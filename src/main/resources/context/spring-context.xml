@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="false">
+
+	<description>Spring公共配置 </description>
+
+	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+	<context:component-scan base-package="lab.s2jh,s2jh.biz" scoped-proxy="targetClass">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+	
+	<!-- 与JPA Hibernate共享一个cacheManager -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache" />
+	</bean>
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache-config.xml" />
+		<property name="shared" value="true" />
+		<property name="cacheManagerName" value="s2jh_cache_v_${build_version}" />
+	</bean>
+
+	<!-- JPA Entity Manager 配置, 设置depends-on="cacheManager"，确保共享模式下优先加载Spring CacheManager -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		depends-on="cacheManager">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="persistenceUnitPostProcessors" ref="persistenceUnitPostProcessors" />
+		<property name="packagesToScan" value="lab.s2jh.core.audit.envers,lab.s2jh.**.entity,s2jh.biz.**.entity" />
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.connection.autocommit">false</prop>
+				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.DefaultNamingStrategy</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate_hbm2ddl_auto}</prop>
+
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.region_prefix">hibernate</prop>
+				<prop key="hibernate.cache.use_structured_entries">true</prop>
+
+				<!-- EhCache -->
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+				<prop key="net.sf.ehcache.configurationResourceName">ehcache-config.xml</prop>
+
+				<prop key="org.hibernate.envers.audit_table_prefix">AUD_</prop>
+				<prop key="org.hibernate.envers.audit_table_suffix"></prop>
+				<prop key="org.hibernate.envers.do_not_audit_optimistic_locking_field">false</prop>
+				<prop key="org.hibernate.envers.global_with_modified_flag">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="persistenceUnitPostProcessors" class="lab.s2jh.core.dao.jpa.ExtPersistenceUnitPostProcessor" />
+
+	<!-- Spring Data JPA配置 -->
+	<jpa:repositories base-package="lab.s2jh.**.dao,s2jh.biz.**.dao" transaction-manager-ref="transactionManager"
+		entity-manager-factory-ref="entityManagerFactory">
+		<repository:exclude-filter type="regex" expression="lab.s2jh.core.*" />
+	</jpa:repositories>
+	
+	<!-- MyBatis配置，主要为了提供高效灵活的查询功能支持 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="dataSource" ref="dataSource" />
+		<!-- 显式指定Mapper文件位置 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath*:lab/s2jh/**/entity/*Mapper.xml</value>
+				<value>classpath*:s2jh/biz/**/entity/*Mapper.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- JPA 事务配置 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+	<!-- Spring Cache配置 -->
+	<cache:annotation-driven />
+
+
+	<task:scheduler id="springScheduler" pool-size="10" />
+	<!-- 用于增强Spring @Async 注解在异步模式能捕捉到异常日志 -->
+	<bean id="handlingAsyncTaskExecutor" class="lab.s2jh.core.context.async.HandlingAsyncTaskExecutor" />
+	<!-- 建议只定义@Async注解使用，尽量不用@Scheduled而改用后面的Quartz方式便于文本定义调整定时策略 -->
+	<task:annotation-driven executor="handlingAsyncTaskExecutor" scheduler="springScheduler" />
+
+</beans>

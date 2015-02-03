@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="lab.s2jh.module.sys.entity.NotifyMessage">
+
+	<resultMap id="pageResultMap" type="lab.s2jh.module.sys.entity.NotifyMessage">
+		<id property="id" column="id" />
+	</resultMap>
+
+	<sql id="sqlReadableMessages">
+		<!-- 已发布的 -->
+		(m.publishTime is not null and m.publishTime&lt;=#{now})
+		<!-- 未过期的 -->
+		and (m.expireTime is null or m.expireTime > #{now})
+		and ( 
+		<!-- 公告类型 -->
+		(m.targetUser_id is null
+		<if test="siteShow!=null">
+			and (m.siteShow = #{siteShow})
+		</if>
+		<if test="mgmtShow!=null">
+			and (m.mgmtShow = #{mgmtShow})
+		</if>
+		)
+		<!-- 用户类型消息 -->
+		or (m.targetUser_id = #{user.id})
+		)
+	</sql>
+
+	<sql id="sqlToReadMessages">
+		and not exists
+		(select 1
+		from
+		sys_NotifyMessageRead mr where
+		mr.notifyMessage_id=m.id and
+		mr.readUser_id=#{user.id})
+	</sql>
+
+	<!-- 用户个人未读信息个数 -->
+	<select id="findCountToRead" resultType="Integer">
+		select count(1) from sys_NotifyMessage m
+		<where>
+			<include refid="sqlReadableMessages" />
+			<include refid="sqlToReadMessages" />
+		</where>
+	</select>
+
+	<!-- 用户个人信息列表 -->
+	<select id="findPageToUser" resultMap="pageResultMap">
+		select m.*,mr.lastReadTime as lastReadTime from sys_NotifyMessage m left
+		outer join
+		sys_NotifyMessageRead mr on
+		mr.notifyMessage_id=m.id
+		and mr.readUser_id=#{user.id}
+		<where>
+			<include refid="sqlReadableMessages" />
+			<if test="title!=null">
+				and m.title like '%${title}%'
+			</if>
+			<if test="htmlContent!=null">
+				and m.htmlContent like '%${htmlContent}%'
+			</if>
+			<if test="publishTimeFrom != null">
+				and m.publishTime &gt;= #{publishTimeFrom}
+			</if>
+			<if test="publishTimeTo != null">
+				and m.publishTime &lt;= #{publishTimeTo}
+			</if>
+			<if test="toRead!=null">
+				<include refid="sqlToReadMessages" />
+			</if>
+		</where>
+		order by m.orderRank desc,m.publishTime desc
+	</select>
+</mapper> 
