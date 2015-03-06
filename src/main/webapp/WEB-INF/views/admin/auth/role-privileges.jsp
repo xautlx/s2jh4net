@@ -49,7 +49,7 @@
                             }
                             //叶子节点才设置name属性并回传post提交
                             var checkbox = '<input type="checkbox" ' + (j == codes.length - 1 ? 'name="privilegeIds"' : '') + checked + ' style="margin-right: 10px" value="' + item.id + '">';
-                            var el = '<label>' + checkbox + (j == codes.length - 1 ? item.code : code) + "</label>";
+                            var el = '<label>' + checkbox + (code) + "</label>";
                             var $item = $('<div class="col-md-3 col-item"><div style="margin:5px;border-top: 1px solid #ddd;">' + el + '</div></div>').appendTo($row);
                             $item.attr("data-index", j);
                             $item.attr("data-text", code);

@@ -47,7 +47,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     }
 
     @MenuData("配置管理:系统管理:消息管理")
-    @RequiresPermissions("通知消息:100菜单")
+    @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         return "admin/sys/notifyMessage-index";
