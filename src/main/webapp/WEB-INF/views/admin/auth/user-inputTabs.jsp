@@ -12,7 +12,9 @@
 		<ul class="nav nav-tabs" data-active="${param._tab_active}">
 			<li class="tools pull-right"><a href="javascript:;" class="btn default reload"><i class="fa fa-refresh"></i></a></li>
 			<li><a data-toggle="tab" href="${ctx}/admin/auth/user/edit?id=${id}">基本信息</a></li>
+			<!-- 
 			<li><a data-toggle="tab" href="${ctx}/admin/auth/user/privileges?id=${id}">权限关联</a></li>
+			 -->
 		</ul>
 	</div>
 </body>

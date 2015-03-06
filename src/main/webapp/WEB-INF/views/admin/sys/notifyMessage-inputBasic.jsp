@@ -54,7 +54,7 @@
 					<div class="form-group">
 						<label class="control-label">生效时间</label>
 						<div class="controls">
-							<form:input path="publishTime" class="form-control date-picker" data-timepicker="true" />
+							<form:input path="publishTime" class="form-control" data-toggle="datetimepicker"/>
 						</div>
 					</div>
 				</div>
@@ -62,7 +62,7 @@
 					<div class="form-group">
 						<label class="control-label">过期时间</label>
 						<div class="controls">
-							<form:input path="expireTime" class="form-control date-picker" data-timepicker="true" />
+							<form:input path="expireTime" class="form-control" data-toggle="datetimepicker"/>
 						</div>
 					</div>
 				</div>

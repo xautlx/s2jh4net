@@ -30,7 +30,7 @@
 				<div class="form-group">
 					<label class="control-label">发布日期</label>
 					<div class="controls">
-						<input type="text" name="search_publishTime" class="form-control input-small date-picker">
+						<input type="text" name="search_publishTime" class="form-control input-small" data-toggle="datepicker">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">

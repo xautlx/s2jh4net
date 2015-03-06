@@ -112,11 +112,12 @@
 	<script src="${ctx}/assets/plugins/jquery.form.js"></script>
 	<!-- END PAGE LEVEL PLUGINS -->
 
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
-	<script src="${ctx}/assets/admin/scripts/app.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/admin/app/util.js" type="text/javascript"></script>
+	<script src="${ctx}/assets/admin/app/util.js"></script>
+	<script src="${ctx}/assets/w/app/global.js"></script>
 	<script src="${ctx}/assets/admin/app/global.js"></script>
-	<script src="${ctx}/assets/admin/app/form-validation.js" type="text/javascript"></script>
+	<script src="${ctx}/assets/admin/app/grid.js"></script>
+	<script src="${ctx}/assets/w/app/form-validation.js"></script>
+	<script src="${ctx}/assets/w/app/page.js"></script>
 	<script src="${ctx}/assets/admin/app/page.js"></script>
 
 	<script>
@@ -127,8 +128,10 @@
             App.init();
             Util.init();
             Global.init();
+            AdminGlobal.init();
             FormValidation.init();
-            FormValidation.initAjax();
+
+            App.unblockUI($("body"));
 
             //console.profileEnd();
         });
