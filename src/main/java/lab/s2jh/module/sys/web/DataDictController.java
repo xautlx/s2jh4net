@@ -45,7 +45,7 @@ public class DataDictController extends BaseController<DataDict, Long> {
     }
 
     @MenuData("配置管理:系统管理:数据字典")
-    @RequiresPermissions("数据字典:100菜单")
+    @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         return "admin/sys/dataDict-index";
@@ -59,21 +59,21 @@ public class DataDictController extends BaseController<DataDict, Long> {
         super.appendFilterProperty(groupPropertyFilter);
     }
 
-    @RequiresPermissions("数据字典:110列表")
+    @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<DataDict> findByPage(HttpServletRequest request) {
         return super.findByPage(DataDict.class, request);
     }
 
-    @RequiresPermissions("数据字典:120基本信息编辑")
+    @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") DataDict entity, Model model) {
         return super.editSave(entity);
     }
 
-    @RequiresPermissions("数据字典:130删除")
+    @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(HttpServletRequest request, @ModelAttribute("entity") DataDict entity) {

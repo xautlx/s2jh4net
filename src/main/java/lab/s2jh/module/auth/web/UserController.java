@@ -45,14 +45,14 @@ public class UserController extends BaseController<User, Long> {
     }
 
     @MenuData("配置管理:权限管理:用户账号")
-    @RequiresPermissions("用户:100菜单")
+    @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         model.addAttribute("authType", writeValueAsJsonString(EnumUtils.getEnumDataMap(AuthTypeEnum.class)));
         return "admin/auth/user-index";
     }
 
-    @RequiresPermissions("用户:110列表")
+    @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<User> findByPage(HttpServletRequest request) {
@@ -64,7 +64,7 @@ public class UserController extends BaseController<User, Long> {
         return "admin/auth/user-inputTabs";
     }
 
-    @RequiresPermissions("用户:120基本信息编辑")
+    @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(Model model) {
         model.addAttribute("authTypeMap", EnumUtils.getEnumDataMap(AuthTypeEnum.class));
@@ -72,11 +72,10 @@ public class UserController extends BaseController<User, Long> {
         return "admin/auth/user-inputBasic";
     }
 
-    @RequiresPermissions("用户:120基本信息编辑")
+    @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") User entity, Model model,
-            @RequestParam("rawPassword") String rawPassword) {
+    public OperationResult editSave(@ModelAttribute("entity") User entity, Model model, @RequestParam("rawPassword") String rawPassword) {
         userService.saveCascadeR2Roles(entity, rawPassword);
         return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }

@@ -38,20 +38,20 @@ public class JobRunHistController extends BaseController<JobRunHist, Long> {
     }
 
     @MenuData("配置管理:计划任务管理:任务运行记录")
-    @RequiresPermissions("计划任务管理:任务运行记录")
+    @RequiresPermissions("配置管理:计划任务管理:任务运行记录")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
         return "admin/schedule/jobRunHist-index";
     }
 
-    @RequiresPermissions("计划任务管理:任务运行记录")
+    @RequiresPermissions("配置管理:计划任务管理:任务运行记录")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<JobRunHist> findByPage(HttpServletRequest request) {
         return super.findByPage(JobRunHist.class, request);
     }
 
-    @RequiresPermissions("计划任务管理:任务运行记录")
+    @RequiresPermissions("配置管理:计划任务管理:任务运行记录")
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String htmlPreview() {
         return "admin/schedule/jobRunHist-view";

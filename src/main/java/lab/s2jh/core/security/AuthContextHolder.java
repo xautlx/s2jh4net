@@ -3,6 +3,8 @@
  */
 package lab.s2jh.core.security;
 
+import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -16,6 +18,17 @@ public class AuthContextHolder {
     private static final Logger logger = LoggerFactory.getLogger(AuthContextHolder.class);
 
     public static final String DEFAULT_UNKNOWN_PIN = "N/A";
+
+    /**
+     * 获取SYS类型账户登录账号
+     */
+    public static String getAuthSysUserUid() {
+        AuthUserDetails authUserDetails = getAuthUserDetails();
+        if (authUserDetails == null || !AuthTypeEnum.SYS.equals(authUserDetails.getAuthType())) {
+            return null;
+        }
+        return authUserDetails.getAuthUid();
+    }
 
     /**
      * 获取登录用户的友好显示字符串

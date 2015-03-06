@@ -51,13 +51,13 @@ public class RoleController extends BaseController<Role, Long> {
     }
 
     @MenuData("配置管理:权限管理:角色配置")
-    @RequiresPermissions("角色:100菜单")
+    @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
         return "admin/auth/role-index";
     }
 
-    @RequiresPermissions("角色:110列表")
+    @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<Role> findByPage(HttpServletRequest request) {
@@ -69,20 +69,20 @@ public class RoleController extends BaseController<Role, Long> {
         return "admin/auth/role-inputTabs";
     }
 
-    @RequiresPermissions("角色:120基本信息编辑")
+    @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow() {
         return "admin/auth/role-inputBasic";
     }
 
-    @RequiresPermissions("角色:120基本信息编辑")
+    @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") Role entity, Model model) {
         return super.editSave(entity);
     }
 
-    @RequiresPermissions("角色:130关联权限配置")
+    @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/privileges", method = RequestMethod.GET)
     public String privilegeR2sShow(@ModelAttribute("entity") Role entity, Model model) {
         Set<Long> r2PrivilegeIds = Sets.newHashSet();
@@ -96,7 +96,7 @@ public class RoleController extends BaseController<Role, Long> {
         return "admin/auth/role-privileges";
     }
 
-    @RequiresPermissions("角色:130关联权限配置")
+    @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/privileges", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult privilegeR2sSave(@ModelAttribute("entity") Role entity,

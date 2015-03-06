@@ -25,4 +25,13 @@ public class ConfigPropertyService extends BaseService<ConfigProperty, Long> {
     public ConfigProperty findByPropKey(String propKey) {
         return configPropertyDao.findByPropKey(propKey);
     }
+
+    @Transactional(readOnly = true)
+    public String findValueByPropKey(String propKey) {
+        ConfigProperty configProperty = configPropertyDao.findByPropKey(propKey);
+        if (configProperty != null) {
+            return configProperty.getSimpleValue();
+        }
+        return null;
+    }
 }

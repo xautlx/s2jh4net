@@ -13,11 +13,13 @@ import javax.persistence.Version;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.AuditOverrides;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_EMPTY)
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "javassistLazyInitializer", "revisionEntity", "handler" }, ignoreUnknown = true)
 @MappedSuperclass
 @AuditOverrides({ @AuditOverride(forClass = BaseEntity.class) })
 public abstract class BaseEntity<ID extends Serializable> extends PersistableEntity<ID> {

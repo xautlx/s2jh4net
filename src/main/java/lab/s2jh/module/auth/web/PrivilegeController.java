@@ -34,7 +34,7 @@ public class PrivilegeController extends BaseController<Privilege, Long> {
     }
 
     @MenuData("配置管理:权限管理:权限配置")
-    @RequiresPermissions("权限:100菜单")
+    @RequiresPermissions("配置管理:权限管理:权限配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         List<Privilege> privileges = privilegeService.findAllCached();
@@ -42,7 +42,7 @@ public class PrivilegeController extends BaseController<Privilege, Long> {
         return "admin/auth/privilege-index";
     }
 
-    @RequiresPermissions("权限:110列表")
+    @RequiresPermissions("配置管理:权限管理:权限配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Object list() {

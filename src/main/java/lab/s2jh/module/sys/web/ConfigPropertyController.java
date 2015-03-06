@@ -43,26 +43,26 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     }
 
     @MenuData("配置管理:系统管理:参数配置")
-    @RequiresPermissions("参数:100菜单")
+    @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
         return "admin/sys/configProperty-index";
     }
 
-    @RequiresPermissions("参数:110列表")
+    @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<ConfigProperty> findByPage(HttpServletRequest request) {
         return super.findByPage(ConfigProperty.class, request);
     }
 
-    @RequiresPermissions("参数:120显示")
+    @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow() {
         return "admin/sys/configProperty-inputBasic";
     }
 
-    @RequiresPermissions("参数:130保存")
+    @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") ConfigProperty entity, HttpServletRequest request) {

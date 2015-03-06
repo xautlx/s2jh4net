@@ -36,13 +36,13 @@ public class QuartzTriggerController {
     private JobBeanCfgService jobBeanCfgService;
 
     @MenuData("配置管理:计划任务管理:任务实时控制")
-    @RequiresPermissions("配置管理:计划任务管理:任务实时控制:100主界面")
+    @RequiresPermissions("配置管理:计划任务管理:任务实时控制")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
         return "admin/schedule/quartzTrigger-index";
     }
 
-    @RequiresPermissions("配置管理:计划任务管理:任务实时控制:100主界面")
+    @RequiresPermissions("配置管理:计划任务管理:任务实时控制")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Object list(HttpServletRequest request) throws SchedulerException {
@@ -68,7 +68,7 @@ public class QuartzTriggerController {
         return new PageImpl(triggerDatas);
     }
 
-    @RequiresPermissions("配置管理:计划任务管理:任务实时控制:200状态控制")
+    @RequiresPermissions("配置管理:计划任务管理:任务实时控制")
     @RequestMapping(value = "/state", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult doStateTrigger(@RequestParam(value = "ids") String[] ids, @RequestParam(value = "state") String state)
@@ -92,7 +92,7 @@ public class QuartzTriggerController {
         return OperationResult.buildSuccessResult("批量状态更新操作完成");
     }
 
-    @RequiresPermissions("配置管理:计划任务管理:任务实时控制:300立即运行")
+    @RequiresPermissions("配置管理:计划任务管理:任务实时控制")
     @RequestMapping(value = "/run", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult doRunTrigger(@RequestParam(value = "ids") String[] ids) throws SchedulerException {

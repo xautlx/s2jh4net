@@ -53,27 +53,27 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
         return "admin/sys/notifyMessage-index";
     }
 
-    @RequiresPermissions("通知消息:110列表")
+    @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<NotifyMessage> findByPage(HttpServletRequest request) {
         return super.findByPage(NotifyMessage.class, request);
     }
 
-    @RequiresPermissions("通知消息:120基本信息编辑")
+    @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow() {
         return "admin/sys/notifyMessage-inputBasic";
     }
 
-    @RequiresPermissions("通知消息:120基本信息编辑")
+    @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") NotifyMessage entity, Model model) {
         return super.editSave(entity);
     }
 
-    @RequiresPermissions("通知消息:110列表")
+    @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/read-list", method = RequestMethod.GET)
     @ResponseBody
     public Page<NotifyMessageRead> readList(HttpServletRequest request) {

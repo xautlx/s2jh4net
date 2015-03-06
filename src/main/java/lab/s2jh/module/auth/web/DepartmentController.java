@@ -50,7 +50,7 @@ public class DepartmentController extends BaseController<Department, Long> {
     }
 
     @MenuData("配置管理:权限管理:部门配置")
-    @RequiresPermissions("部门:100菜单")
+    @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         return "admin/auth/department-index";
@@ -64,14 +64,14 @@ public class DepartmentController extends BaseController<Department, Long> {
         super.appendFilterProperty(groupPropertyFilter);
     }
 
-    @RequiresPermissions("部门:110列表")
+    @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<Department> findByPage(HttpServletRequest request) {
         return super.findByPage(Department.class, request);
     }
 
-    @RequiresPermissions("部门:120基本信息编辑")
+    @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") Department entity, Model model) {

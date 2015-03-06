@@ -10,6 +10,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
+/**
+ * 扩展标准的PropertyPlaceholderConfigurer把属性文件中的配置参数信息放入全局Map变量便于其他接口访问key-value配置数据
+ */
 public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
     private static Logger logger = LoggerFactory.getLogger(ExtPropertyPlaceholderConfigurer.class);
@@ -17,8 +20,7 @@ public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigu
     private static Map<String, String> ctxPropertiesMap;
 
     @Override
-    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)
-            throws BeansException {
+    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
         super.processProperties(beanFactoryToProcess, props);
         ctxPropertiesMap = new HashMap<String, String>();
         logger.info("Putting PropertyPlaceholder {}  datas into cache...", props.size());

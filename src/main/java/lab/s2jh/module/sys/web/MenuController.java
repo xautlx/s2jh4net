@@ -42,7 +42,7 @@ public class MenuController extends BaseController<Menu, Long> {
     }
 
     @MenuData("配置管理:系统管理:菜单配置")
-    @RequiresPermissions("菜单:100菜单")
+    @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         return "admin/sys/menu-index";
@@ -56,14 +56,14 @@ public class MenuController extends BaseController<Menu, Long> {
         super.appendFilterProperty(groupPropertyFilter);
     }
 
-    @RequiresPermissions("菜单:110列表")
+    @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<Menu> findByPage(HttpServletRequest request) {
         return super.findByPage(Menu.class, request);
     }
 
-    @RequiresPermissions("菜单:120基本信息编辑")
+    @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") Menu entity, Model model) {
