@@ -42,8 +42,6 @@ import com.google.common.collect.Maps;
  */
 public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptionResolver, Ordered {
 
-    private static final Integer PAD_SIZE = 30;
-
     private static final Logger logger = LoggerFactory.getLogger("lab.s2jh.errors");
 
     private ContentNegotiationManager contentNegotiationManager;
@@ -64,7 +62,16 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
         if (e instanceof UnauthenticatedException) {
             //记录当前请求信息，登录完成后直接转向登录之前URL
             WebUtils.saveRequest(request);
-            return new ModelAndView("w/login");
+            String view = null;
+            String path = request.getServletPath();
+            if (path.startsWith("/admin")) {
+                view = "admin/login";
+            } else if (path.startsWith("/m")) {
+                view = "m/login";
+            } else {
+                view = "w/login";
+            }
+            return new ModelAndView(view);
         }
 
         //访问受限或无权限访问，转向403提示页面

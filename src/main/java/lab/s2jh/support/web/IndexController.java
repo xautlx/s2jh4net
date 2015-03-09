@@ -2,6 +2,7 @@ package lab.s2jh.support.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.JcaptchaFormAuthenticationFilter.AuthenticationValidationException;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.service.UserService;
@@ -10,6 +11,7 @@ import lab.s2jh.support.service.SmsService;
 import lab.s2jh.support.service.VerifyCodeService;
 
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,8 +46,15 @@ public class IndexController {
         return "m/index";
     }
 
+    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String adminIndex() {
+        return "admin/index";
+    }
+
+    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/admin/", method = RequestMethod.GET)
+    public String adminIndexRoot() {
         return "admin/index";
     }
 

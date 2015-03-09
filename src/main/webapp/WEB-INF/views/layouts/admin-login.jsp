@@ -54,7 +54,9 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="row">
-						<div class="col-md-4">LOGO图片</div>
+						<div class="col-md-4">
+							<img src="${ctx}/assets/img/logo.png" />
+						</div>
 						<div class="col-md-8">
 							<h2 style="color: #555555">${applicationScope.cfg.cfg_system_title}</h2>
 						</div>
@@ -98,6 +100,9 @@
 	<script src="${ctx}/assets/plugins/jquery.cookie.min.js" type="text/javascript"></script>
 	<!-- END CORE PLUGINS -->
 	<!-- BEGIN PAGE LEVEL PLUGINS -->
+
+	<script src="${ctx}/assets/admin/scripts/app.js" type="text/javascript"></script>
+
 	<script src="${ctx}/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
 	<script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/localization/messages_zh.js"></script>
 	<script src="${ctx}/assets/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
@@ -115,7 +120,6 @@
 	<script src="${ctx}/assets/admin/app/util.js"></script>
 	<script src="${ctx}/assets/w/app/global.js"></script>
 	<script src="${ctx}/assets/admin/app/global.js"></script>
-	<script src="${ctx}/assets/admin/app/grid.js"></script>
 	<script src="${ctx}/assets/w/app/form-validation.js"></script>
 	<script src="${ctx}/assets/w/app/page.js"></script>
 	<script src="${ctx}/assets/admin/app/page.js"></script>

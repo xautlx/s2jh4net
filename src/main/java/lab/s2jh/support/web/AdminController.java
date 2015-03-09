@@ -72,6 +72,7 @@ public class AdminController {
     @Autowired(required = false)
     private AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor;
 
+    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/admin/dashboard", method = RequestMethod.GET)
     public String dashboard(Model model) {
         return "admin/dashboard";

@@ -15,8 +15,8 @@
 			<ul id="revolutionul" style="display: none;">
 				<!-- THE FIRST SLIDE -->
 				<li data-transition="fade" data-slotamount="8" data-masterspeed="700" data-delay="9400"
-					data-thumb="assets/img/sliders/revolution/thumbs/thumb2.jpg">
-					<!-- THE MAIN IMAGE IN THE FIRST SLIDE --> <img src="assets/img/sliders/revolution/bg1.jpg" alt="">
+					data-thumb="${ctx}/assets/w/img/sliders/revolution/thumbs/thumb2.jpg">
+					<!-- THE MAIN IMAGE IN THE FIRST SLIDE --> <img src="${ctx}/assets/w/img/sliders/revolution/bg1.jpg" alt="">
 
 					<div class="caption lft slide_title slide_item_left" data-x="0" data-y="105" data-speed="400" data-start="1500"
 						data-easing="easeOutExpo">Need a website design ?</div>
@@ -29,14 +29,14 @@
 					href="http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes" data-x="0"
 					data-y="290" data-speed="400" data-start="3000" data-easing="easeOutExpo"> Purchase Now! </a>
 					<div class="caption lfb" data-x="640" data-y="55" data-speed="700" data-start="1000" data-easing="easeOutExpo">
-						<img src="assets/img/sliders/revolution/man-winner.png" alt="Image 1">
+						<img src="${ctx}/assets/w/img/sliders/revolution/man-winner.png" alt="Image 1">
 					</div>
 				</li>
 
 				<!-- THE SECOND SLIDE -->
 				<li data-transition="fade" data-slotamount="7" data-masterspeed="300" data-delay="9400"
-					data-thumb="assets/img/sliders/revolution/thumbs/thumb2.jpg"><img src="assets/img/sliders/revolution/bg2.jpg"
-					alt="">
+					data-thumb="${ctx}/assets/w/img/sliders/revolution/thumbs/thumb2.jpg"><img
+					src="${ctx}/assets/w/img/sliders/revolution/bg2.jpg" alt="">
 					<div class="caption lfl slide_title slide_item_left" data-x="0" data-y="125" data-speed="400" data-start="3500"
 						data-easing="easeOutExpo">Powerfull & Clean</div>
 					<div class="caption lfl slide_subtitle slide_item_left" data-x="0" data-y="200" data-speed="400" data-start="4000"
@@ -47,33 +47,33 @@
 					</div>
 					<div class="caption lfr slide_item_right" data-x="635" data-y="105" data-speed="1200" data-start="1500"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/mac.png" alt="Image 1">
+						<img src="${ctx}/assets/w/img/sliders/revolution/mac.png" alt="Image 1">
 					</div>
 					<div class="caption lfr slide_item_right" data-x="580" data-y="245" data-speed="1200" data-start="2000"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/ipad.png" alt="Image 1">
+						<img src="${ctx}/assets/w/img/sliders/revolution/ipad.png" alt="Image 1">
 					</div>
 					<div class="caption lfr slide_item_right" data-x="735" data-y="290" data-speed="1200" data-start="2500"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/iphone.png" alt="Image 1">
+						<img src="${ctx}/assets/w/img/sliders/revolution/iphone.png" alt="Image 1">
 					</div>
 					<div class="caption lfr slide_item_right" data-x="835" data-y="230" data-speed="1200" data-start="3000"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/macbook.png" alt="Image 1">
+						<img src="${ctx}/assets/w/img/sliders/revolution/macbook.png" alt="Image 1">
 					</div>
 					<div class="caption lft slide_item_right" data-x="865" data-y="45" data-speed="500" data-start="5000"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/hint1-blue.png" id="rev-hint1" alt="Image 1">
+						<img src="${ctx}/assets/w/img/sliders/revolution/hint1-blue.png" id="rev-hint1" alt="Image 1">
 					</div>
 					<div class="caption lfb slide_item_right" data-x="355" data-y="355" data-speed="500" data-start="5500"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/hint2-blue.png" id="rev-hint2" alt="Image 1">
+						<img src="${ctx}/assets/w/img/sliders/revolution/hint2-blue.png" id="rev-hint2" alt="Image 1">
 					</div></li>
 
 				<!-- THE THIRD SLIDE -->
 				<li data-transition="fade" data-slotamount="8" data-masterspeed="700" data-delay="9400"
-					data-thumb="assets/img/sliders/revolution/thumbs/thumb2.jpg"><img src="assets/img/sliders/revolution/bg3.jpg"
-					alt="">
+					data-thumb="${ctx}/assets/w/img/sliders/revolution/thumbs/thumb2.jpg"><img
+					src="${ctx}/assets/w/img/sliders/revolution/bg3.jpg" alt="">
 					<div class="caption lfl slide_item_left" data-x="20" data-y="95" data-speed="400" data-start="1500"
 						data-easing="easeOutBack">
 						<iframe src="http://player.vimeo.com/video/56974716?portrait=0" width="420" height="240" style="border: 0"
@@ -91,8 +91,8 @@
 
 				<!-- THE FORTH SLIDE -->
 				<li data-transition="fade" data-slotamount="8" data-masterspeed="700" data-delay="9400"
-					data-thumb="assets/img/sliders/revolution/thumbs/thumb2.jpg">
-					<!-- THE MAIN IMAGE IN THE FIRST SLIDE --> <img src="assets/img/sliders/revolution/bg4.jpg" alt="">
+					data-thumb="${ctx}/assets/w/img/sliders/revolution/thumbs/thumb2.jpg">
+					<!-- THE MAIN IMAGE IN THE FIRST SLIDE --> <img src="${ctx}/assets/w/img/sliders/revolution/bg4.jpg" alt="">
 					<div class="caption lft slide_title" data-x="0" data-y="105" data-speed="400" data-start="1500"
 						data-easing="easeOutExpo">What else included ?</div>
 					<div class="caption lft slide_subtitle" data-x="0" data-y="180" data-speed="400" data-start="2000"
@@ -105,12 +105,12 @@
 					data-speed="400" data-start="3000" data-easing="easeOutExpo"> Learn More! </a>
 					<div class="caption lft start" data-x="670" data-y="55" data-speed="400" data-start="2000"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/iphone_left.png" alt="Image 2">
+						<img src="${ctx}/assets/w/img/sliders/revolution/iphone_left.png" alt="Image 2">
 					</div>
 
 					<div class="caption lft start" data-x="850" data-y="55" data-speed="400" data-start="2400"
 						data-easing="easeOutBack">
-						<img src="assets/img/sliders/revolution/iphone_right.png" alt="Image 3">
+						<img src="${ctx}/assets/w/img/sliders/revolution/iphone_right.png" alt="Image 3">
 					</div>
 				</li>
 			</ul>
@@ -164,9 +164,7 @@
 				<span>Metronic - The Most Complete & Popular Admin & Frontend Theme</span>
 			</div>
 			<div class="col-md-3 quote-v1-inner text-right">
-				<a class="btn-transparent" href="http://www.keenthemes.com/preview/index.php?theme=metronic_admin" target="_blank"><i
-					class="fa fa-rocket margin-right-10"></i>Preview Admin</a>
-				<!--<a class="btn-transparent" href="http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469"><i class="icon-gift margin-right-10"></i>Purchase 2 in 1</a>-->
+				
 			</div>
 		</div>
 		<!-- END BLOCKQUOTE BLOCK -->
@@ -184,44 +182,52 @@
 			</div>
 			<div class="col-md-9">
 				<ul class="bxslider">
-					<li><em> <img src="assets/img/works/img1.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img1.jpg" class="fancybox-button"
-							title="Project Name #1" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img1.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img1.jpg"
+							class="fancybox-button" title="Project Name #1" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
-					<li><em> <img src="assets/img/works/img2.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img2.jpg" class="fancybox-button"
-							title="Project Name #2" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img2.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img2.jpg"
+							class="fancybox-button" title="Project Name #2" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
-					<li><em> <img src="assets/img/works/img3.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img3.jpg" class="fancybox-button"
-							title="Project Name #3" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img3.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img3.jpg"
+							class="fancybox-button" title="Project Name #3" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
-					<li><em> <img src="assets/img/works/img4.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img4.jpg" class="fancybox-button"
-							title="Project Name #4" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img4.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img4.jpg"
+							class="fancybox-button" title="Project Name #4" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
-					<li><em> <img src="assets/img/works/img5.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img5.jpg" class="fancybox-button"
-							title="Project Name #5" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img5.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img5.jpg"
+							class="fancybox-button" title="Project Name #5" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
-					<li><em> <img src="assets/img/works/img6.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img6.jpg" class="fancybox-button"
-							title="Project Name #6" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img6.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img6.jpg"
+							class="fancybox-button" title="Project Name #6" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
-					<li><em> <img src="assets/img/works/img3.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img3.jpg" class="fancybox-button"
-							title="Project Name #3" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img3.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img3.jpg"
+							class="fancybox-button" title="Project Name #3" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
-					<li><em> <img src="assets/img/works/img4.jpg" alt="" /> <a href="portfolio_item.html"><i
-								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="assets/img/works/img4.jpg" class="fancybox-button"
-							title="Project Name #4" data-rel="fancybox-button"><i class="fa fa-search icon-hover icon-hover-2"></i></a>
+					<li><em> <img src="${ctx}/assets/w/img/works/img4.jpg" alt="" /> <a href="portfolio_item.html"><i
+								class="fa fa-link icon-hover icon-hover-1"></i></a> <a href="${ctx}/assets/w/img/works/img4.jpg"
+							class="fancybox-button" title="Project Name #4" data-rel="fancybox-button"><i
+								class="fa fa-search icon-hover icon-hover-2"></i></a>
 					</em> <a class="bxslider-block" href="#"> <strong>Amazing Project</strong> <b>Agenda corp.</b>
 					</a></li>
 				</ul>
@@ -243,11 +249,7 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane row fade in active" id="tab-1">
-						<div class="col-md-3">
-							<a href="assets/img/photos/img7.jpg" class="fancybox-button" title="Image Title" data-rel="fancybox-button">
-								<img class="img-responsive" src="assets/img/photos/img7.jpg" alt="" />
-							</a>
-						</div>
+						<div class="col-md-3"></div>
 						<div class="col-md-9">
 							<p class="margin-bottom-10">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu
 								stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Cosby
@@ -264,11 +266,7 @@
 								twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum
 								PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia..</p>
 						</div>
-						<div class="col-md-3">
-							<a href="assets/img/photos/img10.jpg" class="fancybox-button" title="Image Title" data-rel="fancybox-button">
-								<img class="img-responsive" src="assets/img/photos/img10.jpg" alt="" />
-							</a>
-						</div>
+						<div class="col-md-3"></div>
 					</div>
 					<div class="tab-pane fade" id="tab-3">
 						<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny
@@ -299,7 +297,6 @@
 								adipisicing sit amet, consectetur adipisicing elit, of them jean shorts sed magna aliqua. Lorem ipsum dolor met
 								consectetur adipisicing sit amet do eiusmod dolore.</span>
 							<div class="carousel-info">
-								<img class="pull-left" src="assets/img/people/img1-small.jpg" alt="" />
 								<div class="pull-left">
 									<span class="testimonials-name">Lina Mars</span> <span class="testimonials-post">Commercial Director</span>
 								</div>
@@ -310,7 +307,6 @@
 								probably haven't heard of them jean shorts austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse.
 								Mustache cliche tempor, williamsburg carles vegan helvetica.</span>
 							<div class="carousel-info">
-								<img class="pull-left" src="assets/img/people/img5-small.jpg" alt="" />
 								<div class="pull-left">
 									<span class="testimonials-name">Kate Ford</span> <span class="testimonials-post">Commercial Director</span>
 								</div>
@@ -321,7 +317,6 @@
 								helvetica.retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid
 								Aliquip placeat salvia cillum iphone.</span>
 							<div class="carousel-info">
-								<img class="pull-left" src="assets/img/people/img2-small.jpg" alt="" />
 								<div class="pull-left">
 									<span class="testimonials-name">Jake Witson</span> <span class="testimonials-post">Commercial Director</span>
 								</div>
@@ -360,45 +355,6 @@
 			</div>
 		</div>
 		<!-- END STEPS -->
-
-		<!-- BEGIN CLIENTS -->
-		<div class="row margin-bottom-40 our-clients">
-			<div class="col-md-3">
-				<h2>
-					<a href="#">Our Clients</a>
-				</h2>
-				<p>Lorem dipsum folor margade sitede lametep eiusmod psumquis dolore.</p>
-			</div>
-			<div class="col-md-9">
-				<ul class="bxslider1 clients-list">
-					<li><a href="#"> <img src="assets/img/clients/client_1_gray.png" alt="" /> <img
-							src="assets/img/clients/client_1.png" class="color-img" alt="" />
-					</a></li>
-					<li><a href="#"> <img src="assets/img/clients/client_2_gray.png" alt="" /> <img
-							src="assets/img/clients/client_2.png" class="color-img" alt="" />
-					</a></li>
-					<li><a href="#"> <img src="assets/img/clients/client_3_gray.png" alt="" /> <img
-							src="assets/img/clients/client_3.png" class="color-img" alt="" />
-					</a></li>
-					<li><a href="#"> <img src="assets/img/clients/client_4_gray.png" alt="" /> <img
-							src="assets/img/clients/client_4.png" class="color-img" alt="" />
-					</a></li>
-					<li><a href="#"> <img src="assets/img/clients/client_5_gray.png" alt="" /> <img
-							src="assets/img/clients/client_5.png" class="color-img" alt="" />
-					</a></li>
-					<li><a href="#"> <img src="assets/img/clients/client_6_gray.png" alt="" /> <img
-							src="assets/img/clients/client_6.png" class="color-img" alt="" />
-					</a></li>
-					<li><a href="#"> <img src="assets/img/clients/client_7_gray.png" alt="" /> <img
-							src="assets/img/clients/client_7.png" class="color-img" alt="" />
-					</a></li>
-					<li><a href="#"> <img src="assets/img/clients/client_8_gray.png" alt="" /> <img
-							src="assets/img/clients/client_8.png" class="color-img" alt="" />
-					</a></li>
-				</ul>
-			</div>
-		</div>
-		<!-- END CLIENTS -->
 	</div>
 </body>
 </html>
