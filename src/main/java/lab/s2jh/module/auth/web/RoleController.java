@@ -83,6 +83,13 @@ public class RoleController extends BaseController<Role, Long> {
     }
 
     @RequiresPermissions("配置管理:权限管理:角色配置")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult delete(@RequestParam("ids") Long... ids) {
+        return super.delete(ids);
+    }
+
+    @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/privileges", method = RequestMethod.GET)
     public String privilegeR2sShow(@ModelAttribute("entity") Role entity, Model model) {
         Set<Long> r2PrivilegeIds = Sets.newHashSet();
