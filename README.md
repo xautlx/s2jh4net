@@ -24,6 +24,8 @@
 
 * 目前本项目文档尚在编写完善中，暂时请参考 [S2JH](http://git.oschina.net/xautlx/s2jh) 相关资料
 
+> 项目最新自动化持续集成构建状态 Travis-CI Status: [![Build Status](https://travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://travis-ci.org/xautlx/s2jh4net)
+
 ## 运行方式
 
 目前先提供直接导入Eclipse开发部署方式，后面逐步添加一键启动支持。
