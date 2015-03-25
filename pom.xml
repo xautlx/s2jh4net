@@ -766,6 +766,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
+			<scope>test</scope>
 		</dependency>
 
         <!-- 辅助用于解析开发的markdown格式文档文件到html显示 -->
