@@ -46,34 +46,34 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
         return new NotifyMessage();
     }
 
-    @MenuData("配置管理:系统管理:消息管理")
-    @RequiresPermissions("配置管理:系统管理:消息管理")
+    @MenuData("配置管理:系统管理:公告管理")
+    @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         return "admin/sys/notifyMessage-index";
     }
 
-    @RequiresPermissions("配置管理:系统管理:消息管理")
+    @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<NotifyMessage> findByPage(HttpServletRequest request) {
         return super.findByPage(NotifyMessage.class, request);
     }
 
-    @RequiresPermissions("配置管理:系统管理:消息管理")
+    @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow() {
         return "admin/sys/notifyMessage-inputBasic";
     }
 
-    @RequiresPermissions("配置管理:系统管理:消息管理")
+    @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") NotifyMessage entity, Model model) {
         return super.editSave(entity);
     }
 
-    @RequiresPermissions("配置管理:系统管理:消息管理")
+    @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/read-list", method = RequestMethod.GET)
     @ResponseBody
     public Page<NotifyMessageRead> readList(HttpServletRequest request) {

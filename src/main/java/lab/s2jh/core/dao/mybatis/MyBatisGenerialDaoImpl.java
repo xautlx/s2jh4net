@@ -5,30 +5,30 @@ import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 
 import com.github.loafer.mybatis.pagination.PaginationInterceptor;
 
-@Component
 public class MyBatisGenerialDaoImpl implements MyBatisDao {
 
-    @Autowired
     private SqlSession sqlSession;
 
     @Override
-    public <T> T findOne(String namespace, String statementId, Object parameter) {
-        String statement = namespace + "." + statementId;
-        return sqlSession.selectOne(statement, parameter);
+    public <E> List<E> findList(String namespace, String statementId, Object parameters) {
+        return findList(namespace, statementId, parameters, null);
     }
 
     @Override
-    public <E> List<E> findList(String namespace, String statementId, Object parameters) {
+    public <E> List<E> findList(String namespace, String statementId, Object parameters, Integer top) {
         String statement = namespace + "." + statementId;
-        return sqlSession.selectList(statement, parameters);
+        if (top != null) {
+            RowBounds rowBounds = new RowBounds(0, top);
+            return sqlSession.selectList(statement, parameters, rowBounds);
+        } else {
+            return sqlSession.selectList(statement, parameters);
+        }
     }
 
     @Override
@@ -43,14 +43,28 @@ public class MyBatisGenerialDaoImpl implements MyBatisDao {
     }
 
     @Override
-    public <K, V> Map<K, V> findMap(String namespace, String statementId, Object parameter, String mapKey) {
+    public <V> Map<String, V> findMap(String namespace, String statementId, Object parameters, String mapKey, Integer top) {
         String statement = namespace + "." + statementId;
-        return sqlSession.selectMap(statement, parameter, mapKey);
+        if (top != null) {
+            RowBounds rowBounds = new RowBounds(0, top);
+            return sqlSession.selectMap(statement, parameters, mapKey, rowBounds);
+        } else {
+            return sqlSession.selectMap(statement, parameters, mapKey);
+        }
     }
 
     @Override
-    public int execute(String namespace, String statementId, Object parameter) {
-        String statement = namespace + "." + statementId;
-        return sqlSession.update(statement, parameter);
+    public <V> Map<String, V> findMap(String namespace, String statementId, Object parameters, String mapKey) {
+        return findMap(namespace, statementId, parameters, mapKey, null);
     }
+
+    public void setSqlSession(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+    }
+
+    //由于本框架优先采用Hibernate进行数据管理，因此MyBatis仅用于复杂的查询之用，不做数据更新操作以免干扰Hibernate缓存
+    //    public int execute(String namespace, String statementId, Object parameter) {
+    //        String statement = namespace + "." + statementId;
+    //        return sqlSession.update(statement, parameter);
+    //    }
 }

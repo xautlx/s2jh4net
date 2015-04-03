@@ -10,12 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import lab.s2jh.core.exception.WebException;
 import lab.s2jh.module.bpm.service.ActivitiService;
 
-import org.activiti.engine.FormService;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,24 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ActivitiController {
 
     protected static Logger logger = LoggerFactory.getLogger(ActivitiController.class);
-
-    @Autowired
-    private RepositoryService repositoryService;
-
-    @Autowired
-    private RuntimeService runtimeService;
-
-    @Autowired
-    private FormService formService;
-
-    @Autowired
-    private IdentityService identityService;
-
-    @Autowired
-    private TaskService taskService;
-
-    @Autowired
-    private HistoryService historyService;
 
     @Autowired
     protected ActivitiService activitiService;

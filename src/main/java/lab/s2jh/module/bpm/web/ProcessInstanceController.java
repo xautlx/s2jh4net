@@ -10,12 +10,9 @@ import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.module.bpm.service.ActivitiService;
 
-import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -46,22 +43,13 @@ public class ProcessInstanceController {
 
     protected static Logger logger = LoggerFactory.getLogger(ProcessInstanceController.class);
 
-    @Autowired
+    @Autowired(required = false)
     private RepositoryService repositoryService;
 
-    @Autowired
+    @Autowired(required = false)
     private RuntimeService runtimeService;
 
-    @Autowired
-    private FormService formService;
-
-    @Autowired
-    private IdentityService identityService;
-
-    @Autowired
-    private TaskService taskService;
-
-    @Autowired
+    @Autowired(required = false)
     private HistoryService historyService;
 
     @Autowired

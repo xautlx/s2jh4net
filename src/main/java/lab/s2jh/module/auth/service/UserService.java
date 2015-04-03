@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import lab.s2jh.aud.dao.UserLogonLogDao;
+import lab.s2jh.aud.entity.UserLogonLog;
 import lab.s2jh.core.dao.jpa.BaseDao;
-import lab.s2jh.core.security.AuthContextHolder;
-import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.PasswordService;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.service.Validation;
@@ -16,12 +16,10 @@ import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.module.auth.dao.PrivilegeDao;
 import lab.s2jh.module.auth.dao.RoleDao;
 import lab.s2jh.module.auth.dao.UserDao;
-import lab.s2jh.module.auth.dao.UserLogonLogDao;
 import lab.s2jh.module.auth.entity.Privilege;
 import lab.s2jh.module.auth.entity.Role;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
-import lab.s2jh.module.auth.entity.UserLogonLog;
 import lab.s2jh.support.service.DynamicConfigService;
 import lab.s2jh.support.service.FreemarkerService;
 import lab.s2jh.support.service.MailService;
@@ -69,21 +67,24 @@ public class UserService extends BaseService<User, Long> {
         return userDao;
     }
 
-    /**
-     * 获取当前登录用户账号对象
-     */
     @Transactional(readOnly = true)
-    public User findAuthUser() {
-        AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
-        if (authUserDetails == null) {
-            return null;
-        }
-        return findByAuthTypeAndAuthUid(authUserDetails.getAuthType(), authUserDetails.getAuthUid());
+    public User findBySysAuthUid(String authUid) {
+        return findByAuthTypeAndAuthUid(AuthTypeEnum.SYS, authUid);
     }
 
     @Transactional(readOnly = true)
     public User findByAuthTypeAndAuthUid(AuthTypeEnum authType, String authUid) {
         return userDao.findByAuthTypeAndAuthUid(authType, authUid);
+    }
+
+    @Transactional(readOnly = true)
+    public User findBySysAccessToken(String accessToken) {
+        return findByAuthTypeAndAccessToken(AuthTypeEnum.SYS, accessToken);
+    }
+
+    @Transactional(readOnly = true)
+    public User findByAuthTypeAndAccessToken(AuthTypeEnum authType, String accessToken) {
+        return userDao.findByAuthTypeAndAccessToken(authType, accessToken);
     }
 
     public String encodeUserPasswd(User user, String rawPassword) {
@@ -151,6 +152,13 @@ public class UserService extends BaseService<User, Long> {
 
     @Async
     public void userLogonLog(User user, UserLogonLog userLogonLog) {
+
+        String httpSessionId = userLogonLog.getHttpSessionId();
+        if (StringUtils.isNotBlank(httpSessionId)) {
+            if (userLogonLogDao.findByHttpSessionId(httpSessionId) != null) {
+                return;
+            }
+        }
 
         //登录记录
         user.setLogonTimes(user.getLogonTimes() + 1);

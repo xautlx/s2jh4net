@@ -21,8 +21,12 @@ public class VerifyCodeService {
      */
     public String generateSmsCode(HttpServletRequest request, String mobileNum) {
         String code = RandomStringUtils.randomNumeric(6);
-        HttpSession session = request.getSession();
-        session.setAttribute(KEY_SESSION_SMS_DATA, code);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.setAttribute(KEY_SESSION_SMS_DATA, code);
+        } else {
+            //TODO 在没有session情况下，其他容错处理
+        }
         return code;
     }
 

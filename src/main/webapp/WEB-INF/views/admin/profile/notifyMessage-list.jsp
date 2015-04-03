@@ -12,31 +12,28 @@
 <body>
 	<div class="row">
 		<div class="col-md-12">
-			<table class="table table-striped table-hover table-bordered table-sorting">
+			<table class="table table-striped table-hover table-bordered">
 				<thead>
 					<tr>
 						<th>消息标题</th>
 						<th>消息摘要</th>
-						<th class="sorting" data-sorting-name="publishTime">发布时间</th>
-						<th class="sorting" data-sorting-name="expireTime">过期时间</th>
+						<th>发布时间</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach var="item" items="${pageData.content}">
+					<c:forEach var="item" items="${notifyMessages}">
 						<tr>
 							<td><a href="${ctx}/admin/profile/notify-message-view/${item.id}" data-toggle="modal-ajaxify" title="查看消息">
-									<c:if test="${item.lastReadTime==null}">
+									<c:if test="${!item.readed}">
 										<i class="fa fa-envelope-o"></i>
 									</c:if> ${item.title}
 							</a></td>
 							<td>${item.messageAbstract}</td>
 							<td><fmt:formatDate value="${item.publishTime}" type="both" pattern="yyyy-MM-dd mm:HH:ss" /></td>
-							<td><fmt:formatDate value="${item.expireTime}" type="both" pattern="yyyy-MM-dd mm:HH:ss" /></td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
-			<tags:pagination page="${pageData}" />
 		</div>
 	</div>
 </body>

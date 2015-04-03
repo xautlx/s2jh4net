@@ -84,7 +84,8 @@
 							<li>QQ: <span><a
 									href="http://wpa.qq.com/msgrd?v=3&uin=2414521719&site=http://my.oschina.net/s2jh&menu=yes">2414521719</a></span></li>
 							<li class="sep"><span>|</span></li>
-							<li><i class="fa fa-envelope-o topbar-info-icon top-2"></i>Email: <span>xautlx@hotmail.com</span></li>
+							<li><i class="fa fa-envelope-o topbar-info-icon top-2"></i>Email: <span><a
+									href="mailto:s2jh-dev@hotmail.com">s2jh-dev@hotmail.com</a></span></li>
 							<li class="sep"><span>|</span></li>
 							<li><span><a href="${ctx}/admin" target="_blank">管理后台系统</a></span></li>
 							<li class="sep"><span>|</span></li>
@@ -160,7 +161,10 @@
 			<div class="row">
 				<div class="col-md-8">
 					<p>
-						<span class="margin-right-10">2015 © S2JH. ALL Rights Reserved.</span> <a href="#">关于S2JH</a> | <a href="#">联系作者</a>
+						<span class="margin-right-10">2015 © S2JH. ALL Rights Reserved.</span> <a
+							href="http://git.oschina.net/xautlx/s2jh" target="_blank">关于S2JH</a> | <a
+							href="http://git.oschina.net/xautlx/s2jh4net" target="_blank">关于S2JH4Net</a> | <a
+							href="mailto:s2jh-dev@hotmail.com">联系作者</a>
 					</p>
 				</div>
 				<div class="col-md-4">

@@ -1,7 +1,7 @@
 package lab.s2jh.module.sys.dao.test;
 
-import lab.s2jh.core.test.MockEntityUtils;
 import lab.s2jh.core.test.SpringTransactionalTestCase;
+import lab.s2jh.core.util.MockEntityUtils;
 import lab.s2jh.module.sys.dao.ConfigPropertyDao;
 import lab.s2jh.module.sys.entity.ConfigProperty;
 

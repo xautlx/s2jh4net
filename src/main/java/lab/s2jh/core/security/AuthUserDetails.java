@@ -22,6 +22,9 @@ public class AuthUserDetails implements Serializable {
     @MetaData(value = "前端门户用户角色")
     public final static String ROLE_SITE_USER = "ROLE_SITE_USER";
 
+    @MetaData(value = "APP用户角色")
+    public final static String ROLE_APP_USER = "ROLE_APP_USER";
+
     @MetaData(value = "后端管理用户角色")
     public final static String ROLE_MGMT_USER = "ROLE_MGMT_USER";
 
@@ -42,6 +45,9 @@ public class AuthUserDetails implements Serializable {
 
     @MetaData(value = "记录登录来源")
     private AuthSourceEnum source = AuthSourceEnum.W;
+
+    @MetaData(value = "访问TOKEN")
+    private String accessToken;
 
     public String getAuthGuid() {
         return authGuid;
@@ -99,7 +105,15 @@ public class AuthUserDetails implements Serializable {
 
     @Override
     public String toString() {
-        return "AuthUserDetails [authGuid=" + authGuid + ", authUid=" + authUid + ", authType=" + authType
-                + ", nickName=" + nickName + ", source=" + source + "]";
+        return "AuthUserDetails [authGuid=" + authGuid + ", authUid=" + authUid + ", authType=" + authType + ", nickName=" + nickName + ", source="
+                + source + "]";
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

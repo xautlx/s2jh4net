@@ -11,15 +11,15 @@
 
     <!-- 基于检测视图是否存在自动进行activiti 用户信息 DDL初始化 -->
 	<bean name="activitiDatabaseDataInitialize" class="lab.s2jh.module.bpm.data.ActivitiDatabaseDataInitialize">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSourceApp" />
 	</bean>
 
     <!-- Activiti begin: 文档参考：http://www.mossle.com/docs/activiti/ -->
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
-		<property name="dataSource" ref="dataSource" />
-		<property name="transactionManager" ref="transactionManager" />
+		<property name="dataSource" ref="dataSourceApp" />
+		<property name="transactionManager" ref="transactionManagerApp" />
 		<property name="databaseSchemaUpdate" value="true" />
-		<property name="jpaEntityManagerFactory" ref="entityManagerFactory" />
+		<property name="jpaEntityManagerFactory" ref="entityManagerFactoryApp" />
 		<property name="jpaHandleTransaction" value="true" />
 		<property name="jpaCloseEntityManager" value="true" />
 		<property name="jobExecutorActivate" value="false" />

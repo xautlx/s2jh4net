@@ -1,4 +1,4 @@
-package lab.s2jh.core.test;
+package lab.s2jh.core.util;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;

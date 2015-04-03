@@ -1,4 +1,4 @@
-package lab.s2jh.module.auth.entity;
+package lab.s2jh.aud.entity;
 
 import java.util.Date;
 
@@ -17,6 +17,7 @@ import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
+import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,6 +52,10 @@ public class UserLogonLog extends BaseNativeEntity {
     @Column(length = 8, nullable = false)
     @Enumerated(EnumType.STRING)
     private AuthTypeEnum authType = AuthTypeEnum.SYS;
+
+    @MetaData(value = "便于按日汇总统计的冗余属性")
+    @Column(nullable = true)
+    private String logonYearMonthDay;
 
     @MetaData(value = "登录时间")
     @Temporal(TemporalType.TIMESTAMP)

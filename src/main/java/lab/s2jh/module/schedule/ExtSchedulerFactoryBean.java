@@ -2,6 +2,8 @@ package lab.s2jh.module.schedule;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import lab.s2jh.module.schedule.entity.JobBeanCfg;
 import lab.s2jh.module.schedule.service.JobBeanCfgService;
 
@@ -33,13 +35,14 @@ public class ExtSchedulerFactoryBean extends SchedulerFactoryBean {
 
     private JobBeanCfgService jobBeanCfgService;
 
-    private Boolean runWithinCluster = Boolean.TRUE;
+    private boolean runWithinCluster = false;
 
-    public void setRunWithinCluster(Boolean runWithinCluster) {
-        this.runWithinCluster = runWithinCluster;
+    public void setDataSource(DataSource dataSource) {
+        super.setDataSource(dataSource);
+        this.runWithinCluster = true;
     }
 
-    public Boolean getRunWithinCluster() {
+    public boolean isRunWithinCluster() {
         return runWithinCluster;
     }
 

@@ -34,4 +34,9 @@ public @interface MetaData {
      * @see PersistableController#getRevisionFields()
      */
     boolean comparable() default true;
+
+    /**
+     * 标识属性是否在代码生成项可编辑
+     */
+    boolean editable() default true;
 }

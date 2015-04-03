@@ -91,8 +91,8 @@
                                     $.each(ids, function(i, item) {
                                         var item = $.trim(item);
                                         var $tr = $grid.find("tr.jqgrow[id='" + item + "']");
-                                        if (response.userdata && response.userdata[item]) {
-                                            var msg = response.userdata[item];
+                                        if (response.data && response.data[item]) {
+                                            var msg = response.data[item];
                                             $tr.pulsate({
                                                 color : "#bf1c56",
                                                 repeat : 3

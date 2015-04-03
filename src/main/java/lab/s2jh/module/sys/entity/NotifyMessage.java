@@ -1,14 +1,14 @@
 package lab.s2jh.module.sys.entity;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -16,9 +16,7 @@ import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.AttachmentableEntity;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.WebFormatter;
-import lab.s2jh.core.web.json.EntityIdDisplaySerializer;
 import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
-import lab.s2jh.module.auth.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -30,6 +28,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 @Getter
 @Setter
@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 @Table(name = "sys_NotifyMessage")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@MetaData(value = "通知消息", comments = "群发公告或定向用户消息。为了简化处理逻辑公告和用户消息放在一起，如果用户消息量担心影响查询效率，可以考虑引入定期归档处理把过期消息搬迁归档")
+@MetaData(value = "公告消息")
 public class NotifyMessage extends BaseNativeEntity implements AttachmentableEntity {
 
     private static final long serialVersionUID = 2544390748513253055L;
@@ -46,6 +46,14 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
     @MetaData(value = "标题")
     @Column(nullable = false)
     private String title;
+
+    @MetaData(value = "生效标识", comments = "安排定时任务，基于publishTime和expireTime更新此值")
+    @Column(nullable = false)
+    private Boolean effective = Boolean.FALSE;
+
+    @MetaData(value = "标识必须登录才能访问")
+    @Column(nullable = false)
+    private Boolean authRequired = Boolean.FALSE;
 
     @MetaData(value = "发布时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -57,23 +65,26 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
     @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
     private Date expireTime;
 
-    @MetaData(value = "前端显示")
-    private Boolean siteShow = Boolean.FALSE;
+    @MetaData(value = "前端网站显示")
+    public static final Integer SHOW_SCOPE_SITE = 1;
+    @MetaData(value = "管理系统显示")
+    public static final Integer SHOW_SCOPE_ADMIN = 2;
+    @MetaData(value = "APP客户端显示")
+    public static final Integer SHOW_SCOPE_APP = 4;
 
-    @MetaData(value = "后台显示")
-    private Boolean mgmtShow = Boolean.TRUE;
+    public static final Map<Integer, String> showScopeMap = Maps.newHashMap();
+    static {
+        showScopeMap.put(SHOW_SCOPE_SITE, "前端网站显示");
+        showScopeMap.put(SHOW_SCOPE_ADMIN, "管理系统显示");
+        showScopeMap.put(SHOW_SCOPE_APP, "APP客户端显示");
+    }
 
-    @MetaData(value = "目标用户", comments = "此值为空则为公告消息")
-    @ManyToOne
-    @JoinColumn(name = "targetUser_id", nullable = true)
-    @JsonSerialize(using = EntityIdDisplaySerializer.class)
-    private User targetUser;
-
-    @MetaData(value = "邮件推送消息")
-    private Boolean emailPush = Boolean.FALSE;
-
-    @MetaData(value = "短信推送消息")
-    private Boolean smsPush = Boolean.FALSE;
+    /**
+     * 基于二进制与非操作设定
+     * @see #showScopeMap
+     */
+    @MetaData(value = "公告显示的范围代码")
+    private Integer showScopeCode = 0;
 
     @MetaData(value = "外部链接")
     private String externalLink;
@@ -92,9 +103,9 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
     @MetaData(value = "关联附件个数", comments = "用于列表显示和关联处理附件清理判断")
     private Integer attachmentSize;
 
-    @MetaData(value = "最后读取时间")
     @Transient
-    private Date lastReadTime;
+    @MetaData(value = "标识已读")
+    private Boolean readed;
 
     @Override
     @Transient
@@ -114,18 +125,25 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
 
     @Transient
     public String getMessageType() {
-        if (targetUser != null) {
-            return "个人消息: " + targetUser.getDisplay();
+        List<String> showScopes = Lists.newArrayList();
+        for (Map.Entry<Integer, String> me : showScopeMap.entrySet()) {
+            if ((showScopeCode & me.getKey()) == me.getKey()) {
+                showScopes.add(me.getValue());
+            }
         }
-        if (mgmtShow && siteShow) {
-            return "公告: 前后端";
+        if (showScopes.size() == 0) {
+            return "待定";
+        } else {
+            return StringUtils.join(showScopes, ",");
         }
-        if (mgmtShow) {
-            return "公告: 后端";
+    }
+
+    @Transient
+    public void setShowScopeAll() {
+        int code = 0;
+        for (Integer key : showScopeMap.keySet()) {
+            code += key;
         }
-        if (siteShow) {
-            return "公告: 前端";
-        }
-        return "待定";
+        this.showScopeCode = code;
     }
 }

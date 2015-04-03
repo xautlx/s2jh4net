@@ -281,8 +281,7 @@ public class ServletUtils {
         //Request相关的参数、属性等数据组装
         StringBuilder sb = new StringBuilder();
         String xForwardedFor = request.getHeader("x-forwarded-for");
-        sb.append(StringUtils.rightPad("\nHTTP Request Logon User PIN", PAD_SIZE) + ":"
-                + AuthContextHolder.getAuthUserDisplay());
+        sb.append(StringUtils.rightPad("\nHTTP Request Logon User PIN", PAD_SIZE) + ":" + AuthContextHolder.getAuthUserDisplay());
         if (verbose) {
             sb.append(StringUtils.rightPad("\nHTTP Request RemoteAddr", PAD_SIZE) + ":" + request.getRemoteAddr());
             sb.append(StringUtils.rightPad("\nHTTP Request RemoteHost", PAD_SIZE) + ":" + request.getRemoteHost());
@@ -324,16 +323,19 @@ public class ServletUtils {
                 }
             }
 
-            sb.append("\nSession Attribute Data:");
-            HttpSession session = request.getSession();
-            Enumeration<?> sessionAttrNames = session.getAttributeNames();
-            while (sessionAttrNames.hasMoreElements()) {
-                String attrName = (String) sessionAttrNames.nextElement();
-                Object attr = session.getAttribute(attrName);
-                if (attr != null && attr.toString().length() > 100) {
-                    sb.append("\n - " + attrName + "=" + attr.toString().substring(0, 100) + "...");
-                } else {
-                    sb.append("\n - " + attrName + "=" + attr);
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                sb.append("\nSession Attribute Data:");
+
+                Enumeration<?> sessionAttrNames = session.getAttributeNames();
+                while (sessionAttrNames.hasMoreElements()) {
+                    String attrName = (String) sessionAttrNames.nextElement();
+                    Object attr = session.getAttribute(attrName);
+                    if (attr != null && attr.toString().length() > 100) {
+                        sb.append("\n - " + attrName + "=" + attr.toString().substring(0, 100) + "...");
+                    } else {
+                        sb.append("\n - " + attrName + "=" + attr);
+                    }
                 }
             }
         }

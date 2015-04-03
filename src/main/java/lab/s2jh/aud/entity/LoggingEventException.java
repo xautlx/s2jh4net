@@ -1,4 +1,4 @@
-package lab.s2jh.module.sys.entity;
+package lab.s2jh.aud.entity;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;

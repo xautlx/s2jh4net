@@ -5,7 +5,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>角色配置</title>
 </head>
 <body>
 	<div class="tabbable tabbable-custom tabbable-secondary">

@@ -80,6 +80,13 @@ public class UserController extends BaseController<User, Long> {
         return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }
 
+    @RequiresPermissions("配置管理:权限管理:用户账号")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult delete(@RequestParam("ids") Long... ids) {
+        return super.delete(ids);
+    }
+
     @RequiresUser
     @ModelAttribute
     public void prepareModel(Model model, @RequestParam(value = "id", required = false) Long id) {

@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
@@ -21,6 +22,7 @@ public class QuartzDatabaseDataInitialize {
     private final Logger logger = LoggerFactory.getLogger(QuartzDatabaseDataInitialize.class);
 
     @Autowired
+    @Qualifier("dataSourceApp")
     private DataSource dataSource;
 
     @PostConstruct
@@ -44,6 +46,10 @@ public class QuartzDatabaseDataInitialize {
                     resource = new ClassPathResource("lab/s2jh/module/schedule/data/quartz/tables_mysql.sql");
                 } else if (name.indexOf("h2") > -1) {
                     resource = new ClassPathResource("lab/s2jh/module/schedule/data/quartz/tables_h2.sql");
+                } else if (name.indexOf("microsoft") > -1) {
+                    //In your Quartz properties file, you'll need to set 
+                    //org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.MSSQLDelegate
+                    resource = new ClassPathResource("lab/s2jh/module/schedule/data/quartz/tables_sqlServer.sql");
                 }
 
                 if (resource != null) {

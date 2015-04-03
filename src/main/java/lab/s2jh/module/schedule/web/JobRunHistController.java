@@ -2,11 +2,11 @@ package lab.s2jh.module.schedule.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lab.s2jh.aud.entity.JobRunHist;
+import lab.s2jh.aud.service.JobRunHistService;
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.web.BaseController;
-import lab.s2jh.module.schedule.entity.JobRunHist;
-import lab.s2jh.module.schedule.service.JobRunHistService;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;

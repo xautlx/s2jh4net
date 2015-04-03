@@ -1,7 +1,7 @@
-package lab.s2jh.module.sys.dao;
+package lab.s2jh.aud.dao;
 
+import lab.s2jh.aud.entity.LoggingEvent;
 import lab.s2jh.core.dao.jpa.BaseDao;
-import lab.s2jh.module.sys.entity.LoggingEvent;
 
 import org.springframework.stereotype.Repository;
 

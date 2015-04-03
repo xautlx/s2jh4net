@@ -85,7 +85,7 @@ public class User extends BaseNativeEntity {
     @MetaData(value = "移动电话", tooltips = "请仔细填写，可用于系统通知短信发送，找回密码等功能")
     private String mobile;
 
-    @MetaData(value = "OAUTH访问Token")
+    @MetaData(value = "REST访问Token")
     private String accessToken;
 
     @MetaData(value = "访问Token过期时间")
@@ -139,6 +139,7 @@ public class User extends BaseNativeEntity {
     @MetaData(value = "已关联角色主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
     @Transient
     @Getter(AccessLevel.NONE)
+    @JsonIgnore
     private Long[] selectedRoleIds;
 
     public Long[] getSelectedRoleIds() {

@@ -15,6 +15,9 @@ public class SourceUsernamePasswordToken extends UsernamePasswordToken {
     @MetaData(value = "登录来源", comments = "标识是前端用户或后端管理等登录来源，可根据不同来源授予默认角色")
     private AuthSourceEnum source;
 
+    @MetaData(value = "来源唯一标识", comments = "标识来源设备或应用等唯一标识")
+    private String uuid;
+
     public static enum AuthSourceEnum {
 
         @MetaData(value = "APP手机应用")
@@ -36,5 +39,13 @@ public class SourceUsernamePasswordToken extends UsernamePasswordToken {
 
     public void setSource(AuthSourceEnum source) {
         this.source = source;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

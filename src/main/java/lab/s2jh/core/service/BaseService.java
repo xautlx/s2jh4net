@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
@@ -80,9 +79,6 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     /** 泛型对应的Class定义 */
     protected Class<T> entityClass;
 
-    @PersistenceContext
-    protected EntityManager entityManager;
-
     /** 子类设置具体的DAO对象实例 */
     abstract protected BaseDao<T, ID> getEntityDao();
 
@@ -98,6 +94,10 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
         } catch (Exception e) {
             logger.error("error detail:", e);
         }
+    }
+
+    protected EntityManager getEntityManager() {
+        return null;
     }
 
     /**
@@ -191,7 +191,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
                 }
             }
         }
-        entityManager.detach(entity);
+        getEntityManager().detach(entity);
         return entity;
     }
 
@@ -471,7 +471,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @return Map结构的集合分页对象
      */
     public Page<Map<String, Object>> findByGroupAggregate(Class clazz, GroupPropertyFilter groupFilter, Pageable pageable, String... properties) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
         Root<?> root = criteriaQuery.from(clazz);
 
@@ -555,7 +555,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
         select.groupBy(groupExpressions);
 
         //创建查询对象
-        TypedQuery<Tuple> query = entityManager.createQuery(select);
+        TypedQuery<Tuple> query = getEntityManager().createQuery(select);
         //动态追加分页参数
         if (pageable != null) {
             query.setFirstResult(pageable.getOffset());
@@ -614,12 +614,12 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     public Page<Map> findByPageNativeSQL(Pageable pageable, String sql, String orderby) {
         Query query = null;
         if (StringUtils.isNotBlank(orderby)) {
-            query = entityManager.createNativeQuery(sql + " " + orderby);
+            query = getEntityManager().createNativeQuery(sql + " " + orderby);
         } else {
-            query = entityManager.createNativeQuery(sql);
+            query = getEntityManager().createNativeQuery(sql);
         }
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        Query queryCount = entityManager.createNativeQuery("select count(*) from (" + sql + ") cnt");
+        Query queryCount = getEntityManager().createNativeQuery("select count(*) from (" + sql + ") cnt");
         query.setFirstResult(pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
         Object count = queryCount.getSingleResult();
@@ -633,7 +633,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @return
      */
     @Transactional(readOnly = true)
-    public long count(Specification<T> spec) {
+    private long count(Specification<T> spec) {
         return getEntityDao().count(spec);
     }
 
@@ -1150,7 +1150,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public List<EntityRevision> findEntityRevisions(final Object id, String property, Boolean changed) {
         List<EntityRevision> entityRevisions = Lists.newArrayList();
-        AuditQuery auditQuery = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity(entityClass, false, true);
+        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(entityClass, false, true);
         auditQuery.add(AuditEntity.id().eq(id)).addOrder(AuditEntity.revisionNumber().desc());
         if (StringUtils.isNotBlank(property) && changed != null) {
             if (changed) {
@@ -1182,7 +1182,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public List<EntityRevision> findEntityRevisions(final ID id, Number... revs) {
         List<EntityRevision> entityRevisions = Lists.newArrayList();
-        AuditQuery auditQuery = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity(entityClass, false, true);
+        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(entityClass, false, true);
         auditQuery.add(AuditEntity.id().eq(id)).add(AuditEntity.revisionNumber().in(revs));
         List list = auditQuery.getResultList();
         if (CollectionUtils.isNotEmpty(list)) {
@@ -1241,7 +1241,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
             if (R2OperationEnum.update.equals(op) || R2OperationEnum.add.equals(op)) {
                 // 双循环处理需要新增关联的项目
                 for (Serializable r2EntityId : r2EntityIds) {
-                    Object r2Entity = entityManager.find(r2EntityClass, r2EntityId);
+                    Object r2Entity = getEntityManager().find(r2EntityClass, r2EntityId);
                     boolean tobeAdd = true;
                     for (Object r2 : oldR2s) {
                         if (FieldUtils.readDeclaredField(r2, r2EntityPropertyName, true).equals(r2Entity)) {
@@ -1264,7 +1264,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
                 for (Object r2 : oldR2s) {
                     boolean tobeDlete = true;
                     for (Serializable r2EntityId : r2EntityIds) {
-                        Object r2Entity = entityManager.find(r2EntityClass, r2EntityId);
+                        Object r2Entity = getEntityManager().find(r2EntityClass, r2EntityId);
                         if (FieldUtils.readDeclaredField(r2, r2EntityPropertyName, true).equals(r2Entity)) {
                             tobeDlete = false;
                             break;
@@ -1283,7 +1283,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
                 for (Object r2 : oldR2s) {
                     boolean tobeDlete = false;
                     for (Serializable r2EntityId : r2EntityIds) {
-                        Object r2Entity = entityManager.find(r2EntityClass, r2EntityId);
+                        Object r2Entity = getEntityManager().find(r2EntityClass, r2EntityId);
                         if (FieldUtils.readDeclaredField(r2, r2EntityPropertyName, true).equals(r2Entity)) {
                             tobeDlete = true;
                             break;
@@ -1347,7 +1347,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
                     for (Object r2 : oldR2s) {
                         boolean tobeDlete = true;
                         for (Serializable r2EntityId : r2EntityIds) {
-                            Object r2Entity = entityManager.find(r2EntityClass, r2EntityId);
+                            Object r2Entity = getEntityManager().find(r2EntityClass, r2EntityId);
                             if (FieldUtils.readDeclaredField(r2, r2EntityPropertyName, true).equals(r2Entity)) {
                                 tobeDlete = false;
                                 break;
@@ -1362,7 +1362,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
 
                 // 双循环处理需要新增关联的项目
                 for (Serializable r2EntityId : r2EntityIds) {
-                    Object r2Entity = entityManager.find(r2EntityClass, r2EntityId);
+                    Object r2Entity = getEntityManager().find(r2EntityClass, r2EntityId);
                     boolean tobeAdd = true;
                     if (CollectionUtils.isNotEmpty(oldR2s)) {
                         for (Object r2 : oldR2s) {
@@ -1388,11 +1388,11 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Transactional(readOnly = true)
     public Object findEntity(Class entityClass, Serializable id) {
-        return entityManager.find(entityClass, id);
+        return getEntityManager().find(entityClass, id);
     }
 
     public void detachEntity(Object entity) {
-        entityManager.detach(entity);
+        getEntityManager().detach(entity);
     }
 
     /**
@@ -1401,11 +1401,11 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @SuppressWarnings("rawtypes")
     protected List<Map<String, Object>> queryForMapDatasByNativeSQL(String sql) {
         //TODO 防止SQL字符过滤处理
-        Query query = entityManager.createNativeQuery(sql);
+        Query query = getEntityManager().createNativeQuery(sql);
         //Hibernate特定语法
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         List list = query.getResultList();
-        entityManager.close();
+        getEntityManager().close();
         return list;
     }
 }

@@ -7,7 +7,6 @@ import lab.s2jh.module.sys.service.NotifyMessageService;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 
 public class NotifyMessageServiceTest extends SpringTransactionalTestCase {
 
@@ -15,18 +14,11 @@ public class NotifyMessageServiceTest extends SpringTransactionalTestCase {
     private NotifyMessageService notifyMessageService;
 
     @Test
-    public void findMgmtCountToRead() {
+    public void findSiteCountToRead() {
         User user = new User();
         user.setId(1L);
-        Integer count = notifyMessageService.findMgmtCountToRead(user);
-        logger.debug("findMgmtCountToRead Count: {}", count);
+        Long count = notifyMessageService.findCountToRead(user, NotifyMessage.SHOW_SCOPE_SITE);
+        logger.debug("findSiteCountToRead Count: {}", count);
     }
 
-    @Test
-    public void findMgmtPageToRead() {
-        User user = new User();
-        user.setId(1L);
-        Page<NotifyMessage> pageData = notifyMessageService.findMgmtPageToRead(user, null, null);
-        logger.debug("findMgmtPageToRead pageData: {}", pageData);
-    }
 }

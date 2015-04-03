@@ -62,7 +62,7 @@ public class QuartzTriggerController {
                 triggerMap.put("nextFireTime", DateUtils.formatTime(cronTrigger.getNextFireTime()));
             }
             triggerMap.put("stateLabel", scheduler.getTriggerState(trigger.getKey()));
-            triggerMap.put("runWithinCluster", schedulerFactoryBean.getRunWithinCluster());
+            triggerMap.put("runWithinCluster", schedulerFactoryBean.isRunWithinCluster());
             triggerDatas.add(triggerMap);
         }
         return new PageImpl(triggerDatas);

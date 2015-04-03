@@ -1,5 +1,6 @@
 package lab.s2jh.core.web.exception;
 
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,11 @@ import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.accept.ContentNegotiationManager;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -58,126 +62,167 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
      */
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object aHandler, Exception e) {
 
-        //未登录访问，转向登录界面
-        if (e instanceof UnauthenticatedException) {
-            //记录当前请求信息，登录完成后直接转向登录之前URL
-            WebUtils.saveRequest(request);
-            String view = null;
-            String path = request.getServletPath();
-            if (path.startsWith("/admin")) {
-                view = "admin/login";
-            } else if (path.startsWith("/m")) {
-                view = "m/login";
-            } else {
-                view = "w/login";
+        String errorMessage = null;
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        if (e instanceof HttpRequestMethodNotSupportedException) {
+            //HTTP请求方式不对
+            errorMessage = e.getMessage();
+            httpStatus = HttpStatus.BAD_REQUEST;
+
+            //此时还未到Controller方法，无法基于ResponseBody注解判断响应类型，则基于contentNegotiationManager进行判断
+            try {
+                //先处理特定类型相应
+                ServletWebRequest webRequest = new ServletWebRequest(request);
+                List<MediaType> mediaTypes = contentNegotiationManager.resolveMediaTypes(webRequest);
+                for (MediaType mediaType : mediaTypes) {
+                    //JSON类型请求响应
+                    if (mediaType.equals(MediaType.APPLICATION_JSON)) {
+                        ModelAndView mv = new ModelAndView();
+                        MappingJackson2JsonView view = new MappingJackson2JsonView();
+                        Map<String, Object> attributes = Maps.newHashMap();
+                        attributes.put("type", OperationResult.OPERATION_RESULT_TYPE.failure);
+                        attributes.put("code", OperationResult.FAILURE);
+                        attributes.put("message", errorMessage);
+                        attributes.put("exception", e.getMessage());
+                        view.setAttributesMap(attributes);
+                        mv.setView(view);
+                        return mv;
+                    }
+                }
+            } catch (HttpMediaTypeNotAcceptableException e1) {
+                logger.error(e1.getMessage(), e1);
             }
-            return new ModelAndView(view);
-        }
 
-        //访问受限或无权限访问，转向403提示页面
-        if (e instanceof UnauthorizedException) {
-            return new ModelAndView("error/403");
-        }
+        } else if (e instanceof UnauthenticatedException) {
+            //未登录访问，转向登录界面
+            errorMessage = "访问需要登录";
+            httpStatus = HttpStatus.UNAUTHORIZED;
+        } else if (e instanceof UnauthorizedException) {
+            //访问受限或无权限访问，转向403提示页面
+            errorMessage = "访问未授权";
+            httpStatus = HttpStatus.FORBIDDEN;
+        } else {
 
-        //构建和记录友好和详细的错误信息及消息
-        //生成一个异常流水号，追加到错误消息上显示到前端用户，用户反馈问题时给出此流水号给运维或开发人员快速定位对应具体异常细节
-        String rand = DateFormatUtils.format(new java.util.Date(), "yyMMddHHmmss") + RandomStringUtils.randomNumeric(3);
-        //标记有些校验类型异常无需调用logger对象写入日志
-        boolean skipLog = false;
-        String errorTitle = "ERR" + rand + ": ";
-        String errorMessage = errorTitle + "系统运行错误，请联系管理员！";
+            //构建和记录友好和详细的错误信息及消息
+            //生成一个异常流水号，追加到错误消息上显示到前端用户，用户反馈问题时给出此流水号给运维或开发人员快速定位对应具体异常细节
+            String rand = DateFormatUtils.format(new java.util.Date(), "yyMMddHHmmss") + RandomStringUtils.randomNumeric(3);
+            //标记有些校验类型异常无需调用logger对象写入日志
+            boolean skipLog = false;
+            String errorTitle = "ERR" + rand + ": ";
+            errorMessage = errorTitle + "系统运行错误，请联系管理员！";
+
+            //先判断明确子类异常，优先匹配后则终止其他判断
+            boolean continueProcess = true;
+            if (continueProcess) {
+                DuplicateTokenException ex = parseSpecException(e, DuplicateTokenException.class);
+                if (ex != null) {
+                    continueProcess = false;
+                    errorMessage = "请勿重复提交表单";
+                    skipLog = true;
+                }
+            }
+
+            if (continueProcess) {
+                //业务校验失败异常，直接反馈校验提示信息即可
+                ValidationException ex = parseSpecException(e, ValidationException.class);
+                if (ex != null) {
+                    continueProcess = false;
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    errorMessage = e.getMessage();
+                    skipLog = true;
+                }
+            }
+
+            if (continueProcess) {
+                //框架定义的基类运行异常
+                BaseRuntimeException ex = parseSpecException(e, BaseRuntimeException.class);
+                if (ex != null) {
+                    continueProcess = false;
+                    errorMessage = errorTitle + e.getMessage();
+                }
+            }
+
+            if (continueProcess) {
+                //对一些数据库异常进行友好转义处理，以便前端用户可以理解
+                SQLException ex = parseSpecException(e, SQLException.class);
+                if (ex != null) {
+                    continueProcess = false;
+                    String sqlMessage = ex.getMessage();
+                    if (sqlMessage != null && (sqlMessage.indexOf("FK") > -1 || sqlMessage.startsWith("ORA-02292"))) {
+                        errorMessage = "该数据已被关联使用：" + sqlMessage;
+                        skipLog = true;
+                    } else if (sqlMessage != null
+                            && (sqlMessage.indexOf("Duplicate") > -1 || sqlMessage.indexOf("UNIQUE") > -1 || sqlMessage.startsWith("ORA-02292"))) {
+                        errorMessage = "违反唯一性约束：" + sqlMessage;
+                        skipLog = true;
+                    }
+                }
+            }
+
+            if (!skipLog) {
+                //记录登录用户信息
+                String userId = AuthContextHolder.getAuthUserDisplay();
+                if (StringUtils.isNotBlank(userId)) {
+                    MDC.put("AUTH_USER", userId);
+                }
+                //记录时间
+                MDC.put("LOG_DATETIME", DateUtils.formatTimeNow());
+
+                //以logger的MDC模式记录组装的字符串信息
+                MDC.put("WEB_DATA", ServletUtils.buildRequestInfoToString(request, true));
+
+                logger.error(errorMessage, e);
+
+                MDC.clear();
+            }
+
+        }
 
         //设置http status错误代码，如jqGrid等组件是基于此代码来标识请求处理成功与否
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        //先判断明确子类异常，优先匹配后则终止其他判断
-        boolean continueProcess = true;
-        if (continueProcess) {
-            DuplicateTokenException ex = parseSpecException(e, DuplicateTokenException.class);
-            if (ex != null) {
-                continueProcess = false;
-                errorMessage = "请勿重复提交表单";
-                skipLog = true;
-            }
-        }
-
-        if (continueProcess) {
-            //业务校验失败异常，直接反馈校验提示信息即可
-            ValidationException ex = parseSpecException(e, ValidationException.class);
-            if (ex != null) {
-                continueProcess = false;
-                response.setStatus(HttpStatus.BAD_REQUEST.value());
-                errorMessage = e.getMessage();
-                skipLog = true;
-                return new ModelAndView("error/400");
-            }
-        }
-
-        if (continueProcess) {
-            //框架定义的基类运行异常
-            BaseRuntimeException ex = parseSpecException(e, BaseRuntimeException.class);
-            if (ex != null) {
-                continueProcess = false;
-                errorMessage = errorTitle + e.getMessage();
-            }
-        }
-
-        if (continueProcess) {
-            //对一些数据库异常进行友好转义处理，以便前端用户可以理解
-            SQLException ex = parseSpecException(e, SQLException.class);
-            if (ex != null) {
-                continueProcess = false;
-                String sqlMessage = ex.getMessage();
-                if (sqlMessage != null && (sqlMessage.indexOf("FK") > -1 || sqlMessage.startsWith("ORA-02292"))) {
-                    errorMessage = "该数据已被关联使用：" + sqlMessage;
-                    skipLog = true;
-                } else if (sqlMessage != null
-                        && (sqlMessage.indexOf("Duplicate") > -1 || sqlMessage.indexOf("UNIQUE") > -1 || sqlMessage.startsWith("ORA-02292"))) {
-                    errorMessage = "违反唯一性约束：" + sqlMessage;
-                    skipLog = true;
-                }
-            }
-        }
-
-        if (!skipLog) {
-            //记录登录用户信息
-            String userId = AuthContextHolder.getAuthUserDisplay();
-            if (StringUtils.isNotBlank(userId)) {
-                MDC.put("AUTH_USER", userId);
-            }
-            //记录时间
-            MDC.put("LOG_DATETIME", DateUtils.formatTimeNow());
-
-            //以logger的MDC模式记录组装的字符串信息
-            MDC.put("WEB_DATA", ServletUtils.buildRequestInfoToString(request, true));
-
-            logger.error(errorMessage, e);
-
-            MDC.clear();
-        }
-
-        try {
-            //先处理特定类型相应
-            ServletWebRequest webRequest = new ServletWebRequest(request);
-            List<MediaType> mediaTypes = contentNegotiationManager.resolveMediaTypes(webRequest);
-            for (MediaType mediaType : mediaTypes) {
-                //JSON类型请求响应
-                if (mediaType.equals(MediaType.APPLICATION_JSON)) {
-                    ModelAndView mv = new ModelAndView();
-                    MappingJackson2JsonView view = new MappingJackson2JsonView();
-                    Map<String, Object> attributes = Maps.newHashMap();
-                    attributes.put("type", OperationResult.OPERATION_RESULT_TYPE.failure);
-                    attributes.put("message", errorMessage);
-                    view.setAttributesMap(attributes);
-                    mv.setView(view);
-                    return mv;
-                }
-            }
-        } catch (HttpMediaTypeNotAcceptableException e1) {
-            e1.printStackTrace();
-        }
+        response.setStatus(httpStatus.value());
         //其余按照标准的error-page处理
         request.setAttribute("javax.servlet.error.message", errorMessage);
-        return new ModelAndView("error/500");
+
+        boolean json = false;
+        if (aHandler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) aHandler;
+            Method method = handlerMethod.getMethod();
+            ResponseBody responseBody = method.getAnnotation(ResponseBody.class);
+            if (responseBody != null) {
+                json = true;
+            }
+        }
+
+        if (json) {
+            ModelAndView mv = new ModelAndView();
+            MappingJackson2JsonView view = new MappingJackson2JsonView();
+            Map<String, Object> attributes = Maps.newHashMap();
+            attributes.put("type", OperationResult.OPERATION_RESULT_TYPE.failure);
+            attributes.put("code", OperationResult.FAILURE);
+            attributes.put("message", errorMessage);
+            attributes.put("exception", e.getMessage());
+            view.setAttributesMap(attributes);
+            mv.setView(view);
+            return mv;
+        } else {
+            if (httpStatus.equals(HttpStatus.UNAUTHORIZED)) {
+                //记录当前请求信息，登录完成后直接转向登录之前URL
+                WebUtils.saveRequest(request);
+                String view = null;
+                String path = request.getServletPath();
+                if (path.startsWith("/admin")) {
+                    view = "admin/login";
+                } else if (path.startsWith("/m")) {
+                    view = "m/login";
+                } else {
+                    view = "w/login";
+                }
+                return new ModelAndView("redirect:" + view);
+            }
+        }
+
+        return new ModelAndView("error/" + httpStatus.value());
     }
 
     /**

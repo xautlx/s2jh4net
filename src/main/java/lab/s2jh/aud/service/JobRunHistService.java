@@ -1,9 +1,9 @@
-package lab.s2jh.module.schedule.service;
+package lab.s2jh.aud.service;
 
+import lab.s2jh.aud.dao.JobRunHistDao;
+import lab.s2jh.aud.entity.JobRunHist;
 import lab.s2jh.core.dao.jpa.BaseDao;
 import lab.s2jh.core.service.BaseService;
-import lab.s2jh.module.schedule.dao.JobRunHistDao;
-import lab.s2jh.module.schedule.entity.JobRunHist;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;

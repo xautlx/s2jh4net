@@ -82,7 +82,6 @@ public class UtilController {
         return OperationResult.buildSuccessResult("动态更新Logger日志级别操作成功");
     }
 
-    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> formValidation(Model model, @RequestParam("clazz") String clazz) {

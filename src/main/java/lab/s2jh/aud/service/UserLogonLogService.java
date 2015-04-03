@@ -1,9 +1,9 @@
-package lab.s2jh.module.auth.service;
+package lab.s2jh.aud.service;
 
+import lab.s2jh.aud.dao.UserLogonLogDao;
+import lab.s2jh.aud.entity.UserLogonLog;
 import lab.s2jh.core.dao.jpa.BaseDao;
 import lab.s2jh.core.service.BaseService;
-import lab.s2jh.module.auth.dao.UserLogonLogDao;
-import lab.s2jh.module.auth.entity.UserLogonLog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,10 @@
  */
 package lab.s2jh.core.security;
 
+import lab.s2jh.core.context.SpringContextHolder;
+import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
+import lab.s2jh.module.auth.service.UserService;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -59,5 +62,17 @@ public class AuthContextHolder {
             return null;
         }
         return (AuthUserDetails) principal;
+    }
+
+    /**
+     * 获取当前登录用户Entity实体对象
+     */
+    public static User findAuthUser() {
+        AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
+        if (authUserDetails == null) {
+            return null;
+        }
+        UserService userService = SpringContextHolder.getBean(UserService.class);
+        return userService.findByAuthTypeAndAuthUid(authUserDetails.getAuthType(), authUserDetails.getAuthUid());
     }
 }

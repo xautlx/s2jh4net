@@ -1,7 +1,7 @@
-package lab.s2jh.module.schedule.dao;
+package lab.s2jh.aud.dao;
 
+import lab.s2jh.aud.entity.JobRunHist;
 import lab.s2jh.core.dao.jpa.BaseDao;
-import lab.s2jh.module.schedule.entity.JobRunHist;
 
 import org.springframework.stereotype.Repository;
 

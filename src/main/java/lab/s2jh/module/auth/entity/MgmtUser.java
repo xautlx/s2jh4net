@@ -17,7 +17,6 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.envers.NotAudited;
 
 @Getter
 @Setter
@@ -32,36 +31,18 @@ public class MgmtUser extends BaseNativeEntity {
     private static final long serialVersionUID = 512335968914828057L;
 
     @MetaData(value = "登录账号对象")
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @MetaData(value = "所属部门")
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "department_id")
     private Department department;
 
     @Override
     @Transient
     public String getDisplay() {
         return user.getDisplay();
-    }
-
-    @NotAudited
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "department_id")
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    @NotAudited
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "user_id")
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

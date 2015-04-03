@@ -1,4 +1,4 @@
-package lab.s2jh.module.sys.entity;
+package lab.s2jh.aud.entity;
 
 import java.util.Date;
 import java.util.List;

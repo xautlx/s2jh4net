@@ -30,6 +30,7 @@ import lab.s2jh.module.auth.entity.UserR2Role;
 import lab.s2jh.module.sys.entity.ConfigProperty;
 import lab.s2jh.module.sys.entity.Menu;
 import lab.s2jh.module.sys.entity.NotifyMessage;
+import lab.s2jh.module.sys.entity.UserMessage;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +38,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -56,6 +58,7 @@ public class BasicDatabaseDataInitialize {
     private final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitialize.class);
 
     @Autowired
+    @Qualifier("entityManagerFactoryApp")
     private EntityManagerFactory entityManagerFactory;
 
     @Autowired
@@ -65,7 +68,7 @@ public class BasicDatabaseDataInitialize {
     private ExtPropertyPlaceholderConfigurer extPropertyPlaceholderConfigurer;
 
     @PostConstruct
-    public void initialize() {
+    public void initialize() throws Exception {
 
         logger.info("Running " + this.getClass().getName());
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -163,15 +166,37 @@ public class BasicDatabaseDataInitialize {
         if (isEmptyTable(NotifyMessage.class, entityManager)) {
             NotifyMessage entity = new NotifyMessage();
             entity.setTitle("欢迎访问" + systemTitle);
-            entity.setMgmtShow(true);
-            entity.setSiteShow(false);
+            entity.setShowScopeAll();
             entity.setPublishTime(now);
+            entity.setEffective(true);
             entity.setHtmlContent("<p>系统初始化时间：" + DateUtils.formatTime(now) + "</p>");
+            entityManager.persist(entity);
+        }
+
+        //初始化演示通知消息
+        if (isEmptyTable(UserMessage.class, entityManager)) {
+            User admin = (User) entityManager.createQuery("from User where authUid='admin'").getSingleResult();
+
+            UserMessage entity = new UserMessage();
+            entity.setTitle("演示个人消息1");
+            entity.setPublishTime(now);
+            entity.setEffective(true);
+            entity.setTargetUser(admin);
+            entity.setHtmlContent("<p>演示定向发送个人消息1内容</p>");
+            entityManager.persist(entity);
+
+            entity = new UserMessage();
+            entity.setTitle("演示个人消息2");
+            entity.setPublishTime(now);
+            entity.setEffective(true);
+            entity.setTargetUser(admin);
+            entity.setHtmlContent("<p>演示定向发送个人消息2内容</p>");
             entityManager.persist(entity);
         }
 
         entityManager.flush();
         entityManager.close();
+
         entityManager.getTransaction().commit();
     }
 
@@ -282,6 +307,7 @@ public class BasicDatabaseDataInitialize {
             //In that case, an additional class path must be registered to the ClassPool. Suppose that pool refers to a ClassPool object:  
             pool.insertClassPath(new ClassClassPath(this.getClass()));
 
+            //合并所有类中所有RequiresPermissions定义信息
             Set<String> mergedPermissions = Sets.newHashSet();
             for (BeanDefinition beanDefinition : beanDefinitions) {
                 String className = beanDefinition.getBeanClassName();

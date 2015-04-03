@@ -2,6 +2,7 @@ package lab.s2jh.core.web;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,9 +10,11 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.entity.PersistableEntity;
+import lab.s2jh.core.exception.WebException;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.EntityProcessCallbackHandler.EntityProcessCallbackException;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
@@ -20,11 +23,14 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
@@ -41,11 +47,26 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
 
     abstract protected T buildBindingEntity();
 
-    protected Page<T> findByPage(Class<T> clazz, HttpServletRequest request) {
+    protected Page<T> findByPage(Class<T> clazz, HttpServletRequest request, EntityProcessCallbackHandler<T> handler) {
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
         GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(clazz, request);
         appendFilterProperty(groupFilter);
-        return getEntityService().findByPage(groupFilter, pageable);
+        Page<T> pageData = getEntityService().findByPage(groupFilter, pageable);
+        if (handler != null) {
+            List<T> content = pageData.getContent();
+            for (T entity : content) {
+                try {
+                    handler.processEntity(entity);
+                } catch (EntityProcessCallbackException e) {
+                    throw new WebException("entity process callback error", e);
+                }
+            }
+        }
+        return pageData;
+    }
+
+    protected Page<T> findByPage(Class<T> clazz, HttpServletRequest request) {
+        return findByPage(clazz, request, null);
     }
 
     protected OperationResult editSave(T entity) {
@@ -105,8 +126,8 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
             if (rejectSize == entities.size()) {
                 return OperationResult.buildFailureResult("所有选取记录删除操作失败", errorMessageMap);
             } else {
-                return OperationResult.buildWarningResult("删除操作已处理. 成功:" + (entities.size() - rejectSize) + "条"
-                        + ",失败:" + rejectSize + "条", errorMessageMap);
+                return OperationResult.buildWarningResult("删除操作已处理. 成功:" + (entities.size() - rejectSize) + "条" + ",失败:" + rejectSize + "条",
+                        errorMessageMap);
             }
         }
     }
@@ -122,6 +143,16 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
         model.addAttribute("clazz", ServletUtils.buildValidateId(entity.getClass()));
         model.addAttribute("entity", entity);
         return entity;
+    }
+
+    /**
+     * 为了防止用户恶意传入数据修改不可访问的属性，采用白名单机制，只有在该方法中定义的属性才会进行自动绑定
+     * 请记住把所有表单元素涉及到属性添加到此方法的setAllowedFields列表中，否则会出现页面数据没有正确保存到数据库
+     */
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(DateUtils.DEFAULT_DATE_FORMATER, true));
+        //binder.setAllowedFields("nick", "gender", "name", "idCardNo", "studentExt.dormitory");
     }
 
     /**
