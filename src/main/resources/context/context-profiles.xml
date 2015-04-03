@@ -172,7 +172,7 @@
 		</bean>		
 	</beans>
 	
-	<beans profile="oschina">
+	<beans profile="cloud">
         <!-- 缺省PropertyPlaceholder定义 -->
 		<bean id="extPropertyPlaceholderConfigurer" class="lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer">
 			<property name="locations">

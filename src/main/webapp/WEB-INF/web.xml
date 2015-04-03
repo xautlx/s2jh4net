@@ -10,7 +10,7 @@
 	</context-param>
 	<context-param>
 		<param-name>spring.profiles.default</param-name>
-		<param-value>oschina</param-value>
+		<param-value>development</param-value>
 	</context-param>
 
 	<listener>
