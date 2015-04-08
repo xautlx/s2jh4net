@@ -12,40 +12,25 @@
 
 ### 文档内容说明
 
-文档内容主要涉及基于 http://git.oschina.net/xautlx/nutch-ajax 项目内容（额外包含一些Nutch和Solr标准的功能和原理说明但不保证完整性）的设计和开发过程讲解。具体可详见文档目录列表。
+文档内容主要涉及基于 http://git.oschina.net/xautlx/s2jh4net 项目内容的设计和开发过程讲解。具体可详见文档目录列表。
 
 ### 主要功能特性
 
-* **常规的HTML页面抓取**: 对于常规的例如新闻类没有AJAX特性的页面可以直接用Nutch自带的protocol-http插件抓取。
-
-* **常规的AJAX页面抓取**: 对于绝大部分诸如jQuery ajax加载的页面，可以直接用htmlunit扩展插件抓取。
-
-* **特殊的AJAX请求页面抓取**: 诸如淘宝/天猫的页面采用了独特的Kissy Javascript组件，目前测试htmlunit无法正确解析，因此退而求其次采用效率低一些的Selenium WebDriver方式实现页面数据抓取。
-
-* **基于过滤链模式解析页面结构化数据**: 解析提取页面结构化属性数据项，并内置SQL和No SQL等类型数据持久化接口处理。
-
-* **基于Solr整合实现定制数据的索引和搜索支持**: 扩展提供定制索引项，拼音转换，业务数据库整合等SOLR集成。
+TODO
 
 ### 主要技术特性
 
-* 基于Apache Nutch 2.3 及 Solr 4.8.1系列
-* 基于Htmlunit，Selenium WebDriver等扩展实现AJAX网站数据爬取定向采集
-* 基于爬取网站数据及业务系统数据库数据整合进行索引和搜索
+TODO
 
 ### 特别说明
 
 * 文档所列举到的工具软件类型及版本，操作过程等，皆以实际操作过程涉及相关为参考，如果你是新手建议一步步按照文档进行，如果你是熟手你可以参考相关描述直接在现有熟悉的环境自行配置。
 
-* Nutch的运行涉及Hadoop，HBase等这些组件，官方的代码和指南基本都是面向或优先定位在Unix/Linux环境进行开发和部署运行的。但是考虑到比较绝大部分开发人员都是熟悉Windows开发环境，考虑到引入Linux作为开发演示环境会把开发过程进一步复杂化，因此本教程全部基于Windows系统进行说明，并且会对其中涉及到一些平台问题进行特殊说明
-
 * 除特殊说明以外，以下教程假定相关软件或项目的操作根目录为：DEV_DIR=D:\projects\training\s2jh4net，另外，**部分截图来源于其他项目内容，请注意参考本教程相关描述对应调整**。
 
 **内容不包括：**
 
-本教程内容以单机运行模式为例，不涉及Nutch及Solr相关的基于HDFS、Hadoop、HBase等分布式和集群部署运行等高级特性，此类相关技术点在本教程不做任何说明，请自行参考官方资料相关教程。
-
-Nutch官方WIKI文档：http://wiki.apache.org/nutch/
-Solr官方WIKI文档：https://wiki.apache.org/solr/
+TODO
 
 ## 基本工具安装配置
 
@@ -208,3 +193,7 @@ Console台可以看到整个数据库结构及基础数据初始化过程，最�
 ![img](images/img-0065.jpg)
 
 ![img](images/img-0066.jpg)
+
+### 关于MySQL运行配置说明
+
+TODO

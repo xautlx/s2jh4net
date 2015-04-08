@@ -30,6 +30,8 @@
 
 目前先提供直接导入Eclipse（spring-tool-suite-3.6.3.RELEASE）开发部署方式，后面逐步添加一键启动支持。
 
+**详细运行指南请参考项目doc目录下相关Markdown或HTML格式文档**，基本过程描述如下：
+
 * 首先为Eclipse安装Lombok插件（否则工程编译错误）：下载lombok.jar后以java -jar方式运行按照提示选择Eclipse目录安装即可，详见：http://projectlombok.org/download.html
 * 从GIT Clone项目到本地，然后import到本地spring-tool-suite-3.6.3.RELEASE
 * 项目上或pom.xml执行maven install，初始下载所有需要的依赖资源
