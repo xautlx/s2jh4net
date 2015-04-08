@@ -646,7 +646,7 @@
 			<version>1.8.6</version>
 		</dependency>
 		<dependency>
-			<groupId>pinyin4j</groupId>
+			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
 			<version>2.5.0</version>
 		</dependency>
@@ -780,7 +780,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.14.8</version>
+			<version>1.16.2</version>
 			<scope>provided</scope>
 		</dependency>
 
