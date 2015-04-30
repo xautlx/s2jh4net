@@ -435,6 +435,7 @@
 	<script src="${ctx}/assets/w/app/global.js"></script>
 	<script src="${ctx}/assets/admin/app/global.js"></script>
 	<script src="${ctx}/assets/admin/app/grid.js"></script>
+	<script src="${ctx}/assets/admin/app/dynamic-table.js"></script>
 	<script src="${ctx}/assets/w/app/form-validation.js"></script>
 	<script src="${ctx}/assets/w/app/page.js"></script>
 	<script src="${ctx}/assets/admin/app/page.js"></script>
