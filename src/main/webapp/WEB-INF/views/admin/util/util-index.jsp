@@ -87,5 +87,22 @@
 			</div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="portlet box grey">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> 负载均衡验证
+					</div>
+					<div class="tools">
+						<a class="collapse" href="javascript:;"></a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<a class="btn blue" href="${ctx}/admin/util/load-balance-test" target="_blank">点击显示负载均衡信息页面</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
