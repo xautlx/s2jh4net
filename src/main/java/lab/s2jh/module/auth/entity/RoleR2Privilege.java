@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
@@ -22,7 +23,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "auth_RoleR2Privilege")
+@Table(name = "auth_RoleR2Privilege", uniqueConstraints = @UniqueConstraint(columnNames = { "privilege_id", "role_id" }))
 @MetaData(value = "角色与权限关联")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class RoleR2Privilege extends BaseNativeEntity {

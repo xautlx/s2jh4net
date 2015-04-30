@@ -4,13 +4,18 @@ import java.io.Serializable;
 
 import lab.s2jh.core.annotation.MetaData;
 
-import org.apache.shiro.aop.MethodInvocation;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class NavMenuVO implements Serializable {
 
     private static final long serialVersionUID = 9047695739997529718L;
+
+    @MetaData(value = "编号")
+    private Long id;
+
+    @MetaData(value = "父编号")
+    private Long parentId;
+
+    @MetaData(value = "菜单名称")
+    private String name;
 
     @MetaData(value = "菜单路径")
     private String path;
@@ -23,8 +28,6 @@ public class NavMenuVO implements Serializable {
 
     @MetaData(value = "展开标识", tooltips = "是否默认展开菜单组")
     private Boolean initOpen = Boolean.FALSE;
-
-    private MethodInvocation methodInvocation;
 
     public String getPath() {
         return path;
@@ -50,15 +53,6 @@ public class NavMenuVO implements Serializable {
         this.style = style;
     }
 
-    @JsonIgnore
-    public MethodInvocation getMethodInvocation() {
-        return methodInvocation;
-    }
-
-    public void setMethodInvocation(MethodInvocation methodInvocation) {
-        this.methodInvocation = methodInvocation;
-    }
-
     public Boolean getInitOpen() {
         return initOpen;
     }
@@ -66,4 +60,29 @@ public class NavMenuVO implements Serializable {
     public void setInitOpen(Boolean initOpen) {
         this.initOpen = initOpen;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
 }

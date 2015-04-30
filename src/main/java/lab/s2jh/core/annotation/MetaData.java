@@ -39,4 +39,10 @@ public @interface MetaData {
      * 标识属性是否在代码生成项可编辑
      */
     boolean editable() default true;
+
+    /**
+     * 对于自增类型实体设置AUTO_INCREMENT初始值
+     * 一般用于业务对象如订单直接用ID作为订单号，希望编号能对齐，则直接把自增初始化值为较长位数数字，如1000000000
+     */
+    long autoIncrementInitValue() default 0;
 }

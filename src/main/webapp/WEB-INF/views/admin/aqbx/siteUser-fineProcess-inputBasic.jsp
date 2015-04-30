@@ -182,28 +182,28 @@
 					<div class="row">
 						<div class="col-md-4">
 							<c:if test="${entity.siteUser.siteUserExt.idCardAndHeadPhoto!=null}">
-								<img src="${applicationScope.cfg.image_view_url_prefix}${entity.siteUser.siteUserExt.idCardAndHeadPhoto}"></img>
+								<img src="${applicationScope.cfg.read_file_url_prefix}${entity.siteUser.siteUserExt.idCardAndHeadPhoto}"></img>
 							</c:if>
 						</div>
 						<div class="col-md-4">
 							<div class="row">
 								<div class="col-md-12">
 									<c:if test="${entity.siteUser.siteUserExt.positiveIdCardPhoto!=null}">
-										<img src="${applicationScope.cfg.image_view_url_prefix}${entity.siteUser.siteUserExt.positiveIdCardPhoto}"></img>
+										<img src="${applicationScope.cfg.read_file_url_prefix}${entity.siteUser.siteUserExt.positiveIdCardPhoto}"></img>
 									</c:if>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
 									<c:if test="${entity.siteUser.siteUserExt.negativeIdCardPhoto!=null}">
-										<img src="${applicationScope.cfg.image_view_url_prefix}${entity.siteUser.siteUserExt.negativeIdCardPhoto}"></img>
+										<img src="${applicationScope.cfg.read_file_url_prefix}${entity.siteUser.siteUserExt.negativeIdCardPhoto}"></img>
 									</c:if>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<c:if test="${entity.siteUser.siteUserExt.xueXinPhoto!=null}">
-								<img src="${applicationScope.cfg.image_view_url_prefix}${entity.siteUser.siteUserExt.xueXinPhoto}"></img>
+								<img src="${applicationScope.cfg.read_file_url_prefix}${entity.siteUser.siteUserExt.xueXinPhoto}"></img>
 							</c:if>
 						</div>
 					</div>

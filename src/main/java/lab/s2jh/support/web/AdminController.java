@@ -150,10 +150,11 @@ public class AdminController {
                 .getAdvice();
         Collection<AuthorizingAnnotationMethodInterceptor> aamis = shiroMethodInterceptor.getMethodInterceptors();
         for (NavMenuVO navMenuVO : navMenuVOs) {
-            if (navMenuVO.getMethodInvocation() != null) {
+            MethodInvocation mi = menuService.getMappedMethodInvocation(navMenuVO);
+            if (mi != null) {
                 try {
                     //每个菜单项对应一个Controller方法调用，直接调用shiro的拦截器校验逻辑判断登录用户是否有方法访问权限，从而确定菜单是否显示
-                    assertAuthorized(aamis, navMenuVO.getMethodInvocation());
+                    assertAuthorized(aamis, mi);
                 } catch (AuthorizationException e) {
                     //没有菜单对应方法访问权限，则跳过此菜单项
                     continue;
@@ -265,7 +266,7 @@ public class AdminController {
         if (!ImageCaptchaServlet.validateResponse(request, captcha)) {
             return OperationResult.buildFailureResult("验证码不正确，请重新输入");
         }
-        if (dynamicConfigService.getBoolean("cfg.signup.disabled", false)) {
+        if (dynamicConfigService.getBoolean("cfg_signup_disabled", false)) {
             return OperationResult.buildFailureResult("系统暂未开发账号注册功能，如有疑问请联系管理员");
         }
         //TODO 
@@ -284,17 +285,13 @@ public class AdminController {
     @RequestMapping(value = "/admin/profile/notify-message-list", method = RequestMethod.GET)
     public String notifyMessageList(HttpServletRequest request, Model model) {
         User user = AuthContextHolder.findAuthUser();
-        Integer showScopeCode = null;
-        String scope = request.getParameter("scope");
-        if (StringUtils.isNotBlank(scope)) {
-            showScopeCode = Integer.valueOf(scope);
-        }
         List<NotifyMessage> notifyMessages = null;
         String readed = request.getParameter("readed");
         if (StringUtils.isBlank(readed)) {
-            notifyMessages = notifyMessageService.findEffectiveMessages(user, showScopeCode, null);
+            notifyMessages = notifyMessageService.findStatedEffectiveMessages(user, "web-admin", null);
         } else {
-            notifyMessages = notifyMessageService.findEffectiveMessages(user, showScopeCode, BooleanUtils.toBoolean(request.getParameter("readed")));
+            notifyMessages = notifyMessageService.findStatedEffectiveMessages(user, "web-admin",
+                    BooleanUtils.toBoolean(request.getParameter("readed")));
         }
         model.addAttribute("notifyMessages", notifyMessages);
         return "admin/profile/notifyMessage-list";

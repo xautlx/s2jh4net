@@ -1,6 +1,7 @@
 package lab.s2jh.module.sys.service;
 
 import java.util.Date;
+import java.util.List;
 
 import lab.s2jh.core.dao.jpa.BaseDao;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
@@ -10,9 +11,13 @@ import lab.s2jh.core.service.BaseService;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.sys.dao.UserMessageDao;
 import lab.s2jh.module.sys.entity.UserMessage;
+import lab.s2jh.support.service.MailService;
+import lab.s2jh.support.service.MessagePushService;
 import lab.s2jh.support.service.SmsService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +26,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserMessageService extends BaseService<UserMessage, Long> {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserMessageService.class);
+
     @Autowired
     private UserMessageDao userMessageDao;
 
-    @Autowired
+    @Autowired(required = false)
+    private MailService mailService;
+
+    @Autowired(required = false)
     private SmsService smsService;
+
+    @Autowired(required = false)
+    private MessagePushService messagePushService;
 
     @Override
     protected BaseDao<UserMessage, Long> getEntityDao() {
@@ -57,27 +70,57 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
         userMessageDao.save(entity);
     }
 
-    @Override
-    public UserMessage save(UserMessage entity) {
-        boolean newEntity = entity.isNew();
-        super.save(entity);
-        if (newEntity) {
-            //定向用户消息处理
-            User targetUser = entity.getTargetUser();
-            if (targetUser != null) {
-                //邮件推送处理
-                if (entity.getEmailPush()) {
-                    //TODO Email send
-                }
-                //短信推送处理
-                if (entity.getSmsPush()) {
-                    String mobileNum = targetUser.getMobile();
-                    if (StringUtils.isNotBlank(mobileNum)) {
-                        smsService.sendSMS(entity.getHtmlContent(), mobileNum);
-                    }
-                }
+    public Integer updateUserMessageEffective(Date now) {
+        return userMessageDao.updateUserMessageEffective(now);
+    }
+
+    public Integer updateUserMessageNoneffective(Date now) {
+        return userMessageDao.updateUserMessageNoneffective(now);
+    }
+
+    /**
+     * 消息推送处理
+     * @param entity
+     */
+    public void pushMessage(UserMessage entity) {
+        //定向用户消息处理
+        User targetUser = entity.getTargetUser();
+
+        //邮件推送处理
+        if (entity.getEmailPush()) {
+            String email = targetUser.getEmail();
+            if (StringUtils.isNotBlank(email)) {
+                mailService.sendHtmlMail(entity.getTitle(), entity.getMessage(), true, email);
             }
         }
-        return entity;
+
+        //短信推送处理
+        if (entity.getSmsPush()) {
+            if (smsService != null) {
+                String mobileNum = targetUser.getMobile();
+                if (StringUtils.isNotBlank(mobileNum)) {
+                    smsService.sendSMS(entity.getNotification(), mobileNum);
+                }
+            } else {
+                logger.warn("SmsService implement NOT found.");
+            }
+
+        }
+
+        //APP推送
+        if (entity.getAppPush()) {
+            if (messagePushService != null) {
+                messagePushService.sendPush(entity);
+            } else {
+                logger.warn("MessagePushService implement NOT found.");
+            }
+        }
+
+        entity.setLastPushTime(new Date());
+        userMessageDao.save(entity);
+    }
+
+    public List<UserMessage> findEffectiveMessages() {
+        return userMessageDao.findEffectiveMessages();
     }
 }

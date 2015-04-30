@@ -31,20 +31,45 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
-						<label class="control-label">外部链接</label>
+						<label class="control-label">消息内容</label>
 						<div class="controls">
-							<form:input path="externalLink" class="form-control" />
-							<div class="help-block">如果定义了外部链接，显示公告时忽略公告内容直接新开转向链接定义的页面</div>
+							<form:textarea path="message" class="form-control" data-htmleditor="kindeditor" data-height="400px" />
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
-						<label class="control-label">消息内容</label>
+						<label class="control-label">平台设置</label>
 						<div class="controls">
-							<form:textarea path="htmlContent" class="form-control" data-htmleditor="kindeditor" data-height="400px" />
+							<form:input path="platform" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">消息目标列表</label>
+						<div class="controls">
+							<form:input path="audienceTags" class="form-control" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">消息目标组合</label>
+						<div class="controls">
+							<form:input path="audienceAndTags" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">用户标识列表</label>
+						<div class="controls">
+							<form:input path="audienceAlias" class="form-control" />
 						</div>
 					</div>
 				</div>
@@ -54,7 +79,7 @@
 					<div class="form-group">
 						<label class="control-label">生效时间</label>
 						<div class="controls">
-							<form:input path="publishTime" class="form-control" data-toggle="datetimepicker"/>
+							<form:input path="publishTime" class="form-control" data-picker="date-time" />
 						</div>
 					</div>
 				</div>
@@ -62,7 +87,7 @@
 					<div class="form-group">
 						<label class="control-label">过期时间</label>
 						<div class="controls">
-							<form:input path="expireTime" class="form-control" data-toggle="datetimepicker"/>
+							<form:input path="expireTime" class="form-control" data-picker="date-time" />
 						</div>
 					</div>
 				</div>
@@ -78,10 +103,9 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label class="control-label">显示范围</label>
-						<div class="controls  controls-checkboxes">
-							<label><form:checkbox path="mgmtShow" class="form-control" />管理后台</label><label><form:checkbox
-									path="siteShow" class="form-control" />前端站点</label>
+						<label class="control-label">APP弹出提示内容</label>
+						<div class="controls">
+							<form:input path="notification" class="form-control" />
 						</div>
 					</div>
 				</div>

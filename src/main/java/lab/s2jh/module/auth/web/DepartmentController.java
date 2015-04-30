@@ -111,7 +111,7 @@ public class DepartmentController extends BaseController<Department, Long> {
 
     @RequiresUser
     @ModelAttribute
-    public void prepareModel(Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(model, id);
+    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        super.initPrepareModel(request, model, id);
     }
 }

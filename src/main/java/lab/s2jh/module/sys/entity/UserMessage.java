@@ -63,9 +63,9 @@ public class UserMessage extends BaseNativeEntity implements AttachmentableEntit
     @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
     private Date expireTime;
 
-    @MetaData(value = "目标用户", comments = "此值为空则为公告消息")
+    @MetaData(value = "目标用户")
     @ManyToOne
-    @JoinColumn(name = "targetUser_id", nullable = true)
+    @JoinColumn(name = "targetUser_id", nullable = false)
     @JsonSerialize(using = EntityIdDisplaySerializer.class)
     private User targetUser;
 
@@ -75,13 +75,21 @@ public class UserMessage extends BaseNativeEntity implements AttachmentableEntit
     @MetaData(value = "短信推送消息")
     private Boolean smsPush = Boolean.FALSE;
 
-    @MetaData(value = "外部链接")
-    private String externalLink;
+    @MetaData(value = "APP推送消息")
+    private Boolean appPush = Boolean.FALSE;
 
-    @MetaData(value = "公告内容")
+    @MetaData(value = "最近推送时间", comments = "为空表示尚未推送过")
+    private Date lastPushTime;
+
+    @MetaData(value = "APP弹出提示内容", comments = "如果不为空则触发APP弹出通知，为空则不会弹出而只会推送应用消息")
+    @Column(length = 200)
+    private String notification;
+
+    @MetaData(value = "消息内容", comments = "可以是无格式的TEXT或格式化的HTMl，一般是在邮件或WEB页面查看的HTML格式详细内容")
     @Lob
+    @Column(nullable = false)
     @JsonIgnore
-    private String htmlContent;
+    private String message;
 
     @MetaData(value = "关联附件个数", comments = "用于列表显示和关联处理附件清理判断")
     private Integer attachmentSize;
@@ -106,11 +114,16 @@ public class UserMessage extends BaseNativeEntity implements AttachmentableEntit
 
     @Transient
     public String getMessageAbstract() {
-        if (StringUtils.isNotBlank(externalLink)) {
-            return "外部链接：<a href='" + externalLink + "' target='_blank'>" + externalLink + "</a>";
+        if (StringUtils.isNotBlank(notification)) {
+            return notification;
         } else {
             //TODO 优化为提取HTML内容text摘要
-            return StringUtils.substring(WebFormatter.html2text(htmlContent), 0, 50).trim() + "...";
+            if (!StringUtils.isEmpty(message)) {
+                return StringUtils.substring(WebFormatter.html2text(message), 0, 50).trim() + "...";
+            } else {
+                return "";
+            }
+
         }
     }
 }

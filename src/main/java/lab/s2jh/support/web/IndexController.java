@@ -7,10 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.security.AuthUserDetails;
+import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.service.UserService;
-import lab.s2jh.module.sys.entity.NotifyMessage;
+import lab.s2jh.module.sys.entity.NotifyMessage.NotifyMessagePlatformEnum;
 import lab.s2jh.module.sys.service.NotifyMessageService;
 import lab.s2jh.module.sys.service.UserMessageService;
 import lab.s2jh.support.service.DynamicConfigService;
@@ -64,13 +65,15 @@ public class IndexController {
 
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
-    public String adminIndex() {
+    public String adminIndex(HttpServletRequest request, Model model) {
+        model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
         return "admin/index";
     }
 
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/admin/", method = RequestMethod.GET)
-    public String adminIndexRoot() {
+    public String adminIndexRoot(HttpServletRequest request, Model model) {
+        model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
         return "admin/index";
     }
 
@@ -147,7 +150,7 @@ public class IndexController {
 
     /**
      * 
-     * @param scope 显示范围代码  @see {@link NotifyMessage#showScopeMap}
+     * @param platform 平台
      * @return
      */
     @MetaData("用户未读公告数目")
@@ -155,12 +158,12 @@ public class IndexController {
     @ResponseBody
     public OperationResult notifyMessageCount(HttpServletRequest request) {
         User user = AuthContextHolder.findAuthUser();
-        Integer showScopeCode = null;
-        String scope = request.getParameter("scope");
-        if (StringUtils.isNotBlank(scope)) {
-            showScopeCode = Integer.valueOf(scope);
+        String platform = request.getParameter("platform");
+        if (StringUtils.isBlank(platform)) {
+            platform = NotifyMessagePlatformEnum.web_admin.name();
         }
-        return OperationResult.buildSuccessResult(notifyMessageService.findCountToRead(user, showScopeCode));
+
+        return OperationResult.buildSuccessResult(notifyMessageService.findCountToRead(user, platform));
     }
 
     @MetaData("用户未读消息数目")

@@ -14,5 +14,5 @@
 	
 	
 	<mapping path="*" exclue="true" />
-	<mapping path="/w/mock/*" exclue="true" />
+	<mapping path="/admin/util/load-balance-test" exclue="true" />
 </sitemesh>

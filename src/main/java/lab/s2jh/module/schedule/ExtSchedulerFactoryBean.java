@@ -1,6 +1,7 @@
 package lab.s2jh.module.schedule;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -23,6 +24,7 @@ import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * 扩展标准的SchedulerFactoryBean，实现基于数据库配置的任务管理器初始化
@@ -36,6 +38,8 @@ public class ExtSchedulerFactoryBean extends SchedulerFactoryBean {
     private JobBeanCfgService jobBeanCfgService;
 
     private boolean runWithinCluster = false;
+
+    public static Map<String, Boolean> TRIGGER_HIST_MAPPING = Maps.newHashMap();
 
     public void setDataSource(DataSource dataSource) {
         super.setDataSource(dataSource);
@@ -128,18 +132,25 @@ public class ExtSchedulerFactoryBean extends SchedulerFactoryBean {
         this.setTriggers(allTriggers.toArray(new Trigger[] {}));
         super.registerJobsAndTriggers();
 
-        // 把AutoStartup设定的计划任务初始设置为暂停状态
-        for (JobBeanCfg jobBeanCfg : jobBeanCfgs) {
-            if (!jobBeanCfg.getAutoStartup()) {
-                for (Trigger trigger : allTriggers) {
-                    if (jobBeanCfg.getJobClass().equals(trigger.getJobKey().getName())) {
+        for (Trigger trigger : allTriggers) {
+            TRIGGER_HIST_MAPPING.put(trigger.getJobKey().getName(), true);
+            for (JobBeanCfg jobBeanCfg : jobBeanCfgs) {
+                if (jobBeanCfg.getJobClass().equals(trigger.getJobKey().getName())) {
+                    // 把AutoStartup设定的计划任务初始设置为暂停状态
+                    if (!jobBeanCfg.getAutoStartup()) {
                         logger.debug("Setup trigger {} state to PAUSE", trigger.getKey().getName());
                         this.getScheduler().pauseTrigger(trigger.getKey());
-                        break;
                     }
+                    //设定是否开启日志记录
+                    TRIGGER_HIST_MAPPING.put(trigger.getJobKey().getName(), jobBeanCfg.getLogRunHist());
+                    break;
                 }
             }
         }
     }
 
+    public static boolean isTriggerLogRunHist(Trigger trigger) {
+        Boolean hist = TRIGGER_HIST_MAPPING.get(trigger.getJobKey().getName());
+        return hist == null ? true : hist;
+    }
 }

@@ -39,7 +39,7 @@ public class DateUtils {
 
     public static String formatDate(Date date) {
         if (date == null) {
-            return null;
+            return "";
         }
         return DEFAULT_DATE_FORMATER.format(date);
     }

@@ -6,31 +6,34 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>角色权限配置</title>
 </head>
 <body>
 	<form:form class="form-horizontal form-bordered form-label-stripped form-validation"
 		action="${ctx}/admin/auth/role/privileges" method="post" data-editrulesurl="false">
 		<input type="hidden" name="id" value="${param.id}" />
-		<div class="form-actions">
-			<button class="btn blue" type="submit">
-				<i class="fa fa-check"></i> 保存
-			</button>
-			<button class="btn green" type="submit" data-post-dismiss="modal">保存并关闭</button>
-			<button class="btn default" type="button" data-dismiss="modal">取消</button>
-		</div>
+		<c:if test="${true!=readonly}">
+			<div class="form-actions">
+				<button class="btn blue" type="submit">
+					<i class="fa fa-check"></i> 保存
+				</button>
+				<button class="btn green" type="submit" data-post-dismiss="modal">保存并关闭</button>
+				<button class="btn default" type="button" data-dismiss="modal">取消</button>
+			</div>
+		</c:if>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="portlet-body" id="admin-auth-role-privilege-list"></div>
 			</div>
 		</div>
-		<div class="form-actions right">
-			<button class="btn blue" type="submit">
-				<i class="fa fa-check"></i> 保存
-			</button>
-			<button class="btn green" type="submit" data-post-dismiss="modal">保存并关闭</button>
-			<button class="btn default" type="button" data-dismiss="modal">取消</button>
-		</div>
+		<c:if test="${true!=readonly}">
+			<div class="form-actions right">
+				<button class="btn blue" type="submit">
+					<i class="fa fa-check"></i> 保存
+				</button>
+				<button class="btn green" type="submit" data-post-dismiss="modal">保存并关闭</button>
+				<button class="btn default" type="button" data-dismiss="modal">取消</button>
+			</div>
+		</c:if>
 		<script type="text/javascript">
             jQuery(document).ready(function() {
                 var r2s = "${r2PrivilegeIds}".split(",");

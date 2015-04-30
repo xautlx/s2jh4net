@@ -73,6 +73,7 @@
 <link rel="shortcut icon" href="${ctx}/assets/img/favicon.ico" />
 <script type="text/javascript">
     var WEB_ROOT = "${ctx}";
+    var READ_FILE_URL_PREFIX = "${readFileUrlPrefix}";
 </script>
 <sitemesh:write property='head' />
 </head>
@@ -97,13 +98,25 @@
 				<!-- BEGIN NOTIFICATION DROPDOWN -->
 				<li class="dropdown" id="header_notification_bar"><a href="javascript:;" class="dropdown-toggle"
 					data-toggle="dropdown" data-hover="dropdown" data-close-others="true"
-					rel='address:/admin/profile/notify-message|消息列表'"> <i class="fa fa-warning"></i> <span class="badge"
+					rel="address:/admin/profile/notify-message|公告信息列表"> <i class="fa fa-warning"></i> <span class="badge"
 						style="display: none"></span>
 				</a>
 					<ul class="dropdown-menu extended notification">
-						<li id="messageInfo"></li>
+						<li class="message-info"></li>
 					</ul></li>
 				<!-- END NOTIFICATION DROPDOWN -->
+
+				<!-- BEGIN INBOX DROPDOWN -->
+				<li class="dropdown" id="header_inbox_bar"><a href="javascript:;" class="dropdown-toggle"
+					data-toggle="dropdown" data-hover="dropdown" data-close-others="true"
+					rel="address:/admin/profile/user-message|个人消息列表"> <i class="fa fa-envelope"></i> <span class="badge"
+						style="display: none"></span>
+				</a>
+					<ul class="dropdown-menu extended inbox">
+						<li class="message-info"></li>
+					</ul></li>
+				<!-- END INBOX DROPDOWN -->
+
 				<!-- BEGIN USER LOGIN DROPDOWN -->
 				<li class="dropdown user" style="padding-top: 5px; margin-right: 25px"><a href="javascripts:;"
 					rel="address:/admin/profile/edit|个人配置" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
@@ -257,6 +270,72 @@
 		</div>
 	</c:if>
 	<!-- END FOOTER -->
+
+
+	<div class="hide">
+		<form class="form-horizontal" action="${ctx}/w/file/upload/single" id="singleFileUploadForm"
+			enctype="multipart/form-data" method="post">
+			<input type="file" name="fileUpload" />
+			<button type="submit" class="btn">提交</button>
+		</form>
+	</div>
+
+	<!-- BEGIN FileUpload FORM -->
+	<div class="modal fade" id="fileupload-dialog" tabindex="-1" role="basic" aria-hidden="true">
+		<div class="modal-dialog modal-wide">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					<h4 class="modal-title">文件上传</h4>
+				</div>
+				<div class="modal-body">
+					<form id="fileupload" enctype="multipart/form-data" method="POST">
+						<input type="hidden" name="attachmentName" value="attachments" />
+						<div class="row fileupload-buttonbar">
+							<div class="col-lg-7">
+								<!-- The fileinput-button span is used to style the file input field as button -->
+								<span class="btn green fileinput-button"> <i class="fa fa-plus"></i> <span>添加文件...</span> <input
+									type="file" multiple="" name="files">
+								</span>
+								<button class="btn blue start" type="submit">
+									<i class="fa fa-upload"></i> <span>开始上传</span>
+								</button>
+								<button class="btn yellow cancel" type="reset">
+									<i class="fa fa-ban"></i> <span>取消上传</span>
+								</button>
+								<!-- The loading indicator is shown during file processing -->
+								<span class="fileupload-loading"></span>
+							</div>
+							<!-- The global progress information -->
+							<div class="col-lg-5 fileupload-progress fade">
+								<!-- The global progress bar -->
+								<div aria-valuemax="100" aria-valuemin="0" role="progressbar" class="progress progress-striped active">
+									<div style="width: 0%;" class="progress-bar progress-bar-success"></div>
+								</div>
+								<!-- The extended global progress information -->
+								<div class="progress-extended">&nbsp;</div>
+							</div>
+						</div>
+						<table class="table table-striped clearfix" role="presentation">
+							<tbody class="files"></tbody>
+						</table>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn default" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn blue btn-add">添加</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- END FileUpload FORM -->
+
+	<button type="button" class="btn " id="btn-profile-param" title="点击收藏记忆当前表单元素数据" style="display: none">
+		<i class="fa fa-heart-o"></i>
+	</button>
+
 	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 	<!-- BEGIN CORE PLUGINS -->
 	<!--[if lt IE 9]>
@@ -370,6 +449,8 @@
             Global.init();
             AdminGlobal.init();
             FormValidation.init();
+
+            KindEditor.options.uploadJson = '${ctx}/w/image/upload/kind-editor.json;JSESSIONID=${pageContext.session.id}'
 
             App.unblockUI($("body"));
 

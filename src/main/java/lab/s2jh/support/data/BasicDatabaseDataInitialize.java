@@ -11,17 +11,21 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
 import lab.s2jh.core.annotation.MenuData;
+import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.PasswordService;
 import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.Exceptions;
+import lab.s2jh.core.util.MockEntityUtils;
+import lab.s2jh.module.auth.entity.Department;
 import lab.s2jh.module.auth.entity.Privilege;
 import lab.s2jh.module.auth.entity.Role;
 import lab.s2jh.module.auth.entity.User;
@@ -33,6 +37,7 @@ import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.UserMessage;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -55,7 +60,7 @@ import com.google.common.collect.Sets;
 @Component
 public class BasicDatabaseDataInitialize {
 
-    private final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitialize.class);
+    private static final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitialize.class);
 
     @Autowired
     @Qualifier("entityManagerFactoryApp")
@@ -76,8 +81,20 @@ public class BasicDatabaseDataInitialize {
 
         entityManager.getTransaction().begin();
 
+        //搜索所有entity对象，并自动进行自增初始化值设置
+        ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
+        scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
+        Set<BeanDefinition> beanDefinitions = scan.findCandidateComponents("**.entity.**");
+        for (BeanDefinition beanDefinition : beanDefinitions) {
+            Class<?> entityClass = ClassUtils.getClass(beanDefinition.getBeanClassName());
+            MetaData metaData = entityClass.getAnnotation(MetaData.class);
+            if (metaData != null && metaData.autoIncrementInitValue() > 0) {
+                MockEntityUtils.autoIncrementInitValue(entityClass, entityManager);
+            }
+        }
+
         //角色、用户等数据初始化,默认密码为:账号+123
-        if (isEmptyTable(User.class, entityManager)) {
+        if (MockEntityUtils.isEmptyTable(User.class, entityManager)) {
             //后端预置超级管理员，无需配置相关权限，默认自动赋予所有权限
             Role superRole = new Role();
             superRole.setCode(AuthUserDetails.ROLE_SUPER_USER);
@@ -126,6 +143,24 @@ public class BasicDatabaseDataInitialize {
             siteUserRole.setDescription("系统预置，请勿随意修改");
             entityManager.persist(siteUserRole);
 
+            if (GlobalConfigService.isDevMode()) {
+                Department department = new Department();
+                department.setCode("SC00");
+                department.setName("市场部");
+                entityManager.persist(department);
+
+                Department department1 = new Department();
+                department1.setCode("SC01");
+                department1.setName("市场一部");
+                department1.setParent(department);
+                entityManager.persist(department1);
+
+                Department department2 = new Department();
+                department2.setCode("SC02");
+                department2.setName("市场二部");
+                department2.setParent(department);
+                entityManager.persist(department2);
+            }
         } else {
             //如果不是开发模式，则直接退出防止意外更新已有数据
             //为了稳妥，生产环境数据采用手工更新方式
@@ -147,7 +182,7 @@ public class BasicDatabaseDataInitialize {
         }
 
         //系统配置参数初始化
-        if (isEmptyTable(ConfigProperty.class, entityManager)) {
+        if (MockEntityUtils.isEmptyTable(ConfigProperty.class, entityManager)) {
             ConfigProperty entity = new ConfigProperty();
             entity.setPropKey("cfg_system_title");
             entity.setPropName("系统名称");
@@ -155,7 +190,7 @@ public class BasicDatabaseDataInitialize {
             entityManager.persist(entity);
 
             entity = new ConfigProperty();
-            entity.setPropKey("cfg.signup.disabled");
+            entity.setPropKey("cfg_signup_disabled");
             entity.setPropName("禁用自助注册功能");
             entity.setSimpleValue("false");
             entity.setPropDescn("设置为true禁用则登录界面屏蔽自助注册功能");
@@ -163,18 +198,17 @@ public class BasicDatabaseDataInitialize {
         }
 
         //初始化演示通知消息
-        if (isEmptyTable(NotifyMessage.class, entityManager)) {
+        if (MockEntityUtils.isEmptyTable(NotifyMessage.class, entityManager)) {
             NotifyMessage entity = new NotifyMessage();
             entity.setTitle("欢迎访问" + systemTitle);
-            entity.setShowScopeAll();
             entity.setPublishTime(now);
             entity.setEffective(true);
-            entity.setHtmlContent("<p>系统初始化时间：" + DateUtils.formatTime(now) + "</p>");
+            entity.setMessage("<p>系统初始化时间：" + DateUtils.formatTime(now) + "</p>");
             entityManager.persist(entity);
         }
 
         //初始化演示通知消息
-        if (isEmptyTable(UserMessage.class, entityManager)) {
+        if (MockEntityUtils.isEmptyTable(UserMessage.class, entityManager)) {
             User admin = (User) entityManager.createQuery("from User where authUid='admin'").getSingleResult();
 
             UserMessage entity = new UserMessage();
@@ -182,7 +216,7 @@ public class BasicDatabaseDataInitialize {
             entity.setPublishTime(now);
             entity.setEffective(true);
             entity.setTargetUser(admin);
-            entity.setHtmlContent("<p>演示定向发送个人消息1内容</p>");
+            entity.setMessage("<p>演示定向发送个人消息1内容</p>");
             entityManager.persist(entity);
 
             entity = new UserMessage();
@@ -190,7 +224,7 @@ public class BasicDatabaseDataInitialize {
             entity.setPublishTime(now);
             entity.setEffective(true);
             entity.setTargetUser(admin);
-            entity.setHtmlContent("<p>演示定向发送个人消息2内容</p>");
+            entity.setMessage("<p>演示定向发送个人消息2内容</p>");
             entityManager.persist(entity);
         }
 
@@ -198,18 +232,6 @@ public class BasicDatabaseDataInitialize {
         entityManager.close();
 
         entityManager.getTransaction().commit();
-    }
-
-    /**
-     * 判定实体对象对应表是否为空
-     */
-    private boolean isEmptyTable(Class<?> entity, EntityManager entityManager) {
-        Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
-        if (count == null || String.valueOf(count).equals("0")) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**

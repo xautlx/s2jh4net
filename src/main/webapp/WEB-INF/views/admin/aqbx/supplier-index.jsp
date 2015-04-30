@@ -5,16 +5,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>借款列表</title>
 </head>
 <body>
 	<div class="row search-form-default">
 		<div class="col-md-12">
 			<form method="get" class="form-inline form-validation form-search form-search-init control-label-sm"
-				data-grid-search="#grid-supplier-index">
+				data-grid-search="#grid-aqbx-supplier-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_name']" class="form-control input-large" placeholder="名称">
+						<input type="text" name="search['CN_name']" class="form-control input-large" placeholder="代码，名称...">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">
@@ -30,43 +29,85 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<table id="grid-supplier-index"></table>
+			<table id="grid-aqbx-supplier-index"></table>
 		</div>
 	</div>
-
+	
 	<script type="text/javascript">
-        $(function() {
-            $("#grid-supplier-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/aqbx/supplier/list',
-                colModel : [ {
-                    label : '供货商编号',
-                    name : 'id',
-                    align : 'center',
-                    width : 100
-                }, {
-                    label : '供货商名称',
-                    name : 'name',
-                    align : 'center',
-                    width : 200
-                }, {
-                    label : '供货商联系人',
-                    name : 'null',
-                    align : 'center',
-                    width : 200
-                }, {
-                    label : '联系人电话',
-                    name : 'null',
-                    align : 'center',
-                    width : 100
-                }, {
-                    label : '客服QQ',
-                    name : 'null',
-                    align : 'center',
-                    width : 200
-                } ],
-                multiselect : false
-            });
-        });
+		$(function() {
+		    $("#grid-aqbx-supplier-index").data("gridOptions", {
+		        url : WEB_ROOT + '/admin/aqbx/supplier/list',
+		        colModel : [ {
+		            label : '工商编号',
+		            name : 'id',
+		            hidden : true                          
+		        }, {
+		            label : '供商名称',
+		            name : 'name',
+		            width : 255,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '供商Logo',
+		            name : 'logo',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '供商官网',
+		            name : 'webSite',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '供商联系人',
+		            name : 'contacter',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '供商联系人电话',
+		            name : 'contacterTel',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '客服QQ',
+		            name : 'ustomerServiceQQ',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '客服电话',
+		            name : 'customerServiceTel',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '客服邮箱',
+		            name : 'email',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '备注',
+		            name : 'note',
+		            width : 200,
+		            editable: true,
+		            align : 'left'
+		        }, {
+		            label : '操作员',
+		            name : 'createUser.nickName',
+		            width : 60,
+		            editable: true,
+		            align : 'right'
+		        } ],
+		        editurl : WEB_ROOT + '/admin/aqbx/supplier/edit',
+		        editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
+		        delurl : WEB_ROOT + '/admin/aqbx/supplier/delete',
+		        fullediturl : WEB_ROOT + '/admin/aqbx/supplier/edit-tabs'
+		    });
+		});
     </script>
 </body>
 </html>

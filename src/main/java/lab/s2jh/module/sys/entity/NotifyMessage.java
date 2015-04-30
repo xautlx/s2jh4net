@@ -1,8 +1,6 @@
 package lab.s2jh.module.sys.entity;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -28,8 +26,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 @Getter
 @Setter
@@ -60,39 +56,39 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
     @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
     private Date publishTime;
 
-    @MetaData(value = "到期时间")
+    @MetaData(value = "到期时间", comments = "为空表示永不过期")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
     private Date expireTime;
 
-    @MetaData(value = "前端网站显示")
-    public static final Integer SHOW_SCOPE_SITE = 1;
-    @MetaData(value = "管理系统显示")
-    public static final Integer SHOW_SCOPE_ADMIN = 2;
-    @MetaData(value = "APP客户端显示")
-    public static final Integer SHOW_SCOPE_APP = 4;
+    @MetaData(value = "平台设置", comments = "没有值=全部，其他为如下几项逗号分隔组合：web-admin,web-site,ios,android,winphone, @see NotifyMessage#NotifyMessagePlatformEnum")
+    @Column(length = 200, nullable = true)
+    private String platform;
 
-    public static final Map<Integer, String> showScopeMap = Maps.newHashMap();
-    static {
-        showScopeMap.put(SHOW_SCOPE_SITE, "前端网站显示");
-        showScopeMap.put(SHOW_SCOPE_ADMIN, "管理系统显示");
-        showScopeMap.put(SHOW_SCOPE_APP, "APP客户端显示");
-    }
+    @MetaData(value = "消息目标列表", comments = "用标签来进行大规模的设备属性、用户属性分群，各元素之间为OR取并集。没有值=全部，其他为数据字典项逗号分隔组合，如：student, teacher")
+    @Column(length = 1000, nullable = true)
+    private String audienceTags;
 
-    /**
-     * 基于二进制与非操作设定
-     * @see #showScopeMap
-     */
-    @MetaData(value = "公告显示的范围代码")
-    private Integer showScopeCode = 0;
+    @MetaData(value = "消息目标组合", comments = "用标签来进行大规模的设备属性、用户属性分群，各元素之间为AND取交集。没有值=全部，其他为数据字典项逗号分隔组合，如：student, school_01")
+    @Column(length = 1000, nullable = true)
+    private String audienceAndTags;
 
-    @MetaData(value = "外部链接")
-    private String externalLink;
+    @MetaData(value = "用户标识列表", comments = "User对象的alias列表，各元素之间为OR取并集。没有值=全部，其他为数据字典项逗号分隔组合，如：user_01,user_02")
+    @Column(length = 1000, nullable = true)
+    private String audienceAlias;
 
-    @MetaData(value = "公告内容")
+    @MetaData(value = "APP弹出提示内容", comments = "如果不为空则触发APP弹出通知，为空则不会弹出而只会推送应用消息")
+    @Column(length = 200)
+    private String notification;
+
+    @MetaData(value = "最近推送时间", comments = "为空表示尚未推送过")
+    private Date lastPushTime;
+
+    @MetaData(value = "消息内容", comments = "可以是无格式的TEXT或格式化的HTMl，一般是在邮件或WEB页面查看的HTML格式详细内容")
     @Lob
+    @Column(nullable = false)
     @JsonIgnore
-    private String htmlContent;
+    private String message;
 
     @MetaData(value = "总计查看用户数")
     private Integer readUserCount = 0;
@@ -107,6 +103,25 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
     @MetaData(value = "标识已读")
     private Boolean readed;
 
+    public static enum NotifyMessagePlatformEnum {
+
+        @MetaData(value = "后端系统")
+        web_admin,
+
+        @MetaData(value = "前端网站")
+        web_site,
+
+        @MetaData(value = "苹果iOS")
+        ios,
+
+        @MetaData(value = "安卓Android")
+        android,
+
+        @MetaData(value = "Win Phone")
+        winphone;
+
+    }
+
     @Override
     @Transient
     public String getDisplay() {
@@ -115,35 +130,25 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
 
     @Transient
     public String getMessageAbstract() {
-        if (StringUtils.isNotBlank(externalLink)) {
-            return "外部链接：<a href='" + externalLink + "' target='_blank'>" + externalLink + "</a>";
+        if (StringUtils.isNotBlank(notification)) {
+            return notification;
         } else {
             //TODO 优化为提取HTML内容text摘要
-            return StringUtils.substring(WebFormatter.html2text(htmlContent), 0, 50).trim() + "...";
-        }
-    }
-
-    @Transient
-    public String getMessageType() {
-        List<String> showScopes = Lists.newArrayList();
-        for (Map.Entry<Integer, String> me : showScopeMap.entrySet()) {
-            if ((showScopeCode & me.getKey()) == me.getKey()) {
-                showScopes.add(me.getValue());
+            if (!StringUtils.isEmpty(message)) {
+                return StringUtils.substring(WebFormatter.html2text(message), 0, 50).trim() + "...";
+            } else {
+                return "";
             }
-        }
-        if (showScopes.size() == 0) {
-            return "待定";
-        } else {
-            return StringUtils.join(showScopes, ",");
+
         }
     }
 
     @Transient
-    public void setShowScopeAll() {
-        int code = 0;
-        for (Integer key : showScopeMap.keySet()) {
-            code += key;
+    public boolean isPublic() {
+        if (StringUtils.isBlank(audienceTags) && StringUtils.isBlank(audienceAndTags) && StringUtils.isBlank(audienceAlias)) {
+            return true;
         }
-        this.showScopeCode = code;
+        return false;
     }
+
 }

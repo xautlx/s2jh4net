@@ -20,6 +20,9 @@ public class GlobalConstant {
         M,
 
         @MetaData(value = "女")
-        F;
+        F,
+
+        @MetaData(value = "保密")
+        U;
     }
 }

@@ -98,11 +98,11 @@
 					<div class="form-group">
 						<label class="control-label">关联角色</label>
 						<div class="controls">
-							<form:select id="my_multi_select3" path="selectedRoleIds" items="${roles}" itemValue="id" itemLabel="display"
-								class="form-control multi-select-double" data-height="300px" />
+							<form:select path="selectedRoleIds" items="${roles}" itemValue="id" itemLabel="name" class="form-control"
+								data-toggle="double-multi-select" data-height="300px" />
 						</div>
 					</div>
-					<c:if test="${id!=null}">
+					<c:if test="${notNew}">
 						<div class="form-group">
 							<label class="control-label">注册时间</label>
 							<div class="controls">

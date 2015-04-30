@@ -44,6 +44,10 @@ public class Digests {
         return digest(input, MD5, null, 1);
     }
 
+    public static String md5(String input) {
+        return Encodes.encodeHex(Digests.md5(input.getBytes()));
+    }
+
     /**
      * 对字符串进行散列, 支持md5与sha1算法.
      */

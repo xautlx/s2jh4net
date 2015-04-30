@@ -125,7 +125,7 @@
 									<p class="form-control-static">${entity.shareTime}</p>
 								</c:when>
 								<c:otherwise>
-									<form:input path="shareTime" class="form-control" data-toggle="datetimepicker" />
+									<form:input path="shareTime" class="form-control" data-picker="date-time" />
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -142,7 +142,7 @@
 									<p class="form-control-static">${entity.successTime}</p>
 								</c:when>
 								<c:otherwise>
-									<form:input path="successTime" class="form-control" data-toggle="datetimepicker" />
+									<form:input path="successTime" class="form-control" data-picker="date-time" />
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -159,7 +159,7 @@
 									<p class="form-control-static">${entity.firstVisitTime}</p>
 								</c:when>
 								<c:otherwise>
-									<form:input path="firstVisitTime" class="form-control" data-toggle="datetimepicker" />
+									<form:input path="firstVisitTime" class="form-control" data-picker="date-time"  />
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -176,7 +176,7 @@
 									<p class="form-control-static">${entity.lastVisitTime}</p>
 								</c:when>
 								<c:otherwise>
-									<form:input path="lastVisitTime" class="form-control" data-toggle="datetimepicker" />
+									<form:input path="lastVisitTime" class="form-control" data-picker="date-time"  />
 								</c:otherwise>
 							</c:choose>
 						</div>

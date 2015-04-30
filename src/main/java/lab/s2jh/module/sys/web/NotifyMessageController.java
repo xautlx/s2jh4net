@@ -62,7 +62,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
 
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow() {
+    public String editShow(Model model) {
         return "admin/sys/notifyMessage-inputBasic";
     }
 
@@ -84,7 +84,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
 
     @RequiresUser
     @ModelAttribute
-    public void prepareModel(Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(model, id);
+    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        super.initPrepareModel(request, model, id);
     }
 }

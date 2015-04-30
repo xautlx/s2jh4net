@@ -2,7 +2,9 @@ package lab.s2jh.core.web.util;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -27,14 +29,20 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.context.SpringContextHolder;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.Digests;
 import lab.s2jh.core.util.Encodes;
+import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.json.DateJsonSerializer;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
+import lab.s2jh.module.sys.entity.AttachmentFile;
+import lab.s2jh.module.sys.service.AttachmentFileService;
+import lab.s2jh.support.service.DynamicConfigService;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,7 +194,7 @@ public class ServletUtils {
                         }
                     }
 
-                    Class<?> retType = field.getDeclaringClass();
+                    Class<?> retType = field.getType();
                     Column column = field.getAnnotation(Column.class);
 
                     if (column != null) {
@@ -340,5 +348,58 @@ public class ServletUtils {
             }
         }
         return sb.toString();
+    }
+
+    private static String readFileUrlPrefix;
+
+    /**
+     * 文件显示URL前缀
+     * @return
+     */
+    public static String getReadFileUrlPrefix() {
+        if (readFileUrlPrefix == null) {
+            DynamicConfigService dynamicConfigService = SpringContextHolder.getBean(DynamicConfigService.class);
+            readFileUrlPrefix = dynamicConfigService.getString("read_file_url_prefix");
+            if (StringUtils.isBlank(readFileUrlPrefix)) {
+                readFileUrlPrefix = WebAppContextInitFilter.getInitedWebContextFullUrl();
+            }
+        }
+        return readFileUrlPrefix;
+    }
+
+    private static String staticFileUploadDir;
+
+    /**
+     * 获取文件上传根目录：优先取write_upload_file_dir参数值，如果没有定义则取webapp/upload
+     * @return 返回图片显示的完整URL
+     */
+    public static String writeUploadFile(InputStream fis, String name, long length) {
+        if (staticFileUploadDir == null) {
+            DynamicConfigService dynamicConfigService = SpringContextHolder.getBean(DynamicConfigService.class);
+            staticFileUploadDir = dynamicConfigService.getString("write_upload_file_dir");
+            if (StringUtils.isBlank(staticFileUploadDir)) {
+                staticFileUploadDir = WebAppContextInitFilter.getInitedWebContextRealPath();
+            }
+            if (staticFileUploadDir.endsWith(File.separator)) {
+                staticFileUploadDir = staticFileUploadDir.substring(0, staticFileUploadDir.length() - 1);
+            }
+            logger.info("Setup file upload root dir:  {}", staticFileUploadDir);
+        }
+
+        try {
+
+            AttachmentFile attachmentFile = AttachmentFile.buildInstance(name, length);
+            String path = "/upload" + attachmentFile.getFileRelativePath() + "/" + attachmentFile.getDiskFileName();
+            String fullPath = staticFileUploadDir + path;
+            logger.debug("Saving upload file: {}", fullPath);
+            FileUtils.copyInputStreamToFile(fis, new File(fullPath));
+
+            AttachmentFileService attachmentFileServiceService = SpringContextHolder.getBean(AttachmentFileService.class);
+            attachmentFileServiceService.save(attachmentFile);
+
+            return path;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

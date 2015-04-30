@@ -171,4 +171,10 @@ public class User extends BaseNativeEntity {
         return authType + "-" + authUid;
     }
 
+    @MetaData(value = "用户标识别名", comments = "用户在多个终端登录，需要一个标识同一个身份以便多终端推送消息")
+    @Transient
+    public String getAlias() {
+        return authType + "_" + authUid;
+    }
+
 }

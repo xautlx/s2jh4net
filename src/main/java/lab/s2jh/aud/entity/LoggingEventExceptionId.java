@@ -5,7 +5,7 @@ import javax.persistence.Embeddable;
 
 /** 
  * 基于logback的DBAppender表结构规范对应的实体定义
- * @see http://logback.qos.ch/manual/configuration.html #DBAppender
+ * @see http://logback.qos.ch/manual/configuration.html#DBAppender
  */
 @Embeddable
 public class LoggingEventExceptionId implements java.io.Serializable {

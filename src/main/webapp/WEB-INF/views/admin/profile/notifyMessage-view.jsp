@@ -15,14 +15,7 @@
 			<h3 class="margin-bottom-20">${notifyMessage.title}</h3>
 			<div class="row">
 				<div class="col-md-12">
-					<c:choose>
-						<c:when test="${empty notifyMessage.externalLink}">
-						${notifyMessage.htmlContent}
-						</c:when>
-						<c:otherwise>
-						点击外部链接查看：<a href="${notifyMessage.externalLink}" target="_blank">${notifyMessage.externalLink}</a>
-						</c:otherwise>
-					</c:choose>
+					${notifyMessage.message}
 				</div>
 			</div>
 		</div>

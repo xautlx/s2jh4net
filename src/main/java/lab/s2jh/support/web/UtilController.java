@@ -131,4 +131,9 @@ public class UtilController {
             Exceptions.unchecked(e);
         }
     }
+
+    @RequestMapping(value = "/load-balance-test", method = RequestMethod.GET)
+    public String loadBalanceTest() {
+        return "admin/util/load-balance-test";
+    }
 }

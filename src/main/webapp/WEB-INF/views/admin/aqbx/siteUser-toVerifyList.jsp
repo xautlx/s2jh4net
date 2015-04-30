@@ -36,28 +36,28 @@
 				<div class="row">
 					<div class="col-md-5">
 						<c:if test="${item.siteUserExt.idCardAndHeadPhoto!=null}">
-							<img src="${applicationScope.cfg.image_view_url_prefix}${item.siteUserExt.idCardAndHeadPhoto}"></img>
+							<img src="${applicationScope.cfg.read_file_url_prefix}${item.siteUserExt.idCardAndHeadPhoto}"></img>
 						</c:if>
 					</div>
 					<div class="col-md-2">
 						<div class="row">
 							<div class="col-md-12">
 								<c:if test="${item.siteUserExt.positiveIdCardPhoto!=null}">
-									<img src="${applicationScope.cfg.image_view_url_prefix}${item.siteUserExt.positiveIdCardPhoto}"></img>
+									<img src="${applicationScope.cfg.read_file_url_prefix}${item.siteUserExt.positiveIdCardPhoto}"></img>
 								</c:if>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-12">
 								<c:if test="${item.siteUserExt.negativeIdCardPhoto!=null}">
-									<img src="${applicationScope.cfg.image_view_url_prefix}${item.siteUserExt.negativeIdCardPhoto}"></img>
+									<img src="${applicationScope.cfg.read_file_url_prefix}${item.siteUserExt.negativeIdCardPhoto}"></img>
 								</c:if>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-5">
 						<c:if test="${item.siteUserExt.xueXinPhoto!=null}">
-							<img src="${applicationScope.cfg.image_view_url_prefix}${item.siteUserExt.xueXinPhoto}"></img>
+							<img src="${applicationScope.cfg.read_file_url_prefix}${item.siteUserExt.xueXinPhoto}"></img>
 						</c:if>
 					</div>
 				</div>

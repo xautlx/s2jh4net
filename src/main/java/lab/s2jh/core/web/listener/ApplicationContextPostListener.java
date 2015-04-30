@@ -45,8 +45,6 @@ public class ApplicationContextPostListener implements ServletContextListener {
             globalCfg.put("cfg_system_title", dynamicConfigService.getString("cfg_system_title"));
             //开发模式boolean参数
             globalCfg.put("dev_mode", new Boolean(dynamicConfigService.getString("dev_mode")));
-            //设置图片显示前缀，方便在页面直接EL表达式获取
-            globalCfg.put("image_view_url_prefix", dynamicConfigService.getString("img_view_url_prefix"));
 
             Map<String, Object> globalConstant = Maps.newHashMap();
             sc.setAttribute("cons", globalConstant);

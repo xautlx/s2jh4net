@@ -56,9 +56,24 @@
                     index : 'externalLink_OR_htmlContent',
                     align : 'left'
                 }, {
-                    label : '消息类型',
-                    name : 'messageType',
-                    index : 'targetUser.authUid',
+                    label : '平台设置',
+                    name : 'platform',
+                    index : 'platform',
+                    width : 60,
+                }, {
+                    label : '消息目标列表',
+                    name : 'audienceTags',
+                    index : 'audienceTags',
+                    width : 60,
+                }, {
+                    label : '消息目标组合',
+                    name : 'audienceAndTags',
+                    index : 'audienceAndTags',
+                    width : 60,
+                }, {
+                    label : '用户标识列表',
+                    name : 'audienceAlias',
+                    index : 'audienceAlias',
                     width : 60,
                 }, {
                     label : '排序号',

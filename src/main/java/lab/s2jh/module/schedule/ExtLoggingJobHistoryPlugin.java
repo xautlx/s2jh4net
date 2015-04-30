@@ -5,20 +5,15 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Set;
 
 import lab.s2jh.aud.entity.JobRunHist;
 import lab.s2jh.aud.service.JobRunHistService;
 import lab.s2jh.core.context.SpringContextHolder;
-import lab.s2jh.module.schedule.entity.JobBeanCfg;
-import lab.s2jh.module.schedule.service.JobBeanCfgService;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.Trigger;
 import org.quartz.plugins.history.LoggingJobHistoryPlugin;
-
-import com.google.common.collect.Sets;
 
 /**
  * 扩展实现LoggingJobHistoryPlugin约定接口
@@ -26,23 +21,13 @@ import com.google.common.collect.Sets;
  */
 public class ExtLoggingJobHistoryPlugin extends LoggingJobHistoryPlugin {
 
-    public static Set<Trigger> UNCONFIG_TRIGGERS = Sets.newHashSet();
-
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
         super.jobWasExecuted(context, jobException);
 
         Trigger trigger = context.getTrigger();
-        if (!UNCONFIG_TRIGGERS.contains(trigger)) {
-            JobBeanCfgService jobBeanCfgService = SpringContextHolder.getBean(JobBeanCfgService.class);
-            JobBeanCfg jobBeanCfg = jobBeanCfgService.findByJobClass(trigger.getJobKey().getName());
-            if (jobBeanCfg == null) {
-                UNCONFIG_TRIGGERS.add(trigger);
-            } else {
-                if (!jobBeanCfg.getLogRunHist()) {
-                    return;
-                }
-            }
+        if (!ExtSchedulerFactoryBean.isTriggerLogRunHist(trigger)) {
+            return;
         }
 
         JobRunHistService jobRunHistService = SpringContextHolder.getBean(JobRunHistService.class);

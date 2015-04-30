@@ -132,17 +132,32 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
         }
     }
 
-    protected T initPrepareModel(Model model, ID id) {
+    protected void initPrepareModel(HttpServletRequest request, Model model, ID id) {
         T entity = null;
         if (id == null) {
             entity = buildBindingEntity();
         } else {
-            entity = getEntityService().findOne(id);
+            //如果是以POST方式请求数据，则获取Detach状态的对象，其他则保留Session方式以便获取Lazy属性
+            if (request.getMethod().equalsIgnoreCase("POST")) {
+                entity = buildDetachedBindingEntity(id);
+            }
+            //如果子类没有给出detach的对象，则依然采用非detach模式查询返回对象
+            if (entity == null) {
+                entity = getEntityService().findOne(id);
+            }
             model.addAttribute("id", id);
         }
         model.addAttribute("clazz", ServletUtils.buildValidateId(entity.getClass()));
         model.addAttribute("entity", entity);
-        return entity;
+    }
+
+    /**
+     * 如果子类需要一对多关联对象批量处理，则在子类返回定制的detach对象
+     * @param id
+     * @return
+     */
+    protected T buildDetachedBindingEntity(ID id) {
+        return null;
     }
 
     /**

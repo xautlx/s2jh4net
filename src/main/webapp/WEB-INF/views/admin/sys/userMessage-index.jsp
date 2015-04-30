@@ -14,7 +14,7 @@
 				data-grid-search="#grid-sys-user-message-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_title_OR_htmlContent']" class="form-control input-large"
+						<input type="text" name="search['CN_titl']" class="form-control input-large"
 							placeholder="标题，内容...">
 					</div>
 				</div>
@@ -43,6 +43,7 @@
                     label : '目标用户',
                     name : 'targetUser.display',
                     editable : true,
+                    width : 100,
                     align : 'left'
                 }, {
                     label : '标题',

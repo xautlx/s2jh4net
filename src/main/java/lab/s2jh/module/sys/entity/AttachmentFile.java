@@ -1,7 +1,5 @@
 package lab.s2jh.module.sys.entity;
 
-import java.io.File;
-import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -31,6 +29,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE)
 public class AttachmentFile extends BaseEntity<String> {
 
+    private static final long serialVersionUID = -6042357698510260065L;
+
     /** 附件上传文件名称 */
     private String fileRealName;
 
@@ -41,24 +41,9 @@ public class AttachmentFile extends BaseEntity<String> {
     private String fileExtension;
 
     /** 附件大小 */
-    private int fileLength;
-
-    /** 附件MIME类型 */
-    private String fileType;
+    private Long fileLength;
 
     private String fileRelativePath;
-
-    private String entityClassName;
-
-    @MetaData(value = "关联实体主键")
-    private String entityId;
-
-    @MetaData(value = "分类", comments = "如果一个对象有多个类型关联附件，可通过此属性进行分类")
-    private String entityFileCategory;
-
-    private Date lastTouchTime;
-
-    private String lastTouchBy;
 
     private String id;
 
@@ -86,21 +71,12 @@ public class AttachmentFile extends BaseEntity<String> {
 
     @Column(nullable = false)
     @JsonProperty
-    public int getFileLength() {
+    public Long getFileLength() {
         return fileLength;
     }
 
-    public void setFileLength(int fileLength) {
+    public void setFileLength(Long fileLength) {
         this.fileLength = fileLength;
-    }
-
-    @Column(length = 32, nullable = false)
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
     }
 
     @Column(length = 8)
@@ -128,43 +104,9 @@ public class AttachmentFile extends BaseEntity<String> {
         return fileRealName;
     }
 
-    @Column(length = 512, nullable = true)
-    public String getEntityClassName() {
-        return entityClassName;
-    }
-
-    public void setEntityClassName(String entityClassName) {
-        this.entityClassName = entityClassName;
-    }
-
-    @Column(length = 200, nullable = true)
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(String entityId) {
-        this.entityId = entityId;
-    }
-
-    public Date getLastTouchTime() {
-        return lastTouchTime;
-    }
-
-    public void setLastTouchTime(Date lastTouchTime) {
-        this.lastTouchTime = lastTouchTime;
-    }
-
-    public String getLastTouchBy() {
-        return lastTouchBy;
-    }
-
-    public void setLastTouchBy(String lastTouchBy) {
-        this.lastTouchBy = lastTouchBy;
-    }
-
     @Transient
     @JsonIgnore
-    public static AttachmentFile buildInstance(File file) {
+    public static AttachmentFile buildInstance(String fileName, Long fileLength) {
         //简便的做法用UUID作为主键，每次上传都会创建文件对象和数据记录，便于管理，但是存在相同文件重复保存情况
         String id = UUID.randomUUID().toString();
 
@@ -195,7 +137,9 @@ public class AttachmentFile extends BaseEntity<String> {
         AttachmentFile af = new AttachmentFile();
         af.setId(path.replaceAll("/", "") + id);
         af.setFileRelativePath(path);
-        af.setFileLength((int) file.length());
+        af.setFileLength(fileLength);
+        af.setFileRealName(fileName);
+        af.setFileExtension(StringUtils.substringAfterLast(fileName, "."));
         return af;
     }
 
@@ -211,13 +155,5 @@ public class AttachmentFile extends BaseEntity<String> {
     @JsonIgnore
     public String getDiskFileName() {
         return getId() + "." + getFileExtension();
-    }
-
-    public String getEntityFileCategory() {
-        return entityFileCategory;
-    }
-
-    public void setEntityFileCategory(String entityFileCategory) {
-        this.entityFileCategory = entityFileCategory;
     }
 }

@@ -91,6 +91,10 @@ public class UserService extends BaseService<User, Long> {
         return passwordService.entryptPassword(rawPassword, user.getAuthGuid());
     }
 
+    public User save(User entity) {
+        return super.save(entity);
+    }
+
     public User save(User entity, String rawPassword) {
         if (entity.isNew()) {
             Validation.notBlank(rawPassword, "创建账号必须提供初始密码");
@@ -175,4 +179,11 @@ public class UserService extends BaseService<User, Long> {
         userLogonLogDao.save(userLogonLog);
     }
 
+    public User findByAuthUid(String authUid) {
+        return userDao.findByAuthUid(authUid);
+    }
+
+    public User findByRandomCodeAndAuthUid(String randomCode, String moblie) {
+        return userDao.findByRandomCodeAndAuthUid(randomCode, moblie);
+    }
 }

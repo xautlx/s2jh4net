@@ -30,7 +30,7 @@
 	<properties>
 		<!-- 主要依赖库的版本定义 -->
 		<s2jh.version>0.0.1-SNAPSHOT</s2jh.version>
-		<spring.version>4.0.5.RELEASE</spring.version>
+		<spring.version>4.1.6.RELEASE</spring.version>
 		<hibernate.version>4.3.5.Final</hibernate.version>
 		<mybatis.version>3.2.8</mybatis.version>
 		<javassist.version>3.15.0-GA</javassist.version>
@@ -43,7 +43,7 @@
 		<spymemcached.version>2.8.9</spymemcached.version>
 		<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
 		<jolokia.version>1.0.6</jolokia.version>
-		<jackson.version>2.2.3</jackson.version>
+		<jackson.version>2.4.5</jackson.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<commons-lang3.version>3.1</commons-lang3.version>
 		<commons-io.version>2.4</commons-io.version>
@@ -77,6 +77,11 @@
 	<!-- 设定除中央仓库(repo1.maven.org/maven2/)外的其他仓库,按设定顺序进行查找. -->
 	<repositories>
 		<repository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>http://repo.maven.apache.org/maven2</url>
+		</repository>
+		<repository>
 			<id>oschina</id>
 			<name>oschina repository</name>
 			<url>http://maven.oschina.net/content/groups/public/</url>
@@ -85,11 +90,6 @@
 			<id>oschina-thirdparty</id>
 			<name>oschina thirdparty repository</name>
 			<url>http://maven.oschina.net/content/repositories/thirdparty/</url>
-		</repository>
-		<repository>
-			<id>central</id>
-			<name>Central Repository</name>
-			<url>http://repo.maven.apache.org/maven2</url>
 		</repository>
 		<repository>
 			<id>org.springframework.maven.milestone</id>
@@ -179,8 +179,8 @@
 		<!-- j2ee web spec -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -513,6 +513,12 @@
 			<groupId>com.octo.captcha</groupId>
 			<artifactId>jcaptcha</artifactId>
 			<version>1.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.jhlabs</groupId>

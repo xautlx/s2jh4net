@@ -52,6 +52,9 @@ public class Department extends BaseNativeEntity implements Comparable<Departmen
     @Override
     @Transient
     public String getDisplay() {
+        if (code == null) {
+            return null;
+        }
         return code + " " + name;
     }
 
@@ -64,6 +67,25 @@ public class Department extends BaseNativeEntity implements Comparable<Departmen
             category = category.getParent();
         }
         return label;
+    }
+
+    /**
+     * 计算节点所在层级，根节点以0开始
+     * @return
+     */
+    @Transient
+    @JsonIgnore
+    public int getLevel() {
+        int level = 0;
+        return loopLevel(level, this);
+    }
+
+    private int loopLevel(int level, Department item) {
+        Department parent = item.getParent();
+        if (parent != null && parent.getId() != null) {
+            return loopLevel(level + 1, item.getParent());
+        }
+        return level;
     }
 
     @Override

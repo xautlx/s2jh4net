@@ -1,12 +1,9 @@
 package lab.s2jh.tool.builder;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -31,6 +28,7 @@ import lab.s2jh.core.web.json.DateJsonSerializer;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.envers.RevisionEntity;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -45,7 +43,6 @@ import freemarker.template.Template;
 
 /**
  * 基本CRUD框架代码生成工具类，直接main方法执行或Maven方式运行工程的pom.xml调用生成代码
- * 配置文件在：src\main\resources\builder\builder-scan-packages.properties, 用法同Spring的packagesToScan格式，一行一个package定义
  * 生成的代码在：target/generated-codes目录下，其中standalone是一个Entity一个目录，用于偶尔重复生成拷贝某一个Entity相关代码之用，integrate是整合到一起的目录结构
  * 模板文件位置：src\main\resources\builder\freemarker，可自行根据项目需要调整模板定义格式
  */
@@ -55,31 +52,19 @@ public class SourceCodeFrameworkBuilder {
     public static void main(String[] args) throws Exception {
         Configuration cfg = new Configuration();
         // 设置FreeMarker的模版文件位置
-        cfg.setClassForTemplateLoading(SourceCodeFrameworkBuilder.class, "/builder/freemarker");
+        cfg.setClassForTemplateLoading(SourceCodeFrameworkBuilder.class, "/lab/s2jh/tool//builder/freemarker");
         cfg.setDefaultEncoding("UTF-8");
 
         Set<String> entityNames = new HashSet<String>();
 
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-
-        //从属性文件读取扫描entity包列表，用法同Spring的packagesToScan格式，一行一个package定义
-        Reader reader = new InputStreamReader(SourceCodeFrameworkBuilder.class.getResourceAsStream("/builder/builder-scan-packages.properties"));
-        BufferedReader in = new BufferedReader(reader);
-        String line;
-        while ((line = in.readLine()) != null) {
-            if (line.length() == 0 || line.startsWith("#")) {
-                continue;
-            }
-
-            debug("Prepare to scan package: " + line);
-            Set<BeanDefinition> beanDefinitions = scanner.findCandidateComponents(line);
-            for (BeanDefinition beanDefinition : beanDefinitions) {
-                debug(" - " + beanDefinition.getBeanClassName());
-                entityNames.add(beanDefinition.getBeanClassName());
-            }
+        scanner.addExcludeFilter(new AnnotationTypeFilter(RevisionEntity.class));
+        Set<BeanDefinition> beanDefinitions = scanner.findCandidateComponents("");
+        for (BeanDefinition beanDefinition : beanDefinitions) {
+            debug(" - " + beanDefinition.getBeanClassName());
+            entityNames.add(beanDefinition.getBeanClassName());
         }
-        in.close();
 
         String integrateRoot = "." + File.separator + "target" + File.separator + "generated-codes" + File.separator + "integrate" + File.separator;
         String standaloneRoot = "." + File.separator + "target" + File.separator + "generated-codes" + File.separator + "standalone" + File.separator;
@@ -285,7 +270,7 @@ public class SourceCodeFrameworkBuilder {
             process(cfg.getTemplate("JSP_Input_Basic.ftl"), root, standaloneRootPath + File.separator + "jsp" + File.separator, nameField
                     + "-inputBasic.jsp");
 
-            debug("---Source Code Builder Done---");
+            debug("Source Code Builder Done. Processed entities size: " + entityNames.size());
         }
     }
 

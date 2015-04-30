@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
@@ -77,27 +78,31 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     private final Logger logger = LoggerFactory.getLogger(BaseService.class);
 
     /** 泛型对应的Class定义 */
-    protected Class<T> entityClass;
+    private Class<T> entityClass;
 
     /** 子类设置具体的DAO对象实例 */
     abstract protected BaseDao<T, ID> getEntityDao();
 
-    @SuppressWarnings("unchecked")
-    public BaseService() {
-        super();
-        // 通过反射取得Entity的Class.
-        try {
-            Object genericClz = getClass().getGenericSuperclass();
-            if (genericClz instanceof ParameterizedType) {
-                entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    @PersistenceContext(unitName = "entityManagerApp")
+    private EntityManager entityManager;
+
+    protected Class<T> getEntityClass() {
+        if (entityClass == null) {
+            try {
+                // 通过反射取得Entity的Class.
+                Object genericClz = getClass().getGenericSuperclass();
+                if (genericClz instanceof ParameterizedType) {
+                    entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                }
+            } catch (Exception e) {
+                logger.error("error detail:", e);
             }
-        } catch (Exception e) {
-            logger.error("error detail:", e);
         }
+        return entityClass;
     }
 
     protected EntityManager getEntityManager() {
-        return null;
+        return entityManager;
     }
 
     /**
@@ -587,7 +592,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @return
      */
     public Page<Map<String, Object>> findByGroupAggregate(GroupPropertyFilter groupFilter, Pageable pageable, String... properties) {
-        return findByGroupAggregate(entityClass, groupFilter, pageable, properties);
+        return findByGroupAggregate(getEntityClass(), groupFilter, pageable, properties);
     }
 
     /**
@@ -883,7 +888,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
 
         //处理集合子查询
         if (filter.getSubQueryCollectionPropetyType() != null) {
-            String owner = StringUtils.uncapitalize(entityClass.getSimpleName());
+            String owner = StringUtils.uncapitalize(getEntityClass().getSimpleName());
             subQueryFrom.join(owner);
             subquery.select(subQueryFrom.get(owner)).where(predicate);
             predicate = builder.in(root.get("id")).value(subquery);
@@ -1150,7 +1155,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public List<EntityRevision> findEntityRevisions(final Object id, String property, Boolean changed) {
         List<EntityRevision> entityRevisions = Lists.newArrayList();
-        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(entityClass, false, true);
+        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(getEntityClass(), false, true);
         auditQuery.add(AuditEntity.id().eq(id)).addOrder(AuditEntity.revisionNumber().desc());
         if (StringUtils.isNotBlank(property) && changed != null) {
             if (changed) {
@@ -1182,7 +1187,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public List<EntityRevision> findEntityRevisions(final ID id, Number... revs) {
         List<EntityRevision> entityRevisions = Lists.newArrayList();
-        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(entityClass, false, true);
+        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(getEntityClass(), false, true);
         auditQuery.add(AuditEntity.id().eq(id)).add(AuditEntity.revisionNumber().in(revs));
         List list = auditQuery.getResultList();
         if (CollectionUtils.isNotEmpty(list)) {
@@ -1218,12 +1223,12 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
             T entity = findOne(id);
             List oldR2s = (List) FieldUtils.readDeclaredField(entity, r2PropertyName, true);
 
-            Field r2field = FieldUtils.getField(entityClass, r2PropertyName, true);
+            Field r2field = FieldUtils.getField(getEntityClass(), r2PropertyName, true);
             Class r2Class = (Class) (((ParameterizedType) r2field.getGenericType()).getActualTypeArguments()[0]);
             Field entityField = null;
             Field[] fields = r2Class.getDeclaredFields();
             for (Field field : fields) {
-                if (field.getType().equals(entityClass)) {
+                if (field.getType().equals(getEntityClass())) {
                     entityField = field;
                     break;
                 }
@@ -1324,15 +1329,17 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
                 oldR2s = Lists.newArrayList();
                 FieldUtils.writeDeclaredField(entity, r2PropertyName, oldR2s, true);
             }
-            if ((r2EntityIds == null || r2EntityIds.length == 0) && !CollectionUtils.isEmpty(oldR2s)) {
-                oldR2s.clear();
+            if ((r2EntityIds == null || r2EntityIds.length == 0)) {
+                if (!CollectionUtils.isEmpty(oldR2s)) {
+                    oldR2s.clear();
+                }
             } else {
-                Field r2field = FieldUtils.getField(entityClass, r2PropertyName, true);
+                Field r2field = FieldUtils.getField(getEntityClass(), r2PropertyName, true);
                 Class r2Class = (Class) (((ParameterizedType) r2field.getGenericType()).getActualTypeArguments()[0]);
                 Field entityField = null;
                 Field[] fields = r2Class.getDeclaredFields();
                 for (Field field : fields) {
-                    if (field.getType().equals(entityClass)) {
+                    if (field.getType().equals(getEntityClass())) {
                         entityField = field;
                         break;
                     }

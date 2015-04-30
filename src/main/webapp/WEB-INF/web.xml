@@ -75,6 +75,15 @@
 	</servlet-mapping>
 
 	<filter>
+		<filter-name>webAppContextInitFilter</filter-name>
+		<filter-class>lab.s2jh.core.web.filter.WebAppContextInitFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>webAppContextInitFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
 		<filter-name>buildVersionEtagHeaderFilter</filter-name>
 		<filter-class>lab.s2jh.core.web.filter.BuildVersionEtagHeaderFilter</filter-class>
 	</filter>
