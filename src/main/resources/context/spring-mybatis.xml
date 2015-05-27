@@ -18,14 +18,35 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
 	default-lazy-init="false">
 
-	<!-- MyBatis配置，主要为了提供高效灵活的查询功能支持 -->
+	<description>MyBatis配置，主要为了提供高效灵活的查询功能支持。http://mybatis.github.io/mybatis-3/zh/index.html</description>
+
+
+    <!-- Multi-db vendor support -->
+	<bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+		<property name="properties">
+			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+				<property name="properties">
+					<props>
+						<prop key="SQL Server">sqlserver</prop>
+						<prop key="DB2">db2</prop>
+						<prop key="Oracle">oracle</prop>
+						<prop key="MySQL">mysql</prop>
+						<prop key="H2">h2</prop>
+					</props>
+				</property>
+			</bean>
+		</property>
+	</bean>  
+
+	<!-- APP数据源配置 -->
 	<bean id="sqlSessionFactoryApp" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="dataSource" ref="dataSourceApp" />
+		<property name="databaseIdProvider" ref="databaseIdProvider" />  
 		<!-- 显式指定Mapper文件位置 -->
 		<property name="mapperLocations">
 			<list>
-				<value>classpath*:lab/s2jh/**/entity/*Mapper.xml</value>
+				<value>classpath*:lab/s2jh/module/**/entity/*Mapper.xml</value>
 				<value>classpath*:s2jh/biz/**/entity/*Mapper.xml</value>
 			</list>
 		</property>
@@ -34,8 +55,30 @@
 
 	<bean id="myBatisDaoApp" class="lab.s2jh.core.dao.mybatis.MyBatisGenerialDaoImpl">
 		<property name="sqlSession">
-			<bean class="org.mybatis.spring.SqlSessionTemplate">
+			<bean class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
 				<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryApp" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- AUD数据源配置 -->
+	<bean id="sqlSessionFactoryAud" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="dataSource" ref="dataSourceAud" />
+		<property name="databaseIdProvider" ref="databaseIdProvider" />  
+		<!-- 显式指定Mapper文件位置 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath*:lab/s2jh/aud/**/entity/*Mapper.xml</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="myBatisDaoAud" class="lab.s2jh.core.dao.mybatis.MyBatisGenerialDaoImpl">
+		<property name="sqlSession">
+			<bean class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+				<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryAud" />
 			</bean>
 		</property>
 	</bean>

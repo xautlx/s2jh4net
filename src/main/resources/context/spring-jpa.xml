@@ -24,9 +24,6 @@
 		depends-on="cacheManager">
 		<property name="dataSource" ref="dataSourceApp" />
 		<property name="persistenceUnitName" value="entityManagerApp" />
-		<property name="persistenceUnitPostProcessors">
-			<bean class="lab.s2jh.core.dao.jpa.ExtPersistenceUnitPostProcessor" />
-		</property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 		</property>
@@ -41,7 +38,7 @@
 			<props>
 				<prop key="hibernate.connection.autocommit">false</prop>
 				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.DefaultNamingStrategy</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate_hbm2ddl_auto}</prop>
 
 				<prop key="hibernate.cache.use_query_cache">true</prop>
 				<prop key="hibernate.cache.use_second_level_cache">true</prop>
@@ -88,9 +85,6 @@
 	<bean id="entityManagerFactoryAud" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSourceAud" />
 		<property name="persistenceUnitName" value="entityManagerAud" />
-		<property name="persistenceUnitPostProcessors">
-			<bean class="lab.s2jh.core.dao.jpa.ExtPersistenceUnitPostProcessor" />
-		</property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 		</property>
