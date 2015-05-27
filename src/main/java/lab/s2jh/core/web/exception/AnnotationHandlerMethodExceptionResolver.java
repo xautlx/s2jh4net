@@ -175,8 +175,9 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
                 logger.error(errorMessage, e);
 
                 MDC.clear();
+            }else{
+                logger.debug(errorMessage, e);
             }
-
         }
 
         //设置http status错误代码，如jqGrid等组件是基于此代码来标识请求处理成功与否

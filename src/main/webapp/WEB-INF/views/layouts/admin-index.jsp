@@ -187,6 +187,7 @@
 								<i class="fa fa-times"></i>
 							</button>
 						</li>
+						<li><a class="btn-dashboard" href="#dashboard"><i class="fa fa-home"></i> 首页 </a></li>
 					</ul>
 					<div class="tab-content">
 						<div id="tab_content_dashboard"></div>

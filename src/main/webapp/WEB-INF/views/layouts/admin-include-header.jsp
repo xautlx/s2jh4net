@@ -57,5 +57,4 @@
 <script type="text/javascript">
     var WEB_ROOT = "${ctx}";
     var READ_FILE_URL_PREFIX = "${readFileUrlPrefix}";
-    var DASHBOARD_URI="/admin/aqbx/dashboard";
 </script>

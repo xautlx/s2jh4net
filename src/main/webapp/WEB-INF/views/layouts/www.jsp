@@ -41,6 +41,7 @@
 <link href="${ctx}/assets/w/css/themes/blue.css" rel="stylesheet" type="text/css" id="style_color" />
 <link href="${ctx}/assets/w/css/style-responsive.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/assets/w/app/custom.css" rel="stylesheet" type="text/css" />
+<link href="${ctx}/assets/w/app/biz.css" rel="stylesheet" type="text/css" />
 <!-- END THEME STYLES -->
 
 <script src="${ctx}/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
