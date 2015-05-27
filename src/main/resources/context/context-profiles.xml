@@ -33,7 +33,11 @@
 			<property name="url" value="${jdbc_url}" />
 			<property name="username" value="${jdbc_username}" />
 			<property name="password" value="${jdbc_password}" />
-
+			
+            <!-- 由外部事务管理器处理提交 -->
+			<property name="defaultAutoCommit" value="false" />
+			<property name="testWhileIdle" value="false" />
+			
             <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
 			<property name="proxyFilters">
 				<list>
@@ -49,7 +53,11 @@
 			<property name="url" value="${jdbc_url}" />
 			<property name="username" value="${jdbc_username}" />
 			<property name="password" value="${jdbc_password}" />
-
+			
+            <!-- 由外部事务管理器处理提交 -->
+			<property name="defaultAutoCommit" value="false" />
+			<property name="testWhileIdle" value="false" />
+			
             <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
 			<property name="proxyFilters">
 				<list>
@@ -65,8 +73,8 @@
 			<property name="url" value="${jdbc_url}" />
 			<property name="username" value="${jdbc_username}" />
 			<property name="password" value="${jdbc_password}" />
-		</bean>		
-         
+		</bean>
+
 		<import resource="classpath*:/service/spring*.xml" />
 	</beans>
 
@@ -93,6 +101,32 @@
 			<property name="username" value="${jdbc_username}" />
 			<property name="password" value="${jdbc_password}" />
 
+            <!-- 由外部事务管理器处理提交 -->
+			<property name="defaultAutoCommit" value="false" />
+
+            <!-- 配置初始化大小、最小、最大 -->
+			<property name="initialSize" value="50" />
+			<property name="minIdle" value="50" />
+			<property name="maxActive" value="200" />
+
+            <!-- 配置获取连接等待超时的时间 -->
+			<property name="maxWait" value="60000" />
+
+            <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+			<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+            <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+			<property name="minEvictableIdleTimeMillis" value="300000" />
+
+			<property name="validationQuery" value="SELECT 'x'" />
+			<property name="testWhileIdle" value="true" />
+			<property name="testOnBorrow" value="false" />
+			<property name="testOnReturn" value="false" />
+
+            <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+			<property name="poolPreparedStatements" value="false" />
+			<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+
             <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
 			<property name="proxyFilters">
 				<list>
@@ -108,6 +142,32 @@
 			<property name="username" value="${jdbc_username}" />
 			<property name="password" value="${jdbc_password}" />
 
+            <!-- 由外部事务管理器处理提交 -->
+			<property name="defaultAutoCommit" value="false" />
+
+            <!-- 配置初始化大小、最小、最大 -->
+			<property name="initialSize" value="50" />
+			<property name="minIdle" value="50" />
+			<property name="maxActive" value="200" />
+
+            <!-- 配置获取连接等待超时的时间 -->
+			<property name="maxWait" value="60000" />
+
+            <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+			<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+            <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+			<property name="minEvictableIdleTimeMillis" value="300000" />
+
+			<property name="validationQuery" value="SELECT 'x'" />
+			<property name="testWhileIdle" value="true" />
+			<property name="testOnBorrow" value="false" />
+			<property name="testOnReturn" value="false" />
+
+            <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+			<property name="poolPreparedStatements" value="false" />
+			<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+			
             <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
 			<property name="proxyFilters">
 				<list>
@@ -123,8 +183,8 @@
 			<property name="url" value="${jdbc_url}" />
 			<property name="username" value="${jdbc_username}" />
 			<property name="password" value="${jdbc_password}" />
-		</bean>				
-		
+		</bean>
+
 		<import resource="classpath*:/service/spring*.xml" />
 	</beans>
 
@@ -185,7 +245,7 @@
 					<ref bean="log-filter" />
 				</list>
 			</property>
-		</bean>		
+		</bean>
 	</beans>
-		
+
 </beans>

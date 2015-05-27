@@ -38,7 +38,7 @@ public class DataDictService extends BaseService<DataDict, Long> {
     @Transactional(readOnly = true)
     public List<DataDict> findChildrenByPrimaryKey(String primaryKey) {
         DataDict parent = dataDictDao.findByPrimaryKey(primaryKey);
-        return dataDictDao.findChildrenByParentAndDisabled(parent, false);
+        return dataDictDao.findEnabledChildrenByParent(parent);
     }
 
     @Transactional(readOnly = true)
