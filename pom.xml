@@ -801,30 +801,30 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- jetty -->
+		<!-- jetty standard runtime-->
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-webapp</artifactId>
 			<version>${jetty.version}</version>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-jsp</artifactId>
 			<version>${jetty.version}</version>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.restlet</groupId>
 			<artifactId>org.restlet</artifactId>
 			<version>${restlet.version}</version>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.restlet</groupId>
 			<artifactId>org.restlet.ext.servlet</artifactId>
 			<version>${restlet.version}</version>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	
@@ -929,61 +929,63 @@
 	</build>
 
 	<profiles>
+
 		<profile>
-			<id>pkg</id>
+			<id>standalone</id>
+			<properties>
+				<maven.build.timestamp.format>yyyy-MM-dd_HH:mm:ss</maven.build.timestamp.format>
+				<BUILD_ID>${maven.build.timestamp}</BUILD_ID>
+			</properties>
 			<build>
-				<resources>
-					<resource>
-						<filtering>false</filtering>
-						<directory>src/main/java</directory>
-						<excludes>
-							<exclude>**/*.java</exclude>
-						</excludes>
-					</resource>
-					<resource>
-						<filtering>false</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/filter</directory>
-					</resource>
-					<resource>
-						<filtering>false</filtering>
-						<directory>src/main/deploy/${deploy_env}/resources</directory>
-					</resource>
-				</resources>
-				<testResources>
-					<testResource>
-						<filtering>false</filtering>
-						<directory>src/test/java</directory>
-						<excludes>
-							<exclude>**/*.java</exclude>
-						</excludes>
-					</testResource>
-					<testResource>
-						<filtering>false</filtering>
-						<directory>src/test/resources</directory>
-					</testResource>
-				</testResources>
-				<pluginManagement>
-					<plugins>
-						<!-- war打包插件, 设定war包名称不带版本号 -->
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-war-plugin</artifactId>
-							<version>2.4</version>
-							<configuration>
-								<warName>${project.artifactId}</warName>
-								<webResources>
-									<resource>
-										<directory>src/main/deploy/${deploy_env}/webResources</directory>
-									</resource>
-								</webResources>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<archive>
+								<manifestEntries>
+									<Svn-Revision>${SVN_REVISION}</Svn-Revision>
+									<Build-Tag>${BUILD_TAG}</Build-Tag>
+									<Build-Number>${BUILD_NUMBER}</Build-Number>
+									<Build-Id>${BUILD_ID}</Build-Id>
+								</manifestEntries>
+							</archive>
+							<webResources>
+								<resource>
+									<directory>src/main/deploy/${deploy_env}/webResources</directory>
+									<filtering>false</filtering>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>assembly-standalone</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<finalName>${project.artifactId}</finalName>
+									<descriptors>
+										<descriptor>assembly/assembly-standalone.xml</descriptor>
+									</descriptors>
+									<archive>
+										<manifest>
+											<mainClass>lab.s2jh.tool.MainExecutor</mainClass>
+										</manifest>
+									</archive>
+									<outputDirectory>./runtime</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
 			</build>
 		</profile>
 	</profiles>
