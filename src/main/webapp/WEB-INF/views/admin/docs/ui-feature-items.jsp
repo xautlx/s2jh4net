@@ -74,7 +74,7 @@
 					<div class="col-md-6">
 						<span class="help-block">注意在对应所属的controls元素上追加样式controls-checkboxes</span>
 					</div>
-				</div>				
+				</div>
 			</div>
 		</form:form>
 	</div>
@@ -374,8 +374,7 @@
 						<div class="form-group">
 							<label class="control-label">选取多个Tag(Remote查询选取)</label>
 							<div class="controls">
-								<form:input path="splitText" class="form-control" data-select2-type="tags" value=""
-									data-url="${ctx}/docs/mock/tags" />
+								<form:input path="splitText" class="form-control" data-select2-type="tags" data-url="${ctx}/docs/mock/tags" />
 							</div>
 						</div>
 					</div>
