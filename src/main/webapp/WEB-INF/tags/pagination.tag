@@ -10,7 +10,7 @@
         target = "ajax-get-container";
     }
     request.setAttribute("target", target);
-    
+
     int current = page.getNumber() + 1;
     if (paginationSize == null) {
         paginationSize = 5;
@@ -27,13 +27,20 @@
     request.setAttribute("next", next);
 %>
 <div class="row">
-	<div class="col-md-5 col-sm-12">
-		<div class="dataTables_info" id="sample_1_info">总计: ${page.totalElements} 条记录</div>
+	<div class="col-md-6">
+		<div class="dataTables_info">
+			每页： <select size="1" class="form-control input-xsmall select2-offscreen" tabindex="-1" data-allowClear="false">
+				<option value="5" ${page.size==5?'selected':''}>5</option>
+				<option value="10" ${page.size==10?'selected':''}>10</option>
+				<option value="20" ${page.size==20?'selected':''}>20</option>
+				<option value="50" ${page.size==50?'selected':''}>50</option>
+			</select>条，当前：${page.size*page.number+1} - ${page.size*page.number+page.numberOfElements}，总计: ${page.totalElements} 条记录
+		</div>
 	</div>
-	<div class="col-md-7 col-sm-12">
+	<div class="col-md-6">
 		<div class="dataTables_paginate paging_bootstrap" target="${target}">
 			<ul class="pagination" style="visibility: visible;">
-				<li class="first"><a title="首页" href="javascript:void(0)" page="${1}"><i class="fa fa-angle-left"></i></a></li>
+				<li class="first"><a title="首页" href="javascript:void(0)" page="${1}"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="prev"><a title="上一页" href="javascript:void(0)" page="${prev}"><i class="fa fa-angle-left"></i></a></li>
 				<c:forEach var="i" begin="${begin}" end="${end}">
 					<c:choose>
@@ -47,7 +54,7 @@
 				</c:forEach>
 				<li class="next"><a title="下一页" href="javascript:void(0)" page="${next}"><i class="fa fa-angle-right"></i></a></li>
 				<li class="last"><a title="末页" href="javascript:void(0)" page="${page.totalPages}"><i
-						class="fa fa-angle-right"></i></a></li>
+						class="fa  fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
 	</div>
