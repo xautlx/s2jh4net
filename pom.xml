@@ -779,7 +779,13 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>0.9.0</version>
+			<scope>test</scope>
+		</dependency>
+		
         <!-- 辅助用于解析开发的markdown格式文档文件到html显示 -->
 		<dependency>
 			<groupId>org.commonjava.googlecode.markdown4j</groupId>
