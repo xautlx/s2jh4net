@@ -14,6 +14,7 @@ import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.util.Exceptions;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
+import lab.s2jh.support.service.VerifyCodeService;
 import net.sf.ehcache.CacheManager;
 
 import org.apache.commons.io.IOUtils;
@@ -43,6 +44,9 @@ public class UtilController {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private VerifyCodeService verifyCodeService;
 
     @MenuData("配置管理:系统管理:辅助管理")
     @RequiresRoles(AuthUserDetails.ROLE_SUPER_USER)
@@ -135,5 +139,12 @@ public class UtilController {
     @RequestMapping(value = "/load-balance-test", method = RequestMethod.GET)
     public String loadBalanceTest() {
         return "admin/util/load-balance-test";
+    }
+
+    @MetaData(value = "开发模式获取手机验证码")
+    @RequestMapping(value = "/mobile-codes", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, String> mobileCodes() {
+        return verifyCodeService.getMobileCodes();
     }
 }

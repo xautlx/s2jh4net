@@ -8,11 +8,14 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.entity.BaseNativeEntity;
+import lab.s2jh.core.entity.PersistableEntity;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +23,7 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -31,9 +35,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "sche_JobRunHist")
 @MetaData(value = "任务计划运行历史记录")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
-public class JobRunHist extends BaseNativeEntity {
+public class JobRunHist extends PersistableEntity<Long> {
 
     private static final long serialVersionUID = -5759986321900611939L;
+
+    @Id
+    @GeneratedValue(generator = "idGenerator")
+    @GenericGenerator(name = "idGenerator", strategy = "native")
+    private Long id;
 
     @MetaData(value = "Job名称")
     @Column(length = 64, nullable = true)
@@ -87,4 +96,10 @@ public class JobRunHist extends BaseNativeEntity {
 
     @MetaData(value = "触发节点标识")
     private String nodeId;
+
+    @Override
+    @Transient
+    public String getDisplay() {
+        return jobClass + ":" + fireTime;
+    }
 }

@@ -18,6 +18,7 @@ import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.BaseController;
+import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.Department;
 import lab.s2jh.module.auth.service.DepartmentService;
@@ -66,8 +67,7 @@ public class DocumentController extends BaseController<MockEntity, Long> {
 
     @RequestMapping(value = "/docs/markdown/{name}", method = RequestMethod.GET)
     public String markdown(@PathVariable("name") String name, Model model) throws IOException {
-        //TODO 待优化避免每次查询文件列表
-        String mdDirPath = GlobalConfigService.getWebRootRealPath() + "/docs/markdown";
+        String mdDirPath = WebAppContextInitFilter.getInitedWebContextRealPath() + "/docs/markdown";
         File mdDir = new File(mdDirPath);
         String[] files = mdDir.list();
         for (int i = 0; i < files.length; i++) {
@@ -225,6 +225,8 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         private String[] imagePaths;
 
         private BigDecimal quantity;
+
+        private Boolean expired;
 
         private List<MockItemEntity> mockItemEntites;
 

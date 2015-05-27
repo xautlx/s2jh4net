@@ -83,13 +83,13 @@
 					<div class="form-group">
 						<label class="control-label">账号失效日期</label>
 						<div class="controls">
-							<form:input path="accountExpireTime" class="form-control" data-toggle="datepicker" />
+							<form:input path="accountExpireTime" class="form-control" data-picker="date" />
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label">密码失效日期</label>
 						<div class="controls">
-							<form:input path="credentialsExpireTime" class="form-control" data-toggle="datepicker" />
+							<form:input path="credentialsExpireTime" class="form-control" data-picker="date" />
 						</div>
 					</div>
 

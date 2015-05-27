@@ -56,15 +56,11 @@
 		            label : '${entityField.title}',
 		            name : '${entityField.fieldName}.display',
 		            index : '${entityField.fieldName}',
-		            width : 200,
 		        <#else>    
 		        }, {
 		            label : '${entityField.title}',
 		            name : '${entityField.fieldName}',
-		        </#if>              
-		        <#if entityField.listWidth!=0>  
-		            width : ${entityField.listWidth},
-		        </#if>               
+		        </#if>                      
 		        <#if entityField.listHidden>    
 		            hidden : true,
 		        </#if>  
@@ -76,14 +72,20 @@
 		        </#if>
 		        <#if entityField.fieldType=='Timestamp'>          
 		            formatter: 'timestamp',
-		        </#if>		        
+		        </#if>	
+		        <#if entityField.fieldType=='Integer'>          
+		            formatter: 'integer',
+		        </#if> 		        	        
 		        <#if entityField.fieldType=='BigDecimal'>          
 		            formatter: 'number',
 		        </#if> 
+		        <#if entityField.fieldType=='String'>          
+		            width : ${entityField.listWidth},
+		            align : '${entityField.listAlign}',
+		        </#if>
 		        <#if entityField.edit>
 		            editable: true,
 		        </#if>                                                                    
-		            align : '${entityField.listAlign}'
 		        </#if>
 		        </#list>
 		        } ],

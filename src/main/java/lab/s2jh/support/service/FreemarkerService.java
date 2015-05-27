@@ -2,11 +2,11 @@ package lab.s2jh.support.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Map;
 
 import lab.s2jh.core.exception.ServiceException;
-import lab.s2jh.core.service.GlobalConfigService;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +31,7 @@ public class FreemarkerService extends Configuration {
         this.setTemplateLoader(stringTemplateLoader);
     }
 
-    public String processTemplate(String templateName, long version, String templateContents,
-            Map<String, Object> dataMap) {
+    public String processTemplate(String templateName, long version, String templateContents, Map<String, Object> dataMap) {
         Assert.notNull(templateName);
         Assert.notNull(version);
         if (StringUtils.isBlank(templateContents)) {
@@ -71,10 +70,18 @@ public class FreemarkerService extends Configuration {
     }
 
     public String processTemplateByFileName(String templateFileName, Map<String, Object> dataMap) {
-        String templateDir = GlobalConfigService.getWebRootRealPath();
-        templateDir += File.separator + "WEB-INF" + File.separator + "template" + File.separator + "freemarker";
+        String templateDir = System.getProperty("java.io.tmpdir") + File.separator + "template" + File.separator + "freemarker";
         File targetTemplateFile = new File(templateDir + File.separator + templateFileName + ".ftl");
-        //TODO: 可添加额外从classpath加载文件处理
+        if (!targetTemplateFile.exists()) {
+            try {
+                //从classpath加载文件处理写入临时文件
+                InputStream source = this.getClass().getResourceAsStream("/template/freemarker/" + templateFileName + ".ftl");
+                FileUtils.copyInputStreamToFile(source, targetTemplateFile);
+
+            } catch (IOException e) {
+                throw new ServiceException(e.getMessage(), e);
+            }
+        }
         logger.debug("Processing freemarker template file: {}", targetTemplateFile.getAbsolutePath());
         long fileVersion = targetTemplateFile.lastModified();
         Object templateSource = stringTemplateLoader.findTemplateSource(templateFileName);

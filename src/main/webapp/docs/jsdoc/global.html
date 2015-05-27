@@ -132,7 +132,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line537">line 537</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line611">line 611</a>
     </li></ul></dd>
     
     
@@ -1143,6 +1143,325 @@
         
             
 <dt>
+    <h4 class="name" id="initGrid"><span class="type-signature"></span>initGrid<span class="signature">(url, colModel, postData, editurl, editrulesurl, delurl)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        初始化指定grid元素，默认取元素的gridOptions数据值，options为可选覆盖参数表格属性参数：
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">发起AJAX数据请求的URL</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>colModel</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">列属性参数对象，详见随后参数说明</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>postData</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">固定追加的查询参数JSON结构数据对象</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>editurl</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">inline编辑模式POST提交请求的处理url地址，没有此参数则工具条屏蔽相关编辑操作按钮</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>editrulesurl</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">inline编辑模式自动表单校验规则请求url，一般固定为：WEB_ROOT + '/admin/util/validate?clazz=$\{clazz\}'</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>delurl</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">inline删除操作请求url，没有此参数则工具条屏蔽相关删除操作按钮</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line1242">line 1242</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="initImagePreivew"><span class="type-signature"></span>initImagePreivew<span class="signature">(data-toggle)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        为img元素提供预览大图效果: img[data-toggle='preview']
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-toggle</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">'preview'</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line756">line 756</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> &lt;label class="control-label" data-tooltips="[输入提示说明内容]">金额&lt;/label></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="initMultiSelectDouble"><span class="type-signature"></span>initMultiSelectDouble<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -1275,6 +1594,75 @@
         
     <pre class="prettyprint"><code> &lt;form:select path="selectedIds" items="${multiSelectItems}" class="form-control" data-toggle="double-multi-select" data-height="300px" /></code></pre>
 
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="initRecursiveSubGrid"><span class="type-signature"></span>initRecursiveSubGrid<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        递归初始化子表格
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line2945">line 2945</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
     
 </dd>
 
@@ -1809,6 +2197,75 @@
 
     <pre class="prettyprint"><code> &lt;form:input path="splitText" class="form-control" data-select2-type="tags" value="A,D" data-url="https://api.myjson.com/bins/444cr" /></code></pre>
 
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="initSubGrid"><span class="type-signature"></span>initSubGrid<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        初始化普通子表格
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line2983">line 2983</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
     
 </dd>
 
@@ -2502,7 +2959,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line281">line 281</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line284">line 284</a>
     </li></ul></dd>
     
     
@@ -2808,6 +3265,1167 @@
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="initXEditable"><span class="type-signature"></span>initXEditable<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        为a链接元素添加xEditable功能: a.x-editable
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-url='编辑提交的URL'</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-name='保存属性名称'</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-type="编辑元素类型"</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-pk='提交的主键pk属性值'，default：当前元素所在form的id元素值</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-original-title='弹出框的显示标题'，default：数据修改</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-placement='xEditable组件对应支持的可选值'，指定弹窗位置，default：top</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-required='true|false'，default：false</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line552">line 552</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://vitalets.github.io/x-editable/docs.html">http://vitalets.github.io/x-editable/docs.html</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> &lt;<a class="editable editable-click x-editable" href="javascript:;" data-name="disabled"
+                                            data-url="${ctx}/admin/user/edit" data-pk="${id}" data-type="select"
+                                            data-source="{true:'停用',false:'启用'}">${disabled}</a></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-getAtLeastOneSelectedItem"><span class="type-signature"></span>jqgrid-getAtLeastOneSelectedItem<span class="signature">(includeSubGird)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        获取Grid至少选择一项,如果没有选择则Alert提示
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>includeSubGird</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">是否包含子表格数据项，默认false</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line495">line 495</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    选取行项的ID数组
+</div>
+
+
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> $grid.getAtLeastOneSelectedItem()</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-getEditingRowdata"><span class="type-signature"></span>jqgrid-getEditingRowdata<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        获取正在编辑行项的各表单元素值
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line766">line 766</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    各编辑元素内容组装的JSON结构数据
+</div>
+
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-getOnlyOneSelectedItem"><span class="type-signature"></span>jqgrid-getOnlyOneSelectedItem<span class="signature">(requireAlert)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        获取Grid唯一选择行项,如果没有选择或多选则Alert提示
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>requireAlert</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">必选警告标识，如果为true则会给出提示信息，为false则直接不提示直接返回false标识</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line544">line 544</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    已选取行项的ID值
+</div>
+
+
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> $grid.getOnlyOneSelectedItem()</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-getSelectedRowdata"><span class="type-signature"></span>jqgrid-getSelectedRowdata<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        获取Grid已选择selrow单行项rowdata数据
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line611">line 611</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    已选行项rowdata
+</div>
+
+
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> $grid.getSelectedRowdata()</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-getSelectedRowdatas"><span class="type-signature"></span>jqgrid-getSelectedRowdatas<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        获取Grid已选择selarrrow多行项数组rowdata数据
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line583">line 583</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    已选行项rowdata数组
+</div>
+
+
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> $grid.getSelectedRowdatas()</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-isEditingMode"><span class="type-signature"></span>jqgrid-isEditingMode<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        检测表格当前是否处于编辑模式
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line784">line 784</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    布尔值
+</div>
+
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-refresh"><span class="type-signature"></span>jqgrid-refresh<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        刷新Grid组件
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line363">line 363</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> $grid.refresh()</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-setEditingRowdata"><span class="type-signature"></span>jqgrid-setEditingRowdata<span class="signature">(rowdata, forceOverwrite)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        快速修改设置正在编辑行项的各表单元素值
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>rowdata</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">json结构数据，不用完整的行项数据可以是部分name和value值</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>forceOverwrite</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">是否强制覆盖已有值,true=直接覆盖，false=如果已有值则跳过赋值</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line729">line 729</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="jqgrid-sumColumn"><span class="type-signature"></span>jqgrid-sumColumn<span class="signature">(col, decimalPlaces)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        列求和帮助方法，添加小数位保留处理，默认两位
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>col</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">求和列属性名称</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>decimalPlaces</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">保留小数位数</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line808">line 808</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    求和结果数字
+</div>
+
+
+
+        
+    
+    
+</dd>
+
         </dl>
     
     
@@ -2824,13 +4442,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="AdminPage.html">AdminPage</a></li><li><a href="SitePage.html">SitePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#initAjaxBeforeShow">initAjaxBeforeShow</a></li><li><a href="global.html#initControlLabelTooltips">initControlLabelTooltips</a></li><li><a href="global.html#initDataProfileParam">initDataProfileParam</a></li><li><a href="global.html#initDatePicker">initDatePicker</a></li><li><a href="global.html#initDateRangePicker">initDateRangePicker</a></li><li><a href="global.html#initDateTimePicker">initDateTimePicker</a></li><li><a href="global.html#initDropdownSelect">initDropdownSelect</a></li><li><a href="global.html#initDynamicTable">initDynamicTable</a></li><li><a href="global.html#initMultiSelectDouble">initMultiSelectDouble</a></li><li><a href="global.html#initSelect2">initSelect2</a></li><li><a href="global.html#initSelect2Remote">initSelect2Remote</a></li><li><a href="global.html#initSelect2Tags">initSelect2Tags</a></li><li><a href="global.html#initTextareaHtmleditor">initTextareaHtmleditor</a></li><li><a href="global.html#initTextareaMaxlength">initTextareaMaxlength</a></li><li><a href="global.html#initTreeSelect">initTreeSelect</a></li><li><a href="global.html#initUploadBigFile">initUploadBigFile</a></li><li><a href="global.html#initUploadMultiImage">initUploadMultiImage</a></li><li><a href="global.html#initUploadSingleFile">initUploadSingleFile</a></li><li><a href="global.html#initUploadSingleImage">initUploadSingleImage</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="AdminPage.html">AdminPage</a></li><li><a href="Grid.html">Grid</a></li><li><a href="SitePage.html">SitePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#initAjaxBeforeShow">initAjaxBeforeShow</a></li><li><a href="global.html#initControlLabelTooltips">initControlLabelTooltips</a></li><li><a href="global.html#initDataProfileParam">initDataProfileParam</a></li><li><a href="global.html#initDatePicker">initDatePicker</a></li><li><a href="global.html#initDateRangePicker">initDateRangePicker</a></li><li><a href="global.html#initDateTimePicker">initDateTimePicker</a></li><li><a href="global.html#initDropdownSelect">initDropdownSelect</a></li><li><a href="global.html#initDynamicTable">initDynamicTable</a></li><li><a href="global.html#initGrid">initGrid</a></li><li><a href="global.html#initImagePreivew">initImagePreivew</a></li><li><a href="global.html#initMultiSelectDouble">initMultiSelectDouble</a></li><li><a href="global.html#initRecursiveSubGrid">initRecursiveSubGrid</a></li><li><a href="global.html#initSelect2">initSelect2</a></li><li><a href="global.html#initSelect2Remote">initSelect2Remote</a></li><li><a href="global.html#initSelect2Tags">initSelect2Tags</a></li><li><a href="global.html#initSubGrid">initSubGrid</a></li><li><a href="global.html#initTextareaHtmleditor">initTextareaHtmleditor</a></li><li><a href="global.html#initTextareaMaxlength">initTextareaMaxlength</a></li><li><a href="global.html#initTreeSelect">initTreeSelect</a></li><li><a href="global.html#initUploadBigFile">initUploadBigFile</a></li><li><a href="global.html#initUploadMultiImage">initUploadMultiImage</a></li><li><a href="global.html#initUploadSingleFile">initUploadSingleFile</a></li><li><a href="global.html#initUploadSingleImage">initUploadSingleImage</a></li><li><a href="global.html#initXEditable">initXEditable</a></li><li><a href="global.html#jqgrid-getAtLeastOneSelectedItem">jqgrid-getAtLeastOneSelectedItem</a></li><li><a href="global.html#jqgrid-getEditingRowdata">jqgrid-getEditingRowdata</a></li><li><a href="global.html#jqgrid-getOnlyOneSelectedItem">jqgrid-getOnlyOneSelectedItem</a></li><li><a href="global.html#jqgrid-getSelectedRowdata">jqgrid-getSelectedRowdata</a></li><li><a href="global.html#jqgrid-getSelectedRowdatas">jqgrid-getSelectedRowdatas</a></li><li><a href="global.html#jqgrid-isEditingMode">jqgrid-isEditingMode</a></li><li><a href="global.html#jqgrid-refresh">jqgrid-refresh</a></li><li><a href="global.html#jqgrid-setEditingRowdata">jqgrid-setEditingRowdata</a></li><li><a href="global.html#jqgrid-sumColumn">jqgrid-sumColumn</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Tue Apr 28 2015 15:58:13 GMT+0800 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Mon May 18 2015 13:31:40 GMT+0800 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -171,59 +171,5 @@
 			</property>
 		</bean>		
 	</beans>
-	
-	<beans profile="cloud">
-        <!-- 缺省PropertyPlaceholder定义 -->
-		<bean id="extPropertyPlaceholderConfigurer" class="lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer">
-			<property name="locations">
-				<list>
-					<value>classpath*:/application.properties</value>
-					<value>classpath*:/build.filter.properties</value>
-				</list>
-			</property>
-			<property name="ignoreResourceNotFound" value="true" />
-			<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
-		</bean>
-        
-
-        <!-- JDBC连接池  https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 -->
-		<bean id="dataSourceApp" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-            <!-- 创建MySQL UTF-8编码数据库脚本：CREATE DATABASE s2jh DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; -->
-			<property name="url" value="jdbc:mysql://10.4.12.173:3306/d56f4f672896c431596e91cfcfb2727e1?characterEncoding=utf8" />
-			<property name="username" value="${jdbc_username}" />
-			<property name="password" value="${jdbc_password}" />
-
-            <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
-			<property name="proxyFilters">
-				<list>
-					<ref bean="stat-filter" />
-				</list>
-			</property>
-		</bean>
 		
-        <!-- JDBC连接池  https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 -->
-		<bean id="dataSourceAud" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-            <!-- 创建MySQL UTF-8编码数据库脚本：CREATE DATABASE s2jh DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; -->
-			<property name="url" value="jdbc:mysql://10.4.12.173:3306/d56f4f672896c431596e91cfcfb2727e1?characterEncoding=utf8" />
-			<property name="username" value="${jdbc_username}" />
-			<property name="password" value="${jdbc_password}" />
-
-            <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
-			<property name="proxyFilters">
-				<list>
-					<ref bean="stat-filter" />
-				</list>
-			</property>
-		</bean>		
-
-        <!-- JDBC连接池  https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 -->
-		<bean id="dataSourceQuartz" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-            <!-- 创建MySQL UTF-8编码数据库脚本：CREATE DATABASE s2jh DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; -->
-			<property name="url" value="jdbc:mysql://10.4.12.173:3306/d56f4f672896c431596e91cfcfb2727e1?characterEncoding=utf8" />
-			<property name="username" value="${jdbc_username}" />
-			<property name="password" value="${jdbc_password}" />
-		</bean>				
-		
-		<import resource="classpath*:/service/spring*.xml" />
-	</beans>	
 </beans>

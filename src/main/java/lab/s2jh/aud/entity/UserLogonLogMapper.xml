@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="lab.s2jh.aud.entity.UserLogonLog">
+
+	<!-- 按日统计登录用户数-->
+	<select id="findGroupByLogonDay" resultType="Map">
+		select logonYearMonthDay,count(1) as cnt from
+		(
+		select DISTINCT
+		<if test="_databaseId == 'h2'">
+			FORMATDATETIME(log.logonTime,'yyyy-MM-dd') as logonYearMonthDay,
+		</if>
+		<if test="_databaseId == 'mysql'">
+			DATE_FORMAT(log.logonTime,'%Y-%m-%d') as logonYearMonthDay,
+		</if>
+		log.authGuid
+		from
+		auth_UserLogonLog log
+		where 1=1
+		<if test="logonTimeFrom != null">
+			and log.logonYearMonthDay &gt;= #{logonTimeFrom}
+		</if>
+		<if test="logonTimeTo != null">
+			and log.logonYearMonthDay &lt;= #{logonTimeTo}
+		</if>
+		) t GROUP BY t.logonYearMonthDay
+		ORDER BY logonYearMonthDay asc
+	</select>
+
+</mapper> 

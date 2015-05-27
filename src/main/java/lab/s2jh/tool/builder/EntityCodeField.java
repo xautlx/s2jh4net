@@ -18,7 +18,7 @@ public class EntityCodeField implements Comparable<EntityCodeField> {
     /** 在生成代码中属性的相对顺序 */
     private Integer order = Integer.MAX_VALUE;
     /** 属性在列表jqGrid中定义的对齐方式：left，right，center */
-    private String listAlign = "left";
+    private String listAlign = "center";
     /** 属性在列表jqGrid中定义的宽度固定模式 */
     private boolean listFixed = false;
     /** 属性在列表jqGrid中定义的默认不显示模式 */
@@ -30,7 +30,7 @@ public class EntityCodeField implements Comparable<EntityCodeField> {
     /** 标识属性是否枚举类型，根据Java属性反射获取  */
     private Boolean enumField = false;
     /** 属性类型，根据Java属性反射获取 */
-    private String fieldType = "String";
+    private String fieldType;
 
     public String getTitle() {
         return title;

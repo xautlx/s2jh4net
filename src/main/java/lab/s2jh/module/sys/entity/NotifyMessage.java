@@ -133,7 +133,7 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
         if (StringUtils.isNotBlank(notification)) {
             return notification;
         } else {
-            //TODO 优化为提取HTML内容text摘要
+            //优化为提取HTML内容text摘要
             if (!StringUtils.isEmpty(message)) {
                 return StringUtils.substring(WebFormatter.html2text(message), 0, 50).trim() + "...";
             } else {

@@ -3,20 +3,29 @@ package lab.s2jh.core.dao.mybatis;
 import java.util.List;
 import java.util.Map;
 
+import lab.s2jh.core.pagination.GroupPropertyFilter;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public interface MyBatisDao {
 
-    <E> List<E> findList(String namespace, String statementId, Object parameters);
+    <E> List<E> findList(String namespace, String statementId, Map<String, Object> parameters);
 
-    <E> List<E> findList(String namespace, String statementId, Object parameters, Integer top);
+    <E> List<E> findLimitList(String namespace, String statementId, Map<String, Object> parameters, Integer top);
+
+    <E> List<E> findSortList(String namespace, String statementId, GroupPropertyFilter groupPropertyFilter, Sort sort);
+
+    <E> List<E> findSortList(String namespace, String statementId, Map<String, Object> parameters, Sort sort);
 
     <E> Page<E> findPage(String namespace, String statementId, Map<String, Object> parameters, Pageable pageable);
 
-    <V> Map<String, V> findMap(String namespace, String statementId, Object parameters, String mapKey);
+    <E> Page<E> findPage(String namespace, String statementId, GroupPropertyFilter groupPropertyFilter, Pageable pageable);
 
-    <V> Map<String, V> findMap(String namespace, String statementId, Object parameter, String mapKey, Integer top);
+    <V> Map<String, V> findMap(String namespace, String statementId, Map<String, Object> parameters, String mapKey);
+
+    <V> Map<String, V> findMap(String namespace, String statementId, Map<String, Object> parameter, String mapKey, Integer top);
 
     /**
      * 执行更新操作，包括insert、update、delete

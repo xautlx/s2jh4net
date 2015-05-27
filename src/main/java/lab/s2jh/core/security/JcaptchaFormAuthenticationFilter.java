@@ -152,7 +152,8 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         //判断密码是否已到期，如果是则转向密码修改界面
         Date credentialsExpireTime = authAccount.getCredentialsExpireTime();
         if (credentialsExpireTime != null && credentialsExpireTime.before(new Date())) {
-            httpServletResponse.sendRedirect(authUserDetails.getUrlPrefixBySource() + "/profile/cpwd");
+            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + authUserDetails.getUrlPrefixBySource()
+                    + "/profile/credentials-expire");
             return false;
         }
 

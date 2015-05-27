@@ -28,12 +28,16 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.math3.random.RandomDataGenerator;
+import org.apache.shiro.util.CollectionUtils;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -43,12 +47,14 @@ public class MockEntityUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(MockEntityUtils.class);
 
+    private final static RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static <X> X buildMockObject(Class<X> clazz) {
         X x = null;
         try {
             x = clazz.newInstance();
-            for (Method method : clazz.getDeclaredMethods()) {
+            for (Method method : clazz.getMethods()) {
                 String mn = method.getName();
                 if (mn.startsWith("set")) {
                     Class[] parameters = method.getParameterTypes();
@@ -56,6 +62,10 @@ public class MockEntityUtils {
                         Method getMethod = MethodUtils.getAccessibleMethod(clazz, "get" + mn.substring(3), null);
                         if (getMethod != null) {
                             if (getMethod.getName().equals("getId")) {
+                                continue;
+                            }
+                            //有默认值，则直接返回
+                            if (MethodUtils.invokeMethod(x, getMethod.getName(), null, null) != null) {
                                 continue;
                             }
                             Object value = null;
@@ -74,9 +84,9 @@ public class MockEntityUtils {
                             } else if (parameter.isAssignableFrom(Date.class)) {
                                 value = new Date();
                             } else if (parameter.isAssignableFrom(BigDecimal.class)) {
-                                value = new BigDecimal(10 + new Random().nextDouble() * 1000);
+                                value = new BigDecimal(10 + new Double(new Random().nextDouble() * 1000).intValue());
                             } else if (parameter.isAssignableFrom(Integer.class)) {
-                                value = new Random().nextInt();
+                                value = 1 + new Double(new Random().nextDouble() * 100).intValue();
                             } else if (parameter.isAssignableFrom(Boolean.class)) {
                                 value = new Random().nextBoolean();
                             } else if (parameter.isEnum()) {
@@ -96,6 +106,61 @@ public class MockEntityUtils {
             logger.error(e.getMessage(), e);
         }
         return x;
+    }
+
+    /**
+     * 随机取一个对象返回
+     */
+    public static <X> X randomCandidates(X... candidates) {
+        List<X> list = Lists.newArrayList(candidates);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(randomDataGenerator.nextInt(0, list.size() - 1));
+    }
+
+    /**
+     * 随机取一个对象返回
+     */
+    public static <X> X randomCandidates(Iterable<X> candidates) {
+        List<X> list = Lists.newArrayList(candidates);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(randomDataGenerator.nextInt(0, list.size() - 1));
+    }
+
+    /**
+     * 返回区间段随机整数
+     * @param lower 最小值
+     * @param upper 最大值
+     * @return
+     */
+    public static int randomInt(int lower, int upper) {
+        return randomDataGenerator.nextInt(lower, upper);
+    }
+
+    /**
+     * 返回区间段随机布尔值
+     * @return
+     */
+    public static boolean randomBoolean() {
+        return randomDataGenerator.nextInt(0, 100) > 50 ? true : false;
+    }
+
+    /**
+     * 返回区间段随机日期
+     * @param daysBeforeNow 距离当前日期之前天数
+     * @param daysAfterNow 距离当前日期之后天数
+     * @return
+     */
+    public static Date randomDate(int daysBeforeNow, int daysAfterNow) {
+        DateTime dt = new DateTime();
+        dt = dt.plusMinutes(randomInt(-30, 30));
+        dt = dt.plusHours(randomInt(-12, 12));
+        dt = dt.minusDays(daysBeforeNow);
+        dt = dt.plusDays(randomInt(0, daysBeforeNow + daysAfterNow));
+        return dt.toDate();
     }
 
     /**
@@ -169,10 +234,14 @@ public class MockEntityUtils {
                 String sql = null;
                 if (name.indexOf("mysql") > -1) {
                     sql = "ALTER TABLE " + table.name() + " AUTO_INCREMENT =" + metaData.autoIncrementInitValue();
+                } else if (name.indexOf("SQL Server") > -1) {
+                    //DBCC   CHECKIDENT( 'tb ',   RESEED,   20000)  
+                    sql = "DBCC CHECKIDENT('" + table.name() + "',RESEED," + metaData.autoIncrementInitValue() + ")";
                 } else if (name.indexOf("h2") > -1) {
-
+                    //DO Nothing;
+                } else {
+                    throw new UnsupportedOperationException(name);
                 }
-                //TODO 其他数据库
 
                 if (StringUtils.isNotBlank(sql)) {
                     logger.debug("Execute autoIncrementInitValue SQL: {}", sql);
@@ -180,7 +249,6 @@ public class MockEntityUtils {
                 }
             }
         });
-
     }
 
     public static class TestVO {

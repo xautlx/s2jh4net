@@ -3,6 +3,7 @@ package lab.s2jh.support.web;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
+import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.web.view.OperationResult;
@@ -67,6 +68,25 @@ public class UserProfileController {
             userService.save(user, newpasswd);
             return OperationResult.buildSuccessResult("密码修改成功,请在下次登录使用新密码");
         }
+    }
+
+    @MetaData("密码过期强制重置-显示")
+    @RequiresRoles(value = AuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/admin/profile/credentials-expire", method = RequestMethod.GET)
+    public String profileCredentialsExpireShow() {
+        return "admin/profile/credentials-expire";
+    }
+
+    @MetaData("密码过期强制重置-更新")
+    @RequiresRoles(value = AuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/admin/profile/credentials-expire", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult profileCredentialsExpireSave(@RequestParam("newpasswd") String newpasswd) {
+        User user = AuthContextHolder.findAuthUser();
+        //更新密码失效日期为6个月后
+        user.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
+        userService.save(user, newpasswd);
+        return OperationResult.buildSuccessResult("密码修改成功,请在下次登录使用新密码").setRedirect("/admin");
     }
 
     @ModelAttribute

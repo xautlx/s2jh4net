@@ -8,9 +8,6 @@ public class JsonViews {
     public interface App extends Public {
     }
 
-    public interface Admin extends App {
-    }
-
     public interface List {
     }
 
@@ -21,5 +18,8 @@ public class JsonViews {
     }
 
     public interface AppDetail extends App, Detail {
+    }
+
+    public interface Admin extends App, List {
     }
 }

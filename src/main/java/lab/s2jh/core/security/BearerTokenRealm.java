@@ -18,8 +18,9 @@ public class BearerTokenRealm extends AuthorizingRealm {
 
     private UserService userService;
 
-    public BearerTokenRealm() {
-        setAuthenticationTokenClass(BearerAuthenticationToken.class);
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof BearerAuthenticationToken;
     }
 
     @Override

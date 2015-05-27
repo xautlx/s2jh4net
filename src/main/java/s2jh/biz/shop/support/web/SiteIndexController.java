@@ -15,6 +15,7 @@ import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.ImageUtils;
 import lab.s2jh.core.web.BaseController;
+import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
@@ -113,14 +114,15 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
     public OperationResult imageUploadTemp(@RequestParam("photo") CommonsMultipartFile photo, HttpServletRequest request) {
         if (photo != null && !photo.isEmpty()) {
             try {
+                String rootDir = WebAppContextInitFilter.getInitedWebContextRealPath();
                 String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
-                File dir = new File(GlobalConfigService.getWebRootRealPath() + TEMP_PHOTO_FILE_PATH);
+                File dir = new File(rootDir + TEMP_PHOTO_FILE_PATH);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
                 String photoFilePath = TEMP_PHOTO_FILE_PATH + fileName;
-                logger.debug("Saving file: {}", GlobalConfigService.getWebRootRealPath() + photoFilePath);
-                File photoFile = new File(GlobalConfigService.getWebRootRealPath() + photoFilePath);
+                logger.debug("Saving file: {}", rootDir + photoFilePath);
+                File photoFile = new File(rootDir + photoFilePath);
                 photo.transferTo(photoFile);
 
                 BufferedImage bi = ImageIO.read(photoFile);
@@ -146,7 +148,8 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
             @RequestParam(value = "w", required = false) Integer w, @RequestParam(value = "h", required = false) Integer h,
             @RequestParam(value = "size", required = false) Integer size) throws IOException {
         try {
-            String bigImagePath = GlobalConfigService.getWebRootRealPath() + bigImage;
+            String rootDir = WebAppContextInitFilter.getInitedWebContextRealPath();
+            String bigImagePath = rootDir + bigImage;
             //判断是否需要先进行裁剪处理
             if (x != null && w != null && w > 0) {
                 //裁剪图片

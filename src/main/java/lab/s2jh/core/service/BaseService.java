@@ -38,6 +38,7 @@ import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter.MatchType;
 
+import org.activiti.engine.impl.cmd.GetBpmnModelCmd;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1398,21 +1399,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
         return getEntityManager().find(entityClass, id);
     }
 
-    public void detachEntity(Object entity) {
+    public void detach(Object entity) {
         getEntityManager().detach(entity);
-    }
-
-    /**
-     * 基于Native SQL返回Map结构集合数据
-     */
-    @SuppressWarnings("rawtypes")
-    protected List<Map<String, Object>> queryForMapDatasByNativeSQL(String sql) {
-        //TODO 防止SQL字符过滤处理
-        Query query = getEntityManager().createNativeQuery(sql);
-        //Hibernate特定语法
-        query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        List list = query.getResultList();
-        getEntityManager().close();
-        return list;
     }
 }

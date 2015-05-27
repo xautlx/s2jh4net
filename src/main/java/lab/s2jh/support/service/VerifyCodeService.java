@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import lab.s2jh.core.service.GlobalConfigService;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,7 @@ public class VerifyCodeService {
     public String generateSmsCode(HttpServletRequest request, String mobileNum) {
         String code = RandomStringUtils.randomNumeric(6);
         HttpSession session = request.getSession(false);
-        if (session != null) {
+        if (!GlobalConfigService.isDevMode() && session != null) {
             session.setAttribute(KEY_SESSION_SMS_DATA, code);
         } else {
             //在没有session情况下，其他容错处理
@@ -64,7 +66,7 @@ public class VerifyCodeService {
     public boolean verifySmsCode(HttpServletRequest request, String mobileNum, String code) {
         String serverCode = null;
         HttpSession session = request.getSession(false);
-        if (session != null) {
+        if (!GlobalConfigService.isDevMode() && session != null) {
             serverCode = (String) session.getAttribute(KEY_SESSION_SMS_DATA);
         } else {
             //在没有session情况下，其他容错处理
@@ -78,6 +80,16 @@ public class VerifyCodeService {
             return false;
         }
         return serverCode.equals(code);
+    }
+
+    public Map<String, String> getMobileCodes() {
+        Map<String, String> mobileCodes = Maps.newHashMap();
+        if (GlobalConfigService.isDevMode() && smsCodeContainer != null) {
+            for (Map.Entry<String, SmsCode> me : smsCodeContainer.entrySet()) {
+                mobileCodes.put(me.getKey(), me.getValue().getCode());
+            }
+        }
+        return mobileCodes;
     }
 
     /**

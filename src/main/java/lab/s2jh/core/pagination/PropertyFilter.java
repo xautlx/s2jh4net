@@ -29,7 +29,6 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -341,22 +340,67 @@ public class PropertyFilter {
         return filterList;
     }
 
+    /**
+     * 从request对象中提取组装分页和排序对象，参数列表：
+     * rows 每页记录数，默认20
+     * page 当前页码数，从1开始，默认为1
+     * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
+     * sidx 排序属性名称
+     * sord 排序规则，asc=升序，desc=降序，默认asc
+     * @param request 
+     * @return
+     */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request) {
         return buildPageableFromHttpRequest(request, null);
     }
 
+    /**
+     * 从request对象中提取组装分页和排序对象，参数列表：
+     * rows 每页记录数，默认20
+     * page 当前页码数，从1开始，默认为1
+     * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
+     * sidx 排序属性名称
+     * sord 排序规则，asc=升序，desc=降序，默认asc
+     * @param request 
+     * @param sort 如果传入参数为null，则从request构建，否则直接取输入sort参数
+     * @return
+     */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort) {
-        String rows = StringUtils.isBlank(request.getParameter("rows")) ? "20" : request.getParameter("rows");
-        if (Integer.valueOf(rows) < 0) {
+        String strRows = StringUtils.isBlank(request.getParameter("rows")) ? "20" : request.getParameter("rows");
+        if (Integer.valueOf(strRows) < 0) {
             return null;
         }
-        String page = StringUtils.isBlank(request.getParameter("page")) ? "1" : request.getParameter("page");
+
+        int rows = Integer.valueOf(strRows);
+        int offset = -1;
+        int page = 1;
+        String strStart = request.getParameter("start");
+        if (StringUtils.isNotBlank(strStart)) {
+            offset = Integer.valueOf(strStart) - 1;
+            page = (offset + 1) / Integer.valueOf(rows);
+            if (page <= 0) {
+                page = 1;
+            }
+        } else {
+            String strPage = request.getParameter("page");
+            if (StringUtils.isNotBlank(strPage)) {
+                page = Integer.valueOf(strPage);
+            }
+        }
+
         if (sort == null) {
             sort = buildSortFromHttpRequest(request);
         }
-        return new PageRequest(Integer.valueOf(page) - 1, Integer.valueOf(rows), sort);
+        return new ExtPageRequest(offset, page - 1, Integer.valueOf(rows), sort);
     }
 
+    /**
+     * 从request对象中提取组装排序对象，参数列表：
+     * sidx 排序属性名称
+     * sord 排序规则，asc=升序，desc=降序，默认asc
+     * @param request
+     * @return
+     */
     public static Sort buildSortFromHttpRequest(HttpServletRequest request) {
         String sidx = StringUtils.isBlank(request.getParameter("sidx")) ? "id" : request.getParameter("sidx");
         Direction sord = "desc".equalsIgnoreCase(request.getParameter("sord")) ? Direction.DESC : Direction.ASC;

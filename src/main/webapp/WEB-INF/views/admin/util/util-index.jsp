@@ -104,5 +104,25 @@
 			</div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="portlet box grey">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> 开发模式查看手机验证码
+					</div>
+					<div class="tools">
+						<a class="collapse" href="javascript:;"></a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<div class="note note-info">
+						<p>开发模式为了减少不必要的手机短信通道收费服务调用，会以模拟方式发送短信验证码。可通过此功能查询程序中生成的短信验证码直接用于相关功能界面。</p>
+					</div>
+					<a class="btn blue" href="${ctx}/admin/util/mobile-codes" target="_blank">点击显示手机验证码列表</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

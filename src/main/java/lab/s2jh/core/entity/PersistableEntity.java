@@ -37,6 +37,7 @@ public abstract class PersistableEntity<ID extends Serializable> implements Pers
     public static final String EXTRA_ATTRIBUTE_DIRTY_ROW = "dirtyRow";
 
     /** Entity本身无用，主要用于UI层辅助参数传递 */
+    @Transient
     private Map<String, Object> extraAttributes;
 
     /*

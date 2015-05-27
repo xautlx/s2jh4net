@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,12 +33,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "sys_Menu")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "菜单")
+@Audited
 public class Menu extends BaseNativeEntity {
 
     private static final long serialVersionUID = 2860233299443173932L;
-
-    /** 用于报表菜单项计算的固定菜单代码 */
-    public static final String MENU_CODE_RPT = "MFIXRPT";
 
     @MetaData(value = "名称")
     @Column(nullable = false, length = 32)

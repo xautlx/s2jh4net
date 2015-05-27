@@ -4,6 +4,7 @@
 package lab.s2jh.core.pagination;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
@@ -124,6 +126,12 @@ public class GroupPropertyFilter {
         }
     }
 
+    public static GroupPropertyFilter buildDefaultAndGroupFilter(List<PropertyFilter> filters) {
+        GroupPropertyFilter dpf = new GroupPropertyFilter(GROUP_OPERATION_AND);
+        dpf.setFilters(filters);
+        return dpf;
+    }
+
     public static GroupPropertyFilter buildDefaultAndGroupFilter(PropertyFilter... filters) {
         GroupPropertyFilter dpf = new GroupPropertyFilter(GROUP_OPERATION_AND);
         if (filters != null && filters.length > 0) {
@@ -140,10 +148,8 @@ public class GroupPropertyFilter {
         return dpf;
     }
 
-    private static void convertJqGridToFilter(Class<?> entityClass, GroupPropertyFilter jqGroupPropertyFilter,
-            JqGridSearchFilter jqFilter) {
-        jqGroupPropertyFilter.setGroupType(jqFilter.getGroupOp().equalsIgnoreCase("OR") ? GROUP_OPERATION_OR
-                : GROUP_OPERATION_AND);
+    private static void convertJqGridToFilter(Class<?> entityClass, GroupPropertyFilter jqGroupPropertyFilter, JqGridSearchFilter jqFilter) {
+        jqGroupPropertyFilter.setGroupType(jqFilter.getGroupOp().equalsIgnoreCase("OR") ? GROUP_OPERATION_OR : GROUP_OPERATION_AND);
 
         List<JqGridSearchRule> rules = jqFilter.getRules();
         List<PropertyFilter> filters = Lists.newArrayList();
@@ -151,8 +157,7 @@ public class GroupPropertyFilter {
             if (StringUtils.isBlank(rule.getData())) {
                 continue;
             }
-            PropertyFilter filter = new PropertyFilter(entityClass, rule.getOp().toUpperCase() + "_" + rule.getField(),
-                    rule.getData());
+            PropertyFilter filter = new PropertyFilter(entityClass, rule.getOp().toUpperCase() + "_" + rule.getField(), rule.getData());
             filters.add(filter);
         }
         jqGroupPropertyFilter.setFilters(filters);
@@ -263,4 +268,25 @@ public class GroupPropertyFilter {
         return true;
     }
 
+    /**
+     * 转换为Key-Value的Map结构数据
+     * @return
+     */
+    public Map<String, Object> convertToMapParameters() {
+        Map<String, Object> parameters = Maps.newHashMap();
+        List<PropertyFilter> propertyFilters = Lists.newArrayList();
+        propertyFilters.addAll(this.getFilters());
+        if (CollectionUtils.isNotEmpty(this.getGroups())) {
+            for (GroupPropertyFilter group : this.getGroups()) {
+                if (CollectionUtils.isEmpty(group.getFilters()) && CollectionUtils.isEmpty(group.getForceAndFilters())) {
+                    continue;
+                }
+                propertyFilters.addAll(group.getFilters());
+            }
+        }
+        for (PropertyFilter propertyFilter : propertyFilters) {
+            parameters.put(propertyFilter.getPropertyName(), propertyFilter.getMatchValue());
+        }
+        return parameters;
+    }
 }

@@ -55,6 +55,7 @@ public class DynamicConfigService {
             }
         }
         if (val == null) {
+            logger.warn("Undefined config property for: {}", key);
             return defaultValue;
         } else {
             return val.trim();

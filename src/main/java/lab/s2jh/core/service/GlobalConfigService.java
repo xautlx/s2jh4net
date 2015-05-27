@@ -25,23 +25,12 @@ public class GlobalConfigService {
     @MetaData(value = "构建版本")
     private static String buildVersion;
 
-    /**
-     * @see ApplicationContextPreListener#contextInitialized
-     */
-    @MetaData(value = "Web应用部署的根目录", comments = "用于获取WEB-INF目录下资源等")
-    private static String webRootRealPath;
-
     public static boolean isDemoMode() {
         return demoMode;
     }
 
     public static boolean isDevMode() {
         return devMode;
-    }
-
-    public static String getWebRootRealPath() {
-        Assert.notNull(webRootRealPath, "WEB_ROOT real path undefined");
-        return webRootRealPath;
     }
 
     @Value("${build_version}")
@@ -60,15 +49,6 @@ public class GlobalConfigService {
     public void setDevMode(String devMode) {
         GlobalConfigService.devMode = BooleanUtils.toBoolean(devMode);
         logger.info("System runnging at dev_mode={}", GlobalConfigService.devMode);
-    }
-
-    public static void setWebRootRealPath(String in) {
-        if (webRootRealPath == null) {
-            webRootRealPath = in;
-        }
-        if (StringUtils.isNotBlank(webRootRealPath)) {
-            logger.info("System runnging at web.root.real.path={}", webRootRealPath);
-        }
     }
 
     public static String getBuildVersion() {

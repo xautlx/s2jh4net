@@ -25,22 +25,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public abstract class BaseController<T extends PersistableEntity<ID>, ID extends Serializable> {
 
     private final static Logger logger = LoggerFactory.getLogger(BaseController.class);
-
-    private final static ObjectMapper objectMapper = new ObjectMapper();
 
     /** 子类指定泛型对应的实体Service接口对象 */
     abstract protected BaseService<T, ID> getEntityService();
@@ -134,9 +130,7 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
 
     protected void initPrepareModel(HttpServletRequest request, Model model, ID id) {
         T entity = null;
-        if (id == null) {
-            entity = buildBindingEntity();
-        } else {
+        if (id != null) {
             //如果是以POST方式请求数据，则获取Detach状态的对象，其他则保留Session方式以便获取Lazy属性
             if (request.getMethod().equalsIgnoreCase("POST")) {
                 entity = buildDetachedBindingEntity(id);
@@ -146,6 +140,9 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
                 entity = getEntityService().findOne(id);
             }
             model.addAttribute("id", id);
+        }
+        if (entity == null) {
+            entity = buildBindingEntity();
         }
         model.addAttribute("clazz", ServletUtils.buildValidateId(entity.getClass()));
         model.addAttribute("entity", entity);
@@ -178,25 +175,6 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
      */
     protected void appendFilterProperty(GroupPropertyFilter groupPropertyFilter) {
 
-    }
-
-    /**
-     * 一般用于把没有分页的集合数据转换组装为对应的Page对象，传递到前端Grid组件以统一的JSON结构数据显示
-     * @param list 泛型集合数据
-     * @return 转换封装的Page分页结构对象
-     */
-    protected <S> Page<S> buildPageResultFromList(List<S> list) {
-        Page<S> page = new PageImpl<S>(list);
-        return page;
-    }
-
-    protected String writeValueAsJsonString(Object obj) {
-        try {
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            return "{\"ERROR\":\"ERROR\"}";
-        }
     }
 
     /**

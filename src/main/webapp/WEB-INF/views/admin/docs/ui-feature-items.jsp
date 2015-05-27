@@ -14,6 +14,7 @@
 	<li><a data-toggle="tab" href="#tab-auto">Text、HTML等处理组件</a></li>
 	<li><a data-toggle="tab" href="#tab-auto">文件、图片等处理组件</a></li>
 	<li><a data-toggle="tab" href="#tab-auto">动态表格等处理组件</a></li>
+	<li><a data-toggle="tab" href="#tab-auto">统计图表等处理组件</a></li>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane">
@@ -48,6 +49,32 @@
 						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDataProfileParam" target="jsdoc">JSDoc</a></span>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label class="control-label">单选按钮组</label>
+							<div class="controls controls-radiobuttons">
+								<form:radiobuttons path="expired" items="${applicationScope.cons.booleanLabelMap}" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<span class="help-block">注意在对应所属的controls元素上追加样式controls-radiobuttons</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label class="control-label">复选按钮组</label>
+							<div class="controls controls-checkboxes">
+								<form:checkboxes path="expired" items="${applicationScope.cons.booleanLabelMap}" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<span class="help-block">注意在对应所属的controls元素上追加样式controls-checkboxes</span>
+					</div>
+				</div>				
 			</div>
 		</form:form>
 	</div>
@@ -410,5 +437,32 @@
 				<button class="btn default" type="button" data-dismiss="modal">取消</button>
 			</div>
 		</form:form>
+	</div>
+
+
+	<div class="tab-pane">
+		<div class="row search-form-default">
+			<div class="col-md-12">
+				<form action="${ctx}/admin/p2p/data-stat/site-user/timely" method="get"
+					class="form-inline form-validation form-search form-search-auto" data-div-search="#data-stat-site-user-timely">
+					<div class="form-group">
+						<label class="control-label">统计时间段</label>
+						<div class="controls">
+							<input class="form-control input-large" name="activeFromTo" type="text" data-toggle="daterangepicker"
+								data-date-scope="beforeNow">
+						</div>
+					</div>
+					<div class="form-group search-group-btn hide">
+						<button class="btn green" type="submmit">
+							<i class="m-icon-swapright m-icon-white"></i>&nbsp; 查&nbsp;询
+						</button>
+						<button class="btn default" type="reset">
+							<i class="fa fa-undo"></i>&nbsp; 重&nbsp;置
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="data-stat-site-user-timely"></div>
 	</div>
 </div>

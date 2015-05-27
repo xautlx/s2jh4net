@@ -30,6 +30,7 @@ import javax.validation.constraints.Size;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.SpringContextHolder;
+import lab.s2jh.core.entity.PersistableEntity;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
@@ -186,6 +187,12 @@ public class ServletUtils {
                     }
                     Map<String, Object> rules = Maps.newHashMap();
 
+                    //TODO 优化嵌套属性处理
+                    //如果是实体对象类型，一般表单元素name都定义为entity.id，因此额外追加对应id属性校验规则
+                    //if (PersistableEntity.class.isAssignableFrom(field.getType())) {
+                    //    nameRules.put(name + ".id", rules);
+                    //}
+
                     MetaData metaData = field.getAnnotation(MetaData.class);
                     if (metaData != null) {
                         String tooltips = metaData.tooltips();
@@ -234,7 +241,7 @@ public class ServletUtils {
                             } else if (DateUtils.DEFAULT_TIME_FORMAT.equals(dateTimeFormat.pattern())) {
                                 rules.put("timestamp", true);
                             } else {
-                                //TODO
+                                rules.put("date", true);
                             }
                         }
 
@@ -269,10 +276,7 @@ public class ServletUtils {
 
                     if (rules.size() > 0) {
                         nameRules.put(name, rules);
-                        //如果是实体对象类型，一般表单元素name都定义为entity.id，因此额外追加对应id属性校验规则
-                        //if (PersistableEntity.class.isAssignableFrom(field.getType())) {
-                        //    nameRules.put(name + ".id", rules);
-                        //}
+
                     }
                 }
 

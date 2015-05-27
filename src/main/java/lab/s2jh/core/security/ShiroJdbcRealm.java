@@ -32,8 +32,9 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
 
     private UserService userService;
 
-    public ShiroJdbcRealm() {
-        setAuthenticationTokenClass(SourceUsernamePasswordToken.class);
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof SourceUsernamePasswordToken;
     }
 
     /**
@@ -92,6 +93,10 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         AuthUserDetails authUserDetails = (AuthUserDetails) principals.getPrimaryPrincipal();
+        //APP用户固定角色
+        if (AuthSourceEnum.P.equals(authUserDetails.getSource())) {
+            return null;
+        }
         User user = userService.findByAuthTypeAndAuthUid(authUserDetails.getAuthType(), authUserDetails.getAuthUid());
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();

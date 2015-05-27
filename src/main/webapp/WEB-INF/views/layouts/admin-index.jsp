@@ -18,63 +18,12 @@
 <meta content="" name="description" />
 <meta content="" name="author" />
 <meta name="MobileOptimized" content="320">
-<script src="${ctx}/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
-<!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link href="${ctx}/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<!-- END GLOBAL MANDATORY STYLES -->
-<!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
-<link href="${ctx}/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/plugins/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/plugins/bootstrap-datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-multi-select/css/multi-select.css" />
-<link href="${ctx}/assets/plugins/fullcalendar/fullcalendar.css" rel="stylesheet" />
-<link href="${ctx}/assets/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" />
-<!-- END PAGE LEVEL PLUGIN STYLES -->
 
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/bootstrap-toastr/toastr.min.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/data-tables/DT_bootstrap.css" />
-<link rel="stylesheet" type="text/css"
-	href="${ctx}/assets/plugins/bootstrap-editable/bootstrap-editable/css/bootstrap-editable.css" />
-<link rel="stylesheet" type="text/css"
-	href="${ctx}/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch-metro.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" />
-
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-ui/redmond/jquery-ui-1.10.3.custom.min.css">
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-jqgrid/plugins/ui.multiselect.css">
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-jqgrid/css/ui.jqgrid.css">
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/admin/app/bootstrap-jqgrid.css" />
-
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/tooltipster/css/tooltipster.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/tooltipster/css/themes/tooltipster-light.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/tooltipster/css/themes/tooltipster-noir.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/tooltipster/css/themes/tooltipster-punk.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/tooltipster/css/themes/tooltipster-shadow.css" />
-
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/select2/select2_metro.css" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-ztree/css/zTreeStyle/zTreeStyle.css">
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/kindeditor/themes/default/default.css">
-
-<!-- BEGIN THEME STYLES -->
-<link href="${ctx}/assets/admin/css/style-metronic.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/style.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/style-responsive.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/plugins.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/pages/tasks.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/themes/light.css" rel="stylesheet" type="text/css" id="style_color" />
-<link href="${ctx}/assets/admin/css/pages/search.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/app/custom.css" rel="stylesheet" type="text/css" />
-<!-- END THEME STYLES -->
-
-<link href="${ctx}/assets/admin/app/custom.css" rel="stylesheet" type="text/css" />
-
-<link rel="shortcut icon" href="${ctx}/assets/img/favicon.ico" />
+<%@include file="/WEB-INF/views/layouts/admin-include-header.jsp"%>
 <script type="text/javascript">
-    var WEB_ROOT = "${ctx}";
-    var READ_FILE_URL_PREFIX = "${readFileUrlPrefix}";
+    var DASHBOARD_URI = "/admin/dashboard";
 </script>
+
 <sitemesh:write property='head' />
 </head>
 <!-- END HEAD -->
@@ -336,129 +285,7 @@
 		<i class="fa fa-heart-o"></i>
 	</button>
 
-	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-	<!-- BEGIN CORE PLUGINS -->
-	<!--[if lt IE 9]>
-    <script src="${ctx}/assets/plugins/respond.min.js"></script>
-    <script src="${ctx}/assets/plugins/excanvas.min.js"></script> 
-    <![endif]-->
-
-	<script src="${ctx}/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-	<!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
-	<script src="${ctx}/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js"
-		type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/jquery.cookie.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-toastr/toastr.min.js"></script>
-	<!-- END CORE PLUGINS -->
-	<!-- BEGIN PAGE LEVEL PLUGINS -->
-	<script src="${ctx}/assets/plugins/jquery.pulsate.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-daterangepicker/moment.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js"
-		type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
-		type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/gritter/js/jquery.gritter.js" type="text/javascript"></script>
-	<!-- IMPORTANT! fullcalendar depends on jquery-ui-1.10.3.custom.min.js for drag & drop support -->
-	<script src="${ctx}/assets/plugins/fullcalendar/lib/moment.min.js"></script>
-	<script src="${ctx}/assets/plugins/fullcalendar/fullcalendar.min.js"></script>
-	<script src="${ctx}/assets/plugins/fullcalendar/lang/zh-cn.js"></script>
-	<script src="${ctx}/assets/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
-	<!-- END PAGE LEVEL PLUGINS -->
-
-	<script type="text/javascript" src="${ctx}/assets/plugins/jquery.form.js"></script>
-	<script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/dist/jquery.validate.js"></script>
-	<script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/localization/messages_zh.js"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
-	<script type="text/javascript"
-		src="${ctx}/assets/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-
-	<!-- The basic File Upload plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
-	<!-- The File Upload processing plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload-process.js"></script>
-	<!-- The File Upload image preview & resize plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload-image.js"></script>
-	<!-- The File Upload audio preview plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload-audio.js"></script>
-	<!-- The File Upload video preview plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload-video.js"></script>
-	<!-- The File Upload validation plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
-	<!-- The File Upload user interface plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload-ui.js"></script>
-	<!-- The main application script -->
-	<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
-	<!--[if (gte IE 8)&(lt IE 10)]>
-    <script src="${ctx}/assets/plugins/jquery-file-upload/js/cors/jquery.xdr-transport.js"></script>
-    <![endif]-->
-	<!-- END:File Upload Plugin JS files-->
-
-	<script type="text/javascript" src="${ctx}/assets/plugins/tooltipster/js/jquery.tooltipster.min.js"></script>
-
-	<script src="${ctx}/assets/plugins/JSPinyin.js"></script>
-
-	<script src="${ctx}/assets/plugins/flot/jquery.flot.js"></script>
-	<script src="${ctx}/assets/plugins/flot/jquery.flot.pie.js"></script>
-	<script src="${ctx}/assets/plugins/flot/jquery.flot.stack.js"></script>
-	<script src="${ctx}/assets/plugins/flot/jquery.flot.crosshair.js"></script>
-	<script src="${ctx}/assets/plugins/flot/jquery.flot.time.js"></script>
-
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
-	<script src="${ctx}/assets/admin/scripts/app.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/admin/scripts/index.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/admin/scripts/tasks.js" type="text/javascript"></script>
-	<!-- END PAGE LEVEL SCRIPTS -->
-
-	<script src="${ctx}/assets/plugins/jquery-jqgrid/plugins/ui.multiselect.js"></script>
-	<script src="${ctx}/assets/plugins/jquery-jqgrid/js/i18n/grid.locale-cn.js"></script>
-	<script src="${ctx}/assets/plugins/jquery-jqgrid/js/jquery.jqGrid.src.js"></script>
-
-	<script type="text/javascript" src="${ctx}/assets/plugins/select2/select2.min.js"></script>
-	<script src="${ctx}/assets/plugins/jquery-ztree/js/jquery.ztree.all-3.5.js"></script>
-	<script src="${ctx}/assets/plugins/kindeditor/kindeditor-ext.js"></script>
-
-	<script type="text/javascript" src="${ctx}/assets/plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
-	<script type="text/javascript" src="${ctx}/assets/plugins/jquery-multi-select/js/jquery.quicksearch.js"></script>
-
-	<script src="${ctx}/assets/plugins/jquery.address/jquery.address-1.5.min.js"></script>
-
-	<script src="${ctx}/assets/admin/app/util.js"></script>
-	<script src="${ctx}/assets/w/app/global.js"></script>
-	<script src="${ctx}/assets/admin/app/global.js"></script>
-	<script src="${ctx}/assets/admin/app/grid.js"></script>
-	<script src="${ctx}/assets/admin/app/dynamic-table.js"></script>
-	<script src="${ctx}/assets/w/app/form-validation.js"></script>
-	<script src="${ctx}/assets/w/app/page.js"></script>
-	<script src="${ctx}/assets/admin/app/page.js"></script>
-
-	<script>
-        $(function() {
-
-            // console.profile('Profile Sttart');
-
-            App.init();
-            Util.init();
-            Global.init();
-            AdminGlobal.init();
-            FormValidation.init();
-
-            KindEditor.options.uploadJson = '${ctx}/w/image/upload/kind-editor.json;JSESSIONID=${pageContext.session.id}'
-
-            App.unblockUI($("body"));
-
-            //console.profileEnd();
-        });
-    </script>
-	<!-- END JAVASCRIPTS -->
+	<%@include file="/WEB-INF/views/layouts/admin-include-footer.jsp"%>
 </body>
 <!-- END BODY -->
 </html>

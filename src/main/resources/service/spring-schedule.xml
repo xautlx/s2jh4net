@@ -60,7 +60,7 @@
 		<!-- quartz配置 -->
 		<property name="configLocation" value="classpath:quartz-cluster.properties" />
 		<!-- 启动时延期N秒开始任务 -->
-		<property name="startupDelay" value="${quartz_cluster_startup_delay}" />
+		<property name="startupDelay" value="30" />
 		<!-- 保存Job数据到数据库所需的数据源 -->
 		<property name="dataSource" ref="dataSourceQuartz" />
 		<property name="transactionManager" ref="transactionManagerQuartz" />

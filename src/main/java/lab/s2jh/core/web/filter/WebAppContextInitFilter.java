@@ -45,7 +45,9 @@ public class WebAppContextInitFilter implements Filter {
             sb.append(request.getScheme()).append("://").append(request.getServerName());
             sb.append(request.getServerPort() == 80 ? "" : ":" + request.getServerPort());
             sb.append(request.getContextPath());
+            //当前应用的完整上下文路径，一般用于邮件、短信等需要组装完整访问路径之用
             WEB_CONTEXT_FULL_URL = sb.toString();
+            //设置当前WEB_ROOT根目录到配置属性以便在单纯的Service运行环境取到应用根目录获取WEB-INF下相关资源
             WEB_CONTEXT_REAL_PATH = request.getServletContext().getRealPath("/");
             logger.info("Init setup WebApp Context Info: ", WEB_CONTEXT_FULL_URL);
             logger.info(" - WEB_CONTEXT_FULL_URL: {}", WEB_CONTEXT_FULL_URL);

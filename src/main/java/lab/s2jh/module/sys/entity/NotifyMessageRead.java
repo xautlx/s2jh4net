@@ -7,6 +7,7 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,6 +15,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lab.s2jh.module.auth.entity.User;
@@ -32,8 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "sys_NotifyMessageRead", uniqueConstraints = @UniqueConstraint(columnNames = { "notifyMessage_id",
-        "readUser_id" }))
+@Table(name = "sys_NotifyMessageRead", uniqueConstraints = @UniqueConstraint(columnNames = { "notifyMessage_id", "readUser_id" }))
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @MetaData(value = "公告阅读记录")
 public class NotifyMessageRead extends BaseNativeEntity {
@@ -42,13 +43,13 @@ public class NotifyMessageRead extends BaseNativeEntity {
 
     @MetaData(value = "公告")
     @ManyToOne
-    @JoinColumn(name = "notifyMessage_id", nullable = false)
+    @JoinColumn(name = "notifyMessage_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
     @JsonIgnore
     private NotifyMessage notifyMessage;
 
     @MetaData(value = "阅读用户")
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "readUser_id", nullable = false)
+    @JoinColumn(name = "readUser_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
     @JsonIgnore
     private User readUser;
 

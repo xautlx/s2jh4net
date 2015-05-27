@@ -7,6 +7,7 @@ import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.view.OperationResult;
+import lab.s2jh.core.web.json.JsonViews;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ${root_package}.entity.${entity_name};
 import ${root_package}.service.${entity_name}Service;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 @MetaData("${model_title}管理")
 @Controller
@@ -41,8 +44,8 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
     }
     
     @ModelAttribute
-    public void prepareModel(Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(model, id);
+    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        super.initPrepareModel(request, model, id);
     }
     
     //@MenuData("TODO {PATH}:${entity_name}")
@@ -55,6 +58,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
     //@RequiresPermissions("TODO {PATH}:${entity_name}")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
+    @JsonView(JsonViews.Admin.class)
     public Page<${entity_name}> findByPage(HttpServletRequest request) {
         return super.findByPage(${entity_name}.class, request);
     }

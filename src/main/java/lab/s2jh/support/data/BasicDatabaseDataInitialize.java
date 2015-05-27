@@ -10,10 +10,9 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import lab.s2jh.core.annotation.MenuData;
@@ -43,12 +42,12 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -58,13 +57,13 @@ import com.google.common.collect.Sets;
  * 数据库基础数据初始化处理器
  */
 @Component
+@Transactional
 public class BasicDatabaseDataInitialize {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitialize.class);
 
-    @Autowired
-    @Qualifier("entityManagerFactoryApp")
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext(unitName = "entityManagerApp")
+    private EntityManager entityManager;
 
     @Autowired
     private PasswordService passwordService;
@@ -72,14 +71,10 @@ public class BasicDatabaseDataInitialize {
     @Autowired
     private ExtPropertyPlaceholderConfigurer extPropertyPlaceholderConfigurer;
 
-    @PostConstruct
     public void initialize() throws Exception {
 
         logger.info("Running " + this.getClass().getName());
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
         Date now = new Date();
-
-        entityManager.getTransaction().begin();
 
         //搜索所有entity对象，并自动进行自增初始化值设置
         ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
@@ -133,6 +128,8 @@ public class BasicDatabaseDataInitialize {
             entity.setNickName("后台默认普通管理员");
             entity.setSignupTime(now);
             entity.setPassword(passwordService.entryptPassword(entity.getAuthUid() + "123", entity.getAuthGuid()));
+            //默认密码失效，用户初始密码登录后则强制修改密码
+            entity.setCredentialsExpireTime(now);
             entityManager.persist(entity);
 
             //前端登录用户默认角色，，具体权限可通过管理界面配置
@@ -227,11 +224,6 @@ public class BasicDatabaseDataInitialize {
             entity.setMessage("<p>演示定向发送个人消息2内容</p>");
             entityManager.persist(entity);
         }
-
-        entityManager.flush();
-        entityManager.close();
-
-        entityManager.getTransaction().commit();
     }
 
     /**

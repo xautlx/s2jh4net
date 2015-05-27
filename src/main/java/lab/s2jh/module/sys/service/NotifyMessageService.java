@@ -84,11 +84,13 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
         }
 
         if (tags == null || tags.length == 0) {
+            List<NotifyMessage> toRemoves = Lists.newArrayList();
             for (NotifyMessage notifyMessage : scopeEffectiveMessages) {
                 if (!notifyMessage.isPublic()) {
-                    scopeEffectiveMessages.remove(notifyMessage);
+                    toRemoves.add(notifyMessage);
                 }
             }
+            scopeEffectiveMessages.removeAll(toRemoves);
             return scopeEffectiveMessages;
         }
 

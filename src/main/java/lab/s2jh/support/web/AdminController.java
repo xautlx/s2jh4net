@@ -1,7 +1,6 @@
 package lab.s2jh.support.web;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,6 @@ import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.PasswordService;
 import lab.s2jh.core.security.ShiroJdbcRealm;
-import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.web.captcha.ImageCaptchaServlet;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
@@ -34,15 +32,8 @@ import lab.s2jh.support.service.MailService;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.aop.MethodInvocation;
-import org.apache.shiro.authz.AuthorizationException;
-import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.authz.aop.AuthorizingAnnotationMethodInterceptor;
-import org.apache.shiro.spring.security.interceptor.AopAllianceAnnotationsAuthorizingMethodInterceptor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
-import org.apache.shiro.subject.Subject;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,89 +95,12 @@ public class AdminController {
     @RequestMapping(value = "/admin/menus", method = RequestMethod.GET)
     @ResponseBody
     public List<NavMenuVO> navMenu(HttpSession session) {
-
         User user = AuthContextHolder.findAuthUser();
         //如果未登录则直接返回空
         if (user == null) {
             return Lists.newArrayList();
         }
-
-        Subject subject = SecurityUtils.getSubject();
-        //先从session中获取缓存的菜单数据
-        @SuppressWarnings("unchecked")
-        List<NavMenuVO> userNavMenuVOs = (List<NavMenuVO>) session.getAttribute("user.menus");
-        if (userNavMenuVOs == null) {
-            userNavMenuVOs = Lists.newArrayList();
-        } else {
-            //如果是生产环境，并且已有菜单数据，则直接返回
-            if (!GlobalConfigService.isDevMode()) {
-                return userNavMenuVOs;
-            }
-        }
-
-        logger.debug("Build user menu list according to privileges for: {}", subject.getPrincipal());
-
-        //获取所有有效的菜单集合
-        List<NavMenuVO> navMenuVOs = menuService.findAvailableNavMenuVOs();
-
-        if (logger.isDebugEnabled()) {
-            AuthorizationInfo authorizationInfo = shiroJdbcRealm.getAuthorizationInfo(subject.getPrincipals());
-            Collection<String> roles = authorizationInfo.getRoles();
-            logger.debug("Role list: ");
-            for (String role : roles) {
-                logger.debug(" - {}", role);
-            }
-
-            Collection<String> permissions = authorizationInfo.getStringPermissions();
-            logger.debug("Permission list:");
-            if (permissions != null) {
-                for (String permission : permissions) {
-                    logger.debug(" - {}", permission);
-                }
-            }
-        }
-        //计算用户有访问权限的菜单列表
-        AopAllianceAnnotationsAuthorizingMethodInterceptor shiroMethodInterceptor = (AopAllianceAnnotationsAuthorizingMethodInterceptor) authorizationAttributeSourceAdvisor
-                .getAdvice();
-        Collection<AuthorizingAnnotationMethodInterceptor> aamis = shiroMethodInterceptor.getMethodInterceptors();
-        for (NavMenuVO navMenuVO : navMenuVOs) {
-            MethodInvocation mi = menuService.getMappedMethodInvocation(navMenuVO);
-            if (mi != null) {
-                try {
-                    //每个菜单项对应一个Controller方法调用，直接调用shiro的拦截器校验逻辑判断登录用户是否有方法访问权限，从而确定菜单是否显示
-                    assertAuthorized(aamis, mi);
-                } catch (AuthorizationException e) {
-                    //没有菜单对应方法访问权限，则跳过此菜单项
-                    continue;
-                }
-            }
-            //添加用户显示菜单项
-            userNavMenuVOs.add(navMenuVO);
-        }
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Menu list:");
-            for (NavMenuVO navMenuVO : userNavMenuVOs) {
-                logger.debug(" - {}", navMenuVO.getPath());
-            }
-        }
-
-        return userNavMenuVOs;
-    }
-
-    /**
-     * 参考 @see AnnotationsAuthorizingMethodInterceptor.assertAuthorized 对应protected方法实现一个当前私有的校验逻辑
-     */
-    private void assertAuthorized(Collection<AuthorizingAnnotationMethodInterceptor> aamis, MethodInvocation methodInvocation)
-            throws AuthorizationException {
-        //default implementation just ensures no deny votes are cast:
-        if (aamis != null && !aamis.isEmpty()) {
-            for (AuthorizingAnnotationMethodInterceptor aami : aamis) {
-                if (aami.supports(methodInvocation)) {
-                    aami.assertAuthorized(methodInvocation);
-                }
-            }
-        }
+        return menuService.processUserMenu(user);
     }
 
     @RequestMapping(value = "/admin/password/forget", method = RequestMethod.GET)

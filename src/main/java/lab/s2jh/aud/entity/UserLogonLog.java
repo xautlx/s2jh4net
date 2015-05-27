@@ -8,16 +8,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.entity.BaseNativeEntity;
+import lab.s2jh.core.entity.PersistableEntity;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
-import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -36,9 +38,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "auth_UserLogonLog")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 @MetaData(value = "用户登录登出历史记录")
-public class UserLogonLog extends BaseNativeEntity {
+public class UserLogonLog extends PersistableEntity<Long> {
 
     private static final long serialVersionUID = 4034691676061136485L;
+
+    @Id
+    @GeneratedValue(generator = "idGenerator")
+    @GenericGenerator(name = "idGenerator", strategy = "native")
+    private Long id;
 
     @MetaData(value = "账号全局唯一标识", comments = "同时作为SYS类型用户登录密码的SALT")
     @Column(length = 64, nullable = false)

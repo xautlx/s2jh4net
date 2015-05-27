@@ -95,6 +95,7 @@
                 },
                 editurl : WEB_ROOT + '/admin/sys/data-dict/edit',
                 editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
+                fullediturl : WEB_ROOT + "/admin/sys/data-dict/edit",
                 delurl : WEB_ROOT + '/admin/sys/data-dict/delete'
             });
         });

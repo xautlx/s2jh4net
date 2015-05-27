@@ -36,15 +36,17 @@ public class AuthLogonHistRefreshListener implements HttpSessionListener, Servle
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         HttpSession session = se.getSession();
-        String sessionId = session.getId();
-        UserLogonLogService userLogonLogService = SpringContextHolder.getBean(UserLogonLogService.class);
-        UserLogonLog userLogonLog = userLogonLogService.findBySessionId(sessionId);
-        if (userLogonLog != null) {
-            logger.debug("Setup logout time for session ID: {}", sessionId);
-            userLogonLog.setLogoutTime(new Date());
-            userLogonLog.setLogonTimeLength(userLogonLog.getLogoutTime().getTime()
-                    - userLogonLog.getLogonTime().getTime());
-            userLogonLogService.save(userLogonLog);
+        //基于Shiro判断session是否已登录过，由于未提供public常量访问因此直接参考HttpServletSession取代码中字符串
+        if (session.getAttribute("org.apache.shiro.web.session.HttpServletSession.HOST_SESSION_KEY") != null) {
+            String sessionId = session.getId();
+            UserLogonLogService userLogonLogService = SpringContextHolder.getBean(UserLogonLogService.class);
+            UserLogonLog userLogonLog = userLogonLogService.findBySessionId(sessionId);
+            if (userLogonLog != null) {
+                logger.debug("Setup logout time for session ID: {}", sessionId);
+                userLogonLog.setLogoutTime(new Date());
+                userLogonLog.setLogonTimeLength(userLogonLog.getLogoutTime().getTime() - userLogonLog.getLogonTime().getTime());
+                userLogonLogService.save(userLogonLog);
+            }
         }
     }
 
@@ -71,8 +73,7 @@ public class AuthLogonHistRefreshListener implements HttpSessionListener, Servle
                     userLogonLog.setLogoutTime(logoutTime);
 
                     logger.debug(" - Setup logout time for session ID: {}", userLogonLog.getHttpSessionId());
-                    userLogonLog.setLogonTimeLength(userLogonLog.getLogoutTime().getTime()
-                            - userLogonLog.getLogonTime().getTime());
+                    userLogonLog.setLogonTimeLength(userLogonLog.getLogoutTime().getTime() - userLogonLog.getLogonTime().getTime());
                     userLogonLogService.save(userLogonLog);
                 }
             }

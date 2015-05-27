@@ -81,7 +81,6 @@
 			<div class="form-info" style="height: 270px; margin-top: 50px">
 				<h4>访问提示</h4>
 				<p>建议使用最新版本Firefox或Chrome浏览器访问应用以避免不必要的浏览器兼容性问题。</p>
-				<p>当前仅为框架原型演示应用，主要目的展示基于框架开发典型企业应用系统的UI交互效果，各业务功能很可能存在功能不完整或不符合实际业务场景以及相关Bug问题，仅供参考。</p>
 				<c:if test="${cfg.dev_mode}">
 					<p id="devModeTips" style="padding: 10px">
 						<b> 开发/测试/演示登录快速入口: <br /> <a href="javascript:void(0)" onclick="setupDevUser('admin','admin123')">admin超级管理员</a><br />

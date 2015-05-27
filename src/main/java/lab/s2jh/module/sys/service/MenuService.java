@@ -63,61 +63,7 @@ public class MenuService extends BaseService<Menu, Long> {
 
     @Transactional(readOnly = true)
     public List<Menu> findAllCached() {
-        List<Menu> allMenus = menuDao.findAllCached();
-
-        //初始化用于shiro权限比对检查判断的MethodInvocation对应缓存数据
-        if (cachedMethodInvocations == null) {
-            cachedMethodInvocations = Maps.newHashMap();
-            for (Menu menu : allMenus) {
-                //基于记录的Controller类和方法信息构造MethodInvocation,用于后续调用shiro的拦截器进行访问权限比对
-                if (StringUtils.isNotBlank(menu.getControllerMethod())) {
-
-                    try {
-                        final Class<?> clazz = ClassUtils.getClass(menu.getControllerClass());
-                        Method[] methods = clazz.getMethods();
-                        for (final Method method : methods) {
-                            if (method.getName().equals(menu.getControllerMethod())) {
-                                RequestMapping rm = method.getAnnotation(RequestMapping.class);
-                                if (rm.method() == null || rm.method().length == 0 || ArrayUtils.contains(rm.method(), RequestMethod.GET)) {
-                                    cachedMethodInvocations.put(menu.getId(), new MethodInvocation() {
-
-                                        @Override
-                                        public Object proceed() throws Throwable {
-                                            return null;
-                                        }
-
-                                        @Override
-                                        public Object getThis() {
-                                            try {
-                                                return clazz.newInstance();
-                                            } catch (Exception e) {
-                                                Exceptions.unchecked(e);
-                                            }
-                                            return null;
-                                        }
-
-                                        @Override
-                                        public Method getMethod() {
-                                            return method;
-                                        }
-
-                                        @Override
-                                        public Object[] getArguments() {
-                                            return null;
-                                        }
-                                    });
-                                    break;
-                                }
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        Exceptions.unchecked(e);
-                    }
-                }
-            }
-        }
-        return allMenus;
+        return menuDao.findAllCached();
     }
 
     @Transactional(readOnly = true)
@@ -167,7 +113,60 @@ public class MenuService extends BaseService<Menu, Long> {
     }
 
     public MethodInvocation getMappedMethodInvocation(NavMenuVO navMenuVO) {
-        return cachedMethodInvocations.get(navMenuVO);
+        //初始化用于shiro权限比对检查判断的MethodInvocation对应缓存数据
+        if (cachedMethodInvocations == null) {
+            cachedMethodInvocations = Maps.newHashMap();
+            List<Menu> allMenus = findAllCached();
+            for (Menu menu : allMenus) {
+                //基于记录的Controller类和方法信息构造MethodInvocation,用于后续调用shiro的拦截器进行访问权限比对
+                if (StringUtils.isNotBlank(menu.getControllerMethod())) {
+
+                    try {
+                        final Class<?> clazz = ClassUtils.getClass(menu.getControllerClass());
+                        Method[] methods = clazz.getMethods();
+                        for (final Method method : methods) {
+                            if (method.getName().equals(menu.getControllerMethod())) {
+                                RequestMapping rm = method.getAnnotation(RequestMapping.class);
+                                if (rm.method() == null || rm.method().length == 0 || ArrayUtils.contains(rm.method(), RequestMethod.GET)) {
+                                    cachedMethodInvocations.put(menu.getId(), new MethodInvocation() {
+
+                                        @Override
+                                        public Object proceed() throws Throwable {
+                                            return null;
+                                        }
+
+                                        @Override
+                                        public Object getThis() {
+                                            try {
+                                                return clazz.newInstance();
+                                            } catch (Exception e) {
+                                                Exceptions.unchecked(e);
+                                            }
+                                            return null;
+                                        }
+
+                                        @Override
+                                        public Method getMethod() {
+                                            return method;
+                                        }
+
+                                        @Override
+                                        public Object[] getArguments() {
+                                            return null;
+                                        }
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        Exceptions.unchecked(e);
+                    }
+                }
+            }
+        }
+        return cachedMethodInvocations.get(navMenuVO.getId());
     }
 
     /**
@@ -296,7 +295,7 @@ public class MenuService extends BaseService<Menu, Long> {
         return userNavMenuVOs;
     }
 
-    private void removeEmptyParentItem(List<NavMenuVO> userNavMenuVOs) {
+    public void removeEmptyParentItem(List<NavMenuVO> userNavMenuVOs) {
         List<NavMenuVO> toRemoves = Lists.newArrayList();
         for (NavMenuVO vo : userNavMenuVOs) {
             if (StringUtils.isBlank(vo.getUrl())) {

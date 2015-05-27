@@ -65,6 +65,12 @@ public class DataDictController extends BaseController<DataDict, Long> {
     public Page<DataDict> findByPage(HttpServletRequest request) {
         return super.findByPage(DataDict.class, request);
     }
+    
+    @RequiresPermissions("配置管理:系统管理:数据字典")
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String editShow() {
+        return "admin/sys/dataDict-inputBasic";
+    }
 
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)

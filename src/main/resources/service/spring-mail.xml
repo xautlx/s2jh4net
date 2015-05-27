@@ -11,12 +11,12 @@
 
 	<!-- 邮件发送器 -->
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="${mail.host}" />
-		<property name="username" value="${mail.username}" />
-		<property name="password" value="${mail.password}" />
+		<property name="host" value="${mail_host}" />
+		<property name="username" value="${mail_username}" />
+		<property name="password" value="${mail_password}" />
 		<property name="javaMailProperties">
 			<props>
-				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<prop key="mail.smtp.auth">${mail_smtp_auth}</prop>
 				<prop key="mail.smtp.timeout">25000</prop>
 			</props>
 		</property>

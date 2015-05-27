@@ -19,6 +19,8 @@ import javax.persistence.UniqueConstraint;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
+import lab.s2jh.core.web.json.EntityIdDisplaySerializer;
+import lab.s2jh.core.web.json.JsonViews;
 import lab.s2jh.module.sys.service.DataDictService;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,19 +28,21 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "sys_DataDict", uniqueConstraints = @UniqueConstraint(columnNames = { "parent_id", "primaryKey",
-        "secondaryKey" }))
+@Table(name = "sys_DataDict", uniqueConstraints = @UniqueConstraint(columnNames = { "parent_id", "primaryKey", "secondaryKey" }))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "数据字典")
+@Audited
 public class DataDict extends BaseNativeEntity {
 
     private static final long serialVersionUID = 5732022663570063926L;
@@ -49,6 +53,7 @@ public class DataDict extends BaseNativeEntity {
      */
     @MetaData(value = "主标识")
     @Column(length = 128, nullable = false)
+    @JsonView(JsonViews.List.class)
     private String primaryKey;
 
     /** 
@@ -56,6 +61,7 @@ public class DataDict extends BaseNativeEntity {
      */
     @MetaData(value = "次标识")
     @Column(length = 128)
+    @JsonView(JsonViews.Admin.class)
     private String secondaryKey;
 
     /**
@@ -64,6 +70,7 @@ public class DataDict extends BaseNativeEntity {
      * 然后通过{@link DataDictService#findChildrenByPrimaryKey(String)}即可快速返回key-value形式的Map数据
      */
     @MetaData(value = "主要数据")
+    @JsonView(JsonViews.List.class)
     private String primaryValue;
 
     /**
@@ -72,6 +79,7 @@ public class DataDict extends BaseNativeEntity {
      * 对于返回的数据，根据实际业务定制化使用即可
      */
     @MetaData(value = "次要数据")
+    @JsonView(JsonViews.Admin.class)
     private String secondaryValue;
 
     /**
@@ -81,18 +89,22 @@ public class DataDict extends BaseNativeEntity {
      */
     @MetaData(value = "大文本数据", tooltips = "以CLOB大文本方式存储用于特定的大文本数据配置")
     @Lob
+    @JsonView(JsonViews.Detail.class)
     private String richTextValue;
 
     @MetaData(value = "禁用标识", tooltips = "禁用项目全局不显示")
+    @JsonView(JsonViews.Admin.class)
     private Boolean disabled = Boolean.FALSE;
 
     @MetaData(value = "排序号", tooltips = "相对排序号，数字越大越靠上显示")
+    @JsonView(JsonViews.Admin.class)
     private Integer orderRank = 10;
 
     @MetaData(value = "父节点")
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "none"))
-    @JsonProperty
+    @JsonSerialize(using = EntityIdDisplaySerializer.class)
+    @JsonView(JsonViews.Admin.class)
     private DataDict parent;
 
     @MetaData(value = "子节点集合")

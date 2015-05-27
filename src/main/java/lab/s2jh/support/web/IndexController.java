@@ -132,7 +132,9 @@ public class IndexController {
     public String loginFailure(@PathVariable("source") String source, HttpServletRequest request, Model model) {
         //获取认证异常的类名
         AuthenticationException ae = (AuthenticationException) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-        model.addAttribute("error", ae.getMessage());
+        if (ae != null) {
+            model.addAttribute("error", ae.getMessage());
+        }
         return source + "/login";
     }
 

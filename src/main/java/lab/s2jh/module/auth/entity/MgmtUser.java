@@ -4,12 +4,14 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,12 +34,12 @@ public class MgmtUser extends BaseNativeEntity {
 
     @MetaData(value = "登录账号对象")
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
     private User user;
 
     @MetaData(value = "所属部门")
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
     private Department department;
 
     @Override

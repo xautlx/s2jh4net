@@ -77,7 +77,7 @@ public class UserController extends BaseController<User, Long> {
     @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
-        model.addAttribute("authType", writeValueAsJsonString(EnumUtils.getEnumDataMap(AuthTypeEnum.class)));
+        model.addAttribute("authTypeMap", EnumUtils.getEnumDataMap(AuthTypeEnum.class));
         return "admin/auth/user-index";
     }
 

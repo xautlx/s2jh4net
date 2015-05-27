@@ -1,11 +1,16 @@
 package lab.s2jh.support.service;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.mail.internet.MimeMessage;
 
+import lab.s2jh.aud.entity.SendMessageLog;
+import lab.s2jh.aud.entity.SendMessageLog.SendMessageType;
+import lab.s2jh.aud.service.SendMessageLogService;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.exception.ServiceException;
+import lab.s2jh.core.service.GlobalConfigService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,13 +32,15 @@ public class MailService {
     private final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     @Autowired
+    private SendMessageLogService sendMessageLogService;
+
+    @Autowired
     private DynamicConfigService dynamicConfigService;
 
     @Autowired(required = false)
     private JavaMailSender javaMailSender;
 
-    private static final ThreadLocal<Set<MailMessage>> mimeMessages = new NamedThreadLocal<Set<MailMessage>>(
-            "Transaction Mail MimeMessages");
+    private static final ThreadLocal<Set<MailMessage>> mimeMessages = new NamedThreadLocal<Set<MailMessage>>("Transaction Mail MimeMessages");
 
     public boolean isEnabled() {
         return javaMailSender != null;
@@ -74,18 +81,17 @@ public class MailService {
 
     private void sendMail(String subject, String text, boolean singleMode, boolean transactional, String... toAddrs) {
         if (logger.isDebugEnabled()) {
-            logger.debug(
-                    "Sending mail: \nTO: {} \nSubject: {} \nSingle Mode: {} \nTransactional Mode: {} \nContent:\n---------\n{}\n----------",
+            logger.debug("Sending mail: \nTO: {} \nSubject: {} \nSingle Mode: {} \nTransactional Mode: {} \nContent:\n---------\n{}\n----------",
                     StringUtils.join(toAddrs, ","), subject, singleMode, transactional, text);
         }
 
-        if (dynamicConfigService.getBoolean("cfg.mail.mock.mode", false)) {
-            logger.debug("Mock sending  mail...");
+        if (GlobalConfigService.isDevMode()) {
+            logger.debug("Mock sending  mail at DEV mode...");
             return;
         }
 
         MimeMessage message = javaMailSender.createMimeMessage();
-        String from = dynamicConfigService.getString("cfg.mail.from", null);
+        String from = dynamicConfigService.getString("cfg_mail_from", null);
         Assert.notNull(from);
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -104,6 +110,15 @@ public class MailService {
                     javaMailSender.send(message);
                 }
             }
+
+            //消息历史记录
+            SendMessageLog sml = new SendMessageLog();
+            sml.setMessageType(SendMessageType.APP_PUSH);
+            sml.setTargets(StringUtils.join(toAddrs));
+            sml.setTitle(subject);
+            sml.setMessage(text);
+            sml.setSendTime(new Date());
+            sendMessageLogService.asyncSave(sml);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }

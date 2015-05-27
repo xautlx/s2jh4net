@@ -35,5 +35,4 @@ public class EnumUtils {
         }
         return enumDataMap;
     }
-
 }
