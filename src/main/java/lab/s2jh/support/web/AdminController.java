@@ -17,6 +17,7 @@ import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.PasswordService;
 import lab.s2jh.core.security.ShiroJdbcRealm;
 import lab.s2jh.core.web.captcha.ImageCaptchaServlet;
+import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
@@ -35,8 +36,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,8 +52,6 @@ import com.google.common.collect.Lists;
 
 @Controller
 public class AdminController {
-
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private MenuService menuService;
@@ -125,22 +122,9 @@ public class AdminController {
         String email = user.getEmail();
         if (StringUtils.isBlank(email)) {
             return OperationResult.buildFailureResult("当前账号未设定注册邮箱，请联系管理员先设置邮箱后再进行此操作");
-        } else {
-
-            int serverPort = request.getServerPort();
-            // Reconstruct original requesting URL
-            StringBuffer url = new StringBuffer();
-            url.append(request.getScheme()).append("://").append(request.getServerName());
-            if ((serverPort != 80) && (serverPort != 443)) {
-                url.append(":").append(serverPort);
-            }
-            String contextPath = request.getContextPath();
-            if (!"/".equals(contextPath)) {
-                url.append(contextPath);
-            }
-
-            userService.requestResetPassword(url, user);
         }
+
+        userService.requestResetPassword(WebAppContextInitFilter.getInitedWebContextFullUrl(), user);
         return OperationResult.buildSuccessResult("找回密码请求处理成功。重置密码邮件已发送至：" + email);
     }
 

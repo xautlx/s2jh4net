@@ -134,14 +134,14 @@ public class UserService extends BaseService<User, Long> {
         return privilegeDao.findPrivileges(roleCodes);
     }
 
-    public void requestResetPassword(StringBuffer webContextUrl, User user) {
+    public void requestResetPassword(String webContextUrl, User user) {
         String email = user.getEmail();
         Assert.isTrue(StringUtils.isNotBlank(email), "User email required");
         String suject = dynamicConfigService.getString("cfg.user.reset.pwd.notify.email.title", "申请重置密码邮件");
         user.setRandomCode(UUID.randomUUID().toString());
         userDao.save(user);
 
-        webContextUrl.append("/admin/password/reset?uid=" + user.getAuthUid() + "&email=" + email + "&code=" + user.getRandomCode());
+        webContextUrl += ("/admin/password/reset?uid=" + user.getAuthUid() + "&email=" + email + "&code=" + user.getRandomCode());
 
         if (freemarkerService != null) {
             Map<String, Object> params = Maps.newHashMap();

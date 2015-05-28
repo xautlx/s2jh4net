@@ -10,33 +10,66 @@
 
 ### 个人空间： http://my.oschina.net/s2jh
 
-## 关于S2JH说明
+> **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
+
+## Features
+
+* 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
+* 主体基于主流的（Spring MVC + Spring3 + Hibernate4）架构
+* 引入JPA、Spring-Data-JPA提升持久层架构规范性和开发效率
+* 基于流行JQuery/Bootstrap等UI框架和插件整合，良好的浏览器兼容性和移动设备访问支持
+* 提供一个基础的代码生成框架，简化实现基本的CRUD功能开发
+* 基于Maven的项目和组件依赖管理模式，便捷高效的与持续集成开发集成
+
+## Architecture
+
+* [Technical List](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E6%8A%80%E6%9C%AF%E5%88%97%E8%A1%A8.md) - 框架主要技术(Java/Web/Tool)组件列表介绍
+* [Enhanced Grid](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E8%A1%A8%E6%A0%BC%E7%BB%84%E4%BB%B6.md) - 功能强大的Grid表格组件扩展增强
+* [Technical Features](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E6%8A%80%E6%9C%AF%E7%89%B9%E6%80%A7.md) - 主要技术选型和设计说明
+* [Mobile Support](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E7%A7%BB%E5%8A%A8%E6%94%AF%E6%8C%81.md) - 以Android为例的Web App与Native App整合应用
+
+## Development Guide
+
+* [Code Generator](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90.md) - 用于基本CURD框架代码生成的工具
+* [Development Configuration](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE.md) - 开发基础环境配置说明
+
+> 为了便于开发过程参考，项目直接把开发相关的参考样例和指南文档嵌入到运行部署应用中，具体内容可在线浏览，如下图Snapshot部分截图示意。
+
+## Online Demo
+
+**http://120.25.147.207/s2jh4net**
+
+前端门户和HTML5移动站点目前内容较少，主要演示集中在管理端：http://120.25.147.207/s2jh4net/admin
+
+在线演示站点为单点低配阿里云服务器，可能存在访问缓慢情况或更新时中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
+
+建议可参考 [Development Configuration](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE.md) 在本地运行完整体验。
+
+> 项目最新自动化持续集成构建状态 Travis-CI Status: [![Build Status](https://travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://travis-ci.org/xautlx/s2jh4net)
+
+## Snapshot
+
+![ui-signin](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/img-0065.jpg)
+
+![ui-layout](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/ui-layout.jpg)
+
+![ui-example](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/ui-example.jpg)
+
+![grid-master-detail](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/grid-master-detail.png)
+
+## S2JH4Net vs S2JH
+
+**重要提示：** 由于个人精力有限，目前主要重心都已放在S2JH4Net版本更新维护，原有S2JH版本已基本暂停更新！
 
 此项目为 S2JH （ https://github.com/xautlx/s2jh 或 http://git.oschina.net/xautlx/s2jh ） 项目的兄弟项目，主要差异简介：
 
 * s2jh基于Struts2，s2jh4net基于Spring MVC
 * s2jh4net在原有s2jh只面向企业应用系统开发的基础上，重新组织模块和结构来支持典型的互联网站点以及HTML5移动站点开发的支持；
-* 为了简化开发和构建的复杂度，还原采用单一的动态Web工程模式，不再进行复杂的Maven模块化布局（但是Maven进行依赖管理和构建还是保留）；
+* 为了简化开发和构建的复杂度，还原采用单一all-in-one的动态Web工程模式，不再进行复杂的Maven模块化布局（但是Maven进行依赖管理和构建还是保留）；
 * 实体对象属性定义采用了Lombok来简化繁琐的getter和setter定义；
 * JPA Hibernate和MyBatis整合应用；
 * 权限框架改用Apache Shiro；
 * 自动基于注解定义的菜单、权限等数据生成数据库基础配置，采用Java编码方式定义基础数据，抛弃之前的SQL脚本方式；一边开发编码，一边项目实施；
-
-* 目前本项目文档尚在编写完善中，暂时请参考 [S2JH](http://git.oschina.net/xautlx/s2jh) 相关资料
-
-> 项目最新自动化持续集成构建状态 Travis-CI Status: [![Build Status](https://travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://travis-ci.org/xautlx/s2jh4net)
-
-## 运行方式
-
-目前先提供直接导入Eclipse（spring-tool-suite-3.6.3.RELEASE）开发部署方式，后面逐步添加一键启动支持。
-
-**详细运行指南请参考项目doc目录下相关Markdown或HTML格式文档**，基本过程描述如下：
-
-* 首先为Eclipse安装Lombok插件（否则工程编译错误）：下载lombok.jar后以java -jar方式运行按照提示选择Eclipse目录安装即可，详见：http://projectlombok.org/download.html
-* 从GIT Clone项目到本地，然后import到本地spring-tool-suite-3.6.3.RELEASE
-* 项目上或pom.xml执行maven install，初始下载所有需要的依赖资源
-* 刷新工程，检查确保整个工程没有编译错误
-* 部署到Eclipse Server开发模式，启动运行
 
 ### Reference
 
