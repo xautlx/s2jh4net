@@ -10,6 +10,7 @@ import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.util.EnumUtils;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.view.OperationResult;
@@ -105,6 +106,7 @@ public class UserController extends BaseController<User, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") User entity, Model model, @RequestParam("rawPassword") String rawPassword) {
+        Validation.notDemoMode();
         userService.saveCascadeR2Roles(entity, rawPassword);
         return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }
@@ -113,6 +115,7 @@ public class UserController extends BaseController<User, Long> {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("ids") Long... ids) {
+        Validation.notDemoMode();
         return super.delete(ids);
     }
 

@@ -1,15 +1,12 @@
 package lab.s2jh.core.service;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.web.listener.ApplicationContextPreListener;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 @Component
 public class GlobalConfigService {

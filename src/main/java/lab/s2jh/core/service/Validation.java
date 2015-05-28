@@ -39,7 +39,7 @@ public class Validation {
 
     public static void notDemoMode() {
         if (GlobalConfigService.isDemoMode()) {
-            throw new ValidationException("演示模式，操作被禁用");
+            throw new ValidationException("抱歉，此功能在演示模式被禁用，请参考文档在本地部署运行体验。");
         }
     }
 }

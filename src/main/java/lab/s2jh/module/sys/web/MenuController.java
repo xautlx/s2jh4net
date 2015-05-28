@@ -11,6 +11,7 @@ import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter.MatchType;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.sys.entity.Menu;
@@ -77,6 +78,7 @@ public class MenuController extends BaseController<Menu, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") Menu entity, Model model) {
+        Validation.notDemoMode();
         return super.editSave(entity);
     }
 

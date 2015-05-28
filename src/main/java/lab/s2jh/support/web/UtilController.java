@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.security.AuthUserDetails;
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.util.Exceptions;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
@@ -74,6 +75,7 @@ public class UtilController {
     @ResponseBody
     public OperationResult loggerLevelUpdate(@RequestParam(value = "loggerName", required = false) String loggerName,
             @RequestParam("loggerLevel") String loggerLevel) {
+        Validation.notDemoMode();
         if (StringUtils.isBlank(loggerName)) {
             loggerName = Logger.ROOT_LOGGER_NAME;
         }
