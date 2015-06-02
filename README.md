@@ -30,8 +30,10 @@
 
 ## Development Guide
 
-* [Code Generator](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90.md) - 用于基本CURD框架代码生成的工具
 * [Development Configuration](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE.md) - 开发基础环境配置说明
+* [Code Generator](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90.md) - 用于基本CURD框架代码生成的工具
+
+> 由于项目采用了Lombok等插件，如果你想把git获取工程代码导入开发环境，请一定提前浏览文档 [Development Configuration](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE.md) 为IDE进行Lombok等插件配置，否则会出一大堆编译错误。
 
 > 为了便于开发过程参考，项目直接把开发相关的参考样例和指南文档嵌入到运行部署应用中，具体内容可在线浏览，如下图Snapshot部分截图示意。
 
@@ -39,7 +41,7 @@
 
 **http://120.25.147.207/s2jh4net**
 
-前端门户和HTML5移动站点目前内容较少，主要演示集中在管理端：http://120.25.147.207/s2jh4net/admin
+前端门户和HTML5移动站点目前内容较少，主要演示集中在管理端：http://120.25.147.207/s2jh4net/admin , 账号：admin，密码：admin123，或直接点击右下方的“超级管理员”登录链接即可。
 
 在线演示站点为单点低配阿里云服务器，可能存在访问缓慢情况或更新时中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
 
@@ -70,6 +72,17 @@
 * JPA Hibernate和MyBatis整合应用；
 * 权限框架改用Apache Shiro；
 * 自动基于注解定义的菜单、权限等数据生成数据库基础配置，采用Java编码方式定义基础数据，抛弃之前的SQL脚本方式；一边开发编码，一边项目实施；
+
+### License Agreement
+
+* Free License
+
+本项目代码除src/main/webapp/assets目录下admin/app和w/app两个目录下相关Javascript代码以混淆方式提供外，其余开源，在保留标识本项目来源信息以及保证不对本项目进行非授权的销售行为的前提下，可以以任意方式自由免费使用：开源、非开源、商业及非商业。
+
+* Charge Support Service
+
+如果你还有兴趣在现有开放资源基础上进一步提供定制的扩展实现/技术咨询服务/毕业设计指导/二次开发项目指导等方面的合作意向，可联系 E-Mail: s2jh-dev@hotmail.com 或 QQ: 2414521719 (加Q请注明：s2jh4net) 洽谈。[上述联系方式恕不直接提供咨询类询问！若对项目有任何技术问题或Issue反馈，请直接提交到项目站点提问或Git平台的Issue]
+
 
 ### Reference
 
