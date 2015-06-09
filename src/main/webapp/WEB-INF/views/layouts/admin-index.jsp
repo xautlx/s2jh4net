@@ -205,20 +205,7 @@
 			<span class="go-top"> <i class="fa fa-angle-up"></i>
 			</span>
 		</div>
-		<c:if test="${cfg.dev_mode}">
-			<div class="footer-tools" style="margin-left: 10px; margin-right: 10px">
-				<span class="dev-debug" onclick="$('#debug-info').toggle()">DEBUG</span>
-			</div>
-		</c:if>
 	</div>
-	<c:if test="${cfg.dev_mode}">
-		<div id="debug-info" style="display: none; padding: 15px">
-			Debug Info:
-			<shiro:user>登录类型/账号: <shiro:principal property="authType" />/<shiro:principal property="authUid" />, 昵称: <shiro:principal
-					property="nickName" />
-			</shiro:user>
-		</div>
-	</c:if>
 	<!-- END FOOTER -->
 
 

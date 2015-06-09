@@ -16,7 +16,6 @@
 				<button class="btn blue" type="submit">
 					<i class="fa fa-check"></i> 保存
 				</button>
-				<button class="btn green" type="submit" data-post-dismiss="modal">保存并关闭</button>
 				<button class="btn default" type="button" data-dismiss="modal">取消</button>
 			</div>
 		</c:if>
@@ -30,7 +29,6 @@
 				<button class="btn blue" type="submit">
 					<i class="fa fa-check"></i> 保存
 				</button>
-				<button class="btn green" type="submit" data-post-dismiss="modal">保存并关闭</button>
 				<button class="btn default" type="button" data-dismiss="modal">取消</button>
 			</div>
 		</c:if>

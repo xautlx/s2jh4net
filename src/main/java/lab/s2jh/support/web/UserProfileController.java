@@ -6,6 +6,7 @@ import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.security.AuthUserDetails;
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.service.UserService;
@@ -63,6 +64,7 @@ public class UserProfileController {
         if (!encodedPasswd.equals(user.getPassword())) {
             return OperationResult.buildFailureResult("原密码不正确,请重新输入");
         } else {
+            Validation.notDemoMode();
             //更新密码失效日期为6个月后
             user.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
             userService.save(user, newpasswd);
@@ -83,6 +85,7 @@ public class UserProfileController {
     @ResponseBody
     public OperationResult profileCredentialsExpireSave(@RequestParam("newpasswd") String newpasswd) {
         User user = AuthContextHolder.findAuthUser();
+        Validation.notDemoMode();
         //更新密码失效日期为6个月后
         user.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
         userService.save(user, newpasswd);

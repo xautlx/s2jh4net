@@ -14,14 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
+import lab.s2jh.core.pagination.GroupPropertyFilter;
+import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.service.BaseService;
-import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.Department;
+import lab.s2jh.module.auth.entity.Privilege;
 import lab.s2jh.module.auth.service.DepartmentService;
+import lab.s2jh.module.auth.service.PrivilegeService;
 import lab.s2jh.module.auth.service.UserService;
 import lab.s2jh.module.sys.service.MenuService;
 import lab.s2jh.support.web.DocumentController.MockEntity;
@@ -36,6 +39,7 @@ import org.markdown4j.Markdown4jProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +66,9 @@ public class DocumentController extends BaseController<MockEntity, Long> {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private PrivilegeService privilegeService;
 
     Markdown4jProcessor markdown4jProcessor = new Markdown4jProcessor();
 
@@ -190,6 +197,36 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         }
 
         return OperationResult.buildSuccessResult("数据处理成功");
+    }
+
+    @RequestMapping(value = "/docs/mock/infinite-scroll", method = RequestMethod.GET)
+    public Object repayLogData(HttpServletRequest request, Model model) {
+        GroupPropertyFilter groupPropertyFilter = GroupPropertyFilter.buildFromHttpRequest(Privilege.class, request);
+        Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
+        model.addAttribute("pageData", privilegeService.findByPage(groupPropertyFilter, pageable));
+        return "admin/docs/infinite-scroll-items";
+    }
+
+    @RequestMapping(value = "/docs/mock/btn-post", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult btnPost(Model model) {
+        return OperationResult.buildSuccessResult("模拟POST数据处理成功");
+    }
+
+    @MetaData("模拟表单校验Confirm")
+    @RequestMapping(value = "/docs/mock/validation-confirm", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult validationConfirm(HttpServletRequest request, Model model, @RequestParam("quantity") Integer quantity) {
+        //先进行常规的must数据校验
+
+        //检测本次提交表单没有用户已confirm确认标识，则进行相关预警校验检查
+        if (postNotConfirmedByUser(request)) {
+            if (quantity > 100) {
+                return OperationResult.buildConfirmResult("库存余量不足");
+            }
+        }
+
+        return OperationResult.buildSuccessResult("模拟POST数据处理成功");
     }
 
     @Getter

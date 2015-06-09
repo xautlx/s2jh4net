@@ -1,5 +1,6 @@
 package lab.s2jh.module.sys.entity;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 
 import javax.persistence.Access;
@@ -15,13 +16,19 @@ import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
+import lab.s2jh.core.util.Exceptions;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -93,5 +100,38 @@ public class Menu extends BaseNativeEntity {
     @Transient
     public String getDisplay() {
         return path;
+    }
+
+    @MetaData(value = "缓存Web Controller调用方法", comments = "用于缓存记录对应的Controller方法，方便权限判断比较")
+    @Transient
+    private Method mappingMethod;
+
+    @Transient
+    @JsonIgnore
+    public Method getMappingMethod() {
+        if (mappingMethod != null) {
+            return mappingMethod;
+        }
+        //基于记录的Controller类和方法信息构造MethodInvocation,用于后续调用shiro的拦截器进行访问权限比对
+        if (StringUtils.isNotBlank(getControllerMethod())) {
+
+            try {
+                final Class<?> clazz = ClassUtils.getClass(getControllerClass());
+                Method[] methods = clazz.getMethods();
+                for (final Method method : methods) {
+                    if (method.getName().equals(getControllerMethod())) {
+                        RequestMapping rm = method.getAnnotation(RequestMapping.class);
+                        if (rm.method() == null || rm.method().length == 0 || ArrayUtils.contains(rm.method(), RequestMethod.GET)) {
+                            mappingMethod = method;
+                            break;
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                Exceptions.unchecked(e);
+            }
+        }
+        return mappingMethod;
     }
 }

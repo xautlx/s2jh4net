@@ -82,16 +82,6 @@ public class VerifyCodeService {
         return serverCode.equals(code);
     }
 
-    public Map<String, String> getMobileCodes() {
-        Map<String, String> mobileCodes = Maps.newHashMap();
-        if (GlobalConfigService.isDevMode() && smsCodeContainer != null) {
-            for (Map.Entry<String, SmsCode> me : smsCodeContainer.entrySet()) {
-                mobileCodes.put(me.getKey(), me.getValue().getCode());
-            }
-        }
-        return mobileCodes;
-    }
-
     /**
      * 定时把超时的验证码移除，避免无意义的无限制的消耗内存
      */

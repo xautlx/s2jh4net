@@ -22,6 +22,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.apache.shiro.web.util.WebUtils;
 
 public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
@@ -46,6 +47,11 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
     private String captchaParam = DEFAULT_VALIDATE_CODE_PARAM;
 
     private UserService userService;
+
+    /**
+     * 是否强制转向指定successUrl，忽略登录之前自动保存的URL
+     */
+    private boolean forceSuccessUrl = false;
 
     protected AuthenticationToken createToken(String username, String password, ServletRequest request, ServletResponse response) {
         boolean rememberMe = isRememberMe(request);
@@ -157,6 +163,11 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
             return false;
         }
 
+        //如果是强制转向指定successUrl则清空SavedRequest
+        if (forceSuccessUrl) {
+            WebUtils.getAndClearSavedRequest(httpServletRequest);
+        }
+
         return super.onLoginSuccess(token, subject, request, httpServletResponse);
     }
 
@@ -180,6 +191,10 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         public CaptchaValidationException(String message) {
             super(message);
         }
+    }
+
+    public void setForceSuccessUrl(boolean forceSuccessUrl) {
+        this.forceSuccessUrl = forceSuccessUrl;
     }
 
 }

@@ -6,7 +6,7 @@ import java.util.Set;
 import javax.mail.internet.MimeMessage;
 
 import lab.s2jh.aud.entity.SendMessageLog;
-import lab.s2jh.aud.entity.SendMessageLog.SendMessageType;
+import lab.s2jh.aud.entity.SendMessageLog.SendMessageTypeEnum;
 import lab.s2jh.aud.service.SendMessageLogService;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.exception.ServiceException;
@@ -113,7 +113,7 @@ public class MailService {
 
             //消息历史记录
             SendMessageLog sml = new SendMessageLog();
-            sml.setMessageType(SendMessageType.APP_PUSH);
+            sml.setMessageType(SendMessageTypeEnum.APP_PUSH);
             sml.setTargets(StringUtils.join(toAddrs));
             sml.setTitle(subject);
             sml.setMessage(text);

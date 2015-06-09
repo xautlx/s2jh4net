@@ -63,16 +63,15 @@ public class IndexController {
         return "m/index";
     }
 
-    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
-    @RequestMapping(value = "/admin", method = RequestMethod.GET)
-    public String adminIndex(HttpServletRequest request, Model model) {
+    @RequestMapping(value = "/unauthorized", method = RequestMethod.GET)
+    public String unauthorizedUrl(HttpServletRequest request, Model model) {
         model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
-        return "admin/index";
+        return "error/403";
     }
 
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
-    @RequestMapping(value = "/admin/", method = RequestMethod.GET)
-    public String adminIndexRoot(HttpServletRequest request, Model model) {
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public String adminIndex(HttpServletRequest request, Model model) {
         model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
         return "admin/index";
     }

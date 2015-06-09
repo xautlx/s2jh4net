@@ -30,7 +30,6 @@ import javax.validation.constraints.Size;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.SpringContextHolder;
-import lab.s2jh.core.entity.PersistableEntity;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
@@ -49,6 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
+
+import ch.qos.logback.classic.ClassicConstants;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Maps;
@@ -150,6 +151,20 @@ public class ServletUtils {
     }
 
     /**
+     * 将buildValidateId构造的哈希字符串反向解析为
+     * @param validateId
+     * @return
+     */
+    public static Class<?> decodeValidateId(String validateId) {
+        for (Map.Entry<Class<?>, String> me : entityValidationIdMap.entrySet()) {
+            if (me.getValue().equals(validateId)) {
+                return me.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
      * 基于构建的哈希标识计算获取校验规则
      * @param id
      * @return
@@ -161,13 +176,8 @@ public class ServletUtils {
             if (nameRules == null || GlobalConfigService.isDevMode()) {
                 nameRules = Maps.newHashMap();
                 entityValidationRulesMap.put(id, nameRules);
-                Class<?> clazz = null;
-                for (Map.Entry<Class<?>, String> me : entityValidationIdMap.entrySet()) {
-                    if (me.getValue().equals(id)) {
-                        clazz = me.getKey();
-                        break;
-                    }
-                }
+                Class<?> clazz = decodeValidateId(id);
+
                 Assert.notNull(clazz, "验证缓存数据错误");
                 Set<Field> fields = Sets.newHashSet(clazz.getDeclaredFields());
                 clazz = clazz.getSuperclass();
@@ -209,7 +219,7 @@ public class ServletUtils {
                             rules.put("required", true);
                         }
                         if (column.unique() == true) {
-                            //rules.put("unique", true);
+                            rules.put("unique", true);
                         }
                         if (column.updatable() == false) {
                             rules.put("readonly", true);
@@ -287,71 +297,79 @@ public class ServletUtils {
         return nameRules;
     }
 
-    private static final Integer PAD_SIZE = 30;
+    public static Map<String, String> buildRequestInfoDataMap(HttpServletRequest request, boolean verbose) {
 
-    public static String buildRequestInfoToString(HttpServletRequest request, boolean verbose) {
+        Map<String, String> dataMap = Maps.newLinkedHashMap();
+
         //Request相关的参数、属性等数据组装
-        StringBuilder sb = new StringBuilder();
-        String xForwardedFor = request.getHeader("x-forwarded-for");
-        sb.append(StringUtils.rightPad("\nHTTP Request Logon User PIN", PAD_SIZE) + ":" + AuthContextHolder.getAuthUserDisplay());
+        dataMap.put("req.user", AuthContextHolder.getAuthUserDisplay());
+        dataMap.put("req.method", request.getMethod());
+        dataMap.put(ClassicConstants.REQUEST_REQUEST_URI, request.getRequestURI());
         if (verbose) {
-            sb.append(StringUtils.rightPad("\nHTTP Request RemoteAddr", PAD_SIZE) + ":" + request.getRemoteAddr());
-            sb.append(StringUtils.rightPad("\nHTTP Request RemoteHost", PAD_SIZE) + ":" + request.getRemoteHost());
-            sb.append(StringUtils.rightPad("\nHTTP Request x-forwarded-for", PAD_SIZE) + ":" + xForwardedFor);
+            dataMap.put(ClassicConstants.REQUEST_QUERY_STRING, request.getQueryString());
+            dataMap.put("req.contextPath", request.getContextPath());
+            dataMap.put(ClassicConstants.REQUEST_REMOTE_HOST_MDC_KEY, request.getRemoteHost());
+            dataMap.put("req.remotePort", String.valueOf(request.getRemotePort()));
+            dataMap.put("req.remoteUser", request.getRemoteUser());
+            dataMap.put("req.localAddr", request.getLocalAddr());
+            dataMap.put("req.localName", request.getLocalName());
+            dataMap.put("req.localPort", String.valueOf(request.getLocalPort()));
+            dataMap.put("req.serverName", request.getServerName());
+            dataMap.put("req.serverPort", String.valueOf(request.getServerPort()));
+            dataMap.put(ClassicConstants.REQUEST_USER_AGENT_MDC_KEY, request.getHeader("User-Agent"));
+            dataMap.put(ClassicConstants.REQUEST_X_FORWARDED_FOR, request.getHeader("X-Forwarded-For"));
+            dataMap.put(ClassicConstants.REQUEST_REQUEST_URL, request.getRequestURL().toString());
         }
-        sb.append(StringUtils.rightPad("\nHTTP Request Method", PAD_SIZE) + ":" + request.getMethod());
-        sb.append(StringUtils.rightPad("\nHTTP Request URI", PAD_SIZE) + ":" + request.getRequestURI());
-        sb.append(StringUtils.rightPad("\nHTTP Request Query String", PAD_SIZE) + ":" + request.getQueryString());
 
-        sb.append("\nHTTP Request Parameter List : ");
         Enumeration<?> paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()) {
             String paramName = (String) paramNames.nextElement();
             String paramValue = StringUtils.join(request.getParameterValues(paramName), ",");
             if (paramValue != null && paramValue.length() > 100) {
-                sb.append("\n - " + paramName + "=" + paramValue.substring(0, 100) + "...");
-            } else {
-                sb.append("\n - " + paramName + "=" + paramValue);
+                paramValue = paramValue.substring(0, 100) + "...";
             }
+            dataMap.put("req.param[" + paramName + "]", paramValue);
         }
 
         if (verbose) {
-            sb.append("\nRequest Header Data:");
             Enumeration<?> headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String headerName = (String) headerNames.nextElement();
-                sb.append("\n - " + headerName + "=" + request.getHeader(headerName));
+                dataMap.put("req.header[" + headerName + "]", request.getHeader(headerName));
             }
 
-            sb.append("\nRequest Attribute Data:");
             Enumeration<?> attrNames = request.getAttributeNames();
             while (attrNames.hasMoreElements()) {
                 String attrName = (String) attrNames.nextElement();
-                Object attr = request.getAttribute(attrName);
-                if (attr != null && attr.toString().length() > 100) {
-                    sb.append("\n - " + attrName + "=" + attr.toString().substring(0, 100) + "...");
-                } else {
-                    sb.append("\n - " + attrName + "=" + attr);
+                Object attrValue = request.getAttribute(attrName);
+                if (attrValue == null) {
+                    attrValue = "NULL";
                 }
+                String attr = attrValue.toString();
+                if (attr != null && attr.toString().length() > 100) {
+                    attr = attr.substring(0, 100) + "...";
+                }
+                dataMap.put("req.attr[" + attrName + "]", attr);
             }
 
             HttpSession session = request.getSession(false);
             if (session != null) {
-                sb.append("\nSession Attribute Data:");
-
                 Enumeration<?> sessionAttrNames = session.getAttributeNames();
                 while (sessionAttrNames.hasMoreElements()) {
                     String attrName = (String) sessionAttrNames.nextElement();
-                    Object attr = session.getAttribute(attrName);
-                    if (attr != null && attr.toString().length() > 100) {
-                        sb.append("\n - " + attrName + "=" + attr.toString().substring(0, 100) + "...");
-                    } else {
-                        sb.append("\n - " + attrName + "=" + attr);
+                    Object attrValue = session.getAttribute(attrName);
+                    if (attrValue == null) {
+                        attrValue = "NULL";
                     }
+                    String attr = attrValue.toString();
+                    if (attr != null && attr.toString().length() > 100) {
+                        attr = attr.toString().substring(0, 100) + "...";
+                    }
+                    dataMap.put("session.attr[" + attrName + "]", attr);
                 }
             }
         }
-        return sb.toString();
+        return dataMap;
     }
 
     private static String readFileUrlPrefix;

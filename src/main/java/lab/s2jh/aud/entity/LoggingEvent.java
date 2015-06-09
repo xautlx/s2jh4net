@@ -3,6 +3,8 @@ package lab.s2jh.aud.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,13 +15,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.PersistableEntity;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
@@ -32,8 +35,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /** 
  * 基于logback的DBAppender表结构规范对应的实体定义
- * @see http://logback.qos.ch/manual/configuration.html #DBAppender
+ * @see http://logback.qos.ch/manual/configuration.html#DBAppender
  */
+@Getter
+@Setter
+@Accessors(chain = true)
+@Access(AccessType.FIELD)
 @Entity
 @Table(name = "logging_event")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
@@ -42,273 +49,78 @@ public class LoggingEvent extends PersistableEntity<Long> {
 
     private static final long serialVersionUID = 3807617732053699145L;
 
-    private Long id;
-    private Long timestmp;
-    private String formattedMessage;
-    private String loggerName;
-    private String levelString;
-    private String threadName;
-    private Integer referenceFlag;
-    private String arg0;
-    private String arg1;
-    private String arg2;
-    private String arg3;
-    private String callerFilename;
-    private String callerClass;
-    private String callerMethod;
-    private String callerLine;
-    private List<LoggingEventProperty> loggingEventProperties;
-    private List<LoggingEventException> loggingEventExceptions;
-
-    private LoggingHandleStateEnum state = LoggingHandleStateEnum.TBD;
-    private String operationExplain;
-
-    private String createdBy;
-    private Date createdDate;
-    private String lastModifiedBy;
-    private Date lastModifiedDate;
-
-    public static enum LoggingHandleStateEnum {
-        TBD, FIXED, TODO, CANCELED, IGNORE;
-    }
-
     @Id
     @Column(name = "event_id")
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "native")
-    public Long getId() {
-        return id;
-    }
+    private Long id;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Long timestmp;
 
-    public Long getTimestmp() {
-        return timestmp;
-    }
+    @Column(name = "formatted_message", length = 4000)
+    private String formattedMessage;
 
-    public void setTimestmp(Long timestmp) {
-        this.timestmp = timestmp;
-    }
+    @Column(name = "logger_name", length = 256)
+    private String loggerName;
 
-    @Column(length = 4000)
-    public String getFormattedMessage() {
-        return formattedMessage;
-    }
+    @Column(name = "level_string", length = 256)
+    private String levelString;
 
-    public void setFormattedMessage(String formattedMessage) {
-        this.formattedMessage = formattedMessage;
-    }
+    @Column(name = "thread_name", length = 256)
+    private String threadName;
 
-    @Column(length = 256)
-    public String getLoggerName() {
-        return loggerName;
-    }
+    @Column(name = "reference_flag", length = 256)
+    private Integer referenceFlag;
 
-    public void setLoggerName(String loggerName) {
-        this.loggerName = loggerName;
-    }
+    private String arg0;
+    private String arg1;
+    private String arg2;
+    private String arg3;
 
-    @Column(length = 256)
-    public String getLevelString() {
-        return levelString;
-    }
+    @Column(name = "caller_filename", length = 256)
+    private String callerFilename;
 
-    public void setLevelString(String levelString) {
-        this.levelString = levelString;
-    }
+    @Column(name = "caller_class", length = 256)
+    private String callerClass;
 
-    @Column(length = 256)
-    public String getThreadName() {
-        return threadName;
-    }
+    @Column(name = "caller_method", length = 256)
+    private String callerMethod;
 
-    public void setThreadName(String threadName) {
-        this.threadName = threadName;
-    }
-
-    public Integer getReferenceFlag() {
-        return referenceFlag;
-    }
-
-    public void setReferenceFlag(Integer referenceFlag) {
-        this.referenceFlag = referenceFlag;
-    }
-
-    @Column(length = 256)
-    public String getArg0() {
-        return arg0;
-    }
-
-    public void setArg0(String arg0) {
-        this.arg0 = arg0;
-    }
-
-    @Column(length = 256)
-    public String getArg1() {
-        return arg1;
-    }
-
-    public void setArg1(String arg1) {
-        this.arg1 = arg1;
-    }
-
-    @Column(length = 256)
-    public String getArg2() {
-        return arg2;
-    }
-
-    public void setArg2(String arg2) {
-        this.arg2 = arg2;
-    }
-
-    @Column(length = 256)
-    public String getArg3() {
-        return arg3;
-    }
-
-    public void setArg3(String arg3) {
-        this.arg3 = arg3;
-    }
-
-    @Column(length = 256)
-    public String getCallerFilename() {
-        return callerFilename;
-    }
-
-    public void setCallerFilename(String callerFilename) {
-        this.callerFilename = callerFilename;
-    }
-
-    @Column(length = 256)
-    public String getCallerClass() {
-        return callerClass;
-    }
-
-    public void setCallerClass(String callerClass) {
-        this.callerClass = callerClass;
-    }
-
-    @Column(length = 256)
-    public String getCallerMethod() {
-        return callerMethod;
-    }
-
-    public void setCallerMethod(String callerMethod) {
-        this.callerMethod = callerMethod;
-    }
-
-    @Column(length = 8)
-    public String getCallerLine() {
-        return callerLine;
-    }
-
-    public void setCallerLine(String callerLine) {
-        this.callerLine = callerLine;
-    }
+    @Column(name = "caller_line", length = 256)
+    private String callerLine;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "loggingEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    public List<LoggingEventProperty> getLoggingEventProperties() {
-        return loggingEventProperties;
-    }
-
-    public void setLoggingEventProperties(List<LoggingEventProperty> loggingEventProperties) {
-        this.loggingEventProperties = loggingEventProperties;
-    }
+    private List<LoggingEventProperty> loggingEventProperties;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "loggingEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    public List<LoggingEventException> getLoggingEventExceptions() {
-        return loggingEventExceptions;
-    }
-
-    public void setLoggingEventExceptions(List<LoggingEventException> loggingEventExceptions) {
-        this.loggingEventExceptions = loggingEventExceptions;
-    }
+    private List<LoggingEventException> loggingEventExceptions;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 32, nullable = true)
-    public LoggingHandleStateEnum getState() {
-        return state;
-    }
-
-    public void setState(LoggingHandleStateEnum state) {
-        this.state = state;
-    }
+    private LoggingHandleStateEnum state = LoggingHandleStateEnum.TODO;
 
     @Column(length = 4000)
     @JsonIgnore
-    public String getOperationExplain() {
-        return operationExplain;
-    }
+    private String operationExplain;
 
-    public void setOperationExplain(String operationExplain) {
-        this.operationExplain = operationExplain;
+    public static enum LoggingHandleStateEnum {
+
+        @MetaData("已修正")
+        FIXED,
+
+        @MetaData("待处理")
+        TODO,
+
+        @MetaData("已忽略")
+        IGNORE;
     }
 
     @Transient
     @JsonSerialize(using = DateTimeJsonSerializer.class)
     public Date getTimestampDate() {
         return new Date(this.getTimestmp());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.data.domain.Auditable#getCreatedBy()
-     */
-    @JsonIgnore
-    @Column(updatable = false)
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.springframework.data.domain.Auditable#setCreatedBy(java.lang.Object)
-     */
-    public void setCreatedBy(final String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonSerialize(using = DateTimeJsonSerializer.class)
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(final Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.data.domain.Auditable#getLastModifiedBy()
-     */
-    @JsonIgnore
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(final String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    @JsonIgnore
-    @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(final Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     @Transient

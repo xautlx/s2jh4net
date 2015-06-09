@@ -142,7 +142,6 @@ public class UserService extends BaseService<User, Long> {
         userDao.save(user);
 
         webContextUrl += ("/admin/password/reset?uid=" + user.getAuthUid() + "&email=" + email + "&code=" + user.getRandomCode());
-
         if (freemarkerService != null) {
             Map<String, Object> params = Maps.newHashMap();
             params.put("user", user);

@@ -8,7 +8,7 @@
 	<div class="row search-form-default">
 		<div class="col-md-12">
 			<form action="${ctx}/admin/profile/user-message-list?readed=${param.readed}" method="get"
-				class="form-inline form-validation form-search form-search-init control-label-sm"
+				class="form-inline form-validation form-search-init control-label-sm"
 				data-div-search=".profile-user-message-List">
 				<div class="btn-group">
 					<a class="btn btn-default ${empty param.readed?'active':''}" href='javascripts:;'

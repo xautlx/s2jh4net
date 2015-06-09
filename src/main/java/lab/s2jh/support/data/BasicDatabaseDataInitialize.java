@@ -17,6 +17,7 @@ import javax.persistence.Query;
 
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.PasswordService;
@@ -187,7 +188,7 @@ public class BasicDatabaseDataInitialize {
             entityManager.persist(entity);
 
             entity = new ConfigProperty();
-            entity.setPropKey("cfg_signup_disabled");
+            entity.setPropKey(GlobalConstant.cfg_signup_disabled);
             entity.setPropName("禁用自助注册功能");
             entity.setSimpleValue("false");
             entity.setPropDescn("设置为true禁用则登录界面屏蔽自助注册功能");

@@ -48,14 +48,14 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
         super.initPrepareModel(request, model, id);
     }
     
-    //@MenuData("TODO {PATH}:${entity_name}")
-    //@RequiresPermissions("TODO {PATH}:${entity_name}")
+    @MenuData("${model_title}")
+    @RequiresPermissions("${model_title}")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         return "admin${model_path}/${entity_name_uncapitalize}-index";
     }   
     
-    //@RequiresPermissions("TODO {PATH}:${entity_name}")
+    @RequiresPermissions("${model_title}")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -68,20 +68,20 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
         return "admin${model_path}/${entity_name_uncapitalize}-inputTabs";
     }
 
-    //@RequiresPermissions("TODO {PATH}:${entity_name}")
+    @RequiresPermissions("${model_title}")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow() {
+    public String editShow(Model model) {
         return "admin${model_path}/${entity_name_uncapitalize}-inputBasic";
     }
 
-    //@RequiresPermissions("TODO {PATH}:${entity_name}")
+    @RequiresPermissions("${model_title}")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") ${entity_name} entity, Model model) {
         return super.editSave(entity);
     }
 
-    //@RequiresPermissions("TODO {PATH}:${entity_name}")
+    @RequiresPermissions("${model_title}")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("ids") Long... ids) {

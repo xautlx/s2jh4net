@@ -1,14 +1,12 @@
 # 开发框架介绍与开发指南
 
-> **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
-
 ## Features
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
 * 主体基于主流的（Spring MVC + Spring3 + Hibernate4）架构
 * 引入JPA、Spring-Data-JPA提升持久层架构规范性和开发效率
 * 基于流行JQuery/Bootstrap等UI框架和插件整合，良好的浏览器兼容性和移动设备访问支持
-* 提供一个基础的代码生成框架，简化实现基本的CRUD功能开发
+* 提供一个基础分模块的代码生成框架，简化实现基本的CRUD功能开发
 * 基于Maven的项目和组件依赖管理模式，便捷高效的与持续集成开发集成
 
 ## Architecture

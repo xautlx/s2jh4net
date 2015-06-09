@@ -1,45 +1,32 @@
 package lab.s2jh.aud.entity;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /** 
  * 基于logback的DBAppender表结构规范对应的实体定义
  * @see http://logback.qos.ch/manual/configuration.html#DBAppender
  */
+@Getter
+@Setter
+@Accessors(chain = true)
+@Access(AccessType.FIELD)
 @Embeddable
 public class LoggingEventExceptionId implements java.io.Serializable {
 
     private static final long serialVersionUID = -8095577133472687916L;
 
-    private Long eventId;
-    private short i;
-
-    public LoggingEventExceptionId() {
-    }
-
-    public LoggingEventExceptionId(Long eventId, short i) {
-        this.eventId = eventId;
-        this.i = i;
-    }
-
     @Column(name = "event_id", nullable = false)
-    public Long getEventId() {
-        return this.eventId;
-    }
-
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
-    }
-
+    private Long eventId;
+    
     @Column(name = "i", nullable = false)
-    public short getI() {
-        return this.i;
-    }
-
-    public void setI(short i) {
-        this.i = i;
-    }
+    private short i;
 
     public boolean equals(Object other) {
         if ((this == other))

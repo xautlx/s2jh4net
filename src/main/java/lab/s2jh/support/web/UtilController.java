@@ -3,16 +3,22 @@ package lab.s2jh.support.web;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.exception.WebException;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.util.Exceptions;
+import lab.s2jh.core.util.ExtStringUtils;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.support.service.VerifyCodeService;
@@ -30,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +55,9 @@ public class UtilController {
 
     @Autowired
     private VerifyCodeService verifyCodeService;
+
+    @PersistenceContext(unitName = "entityManagerApp")
+    private EntityManager entityManager;
 
     @MenuData("配置管理:系统管理:辅助管理")
     @RequiresRoles(AuthUserDetails.ROLE_SUPER_USER)
@@ -92,6 +102,60 @@ public class UtilController {
     @ResponseBody
     public Map<String, Object> formValidation(Model model, @RequestParam("clazz") String clazz) {
         return ServletUtils.buildValidateRules(clazz);
+    }
+
+    @RequestMapping(value = "/validate/unique", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean formValidationUnique(HttpServletRequest request, Model model, @RequestParam("clazz") String clazz) {
+        String element = request.getParameter("element");
+        Assert.notNull(element);
+
+        String value = request.getParameter(element);
+        if (!ExtStringUtils.hasChinese(value)) {
+            value = ExtStringUtils.encodeUTF8(value);
+        }
+
+        Class<?> entityClass = ServletUtils.decodeValidateId(clazz);
+        String jql = "select id from " + entityClass.getName() + " where " + element + "=:value ";
+        Query query = null;
+
+        // 处理额外补充参数，有些数据是通过两个字段共同决定唯一性，可以通过additional参数补充提供
+        String additionalName = request.getParameter("additional");
+        if (StringUtils.isNotBlank(additionalName)) {
+            String additionalValue = request.getParameter(additionalName);
+            if (!ExtStringUtils.hasChinese(additionalValue)) {
+                additionalValue = ExtStringUtils.encodeUTF8(additionalValue);
+            }
+            jql = jql + additionalName + "=:additionalValue ";
+            query = entityManager.createQuery(jql);
+            query.setParameter("value", value);
+            query.setParameter("additionalValue", additionalValue);
+        } else {
+            query = entityManager.createQuery(jql);
+            query.setParameter("value", value);
+        }
+
+        List<?> entities = query.getResultList();
+        if (entities == null || entities.size() == 0) {// 未查到重复数据
+            return true;
+        } else {
+            if (entities.size() == 1) {// 查询到一条重复数据
+                String id = request.getParameter("id");
+                if (StringUtils.isNotBlank(id)) {
+                    String entityId = ((Long) entities.get(0)).toString();
+                    logger.debug("Check Unique Entity ID = {}", entityId);
+                    if (id.equals(entityId)) {// 查询到数据是当前更新数据，不算已存在
+                        return true;
+                    } else {// 查询到数据不是当前更新数据，算已存在
+                        return false;
+                    }
+                } else {// 没有提供Sid主键，说明是创建记录，则算已存在
+                    return false;
+                }
+            } else {// 查询到多余一条重复数据，说明数据库数据本身有问题
+                throw new WebException("error.check.unique.duplicate: " + element + "=" + value);
+            }
+        }
     }
 
     /**
@@ -141,12 +205,5 @@ public class UtilController {
     @RequestMapping(value = "/load-balance-test", method = RequestMethod.GET)
     public String loadBalanceTest() {
         return "admin/util/load-balance-test";
-    }
-
-    @MetaData(value = "开发模式获取手机验证码")
-    @RequestMapping(value = "/mobile-codes", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, String> mobileCodes() {
-        return verifyCodeService.getMobileCodes();
     }
 }

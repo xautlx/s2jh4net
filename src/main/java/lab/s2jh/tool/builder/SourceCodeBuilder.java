@@ -131,8 +131,10 @@ public class SourceCodeBuilder {
                 superClass = superClass.getSuperclass();
             }
 
+            //计算主界面OR查询字段列表
+            Map<String, String> searchOrFields = Maps.newLinkedHashMap();
             //定义用于OneToOne关联对象的Fetch参数
-            Map<String, String> fetchJoinFields = Maps.newHashMap();
+            Map<String, String> fetchJoinFields = Maps.newLinkedHashMap();
             List<EntityCodeField> entityFields = new ArrayList<EntityCodeField>();
             int cnt = 1;
             for (Field field : fields) {
@@ -169,9 +171,18 @@ public class SourceCodeBuilder {
                     Column fieldColumn = field.getAnnotation(Column.class);
                     if (fieldColumn != null) {
                         int length = fieldColumn.length();
-                        if (length > 255) {
+                        if (length > 300) {
                             length = 200;
                             entityCodeField.setList(false);
+                        } else {
+                            if (searchOrFields.size() < 3) {
+                                MetaData fieldMetaData = field.getAnnotation(MetaData.class);
+                                if (fieldMetaData != null) {
+                                    searchOrFields.put(field.getName(), fieldMetaData.value());
+                                } else {
+                                    searchOrFields.put(field.getName(), field.getName());
+                                }
+                            }
                         }
                         entityCodeField.setListWidth(length);
                     }
@@ -244,6 +255,8 @@ public class SourceCodeBuilder {
             if (fetchJoinFields.size() > 0) {
                 root.put("fetchJoinFields", fetchJoinFields);
             }
+            root.put("searchOrFieldNames", StringUtils.join(searchOrFields.keySet(), "_OR_"));
+            root.put("searchOrFieldPlaceholders", StringUtils.join(searchOrFields.values(), " , "));
 
             integrateRootPath = integrateRootPath + rootPackagePath + modelPackagePath;
             process(cfg.getTemplate("Dao.ftl"), root, integrateRootPath + File.separator + "dao" + File.separator, className + "Dao.java");
@@ -270,9 +283,9 @@ public class SourceCodeBuilder {
             process(cfg.getTemplate("JSP_Input_Tabs.ftl"), root, standaloneRootPath + File.separator + "jsp" + File.separator, nameField
                     + "-inputTabs.jsp");
             process(cfg.getTemplate("JSP_Input_Basic.ftl"), root, standaloneRootPath + File.separator + "jsp" + File.separator, nameField
-                    + "-inputBasic.jsp"); 
+                    + "-inputBasic.jsp");
         }
-        
+
         debug("Source Code Builder Done. Processed entities size: " + entityNames.size());
     }
 

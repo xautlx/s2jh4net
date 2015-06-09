@@ -18,8 +18,6 @@
 			<button class="btn blue" type="submit" data-grid-reload="#grid-auth-user-index">
 				<i class="fa fa-check"></i> 保存
 			</button>
-			<button class="btn green" type="submit" data-grid-reload="#grid-auth-user-index" data-post-dismiss="modal">保存并关闭
-			</button>
 			<button class="btn default" type="button" data-dismiss="modal">取消</button>
 		</div>
 		<div class="form-body">
@@ -140,8 +138,6 @@
 		<div class="form-actions right">
 			<button class="btn blue" type="submit" data-grid-reload=".grid-auth-user-index">
 				<i class="fa fa-check"></i> 保存
-			</button>
-			<button class="btn green" type="submit" data-grid-reload="#grid-auth-user-index" data-post-dismiss="modal">保存并关闭
 			</button>
 			<button class="btn default" type="button" data-dismiss="modal">取消</button>
 		</div>

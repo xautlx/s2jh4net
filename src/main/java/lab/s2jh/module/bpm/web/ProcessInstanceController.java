@@ -55,7 +55,7 @@ public class ProcessInstanceController {
     @Autowired
     protected ActivitiService activitiService;
 
-    @MenuData("配置管理:流程管理:流程运行实例")
+    //@MenuData("配置管理:流程管理:流程运行实例")
     @RequiresPermissions("配置管理:流程管理:流程运行实例")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {

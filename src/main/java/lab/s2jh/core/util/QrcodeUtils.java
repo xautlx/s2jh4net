@@ -48,11 +48,11 @@ public class QrcodeUtils {
             Map<EncodeHintType, Object> hints = Maps.newHashMap();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            hints.put(EncodeHintType.MARGIN, 1);
             BitMatrix bitMatrix = new QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, height, height, hints);
 
             int width = bitMatrix.getWidth();
-            BufferedImage image = new BufferedImage(bitMatrix.getWidth(), bitMatrix.getHeight(),
-                    BufferedImage.TYPE_INT_ARGB);
+            BufferedImage image = new BufferedImage(bitMatrix.getWidth(), bitMatrix.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
@@ -71,8 +71,7 @@ public class QrcodeUtils {
         }
         return null;
     }
-    
-    
+
     public static BufferedImage createQrcodeWithLogo(String content, Integer height, String logoPath) {
         if (height == null || height < 100) {
             height = 200;
@@ -82,28 +81,27 @@ public class QrcodeUtils {
             Map<EncodeHintType, Object> hints = Maps.newHashMap();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            hints.put(EncodeHintType.MARGIN, 0);
             BitMatrix bitMatrix = new QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, height, height, hints);
 
             int width = bitMatrix.getWidth();
-            BufferedImage image = new BufferedImage(bitMatrix.getWidth(), bitMatrix.getHeight(),
-                    BufferedImage.TYPE_INT_ARGB);
+            BufferedImage image = new BufferedImage(bitMatrix.getWidth(), bitMatrix.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
                 }
             }
-            
+
             Graphics2D g = image.createGraphics();
 
             BufferedImage logo = scale(logoPath, 50, 50, false);
-            
+
             int widthLogo = logo.getWidth();
             int heightLogo = logo.getHeight();
 
             // 计算图片放置位置
             int x = (image.getWidth() - widthLogo) / 2;
             int y = (image.getHeight() - logo.getHeight()) / 2;
-
 
             //开始绘制图片
             g.drawImage(logo, x, y, widthLogo, heightLogo, null);
@@ -115,13 +113,13 @@ public class QrcodeUtils {
             g.dispose();
 
             return image;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        } 
-         
+        }
+
         return null;
     }
-    
+
     /**
      * 把传入的原始图像按高度和宽度进行缩放，生成符合要求的图片
      * @param srcImageFile 源文件地址
@@ -131,41 +129,43 @@ public class QrcodeUtils {
      * @return
      * @throws IOException
      */
-    private static BufferedImage scale(String srcImageFile, int height, int width, boolean hasFiller) throws IOException{
+    private static BufferedImage scale(String srcImageFile, int height, int width, boolean hasFiller) throws IOException {
         double ratio = 0;//缩放比例
         File file = new File(srcImageFile);
         BufferedImage srcImage = ImageIO.read(file);
         Image destImage = srcImage.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
-        
+
         //计算比例
-        if(srcImage.getHeight()>height || srcImage.getWidth()>width){
-            if(srcImage.getHeight()>srcImage.getWidth()){
-                ratio = Integer.valueOf(height).doubleValue()/srcImage.getHeight();
-            }else{
-                ratio = Integer.valueOf(width).doubleValue()/srcImage.getWidth();
+        if (srcImage.getHeight() > height || srcImage.getWidth() > width) {
+            if (srcImage.getHeight() > srcImage.getWidth()) {
+                ratio = Integer.valueOf(height).doubleValue() / srcImage.getHeight();
+            } else {
+                ratio = Integer.valueOf(width).doubleValue() / srcImage.getWidth();
             }
         }
-        
+
         AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(ratio, ratio), null);
         destImage = op.filter(srcImage, null);
-        
+
         //是否补白
-        if(hasFiller){
+        if (hasFiller) {
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2d = image.createGraphics();
             graphics2d.setColor(Color.white);
             graphics2d.fillRect(0, 0, width, height);
-            if(width==destImage.getWidth(null)){
-                graphics2d.drawImage(destImage, 0, (height-destImage.getHeight(null))/2, destImage.getWidth(null), destImage.getHeight(null), Color.white, null);
-            }else{
-                graphics2d.drawImage(destImage, 0, (width-destImage.getWidth(null))/2, destImage.getWidth(null), destImage.getHeight(null), Color.white, null);
+            if (width == destImage.getWidth(null)) {
+                graphics2d.drawImage(destImage, 0, (height - destImage.getHeight(null)) / 2, destImage.getWidth(null), destImage.getHeight(null),
+                        Color.white, null);
+            } else {
+                graphics2d.drawImage(destImage, 0, (width - destImage.getWidth(null)) / 2, destImage.getWidth(null), destImage.getHeight(null),
+                        Color.white, null);
             }
-            
+
             graphics2d.dispose();
             destImage = image;
         }
-        
-        return (BufferedImage)destImage;
+
+        return (BufferedImage) destImage;
     }
 
     /**
@@ -211,28 +211,28 @@ public class QrcodeUtils {
     }
 
     public static void main(String[] args) throws Exception {
-//        File file = new File("d://1.png");
-//        QrcodeUtils.createQrcodeImage("中华人民共和国", 200, file);
-//
-//        System.out.println("-----成生成功----");
-//        System.out.println();
-//
-//        String s = QrcodeUtils.decodeQrcode(file);
-//
-//        System.out.println("-----解析成功----");
-//        System.out.println(s);
-        
+        //        File file = new File("d://1.png");
+        //        QrcodeUtils.createQrcodeImage("中华人民共和国", 200, file);
+        //
+        //        System.out.println("-----成生成功----");
+        //        System.out.println();
+        //
+        //        String s = QrcodeUtils.decodeQrcode(file);
+        //
+        //        System.out.println("-----解析成功----");
+        //        System.out.println(s);
+
         String srcFile = "d://kfc.png";
         String destFile = "d://kfcLogo.png";
         String content = "肯德基好味道";
         BufferedImage image = createQrcodeWithLogo(content, null, srcFile);
-        ImageIO.write(image, "png", new File(destFile));  
+        ImageIO.write(image, "png", new File(destFile));
         System.out.println("-----成生成功----");
-        
+
         String result = QrcodeUtils.decodeQrcode(new File(destFile));
-        if(content.endsWith(result)){
-            System.out.println("-----解析成功----"); 
+        if (content.endsWith(result)) {
+            System.out.println("-----解析成功----");
         }
-        
+
     }
 }

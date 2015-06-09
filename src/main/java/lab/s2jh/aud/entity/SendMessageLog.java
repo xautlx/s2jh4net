@@ -57,13 +57,13 @@ public class SendMessageLog extends PersistableEntity<Long> {
     @MetaData(value = "消息类型")
     @Column(length = 16, nullable = false)
     @Enumerated(EnumType.STRING)
-    private SendMessageType messageType;
+    private SendMessageTypeEnum messageType;
 
     @MetaData(value = "发送时间")
     @Column(nullable = false, updatable = false)
     private Date sendTime;
 
-    public static enum SendMessageType {
+    public static enum SendMessageTypeEnum {
 
         @MetaData(value = "电子邮件")
         EMAIL,

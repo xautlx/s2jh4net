@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
 <c:set var="ctx" value="${r"${pageContext.request.contextPath}"}" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,7 +14,7 @@
 				data-grid-search="#grid-${full_entity_name_field}-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_code_OR_name']" class="form-control input-large" placeholder="代码，名称...">
+						<input type="text" name="search['CN_${searchOrFieldNames}']" class="form-control input-large" placeholder="${searchOrFieldPlaceholders}...">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">
@@ -48,9 +49,9 @@
 		            label : '${entityField.title}',
 		            name : '${entityField.fieldName}',
 		            formatter : 'select',
-		            searchoptions : {
-		                value : Util.getCacheEnumsByType('${entityField.fieldType}')
-		            },
+                    searchoptions : {
+                        valueJsonString : '<tags:json value="${r"${"}${entityField.fieldName}Map${r"}"}"/>'
+                    },
 		        <#elseif entityField.fieldType=='Entity'>
 		        }, {
 		            label : '${entityField.title}',
@@ -83,9 +84,7 @@
 		            width : ${entityField.listWidth},
 		            align : '${entityField.listAlign}',
 		        </#if>
-		        <#if entityField.edit>
-		            editable: true,
-		        </#if>                                                                    
+		            editable: true                                                                   
 		        </#if>
 		        </#list>
 		        } ],

@@ -10,7 +10,7 @@
 <body>
 	<div class="row search-form-default">
 		<div class="col-md-12">
-			<form method="get" class="form-inline form-validation form-search form-search-init control-label-sm"
+			<form method="get" class="form-inline form-validation form-search-init control-label-sm"
 				data-grid-search="#grid-sys-menu-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">

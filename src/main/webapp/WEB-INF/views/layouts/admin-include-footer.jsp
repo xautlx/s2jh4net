@@ -77,6 +77,7 @@
 <script src="${ctx}/assets/plugins/jquery-jqgrid/js/jquery.jqGrid.src.js"></script>
 
 <script type="text/javascript" src="${ctx}/assets/plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="${ctx}/assets/plugins/select2/select2_locale_zh-CN.js"></script>
 <script src="${ctx}/assets/plugins/jquery-ztree/js/jquery.ztree.all-3.5.js"></script>
 <script src="${ctx}/assets/plugins/kindeditor/kindeditor-ext.js"></script>
 

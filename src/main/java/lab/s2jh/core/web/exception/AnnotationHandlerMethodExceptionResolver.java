@@ -11,13 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import lab.s2jh.core.exception.BaseRuntimeException;
 import lab.s2jh.core.exception.DuplicateTokenException;
 import lab.s2jh.core.exception.ValidationException;
-import lab.s2jh.core.security.AuthContextHolder;
-import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -161,21 +158,11 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
             }
 
             if (!skipLog) {
-                //记录登录用户信息
-                String userId = AuthContextHolder.getAuthUserDisplay();
-                if (StringUtils.isNotBlank(userId)) {
-                    MDC.put("AUTH_USER", userId);
-                }
-                //记录时间
-                MDC.put("LOG_DATETIME", DateUtils.formatTimeNow());
-
                 //以logger的MDC模式记录组装的字符串信息
-                MDC.put("WEB_DATA", ServletUtils.buildRequestInfoToString(request, true));
-
+                MDC.setContextMap(ServletUtils.buildRequestInfoDataMap(request, true));
                 logger.error(errorMessage, e);
-
                 MDC.clear();
-            }else{
+            } else {
                 logger.debug(errorMessage, e);
             }
         }
@@ -213,11 +200,11 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
                 String view = null;
                 String path = request.getServletPath();
                 if (path.startsWith("/admin")) {
-                    view = "admin/login";
+                    view = "/admin/login";
                 } else if (path.startsWith("/m")) {
-                    view = "m/login";
+                    view = "/m/login";
                 } else {
-                    view = "w/login";
+                    view = "/w/login";
                 }
                 return new ModelAndView("redirect:" + view);
             }

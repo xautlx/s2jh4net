@@ -91,6 +91,876 @@
         <dl>
             
 <dt>
+    <h4 class="name" id="bindBtnPostUrl"><span class="type-signature"></span>bindBtnPostUrl<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        按钮点击提交POST请求: .btn-post-url
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>.btn-post-url</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">为按钮添加处理标识</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-url</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">POST提交URL地址</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-confirm</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">提交操作confirm确认提示字符信息，如果为false则不做提示直接提交</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-post-success</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">直接在属性中编写处理成功回调执行的字符串内容，以eval方式将字符串转换执行</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-post-reload</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">快捷方式指定处理回调刷新：page=浏览器地址刷新；container=当前元素所在最近AJAX容器刷新；其他值则表示JQuery元素定位表达式调用对应AJAX刷新</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="global.js.html">w/app/global.js</a>, <a href="global.js.html#line312">line 312</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code><pre>
+            <button class="btn blue btn-post-url" type="button"
+                data-url="${base}/myt/purchase/purchase-order!bpmSave?id=<s:property value='%{id}' />&taskId=<s:property value='%{#parameters.taskId}' />"
+                data-confirm="确认提交请求？">
+               模拟按钮POST请求
+            </button></pre></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="bindBtnSendSmsCode"><span class="type-signature"></span>bindBtnSendSmsCode<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        短信发送验证码元素: .btn-send-sms-code
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-mobile-el</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">输入手机号元素的name属性值，确保其在同一个.form-group元素下</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="global.js.html">w/app/global.js</a>, <a href="global.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> &lt;button type="button" class="btn btn-send-sms-code" data-mobile-el="mobile">获取验证码&lt;/button></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="bindCaptchaCode"><span class="type-signature"></span>bindCaptchaCode<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        绑定构造图片验证码输入框和验证码图片: .captcha-img , .captcha-text
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>.captcha-text</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">为验证码输入框添加标识</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>.captcha-img</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">为验证码图片添加标识</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="global.js.html">w/app/global.js</a>, <a href="global.js.html#line269">line 269</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code><pre>
+            <div class="input-group">
+                <div class="input-icon">
+                    <i class="fa fa-qrcode"></i> <input class="form-control captcha-text" type="text" autocomplete="off"
+                        placeholder="验证码...看不清可点击图片可刷新" name="captcha" required="true" />
+                </div>
+                <span class="input-group-btn" style="cursor: pointer;"> <img alt="验证码" class="captcha-img"
+                    src="${ctx}/assets/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
+                </span>
+            </div></pre></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="bindExtBootstrapTab"><span class="type-signature"></span>bindExtBootstrapTab<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        绑定构造扩展支持AJAX特性的TAB组件: .tabbable > .nav > [data-toggle="tab"]默认tabbable是一个没有边框的tab样式，tabbable-custom会额外加边框并活动红色标记样式
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>href</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">三种参数模式：#abc 基本的bootstrap tab定位模式; #auto 自动基于内容区域div顺序匹配定位; url链接形式则表示点击AJAX异步加载</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-tab-disabled</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">主要用在添加数据时控制只有第一个标签项可用其余禁用，在第一个标签项保存后自动刷新整个Tab其余标签项可用。</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-active</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">指定活动标签项的顺序编号，默认可设定固定值：$&#123;param._tab_active} 由服务器端基于表单处理动态控制</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="global.js.html">w/app/global.js</a>, <a href="global.js.html#line170">line 170</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code><pre>
+            <div class="tabbable tabbable-custom">
+                <ul class="nav nav-tabs" data-active="${param._tab_active}">
+                    <li class="tools pull-right"><a href="javascript:;" class="btn default reload"><i class="fa fa-refresh"></i></a></li>
+                    <li><a data-toggle="tab" href="${ctx}/admin/auth/role/edit?id=${id}">基本信息</a></li>
+                    <li><a data-toggle="tab" href="${ctx}/admin/auth/role/privileges?id=${id}" data-tab-disabled="${entity.isNew()}">权限关联</a></li>
+                </ul>
+            </div></pre></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="bindModalAjaxify"><span class="type-signature"></span>bindModalAjaxify<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        链接点击弹出模态对话框: a[data-toggle="modal-ajaxify"],a[target="modal-ajaxify"]
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-toggle</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">'modal-ajaxify'=组件标识</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>target或data-modal-size</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">'modal-ajaxify'=组件标识</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-modal-size</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">弹窗的宽度，默认是modal-wide宽屏显示</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">作为弹窗的标题</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="global.js.html">w/app/global.js</a>, <a href="global.js.html#line241">line 241</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>  &lt;a href="${ctx}/admin/password/forget" data-toggle="modal-ajaxify" title="找回密码" data-modal-size="550px">找回密码&lt;/a></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="bindTableInfiniteScroll"><span class="type-signature"></span>bindTableInfiniteScroll<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        绑定构造无限滚动加载表格: table.table-infinite-scroll
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="global.js.html">w/app/global.js</a>, <a href="global.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="initAjaxBeforeShow"><span class="type-signature"></span>initAjaxBeforeShow<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -132,7 +1002,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line611">line 611</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line612">line 612</a>
     </li></ul></dd>
     
     
@@ -160,7 +1030,7 @@
         
             
 <dt>
-    <h4 class="name" id="initControlLabelTooltips"><span class="type-signature"></span>initControlLabelTooltips<span class="signature">(data-tooltips, data-tooltipster-position)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initControlLabelTooltips"><span class="type-signature"></span>initControlLabelTooltips<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -177,10 +1047,16 @@
     
     
     
-        <h5>Parameters:</h5>
+    
+    
+<dl class="details">
+    
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
 
-<table class="params">
+<table class="props">
     <thead>
 	<tr>
 		
@@ -236,11 +1112,8 @@
 	
 	
 	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
+</table></dl>
+        
     
         
     
@@ -262,7 +1135,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line670">line 670</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line676">line 676</a>
     </li></ul></dd>
     
     
@@ -520,7 +1393,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line502">line 502</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line508">line 508</a>
     </li></ul></dd>
     
     
@@ -658,7 +1531,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line588">line 588</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line594">line 594</a>
     </li></ul></dd>
     
     
@@ -796,7 +1669,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line548">line 548</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line554">line 554</a>
     </li></ul></dd>
     
     
@@ -1008,7 +1881,7 @@
         
             
 <dt>
-    <h4 class="name" id="initDynamicTable"><span class="type-signature"></span>initDynamicTable<span class="signature">(data-dynamic-table, data-height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initDynamicTable"><span class="type-signature"></span>initDynamicTable<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1025,10 +1898,16 @@
     
     
     
-        <h5>Parameters:</h5>
+    
+    
+<dl class="details">
+    
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
 
-<table class="params">
+<table class="props">
     <thead>
 	<tr>
 		
@@ -1084,11 +1963,8 @@
 	
 	
 	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
+</table></dl>
+        
     
         
     
@@ -1143,7 +2019,7 @@
         
             
 <dt>
-    <h4 class="name" id="initGrid"><span class="type-signature"></span>initGrid<span class="signature">(url, colModel, postData, editurl, editrulesurl, delurl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initGrid"><span class="type-signature"></span>initGrid<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1160,10 +2036,16 @@
     
     
     
-        <h5>Parameters:</h5>
+    
+    
+<dl class="details">
+    
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
 
-<table class="params">
+<table class="props">
     <thead>
 	<tr>
 		
@@ -1268,7 +2150,7 @@
             
             
             
-            <td class="description last">inline编辑模式自动表单校验规则请求url，一般固定为：WEB_ROOT + '/admin/util/validate?clazz=$\{clazz\}'</td>
+            <td class="description last">inline编辑模式自动表单校验规则请求url，一般固定为：WEB_ROOT + '/admin/util/validate?clazz=$&#123;clazz}'</td>
         </tr>
 	
 	
@@ -1290,12 +2172,171 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>multiselect</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">是否显示多选复选框列，默认true</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">列标题label</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">从JSON响应数据取值的属性名称</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">点击排序或查询回传服务器的属性名称，可选，默认值等于name值</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">列宽度，如果是自动百分比模式会取所有宽度按照百分比换算</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>editable</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">列单元格是否支持inline编辑，editurl有值才有意义</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>align</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">单元格数据对齐模式：left|right|center，基本原则是等长或简短内容center居中；金额类型一般right对齐；其余不等长文本一般left对齐</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>formatter</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">单元格类型，用于合理的控制显示格式和排序等特性，指定不同formatter格式一般会同步自动设定相关的width，align等属性，因此一般建议合理设置。<br>可选值说明：    <pre>     currency=货币类型数据，逗号千分位分隔符，默认两位小数 ，自动设定width=80和align=right     percentage=百分比类型数据，value为小数乘以100转换为%格式，自动设定width=50和align=right     integer=整数类型，自动设定width=60和align=center     number=数字类型，整数或浮点数 ，自动设定width=60和align=right     date=ISO年月日格式，自动设定width=120和align=center     timestamp=ISO年月日时分秒格式，自动设定width=150和align=center     showlink=以AJAX对话框模式请求URL，需自行合理设置width属性，子参数示意：         formatoptions.baseLinkUrl : WEB_ROOT + '/admin/user/view',         formatoptions.title : WEB_ROOT + '/admin/user/view',                       checkbox=复选框，一般用于boolean类型 ，自动设定width=60和align=center，子参数示意：               searchoptions.valueJsonString : '&#123;"true":"正常","false":"中止"}'     select=下拉选项框，一般用于枚举类型属性，子参数示意：          searchoptions.value : function()&#123;              //返回key-value结构对象数组         }                   searchoptions.valueJsonString : '&lt;tags:json value="$&#123;educationLevel}"/>'       </pre></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>formatter</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">inline编辑模式元素类型，默认会按照formatter自动设定合理类型，其余一般为text=单行文本， textarea=多行文本</td>
+        </tr>
+	
+	
 	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
+</table></dl>
+        
     
         
     
@@ -1317,7 +2358,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line1242">line 1242</a>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line1276">line 1276</a>
     </li></ul></dd>
     
     
@@ -1345,7 +2386,7 @@
         
             
 <dt>
-    <h4 class="name" id="initImagePreivew"><span class="type-signature"></span>initImagePreivew<span class="signature">(data-toggle)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initImagePreivew"><span class="type-signature"></span>initImagePreivew<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1362,10 +2403,16 @@
     
     
     
-        <h5>Parameters:</h5>
+    
+    
+<dl class="details">
+    
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
 
-<table class="params">
+<table class="props">
     <thead>
 	<tr>
 		
@@ -1403,11 +2450,8 @@
 	
 	
 	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
+</table></dl>
+        
     
         
     
@@ -1429,7 +2473,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line756">line 756</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line762">line 762</a>
     </li></ul></dd>
     
     
@@ -1454,7 +2498,7 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code> &lt;label class="control-label" data-tooltips="[输入提示说明内容]">金额&lt;/label></code></pre>
+    <pre class="prettyprint"><code> &lt;img alt="个人照片" src="${photoUrl}" data-toggle="preview" /></code></pre>
 
     
 </dd>
@@ -1600,7 +2644,7 @@
         
             
 <dt>
-    <h4 class="name" id="initRecursiveSubGrid"><span class="type-signature"></span>initRecursiveSubGrid<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initRecursiveSubGrid"><span class="type-signature"></span>initRecursiveSubGrid<span class="signature">(subgrid_id, row_id, parent, clearPostData)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1608,7 +2652,7 @@
     
     
     <div class="description">
-        递归初始化子表格
+        树形父子结构数据递归初始化子表格，在主表格的参数对象基础上添加父子关联参数作为子表格初始化参数对象，一般在subGrid=true时，在subGridRowExpanded事件方法中调用
     </div>
     
 
@@ -1616,6 +2660,103 @@
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>subgrid_id</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">直接传入subGridRowExpanded事件方法中对应参数</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>row_id</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">直接传入subGridRowExpanded事件方法中对应参数</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">将当期父行项的id作为参数传入parent指定的参数作为查询子集合的查询条件名称，例如parent.id，在当前主Grid的url参数基础上添加search['EQ_" + parent + "']=(行项id值)作为子表格查询url</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>clearPostData</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">是否初始化清空参数对象中的postData参数，避免父对象的参数干扰</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -1641,7 +2782,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line2945">line 2945</a>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line2993">line 2993</a>
     </li></ul></dd>
     
     
@@ -1663,6 +2804,11 @@
     
     
     
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>  Grid.initRecursiveSubGrid(subgrid_id, row_id, "parent.id");</code></pre>
+
     
 </dd>
 
@@ -1971,7 +3117,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line333">line 333</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line339">line 339</a>
     </li></ul></dd>
     
     
@@ -2168,7 +3314,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line384">line 384</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line390">line 390</a>
     </li></ul></dd>
     
     
@@ -2203,7 +3349,7 @@
         
             
 <dt>
-    <h4 class="name" id="initSubGrid"><span class="type-signature"></span>initSubGrid<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initSubGrid"><span class="type-signature"></span>initSubGrid<span class="signature">(subgrid_id, row_id, options)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2211,7 +3357,7 @@
     
     
     <div class="description">
-        初始化普通子表格
+        初始化普通子表格，一般在subGrid=true时，在subGridRowExpanded事件方法中调用
     </div>
     
 
@@ -2219,6 +3365,85 @@
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>subgrid_id</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">直接传入subGridRowExpanded事件方法中对应参数</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>row_id</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">直接传入subGridRowExpanded事件方法中对应参数</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">传入用于子表格初始化的jqGrid结构参数对象</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -2244,7 +3469,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line2983">line 2983</a>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line3059">line 3059</a>
     </li></ul></dd>
     
     
@@ -2267,12 +3492,37 @@
     
     
     
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code> <pre>
+            subGrid : true,
+            subGridRowExpanded : function(subgrid_id, row_id) {
+                Grid.initSubGrid(subgrid_id, row_id, {
+                    url : WEB_ROOT + "/admin/sys/notify-message/read-list?search['EQ_notifyMessage.id']=" + row_id,
+                    colNames : [ '阅读用户', '首次阅读时间', '最后阅读时间', '总计阅读次数' ],
+                    colModel : [ {
+                        name : 'readUserLabel',
+                        width : 150
+                    }, {
+                        name : 'firstReadTime',
+                        formatter : 'timestamp'
+                    }, {
+                        name : 'lastReadTime',
+                        formatter : 'timestamp'
+                    }, {
+                        name : 'readTotalCount',
+                        align : 'center'
+                    } ]
+                });
+            }</pre></code></pre>
+
+    
 </dd>
 
         
             
 <dt>
-    <h4 class="name" id="initTextareaHtmleditor"><span class="type-signature"></span>initTextareaHtmleditor<span class="signature">(data-htmleditor, data-height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initTextareaHtmleditor"><span class="type-signature"></span>initTextareaHtmleditor<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2289,10 +3539,16 @@
     
     
     
-        <h5>Parameters:</h5>
+    
+    
+<dl class="details">
+    
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
 
-<table class="params">
+<table class="props">
     <thead>
 	<tr>
 		
@@ -2348,11 +3604,8 @@
 	
 	
 	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
+</table></dl>
+        
     
         
     
@@ -2374,7 +3627,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line726">line 726</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line732">line 732</a>
     </li></ul></dd>
     
     
@@ -2399,7 +3652,7 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code> &lt;label class="control-label" data-tooltips="[输入提示说明内容]">金额&lt;/label></code></pre>
+    <pre class="prettyprint"><code> &lt;form:textarea path="product.description" class="form-control" data-htmleditor='kindeditor' data-height="400" /></code></pre>
 
     
 </dd>
@@ -2407,7 +3660,7 @@
         
             
 <dt>
-    <h4 class="name" id="initTextareaMaxlength"><span class="type-signature"></span>initTextareaMaxlength<span class="signature">(maxlength)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="initTextareaMaxlength"><span class="type-signature"></span>initTextareaMaxlength<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2424,10 +3677,16 @@
     
     
     
-        <h5>Parameters:</h5>
+    
+    
+<dl class="details">
+    
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
 
-<table class="params">
+<table class="props">
     <thead>
 	<tr>
 		
@@ -2465,11 +3724,8 @@
 	
 	
 	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
+</table></dl>
+        
     
         
     
@@ -2491,7 +3747,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line704">line 704</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line710">line 710</a>
     </li></ul></dd>
     
     
@@ -2959,7 +4215,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line284">line 284</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line287">line 287</a>
     </li></ul></dd>
     
     
@@ -3079,7 +4335,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line469">line 469</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line475">line 475</a>
     </li></ul></dd>
     
     
@@ -3463,7 +4719,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line552">line 552</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line553">line 553</a>
     </li></ul></dd>
     
     
@@ -4442,13 +5698,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="AdminPage.html">AdminPage</a></li><li><a href="Grid.html">Grid</a></li><li><a href="SitePage.html">SitePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#initAjaxBeforeShow">initAjaxBeforeShow</a></li><li><a href="global.html#initControlLabelTooltips">initControlLabelTooltips</a></li><li><a href="global.html#initDataProfileParam">initDataProfileParam</a></li><li><a href="global.html#initDatePicker">initDatePicker</a></li><li><a href="global.html#initDateRangePicker">initDateRangePicker</a></li><li><a href="global.html#initDateTimePicker">initDateTimePicker</a></li><li><a href="global.html#initDropdownSelect">initDropdownSelect</a></li><li><a href="global.html#initDynamicTable">initDynamicTable</a></li><li><a href="global.html#initGrid">initGrid</a></li><li><a href="global.html#initImagePreivew">initImagePreivew</a></li><li><a href="global.html#initMultiSelectDouble">initMultiSelectDouble</a></li><li><a href="global.html#initRecursiveSubGrid">initRecursiveSubGrid</a></li><li><a href="global.html#initSelect2">initSelect2</a></li><li><a href="global.html#initSelect2Remote">initSelect2Remote</a></li><li><a href="global.html#initSelect2Tags">initSelect2Tags</a></li><li><a href="global.html#initSubGrid">initSubGrid</a></li><li><a href="global.html#initTextareaHtmleditor">initTextareaHtmleditor</a></li><li><a href="global.html#initTextareaMaxlength">initTextareaMaxlength</a></li><li><a href="global.html#initTreeSelect">initTreeSelect</a></li><li><a href="global.html#initUploadBigFile">initUploadBigFile</a></li><li><a href="global.html#initUploadMultiImage">initUploadMultiImage</a></li><li><a href="global.html#initUploadSingleFile">initUploadSingleFile</a></li><li><a href="global.html#initUploadSingleImage">initUploadSingleImage</a></li><li><a href="global.html#initXEditable">initXEditable</a></li><li><a href="global.html#jqgrid-getAtLeastOneSelectedItem">jqgrid-getAtLeastOneSelectedItem</a></li><li><a href="global.html#jqgrid-getEditingRowdata">jqgrid-getEditingRowdata</a></li><li><a href="global.html#jqgrid-getOnlyOneSelectedItem">jqgrid-getOnlyOneSelectedItem</a></li><li><a href="global.html#jqgrid-getSelectedRowdata">jqgrid-getSelectedRowdata</a></li><li><a href="global.html#jqgrid-getSelectedRowdatas">jqgrid-getSelectedRowdatas</a></li><li><a href="global.html#jqgrid-isEditingMode">jqgrid-isEditingMode</a></li><li><a href="global.html#jqgrid-refresh">jqgrid-refresh</a></li><li><a href="global.html#jqgrid-setEditingRowdata">jqgrid-setEditingRowdata</a></li><li><a href="global.html#jqgrid-sumColumn">jqgrid-sumColumn</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="AdminPage.html">AdminPage</a></li><li><a href="Global_.html">Global</a></li><li><a href="Grid.html">Grid</a></li><li><a href="SitePage.html">SitePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bindBtnPostUrl">bindBtnPostUrl</a></li><li><a href="global.html#bindBtnSendSmsCode">bindBtnSendSmsCode</a></li><li><a href="global.html#bindCaptchaCode">bindCaptchaCode</a></li><li><a href="global.html#bindExtBootstrapTab">bindExtBootstrapTab</a></li><li><a href="global.html#bindModalAjaxify">bindModalAjaxify</a></li><li><a href="global.html#bindTableInfiniteScroll">bindTableInfiniteScroll</a></li><li><a href="global.html#initAjaxBeforeShow">initAjaxBeforeShow</a></li><li><a href="global.html#initControlLabelTooltips">initControlLabelTooltips</a></li><li><a href="global.html#initDataProfileParam">initDataProfileParam</a></li><li><a href="global.html#initDatePicker">initDatePicker</a></li><li><a href="global.html#initDateRangePicker">initDateRangePicker</a></li><li><a href="global.html#initDateTimePicker">initDateTimePicker</a></li><li><a href="global.html#initDropdownSelect">initDropdownSelect</a></li><li><a href="global.html#initDynamicTable">initDynamicTable</a></li><li><a href="global.html#initGrid">initGrid</a></li><li><a href="global.html#initImagePreivew">initImagePreivew</a></li><li><a href="global.html#initMultiSelectDouble">initMultiSelectDouble</a></li><li><a href="global.html#initRecursiveSubGrid">initRecursiveSubGrid</a></li><li><a href="global.html#initSelect2">initSelect2</a></li><li><a href="global.html#initSelect2Remote">initSelect2Remote</a></li><li><a href="global.html#initSelect2Tags">initSelect2Tags</a></li><li><a href="global.html#initSubGrid">initSubGrid</a></li><li><a href="global.html#initTextareaHtmleditor">initTextareaHtmleditor</a></li><li><a href="global.html#initTextareaMaxlength">initTextareaMaxlength</a></li><li><a href="global.html#initTreeSelect">initTreeSelect</a></li><li><a href="global.html#initUploadBigFile">initUploadBigFile</a></li><li><a href="global.html#initUploadMultiImage">initUploadMultiImage</a></li><li><a href="global.html#initUploadSingleFile">initUploadSingleFile</a></li><li><a href="global.html#initUploadSingleImage">initUploadSingleImage</a></li><li><a href="global.html#initXEditable">initXEditable</a></li><li><a href="global.html#jqgrid-getAtLeastOneSelectedItem">jqgrid-getAtLeastOneSelectedItem</a></li><li><a href="global.html#jqgrid-getEditingRowdata">jqgrid-getEditingRowdata</a></li><li><a href="global.html#jqgrid-getOnlyOneSelectedItem">jqgrid-getOnlyOneSelectedItem</a></li><li><a href="global.html#jqgrid-getSelectedRowdata">jqgrid-getSelectedRowdata</a></li><li><a href="global.html#jqgrid-getSelectedRowdatas">jqgrid-getSelectedRowdatas</a></li><li><a href="global.html#jqgrid-isEditingMode">jqgrid-isEditingMode</a></li><li><a href="global.html#jqgrid-refresh">jqgrid-refresh</a></li><li><a href="global.html#jqgrid-setEditingRowdata">jqgrid-setEditingRowdata</a></li><li><a href="global.html#jqgrid-sumColumn">jqgrid-sumColumn</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Mon May 18 2015 13:31:40 GMT+0800 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Mon Jun 01 2015 16:22:33 GMT+0800 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

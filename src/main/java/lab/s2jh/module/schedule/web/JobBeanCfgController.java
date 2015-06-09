@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.schedule.entity.JobBeanCfg;
@@ -56,6 +57,7 @@ public class JobBeanCfgController extends BaseController<JobBeanCfg, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") JobBeanCfg entity, HttpServletRequest request) {
+        Validation.notDemoMode();
         return super.editSave(entity);
     }
 

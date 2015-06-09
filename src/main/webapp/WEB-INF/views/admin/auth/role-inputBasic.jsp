@@ -9,7 +9,7 @@
 <title>角色基本信息</title>
 </head>
 <body>
-	<form:form class="form-horizontal form-bordered form-label-stripped form-validation"
+	<form:form class="form-horizontal  form-label-stripped form-validation"
 		action="${ctx}/admin/auth/role/edit" method="post" modelAttribute="entity"
 		data-editrulesurl="${ctx}/admin/util/validate?clazz=${clazz}">
 		<form:hidden path="id" />
@@ -17,8 +17,6 @@
 		<div class="form-actions">
 			<button class="btn blue" type="submit" data-grid-reload="#grid-auth-role-index">
 				<i class="fa fa-check"></i> 保存
-			</button>
-			<button class="btn green" type="submit" data-grid-reload="#grid-auth-role-index" data-post-dismiss="modal">保存并关闭
 			</button>
 			<button class="btn default" type="button" data-dismiss="modal">取消</button>
 		</div>
@@ -41,14 +39,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="form-actions right">
-			<button class="btn blue" type="submit" data-grid-reload=".grid-auth-user-index">
-				<i class="fa fa-check"></i> 保存
-			</button>
-			<button class="btn green" type="submit" data-grid-reload="#grid-auth-role-index" data-post-dismiss="modal">保存并关闭
-			</button>
-			<button class="btn default" type="button" data-dismiss="modal">取消</button>
 		</div>
 	</form:form>
 </body>

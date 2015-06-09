@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter.MatchType;
@@ -164,7 +165,7 @@ public class AdminController {
         if (!ImageCaptchaServlet.validateResponse(request, captcha)) {
             return OperationResult.buildFailureResult("验证码不正确，请重新输入");
         }
-        if (dynamicConfigService.getBoolean("cfg_signup_disabled", false)) {
+        if (dynamicConfigService.getBoolean(GlobalConstant.cfg_signup_disabled, false)) {
             return OperationResult.buildFailureResult("系统暂未开发账号注册功能，如有疑问请联系管理员");
         }
         //TODO 
