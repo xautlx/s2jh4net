@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-@MetaData("配置管理:系统记录:登录记录管理")
+@MetaData("配置管理:系统记录:账户登录记录管理")
 @Controller
 @RequestMapping(value = "/admin/aud/user-logon-log")
 public class UserLogonLogController extends BaseController<UserLogonLog, Long> {
@@ -36,24 +36,19 @@ public class UserLogonLogController extends BaseController<UserLogonLog, Long> {
         return userLogonLogService;
     }
 
-    @Override
-    protected UserLogonLog buildBindingEntity() {
-        return new UserLogonLog();
-    }
-
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
         super.initPrepareModel(request, model, id);
     }
 
-    @MenuData("配置管理:系统记录:登录记录")
-    @RequiresPermissions("配置管理:系统记录:登录记录")
+    @MenuData("配置管理:系统记录:账户登录记录")
+    @RequiresPermissions("配置管理:系统记录:账户登录记录")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         return "admin/aud/userLogonLog-index";
     }
 
-    @RequiresPermissions("配置管理:系统记录:登录记录")
+    @RequiresPermissions("配置管理:系统记录:账户登录记录")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -61,7 +56,7 @@ public class UserLogonLogController extends BaseController<UserLogonLog, Long> {
         return super.findByPage(UserLogonLog.class, request);
     }
 
-    @RequiresPermissions("配置管理:系统记录:登录记录")
+    @RequiresPermissions("配置管理:系统记录:账户登录记录")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(Model model) {
         return "admin/aud/userLogonLog-inputBasic";

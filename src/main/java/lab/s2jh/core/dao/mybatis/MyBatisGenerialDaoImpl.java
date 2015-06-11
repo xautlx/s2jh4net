@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import lab.s2jh.core.pagination.GroupPropertyFilter;
-import lab.s2jh.core.pagination.PropertyFilter;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.data.domain.Page;
@@ -15,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import com.github.loafer.mybatis.pagination.PaginationInterceptor;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class MyBatisGenerialDaoImpl implements MyBatisDao {
 

@@ -41,11 +41,6 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
         return notifyMessageService;
     }
 
-    @Override
-    protected NotifyMessage buildBindingEntity() {
-        return new NotifyMessage();
-    }
-
     @MenuData("配置管理:系统管理:公告管理")
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "", method = RequestMethod.GET)

@@ -29,11 +29,6 @@ public class UserMessageController extends BaseController<UserMessage, Long> {
         return userMessageService;
     }
 
-    @Override
-    protected UserMessage buildBindingEntity() {
-        return new UserMessage();
-    }
-
     @MenuData("配置管理:系统管理:消息管理")
     @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "", method = RequestMethod.GET)

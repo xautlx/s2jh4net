@@ -39,11 +39,6 @@ public class DataDictController extends BaseController<DataDict, Long> {
         return dataDictService;
     }
 
-    @Override
-    protected DataDict buildBindingEntity() {
-        return new DataDict();
-    }
-
     @MenuData("配置管理:系统管理:数据字典")
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -65,7 +60,7 @@ public class DataDictController extends BaseController<DataDict, Long> {
     public Page<DataDict> findByPage(HttpServletRequest request) {
         return super.findByPage(DataDict.class, request);
     }
-    
+
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow() {
@@ -91,7 +86,7 @@ public class DataDictController extends BaseController<DataDict, Long> {
                 return OperationResult.buildConfirmResult("如果删除当前项目将递归删除所有子项");
             }
         }
-        return super.delete(entity);
+        return super.delete(entity.getId());
     }
 
     @RequiresUser

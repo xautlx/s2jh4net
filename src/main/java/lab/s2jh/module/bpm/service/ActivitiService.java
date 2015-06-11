@@ -53,7 +53,7 @@ public class ActivitiService {
 
     public static final String BPM_INITIATOR_VAR_NAME = "initiator";
 
-    @PersistenceContext(unitName = "entityManagerApp")
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired(required = false)

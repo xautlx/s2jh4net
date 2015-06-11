@@ -115,7 +115,7 @@ public class UserLogonLog extends PersistableEntity<Long> {
     @Override
     @Transient
     public String getDisplay() {
-        return authType + ":" + authUid + ":" + httpSessionId;
+        return authType + ":" + authUid;
     }
 
     @Transient

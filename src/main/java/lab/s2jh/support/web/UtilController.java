@@ -25,6 +25,7 @@ import lab.s2jh.support.service.VerifyCodeService;
 import net.sf.ehcache.CacheManager;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -56,7 +57,7 @@ public class UtilController {
     @Autowired
     private VerifyCodeService verifyCodeService;
 
-    @PersistenceContext(unitName = "entityManagerApp")
+    @PersistenceContext
     private EntityManager entityManager;
 
     @MenuData("配置管理:系统管理:辅助管理")
@@ -106,7 +107,7 @@ public class UtilController {
 
     @RequestMapping(value = "/validate/unique", method = RequestMethod.GET)
     @ResponseBody
-    public boolean formValidationUnique(HttpServletRequest request, Model model, @RequestParam("clazz") String clazz) {
+    public boolean formValidationUnique(HttpServletRequest request, Model model, @RequestParam("clazz") String clazz) throws ClassNotFoundException {
         String element = request.getParameter("element");
         Assert.notNull(element);
 
@@ -115,7 +116,7 @@ public class UtilController {
             value = ExtStringUtils.encodeUTF8(value);
         }
 
-        Class<?> entityClass = ServletUtils.decodeValidateId(clazz);
+        Class<?> entityClass = ClassUtils.getClass(clazz);
         String jql = "select id from " + entityClass.getName() + " where " + element + "=:value ";
         Query query = null;
 

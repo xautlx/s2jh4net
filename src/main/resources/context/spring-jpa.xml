@@ -17,20 +17,19 @@
 		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
 	default-lazy-init="false">
-    
-    <!-- ##############主业务模块配置 Start############### -->
+	
 	<!-- JPA Entity Manager 配置, 设置depends-on="cacheManager"，确保共享模式下优先加载Spring CacheManager -->
-	<bean id="entityManagerFactoryApp" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		depends-on="cacheManager">
-		<property name="dataSource" ref="dataSourceApp" />
-		<property name="persistenceUnitName" value="entityManagerApp" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceUnitName" value="entityManager" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 		</property>
 		<property name="packagesToScan">
 			<list>
 				<value>lab.s2jh.core.audit.envers</value>
-				<value>lab.s2jh.module.**.entity</value>
+				<value>lab.s2jh.**.entity</value>
 				<value>s2jh.biz.**.entity</value>
 			</list>
 		</property>
@@ -65,56 +64,17 @@
 	</bean>
 
 	<!-- JPA 事务配置 -->
-	<bean id="transactionManagerApp" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactoryApp" />
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
 	<!-- 使用annotation定义事务 -->
-	<tx:annotation-driven transaction-manager="transactionManagerApp" proxy-target-class="true" />
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 
 	<!-- Spring Data JPA配置 -->
-	<jpa:repositories base-package="lab.s2jh.module.**.dao,s2jh.biz.**.dao" transaction-manager-ref="transactionManagerApp"
-		entity-manager-factory-ref="entityManagerFactoryApp">
+	<jpa:repositories base-package="lab.s2jh.**.dao,s2jh.biz.**.dao" transaction-manager-ref="transactionManager"
+		entity-manager-factory-ref="entityManagerFactory">
 		<repository:exclude-filter type="regex" expression="lab.s2jh.core.*" />
 	</jpa:repositories>
-	<!-- ##############主业务模块配置 End############### -->
-
-    
-    <!-- ##############日志审计模块配置 Start############### -->
-	<!-- JPA Entity Manager 配置, 设置depends-on="cacheManager"，确保共享模式下优先加载Spring CacheManager -->
-	<bean id="entityManagerFactoryAud" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="dataSource" ref="dataSourceAud" />
-		<property name="persistenceUnitName" value="entityManagerAud" />
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
-		</property>
-		<property name="packagesToScan">
-			<list>
-				<value>lab.s2jh.aud.**.entity</value>
-			</list>
-		</property>
-		<property name="jpaProperties">
-			<props>
-				<prop key="hibernate.connection.autocommit">false</prop>
-				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.DefaultNamingStrategy</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-			</props>
-		</property>
-	</bean>
-
-	<!-- JPA 事务配置 -->
-	<bean id="transactionManagerAud" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactoryAud" />
-	</bean>
-
-	<!-- 使用annotation定义事务 -->
-	<tx:annotation-driven transaction-manager="transactionManagerAud" proxy-target-class="true" />
-
-	<!-- Spring Data JPA配置 -->
-	<jpa:repositories base-package="lab.s2jh.aud.**.dao" transaction-manager-ref="transactionManagerAud"
-		entity-manager-factory-ref="entityManagerFactoryAud">
-		<repository:exclude-filter type="regex" expression="lab.s2jh.core.*" />
-	</jpa:repositories>
-	<!-- ##############日志审计模块配置 End############### -->
 
 </beans>

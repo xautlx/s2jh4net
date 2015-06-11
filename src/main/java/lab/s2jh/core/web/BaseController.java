@@ -1,6 +1,7 @@
 package lab.s2jh.core.web;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,6 @@ import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.EntityProcessCallbackHandler.EntityProcessCallbackException;
-import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -41,7 +41,59 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
     /** 子类指定泛型对应的实体Service接口对象 */
     abstract protected BaseService<T, ID> getEntityService();
 
-    abstract protected T buildBindingEntity();
+    /** 实体泛型对应的Class定义 */
+    protected Class<T> entityClass;
+
+    /** 主键泛型对应的Class定义 */
+    protected Class<ID> entityIdClass;
+
+    /**
+     * 初始化构造方法，计算相关泛型对象
+     */
+    @SuppressWarnings("unchecked")
+    public BaseController() {
+        super();
+        // 通过反射取得Entity的Class.
+        try {
+            Object genericClz = getClass().getGenericSuperclass();
+            if (genericClz instanceof ParameterizedType) {
+                entityClass = (Class<T>) ((ParameterizedType) genericClz).getActualTypeArguments()[0];
+                entityIdClass = (Class<ID>) ((ParameterizedType) genericClz).getActualTypeArguments()[1];
+            }
+        } catch (Exception e) {
+            throw new WebException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 将id=123格式的字符串id参数转换为ID泛型对应的主键变量实例
+     * 另外，页面也会以Struts标签获取显示当前操作对象的ID值
+     * @return ID泛型对象实例
+     */
+    public ID getId(HttpServletRequest request) {
+        return getId(request, "id");
+    }
+
+    /**
+     * 将指定参数转换为ID泛型对应的主键变量实例
+     * 另外，页面也会以Struts标签获取显示当前操作对象的ID值
+     * @return ID泛型对象实例
+     */
+    @SuppressWarnings("unchecked")
+    public ID getId(HttpServletRequest request, String paramName) {
+        String entityId = request.getParameter(paramName);
+        //jqGrid inline edit新增数据传入id=负数标识 
+        if (StringUtils.isBlank(entityId) || entityId.startsWith("-")) {
+            return null;
+        }
+        if (String.class.isAssignableFrom(entityIdClass)) {
+            return (ID) entityId;
+        } else if (Long.class.isAssignableFrom(entityIdClass)) {
+            return (ID) (Long.valueOf(entityId));
+        } else {
+            throw new IllegalStateException("Undefine entity ID class: " + entityIdClass);
+        }
+    }
 
     protected Page<T> findByPage(Class<T> clazz, HttpServletRequest request, EntityProcessCallbackHandler<T> handler) {
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
@@ -70,10 +122,6 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
         Map<String, Object> result = Maps.newHashMap();
         result.put("id", entity.getId());
         return OperationResult.buildSuccessResult("数据保存处理完成", result);
-    }
-
-    protected OperationResult delete(T entity) {
-        return delete(entity.getId(), null);
     }
 
     protected OperationResult delete(ID... ids) {
@@ -128,7 +176,7 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
         }
     }
 
-    protected void initPrepareModel(HttpServletRequest request, Model model, ID id) {
+    protected T initPrepareModel(HttpServletRequest request, Model model, ID id) {
         T entity = null;
         if (id != null) {
             //如果是以POST方式请求数据，则获取Detach状态的对象，其他则保留Session方式以便获取Lazy属性
@@ -142,10 +190,15 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
             model.addAttribute("id", id);
         }
         if (entity == null) {
-            entity = buildBindingEntity();
+            try {
+                entity = entityClass.newInstance();
+            } catch (Exception e) {
+                throw new WebException(e.getMessage(), e);
+            }
         }
-        model.addAttribute("clazz", ServletUtils.buildValidateId(entity.getClass()));
+        model.addAttribute("clazz", entityClass.getName());
         model.addAttribute("entity", entity);
+        return entity;
     }
 
     /**
@@ -184,4 +237,5 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
     protected boolean postNotConfirmedByUser(HttpServletRequest request) {
         return !BooleanUtils.toBoolean(request.getParameter("_serverValidationConfirmed_"));
     }
+
 }

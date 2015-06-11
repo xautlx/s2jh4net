@@ -45,9 +45,13 @@ public class RoleController extends BaseController<Role, Long> {
         return roleService;
     }
 
-    @Override
-    protected Role buildBindingEntity() {
-        return new Role().setCode("ROLE_");
+    @RequiresUser
+    @ModelAttribute
+    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        Role role = super.initPrepareModel(request, model, id);
+        if (role.isNew()) {
+            role.setCode("ROLE_");
+        }
     }
 
     @MenuData("配置管理:权限管理:角色配置")
@@ -112,9 +116,4 @@ public class RoleController extends BaseController<Role, Long> {
         return OperationResult.buildSuccessResult();
     }
 
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
 }

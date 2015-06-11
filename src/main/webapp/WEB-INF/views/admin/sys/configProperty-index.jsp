@@ -65,7 +65,7 @@
                 } ],
                 editurl : WEB_ROOT + '/admin/sys/config-property/edit',
                 editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                fullediturl : WEB_ROOT + "/admin/sys/config-property/edit",
+                fullediturl : WEB_ROOT + "/admin/sys/config-property/edit-tabs",
                 delurl : WEB_ROOT + '/admin/sys/config-property/delete'
             });
         });

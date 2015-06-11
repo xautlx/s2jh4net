@@ -1,5 +1,6 @@
 package lab.s2jh.support.service;
 
+import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
 import lab.s2jh.module.sys.entity.ConfigProperty;
 import lab.s2jh.module.sys.service.ConfigPropertyService;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,6 +28,45 @@ public class DynamicConfigService {
 
     @Autowired
     private ConfigPropertyService configPropertyService;
+
+    @MetaData(value = "开发模式", comments = "更宽松的权限控制，更多的日志信息。详见application.properties配置参数定义")
+    private static boolean devMode = false;
+
+    @MetaData(value = "演示模式", comments = "对演示环境进行特殊控制以避免不必要的随意数据修改导致系统混乱")
+    private static boolean demoMode = false;
+
+    @MetaData(value = "构建版本")
+    private static String buildVersion;
+
+    public static boolean isDemoMode() {
+        return demoMode;
+    }
+
+    public static boolean isDevMode() {
+        return devMode;
+    }
+
+    public static String getBuildVersion() {
+        return buildVersion;
+    }
+
+    @Value("${build_version}")
+    public void setBuildVersion(String buildVersion) {
+        DynamicConfigService.buildVersion = buildVersion;
+        logger.info("System runnging at build_version={}", DynamicConfigService.buildVersion);
+    }
+
+    @Value("${demo_mode:false}")
+    public void setDemoMode(String demoMode) {
+        DynamicConfigService.demoMode = BooleanUtils.toBoolean(demoMode);
+        logger.info("System runnging at demo_mode={}", DynamicConfigService.demoMode);
+    }
+
+    @Value("${dev_mode:false}")
+    public void setDevMode(String devMode) {
+        DynamicConfigService.devMode = BooleanUtils.toBoolean(devMode);
+        logger.info("System runnging at dev_mode={}", DynamicConfigService.devMode);
+    }
 
     /**
      * 根据key获取对应动态参数值

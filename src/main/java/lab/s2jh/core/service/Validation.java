@@ -3,6 +3,7 @@ package lab.s2jh.core.service;
 import java.util.Collection;
 
 import lab.s2jh.core.exception.ValidationException;
+import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -38,7 +39,7 @@ public class Validation {
     }
 
     public static void notDemoMode() {
-        if (GlobalConfigService.isDemoMode()) {
+        if (DynamicConfigService.isDemoMode()) {
             throw new ValidationException("抱歉，此功能在演示模式被禁用，请参考文档在本地部署运行体验。");
         }
     }

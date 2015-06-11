@@ -39,25 +39,20 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
         return loggingEventService;
     }
 
-    @Override
-    protected LoggingEvent buildBindingEntity() {
-        return new LoggingEvent();
-    }
-
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
         super.initPrepareModel(request, model, id);
     }
 
-    @MenuData("配置管理:系统记录:日志记录")
-    @RequiresPermissions("配置管理:系统记录:日志记录")
+    @MenuData("配置管理:系统记录:异常日志记录")
+    @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         model.addAttribute("stateMap", EnumUtils.getEnumDataMap(LoggingHandleStateEnum.class));
         return "admin/aud/loggingEvent-index";
     }
 
-    @RequiresPermissions("配置管理:系统记录:日志记录")
+    @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -65,14 +60,14 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
         return super.findByPage(LoggingEvent.class, request);
     }
 
-    @RequiresPermissions("配置管理:系统记录:日志记录")
+    @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(Model model) {
         model.addAttribute("stateMap", EnumUtils.getEnumDataMap(LoggingHandleStateEnum.class));
         return "admin/aud/loggingEvent-inputBasic";
     }
 
-    @RequiresPermissions("配置管理:系统记录:日志记录")
+    @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") LoggingEvent entity, Model model) {

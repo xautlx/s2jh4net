@@ -38,25 +38,20 @@ public class SendMessageLogController extends BaseController<SendMessageLog, Lon
         return sendMessageLogService;
     }
 
-    @Override
-    protected SendMessageLog buildBindingEntity() {
-        return new SendMessageLog();
-    }
-
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
         super.initPrepareModel(request, model, id);
     }
 
-    @MenuData("配置管理:系统记录:消息记录")
-    @RequiresPermissions("配置管理:系统记录:消息记录")
+    @MenuData("配置管理:系统记录:发送消息记录")
+    @RequiresPermissions("配置管理:系统记录:发送消息记录")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         model.addAttribute("messageTypeMap", EnumUtils.getEnumDataMap(SendMessageTypeEnum.class));
         return "admin/aud/sendMessageLog-index";
     }
 
-    @RequiresPermissions("配置管理:系统记录:消息记录")
+    @RequiresPermissions("配置管理:系统记录:发送消息记录")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)

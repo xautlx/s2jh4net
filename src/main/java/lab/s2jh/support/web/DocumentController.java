@@ -92,11 +92,6 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         return null;
     }
 
-    @Override
-    protected MockEntity buildBindingEntity() {
-        return new MockEntity();
-    }
-
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
         super.initPrepareModel(request, model, id);

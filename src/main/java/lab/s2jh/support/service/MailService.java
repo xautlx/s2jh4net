@@ -10,7 +10,6 @@ import lab.s2jh.aud.entity.SendMessageLog.SendMessageTypeEnum;
 import lab.s2jh.aud.service.SendMessageLogService;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.exception.ServiceException;
-import lab.s2jh.core.service.GlobalConfigService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -85,7 +84,7 @@ public class MailService {
                     StringUtils.join(toAddrs, ","), subject, singleMode, transactional, text);
         }
 
-        if (GlobalConfigService.isDevMode()) {
+        if (DynamicConfigService.isDevMode()) {
             logger.debug("Mock sending  mail at DEV mode...");
             return;
         }

@@ -21,7 +21,7 @@ public class UserLogonLogService extends BaseService<UserLogonLog, Long> {
     private UserLogonLogDao userLogonLogDao;
 
     @Autowired
-    private MyBatisDao myBatisDaoAud;
+    private MyBatisDao myBatisDao;
 
     @Override
     protected BaseDao<UserLogonLog, Long> getEntityDao() {
@@ -34,6 +34,6 @@ public class UserLogonLogService extends BaseService<UserLogonLog, Long> {
     }
 
     public List<Map<String, Object>> findGroupByLogonDay() {
-        return myBatisDaoAud.findList(UserLogonLog.class.getName(), "findGroupByLogonDay", null);
+        return myBatisDao.findList(UserLogonLog.class.getName(), "findGroupByLogonDay", null);
     }
 }

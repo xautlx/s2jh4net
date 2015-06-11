@@ -83,17 +83,18 @@
 				<p>建议使用最新版本Firefox或Chrome浏览器访问应用以避免不必要的浏览器兼容性问题。</p>
 				<c:if test="${cfg.dev_mode}">
 					<p id="devModeTips" style="padding: 10px">
-						<b> 开发/测试/演示登录快速入口: <br /> <a href="javascript:void(0)" onclick="setupDevUser('admin','admin123')">admin超级管理员</a><br />
-							<a href="javascript:void(0)" onclick="setupDevUser('mgmt','mgmt123')">mgmt普通管理员</a><br /> <a
-							href="javascript:void(0)" onclick="setupDevUser('user','user123')">user前端用户(登录提示无权管理访问)</a>
+						<b> 开发/测试/演示登录快速入口: <br /> <br /> <a href="javascript:void(0)" onclick="setupDevUser('admin','admin123')">admin超级管理员(admin/admin123)</a>
 						</b>
 					</p>
 					<script type="text/javascript">
+                        var $form = $("#login-form");
+
+                        $("input[name='username']", $form).val("admin");
+                        $("input[name='password']", $form).val("admin123");
+
                         function setupDevUser(user, password) {
-                            var $form = $("#login-form");
                             $("input[name='username']", $form).val(user);
                             $("input[name='password']", $form).val(password);
-                            $("input[name='captcha']", $form).val('admin');
                             $form.submit();
                         }
                         jQuery(document).ready(function() {

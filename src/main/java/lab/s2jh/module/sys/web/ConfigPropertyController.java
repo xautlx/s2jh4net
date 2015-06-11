@@ -6,6 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
+import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.listener.ApplicationContextPostListener;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@MetaData("参数管理")
 @Controller
 @RequestMapping(value = "/admin/sys/config-property")
 public class ConfigPropertyController extends BaseController<ConfigProperty, Long> {
@@ -35,11 +37,6 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @Override
     protected BaseService<ConfigProperty, Long> getEntityService() {
         return configPropertyService;
-    }
-
-    @Override
-    protected ConfigProperty buildBindingEntity() {
-        return new ConfigProperty();
     }
 
     @MenuData("配置管理:系统管理:参数配置")
@@ -56,12 +53,18 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
         return super.findByPage(ConfigProperty.class, request);
     }
 
+    @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
+    public String editTabs(HttpServletRequest request) {
+        return "admin/sys/configProperty-inputTabs";
+    }
+
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow() {
         return "admin/sys/configProperty-inputBasic";
     }
 
+    @MetaData("参数保存")
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody

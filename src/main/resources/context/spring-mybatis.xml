@@ -39,9 +39,9 @@
 	</bean>  
 
 	<!-- APP数据源配置 -->
-	<bean id="sqlSessionFactoryApp" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
-		<property name="dataSource" ref="dataSourceApp" />
+		<property name="dataSource" ref="dataSource" />
 		<property name="databaseIdProvider" ref="databaseIdProvider" />  
 		<!-- 显式指定Mapper文件位置 -->
 		<property name="mapperLocations">
@@ -53,32 +53,10 @@
 	</bean>
 
 
-	<bean id="myBatisDaoApp" class="lab.s2jh.core.dao.mybatis.MyBatisGenerialDaoImpl">
+	<bean id="myBatisDao" class="lab.s2jh.core.dao.mybatis.MyBatisGenerialDaoImpl">
 		<property name="sqlSession">
 			<bean class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
-				<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryApp" />
-			</bean>
-		</property>
-	</bean>
-	
-	<!-- AUD数据源配置 -->
-	<bean id="sqlSessionFactoryAud" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath:mybatis-config.xml" />
-		<property name="dataSource" ref="dataSourceAud" />
-		<property name="databaseIdProvider" ref="databaseIdProvider" />  
-		<!-- 显式指定Mapper文件位置 -->
-		<property name="mapperLocations">
-			<list>
-				<value>classpath*:lab/s2jh/aud/**/entity/*Mapper.xml</value>
-			</list>
-		</property>
-	</bean>
-
-
-	<bean id="myBatisDaoAud" class="lab.s2jh.core.dao.mybatis.MyBatisGenerialDaoImpl">
-		<property name="sqlSession">
-			<bean class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
-				<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryAud" />
+				<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
 			</bean>
 		</property>
 	</bean>

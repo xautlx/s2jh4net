@@ -63,11 +63,6 @@ public class UserController extends BaseController<User, Long> {
         return userService;
     }
 
-    @Override
-    protected User buildBindingEntity() {
-        return new User();
-    }
-
     @RequiresUser
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {

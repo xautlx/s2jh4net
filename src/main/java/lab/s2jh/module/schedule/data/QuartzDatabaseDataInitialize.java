@@ -22,7 +22,6 @@ public class QuartzDatabaseDataInitialize {
     private final Logger logger = LoggerFactory.getLogger(QuartzDatabaseDataInitialize.class);
 
     @Autowired
-    @Qualifier("dataSourceApp")
     private DataSource dataSource;
 
     @PostConstruct

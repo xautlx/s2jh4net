@@ -14,7 +14,7 @@
 				data-grid-search="#grid-${full_entity_name_field}-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_${searchOrFieldNames}']" class="form-control input-large" placeholder="${searchOrFieldPlaceholders}...">
+						<input type="text" name="search['CN_${searchOrFieldNames}']" class="form-control input-xlarge" placeholder="${searchOrFieldPlaceholders}...">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">

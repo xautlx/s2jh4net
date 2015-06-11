@@ -47,11 +47,6 @@ public class MenuController extends BaseController<Menu, Long> {
         return menuService;
     }
 
-    @Override
-    protected Menu buildBindingEntity() {
-        return new Menu();
-    }
-
     @MenuData("配置管理:系统管理:菜单配置")
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "", method = RequestMethod.GET)

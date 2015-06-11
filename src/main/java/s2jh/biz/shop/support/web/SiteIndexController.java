@@ -65,11 +65,6 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
         return siteUserService;
     }
 
-    @Override
-    protected SiteUser buildBindingEntity() {
-        return new SiteUser();
-    }
-
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String wwwIndex(Model model) {
         return "w/index";

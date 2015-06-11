@@ -38,11 +38,6 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
         return ${entity_name_uncapitalize}Service;
     }
     
-    @Override
-    protected ${entity_name} buildBindingEntity() {
-        return new ${entity_name}();
-    }
-    
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
         super.initPrepareModel(request, model, id);

@@ -31,10 +31,7 @@ import javax.validation.constraints.Size;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.SpringContextHolder;
 import lab.s2jh.core.security.AuthContextHolder;
-import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
-import lab.s2jh.core.util.Digests;
-import lab.s2jh.core.util.Encodes;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.json.DateJsonSerializer;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
@@ -43,6 +40,7 @@ import lab.s2jh.module.sys.service.AttachmentFileService;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,50 +131,21 @@ public class ServletUtils {
         }
     }
 
-    private static Map<Class<?>, String> entityValidationIdMap = Maps.newHashMap();
     private static Map<String, Map<String, Object>> entityValidationRulesMap = Maps.newHashMap();
-
-    /**
-     * 基于JSR注解以AJAX方式请求实体对象对应的校验规则JSON，前端需要传入一个实体对象的标识
-     * 为了避免在响应用户的HTML内容中直接透露实体全名等敏感信息，做一个转义处理：
-     * 基于class对象转换得到一个哈希字符串，前端通过此哈希字符串进行参数标识
-     */
-    public static String buildValidateId(Class<?> entityClass) {
-        String id = entityValidationIdMap.get(entityClass);
-        if (id == null) {
-            id = Encodes.encodeHex(Digests.md5(entityClass.getName().getBytes()));
-            entityValidationIdMap.put(entityClass, id);
-        }
-        return id;
-    }
-
-    /**
-     * 将buildValidateId构造的哈希字符串反向解析为
-     * @param validateId
-     * @return
-     */
-    public static Class<?> decodeValidateId(String validateId) {
-        for (Map.Entry<Class<?>, String> me : entityValidationIdMap.entrySet()) {
-            if (me.getValue().equals(validateId)) {
-                return me.getKey();
-            }
-        }
-        return null;
-    }
 
     /**
      * 基于构建的哈希标识计算获取校验规则
      * @param id
      * @return
      */
-    public static Map<String, Object> buildValidateRules(String id) {
-        Map<String, Object> nameRules = entityValidationRulesMap.get(id);
+    public static Map<String, Object> buildValidateRules(String entityClazz) {
+        Map<String, Object> nameRules = entityValidationRulesMap.get(entityClazz);
         try {
             //开发模式则每次计算以便修改注解后及时生效
-            if (nameRules == null || GlobalConfigService.isDevMode()) {
+            if (nameRules == null || DynamicConfigService.isDevMode()) {
                 nameRules = Maps.newHashMap();
-                entityValidationRulesMap.put(id, nameRules);
-                Class<?> clazz = decodeValidateId(id);
+                entityValidationRulesMap.put(entityClazz, nameRules);
+                Class<?> clazz = ClassUtils.getClass(entityClazz);
 
                 Assert.notNull(clazz, "验证缓存数据错误");
                 Set<Field> fields = Sets.newHashSet(clazz.getDeclaredFields());

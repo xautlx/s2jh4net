@@ -83,7 +83,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     /** 子类设置具体的DAO对象实例 */
     abstract protected BaseDao<T, ID> getEntityDao();
 
-    @PersistenceContext(unitName = "entityManagerApp")
+    @PersistenceContext
     private EntityManager entityManager;
 
     protected Class<T> getEntityClass() {
@@ -1139,68 +1139,6 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
             parsed[i++] = path;
         }
         return parsed;
-    }
-
-    /**
-     * 查询对象历史记录版本集合
-     * 
-     * @param id
-     *            实体主键
-     * @param property
-     *            过滤属性
-     * @param changed
-     *            过滤方式，有无变更
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public List<EntityRevision> findEntityRevisions(final Object id, String property, Boolean changed) {
-        List<EntityRevision> entityRevisions = Lists.newArrayList();
-        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(getEntityClass(), false, true);
-        auditQuery.add(AuditEntity.id().eq(id)).addOrder(AuditEntity.revisionNumber().desc());
-        if (StringUtils.isNotBlank(property) && changed != null) {
-            if (changed) {
-                auditQuery.add(AuditEntity.property(property).hasChanged());
-            } else {
-                auditQuery.add(AuditEntity.property(property).hasNotChanged());
-            }
-        }
-        List list = auditQuery.getResultList();
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (Object obj : list) {
-                Object[] itemArray = (Object[]) obj;
-                EntityRevision entityRevision = new EntityRevision();
-                entityRevision.setEntity(itemArray[0]);
-                entityRevision.setRevisionEntity((ExtDefaultRevisionEntity) itemArray[1]);
-                entityRevision.setRevisionType((RevisionType) itemArray[2]);
-                entityRevisions.add(entityRevision);
-            }
-        }
-        return entityRevisions;
-    }
-
-    /**
-     * 查询对象历史记录版本集合
-     * 
-     * @param id
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public List<EntityRevision> findEntityRevisions(final ID id, Number... revs) {
-        List<EntityRevision> entityRevisions = Lists.newArrayList();
-        AuditQuery auditQuery = AuditReaderFactory.get(getEntityManager()).createQuery().forRevisionsOfEntity(getEntityClass(), false, true);
-        auditQuery.add(AuditEntity.id().eq(id)).add(AuditEntity.revisionNumber().in(revs));
-        List list = auditQuery.getResultList();
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (Object obj : list) {
-                Object[] itemArray = (Object[]) obj;
-                EntityRevision entityRevision = new EntityRevision();
-                entityRevision.setEntity(itemArray[0]);
-                entityRevision.setRevisionEntity((ExtDefaultRevisionEntity) itemArray[1]);
-                entityRevision.setRevisionType((RevisionType) itemArray[2]);
-                entityRevisions.add(entityRevision);
-            }
-        }
-        return entityRevisions;
     }
 
     /**

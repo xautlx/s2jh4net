@@ -14,7 +14,8 @@
 				data-grid-search="#grid-aud-user-logon-log-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_authGuid_OR_authUid_OR_logonYearMonthDay']" class="form-control input-large" placeholder="账号全局唯一标识 , 账号类型所对应唯一标识 , 便于按日汇总统计的冗余属性...">
+						<input type="text" name="search['CN_authUid_OR_xforwardFor']" class="form-control input-xlarge"
+							placeholder="登录账号 , xforwardFor...">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">
@@ -33,129 +34,94 @@
 			<table id="grid-aud-user-logon-log-index"></table>
 		</div>
 	</div>
-	
+
 	<script type="text/javascript">
-		$(function() {
-		    $("#grid-aud-user-logon-log-index").data("gridOptions", {
-		        url : WEB_ROOT + '/admin/aud/user-logon-log/list',
-		        colModel : [ {
-		            label : '流水号',
-		            name : 'id',
-		            hidden : true                          
-		        }, {
-		            label : '账号全局唯一标识',
-		            name : 'authGuid',
-		            width : 64,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : '账号类型所对应唯一标识',
-		            name : 'authUid',
-		            width : 64,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : '账号类型',
-		            name : 'authType',
-		            formatter : 'select',
-                    searchoptions : {
-                        valueJsonString : '<tags:json value="${authTypeMap}"/>'
-                    },
-		            width : 80,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : '便于按日汇总统计的冗余属性',
-		            name : 'logonYearMonthDay',
-		            width : 255,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : '登录时间',
-		            name : 'logonTime',
-		            width : 150,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : '登出时间',
-		            name : 'logoutTime',
-		            width : 150,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : '登录时长',
-		            name : 'logonTimeLength',
-		            editable: true                                                                   
-		        }, {
-		            label : '登录次数',
-		            name : 'logonTimes',
-		            formatter: 'integer',
-		            editable: true                                                                   
-		        }, {
-		            label : 'userAgent',
-		            name : 'userAgent',
-		            width : 200,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : 'xforwardFor',
-		            name : 'xforwardFor',
-		            width : 200,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : 'localAddr',
-		            name : 'localAddr',
-		            width : 200,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : 'localName',
-		            name : 'localName',
-		            width : 200,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : 'localPort',
-		            name : 'localPort',
-		            formatter: 'integer',
-		            editable: true                                                                   
-		        }, {
-		            label : 'remoteAddr',
-		            name : 'remoteAddr',
-		            width : 200,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : 'remoteHost',
-		            name : 'remoteHost',
-		            width : 200,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : 'remotePort',
-		            name : 'remotePort',
-		            formatter: 'integer',
-		            editable: true                                                                   
-		        }, {
-		            label : 'serverIP',
-		            name : 'serverIP',
-		            width : 200,
-		            align : 'center',
-		            editable: true                                                                   
-		        }, {
-		            label : 'Session编号',
-		            name : 'httpSessionId',
-		            width : 128,
-		            align : 'center',
-		            editable: true                                                                   
-		        } ],
-		        editurl : WEB_ROOT + '/admin//aud/user-logon-log/edit',
-		        editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-		        delurl : WEB_ROOT + '/admin/aud/user-logon-log/delete',
-		        fullediturl : WEB_ROOT + '/admin/aud/user-logon-log/edit-tabs'
-		    });
-		});
+        $(function() {
+            $("#grid-aud-user-logon-log-index").data("gridOptions", {
+                url : WEB_ROOT + '/admin/aud/user-logon-log/list',
+                colModel : [ {
+                    label : '登录账号',
+                    name : 'display',
+                    width : 100,
+                    align : 'center'
+                }, {
+                    label : '账户编号',
+                    name : 'authGuid',
+                    width : 100,
+                    hidden : true,
+                    align : 'left'
+                }, {
+                    label : '登录时间',
+                    name : 'logonTime',
+                    formatter : 'timestamp'
+                }, {
+                    label : '登出时间',
+                    name : 'logoutTime',
+                    formatter : 'timestamp'
+                }, {
+                    label : '登录时长',
+                    name : 'logonTimeLengthFriendly',
+                    index : 'logonTimeLength',
+                    width : 100,
+                    fixed : true,
+                    align : 'center'
+                }, {
+                    label : '登录次数',
+                    name : 'logonTimes',
+                    width : 60,
+                    formatter : 'number',
+                    align : 'center'
+                }, {
+                    name : 'userAgent',
+                    hidden : true,
+                    align : 'left'
+                }, {
+                    name : 'xforwardFor',
+                    width : 100,
+                    align : 'center'
+                }, {
+                    name : 'localAddr',
+                    hidden : true,
+                    align : 'left'
+                }, {
+                    name : 'localName',
+                    hidden : true,
+                    align : 'left'
+                }, {
+                    name : 'localPort',
+                    width : 60,
+                    fixed : true,
+                    hidden : true,
+                    align : 'right'
+                }, {
+                    name : 'remoteAddr',
+                    hidden : false,
+                    align : 'center'
+                }, {
+                    name : 'remoteHost',
+                    hidden : true,
+                    align : 'left'
+                }, {
+                    name : 'remotePort',
+                    width : 60,
+                    fixed : true,
+                    hidden : true,
+                    align : 'right'
+                }, {
+                    name : 'serverIP',
+                    hidden : true,
+                    align : 'left'
+                }, {
+                    name : 'httpSessionId',
+                    hidden : true,
+                    align : 'left'
+                } ],
+                multiselect : false,
+                sortorder : "desc",
+                sortname : "logonTime",
+                fullediturl : WEB_ROOT + '/admin/aud/user-logon-log/edit-tabs'
+            });
+        });
     </script>
 </body>
 </html>

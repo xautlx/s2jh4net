@@ -34,11 +34,6 @@ public class JobBeanCfgController extends BaseController<JobBeanCfg, Long> {
         return jobBeanCfgService;
     }
 
-    @Override
-    protected JobBeanCfg buildBindingEntity() {
-        return new JobBeanCfg();
-    }
-
     @MenuData("配置管理:计划任务管理:可配置任务管理")
     @RequiresPermissions("配置管理:计划任务管理:可配置任务管理")
     @RequestMapping(value = "", method = RequestMethod.GET)

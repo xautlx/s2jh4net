@@ -32,11 +32,6 @@ public class JobRunHistController extends BaseController<JobRunHist, Long> {
         return jobRunHistService;
     }
 
-    @Override
-    protected JobRunHist buildBindingEntity() {
-        return new JobRunHist();
-    }
-
     @MenuData("配置管理:计划任务管理:任务运行记录")
     @RequiresPermissions("配置管理:计划任务管理:任务运行记录")
     @RequestMapping(value = "", method = RequestMethod.GET)

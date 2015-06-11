@@ -21,7 +21,6 @@ import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.PasswordService;
-import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.Exceptions;
 import lab.s2jh.core.util.MockEntityUtils;
@@ -35,6 +34,7 @@ import lab.s2jh.module.sys.entity.ConfigProperty;
 import lab.s2jh.module.sys.entity.Menu;
 import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.UserMessage;
+import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ClassUtils;
@@ -63,7 +63,7 @@ public class BasicDatabaseDataInitialize {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitialize.class);
 
-    @PersistenceContext(unitName = "entityManagerApp")
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
@@ -141,7 +141,7 @@ public class BasicDatabaseDataInitialize {
             siteUserRole.setDescription("系统预置，请勿随意修改");
             entityManager.persist(siteUserRole);
 
-            if (GlobalConfigService.isDevMode()) {
+            if (DynamicConfigService.isDevMode()) {
                 Department department = new Department();
                 department.setCode("SC00");
                 department.setName("市场部");
@@ -162,7 +162,7 @@ public class BasicDatabaseDataInitialize {
         } else {
             //如果不是开发模式，则直接退出防止意外更新已有数据
             //为了稳妥，生产环境数据采用手工更新方式
-            if (!GlobalConfigService.isDevMode()) {
+            if (!DynamicConfigService.isDevMode()) {
                 return;
             }
         }

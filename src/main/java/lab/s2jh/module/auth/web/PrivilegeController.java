@@ -28,11 +28,6 @@ public class PrivilegeController extends BaseController<Privilege, Long> {
         return privilegeService;
     }
 
-    @Override
-    protected Privilege buildBindingEntity() {
-        return new Privilege();
-    }
-
     @MenuData("配置管理:权限管理:权限配置")
     @RequiresPermissions("配置管理:权限管理:权限配置")
     @RequestMapping(value = "", method = RequestMethod.GET)

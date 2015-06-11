@@ -14,8 +14,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.web.util.ServletUtils;
+import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +53,7 @@ public class HttpRequestLogFilter implements Filter {
             }
 
             //如果是开发模式则开启debug
-            boolean debug = GlobalConfigService.isDevMode();
+            boolean debug = DynamicConfigService.isDevMode();
             if (debug == false) {
                 //如果是非开发模式，提取请求参数标识开启参数debug
                 debug = BooleanUtils.toBoolean(req.getParameter("debug"));

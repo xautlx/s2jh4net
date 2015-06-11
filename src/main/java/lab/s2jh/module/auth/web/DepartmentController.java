@@ -44,11 +44,6 @@ public class DepartmentController extends BaseController<Department, Long> {
         return departmentService;
     }
 
-    @Override
-    protected Department buildBindingEntity() {
-        return new Department();
-    }
-
     @MenuData("配置管理:权限管理:部门配置")
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
