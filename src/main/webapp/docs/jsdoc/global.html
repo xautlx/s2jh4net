@@ -1002,7 +1002,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line612">line 612</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line644">line 644</a>
     </li></ul></dd>
     
     
@@ -1135,7 +1135,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line676">line 676</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line693">line 693</a>
     </li></ul></dd>
     
     
@@ -1393,7 +1393,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line508">line 508</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line522">line 522</a>
     </li></ul></dd>
     
     
@@ -1531,7 +1531,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line594">line 594</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line611">line 611</a>
     </li></ul></dd>
     
     
@@ -1669,7 +1669,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line554">line 554</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line571">line 571</a>
     </li></ul></dd>
     
     
@@ -1873,7 +1873,7 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code> &lt;input type="text" data-toggle="treeselect" data-url="${ctx}/department/tree-datas.json"/></code></pre>
+    <pre class="prettyprint"><code> &lt;input type="text" data-toggle="dropdown-select" data-url="${ctx}/docs/ui-feature/dropdownselect"/></code></pre>
 
     
 </dd>
@@ -2473,7 +2473,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line762">line 762</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line779">line 779</a>
     </li></ul></dd>
     
     
@@ -2914,6 +2914,42 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>data-cascade-name</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">级联下拉框目标更新select组件的name属性值</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-cascade-url</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">级联下拉数据请求URL地址</td>
+        </tr>
+	
+	
 	</tbody>
 </table></dl>
         
@@ -2938,7 +2974,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line194">line 194</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line208">line 208</a>
     </li></ul></dd>
     
     
@@ -2961,9 +2997,17 @@
     
     
     
-        <h5>Example</h5>
+        <h5>Examples</h5>
         
-    <pre class="prettyprint"><code> &lt;form:select path="selectedIds" items="${multiSelectItems}" class="form-control" data-toggle="double-multi-select" data-height="300px" /></code></pre>
+    <pre class="prettyprint"><code> &lt;form:select path="selectedId" items="${multiSelectItems}" class="form-control" /></code></pre>
+
+    <pre class="prettyprint"><code><pre>
+           &lt;select name="clazz" class="form-control" required="true" placeholder="记录数据对象" data-cascade-name="property"
+                data-cascade-url="${ctx}/admin/aud/revision-entity/properties">
+                &lt;c:forEach items="${clazzMapping}" var="item">
+                    &lt;option value="${item.key}">${item.value}&lt;/option>
+                &lt;/c:forEach>
+            &lt;/select></pre></code></pre>
 
     
 </dd>
@@ -3117,7 +3161,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line339">line 339</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line385">line 385</a>
     </li></ul></dd>
     
     
@@ -3314,7 +3358,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line390">line 390</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line436">line 436</a>
     </li></ul></dd>
     
     
@@ -3627,7 +3671,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line732">line 732</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line749">line 749</a>
     </li></ul></dd>
     
     
@@ -3747,7 +3791,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line710">line 710</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line727">line 727</a>
     </li></ul></dd>
     
     
@@ -4335,7 +4379,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line475">line 475</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line543">line 543</a>
     </li></ul></dd>
     
     
@@ -4719,7 +4763,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line553">line 553</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line585">line 585</a>
     </li></ul></dd>
     
     
@@ -5704,7 +5748,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Mon Jun 01 2015 16:22:33 GMT+0800 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Thu Jun 11 2015 20:06:10 GMT+0800 (CST)
 </footer>
 
 <script> prettyPrint(); </script>
