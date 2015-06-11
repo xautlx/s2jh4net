@@ -405,6 +405,41 @@
 						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initMultiSelectDouble" target="_blank">JSDoc</a></span>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<hr>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label class="control-label">下拉级联组件-触发元素</label>
+							<div class="controls">
+								<select name="clazz" class="form-control" required="true" placeholder="记录数据对象" data-cascade-name="property"
+									data-cascade-url="${ctx}/admin/aud/revision-entity/properties">
+									<c:forEach items="${clazzMapping}" var="item">
+										<option value="${item.key}">${item.value}</option>
+									</c:forEach>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">JSDoc</a></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label class="control-label">下拉级联组件-目标元素</label>
+							<div class="controls">
+								<select name="property" class="form-control" placeholder="选取变更属性">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
 			</form:form>
 		</div>
 	</div>

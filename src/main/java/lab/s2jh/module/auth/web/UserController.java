@@ -100,8 +100,12 @@ public class UserController extends BaseController<User, Long> {
     @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") User entity, Model model, @RequestParam("rawPassword") String rawPassword) {
+    public OperationResult editSave(@ModelAttribute("entity") User entity, Model model,
+            @RequestParam(value = "rawPassword", required = false) String rawPassword) {
         Validation.notDemoMode();
+        if (entity.isNew()) {
+            Validation.isTrue(StringUtils.isNotBlank(rawPassword), "创建用户必须设置初始密码");
+        }
         userService.saveCascadeR2Roles(entity, rawPassword);
         return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }

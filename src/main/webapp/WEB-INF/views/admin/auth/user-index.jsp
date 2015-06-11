@@ -109,7 +109,7 @@
                     align : 'left',
                     editoptions : {
                         dataInit : function(elem, opt) {
-                            $(elem).treeselect({
+                            $(elem).treeSelect({
                                 url : WEB_ROOT + "/admin/auth/department/select"
                             });
                         }

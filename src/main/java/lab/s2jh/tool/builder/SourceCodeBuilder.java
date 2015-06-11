@@ -57,6 +57,7 @@ public class SourceCodeBuilder {
 
         Set<String> entityNames = new HashSet<String>();
 
+        //扫码所有@Entity注解实体类
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
         scanner.addExcludeFilter(new AnnotationTypeFilter(RevisionEntity.class));

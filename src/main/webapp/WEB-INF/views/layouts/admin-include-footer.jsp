@@ -37,6 +37,7 @@
 <!-- END PAGE LEVEL PLUGINS -->
 
 <script type="text/javascript" src="${ctx}/assets/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="${ctx}/assets/plugins/bootstrap-contextmenu.js"></script>
 <script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/dist/jquery.validate.js"></script>
 <script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/localization/messages_zh.js"></script>
 <script src="${ctx}/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js" type="text/javascript"></script>

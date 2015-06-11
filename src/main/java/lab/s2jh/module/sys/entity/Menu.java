@@ -22,8 +22,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.util.ClassUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -114,22 +114,16 @@ public class Menu extends BaseNativeEntity {
         }
         //基于记录的Controller类和方法信息构造MethodInvocation,用于后续调用shiro的拦截器进行访问权限比对
         if (StringUtils.isNotBlank(getControllerMethod())) {
-
-            try {
-                final Class<?> clazz = ClassUtils.getClass(getControllerClass());
-                Method[] methods = clazz.getMethods();
-                for (final Method method : methods) {
-                    if (method.getName().equals(getControllerMethod())) {
-                        RequestMapping rm = method.getAnnotation(RequestMapping.class);
-                        if (rm.method() == null || rm.method().length == 0 || ArrayUtils.contains(rm.method(), RequestMethod.GET)) {
-                            mappingMethod = method;
-                            break;
-                        }
+            final Class<?> clazz = ClassUtils.forName(getControllerClass());
+            Method[] methods = clazz.getMethods();
+            for (final Method method : methods) {
+                if (method.getName().equals(getControllerMethod())) {
+                    RequestMapping rm = method.getAnnotation(RequestMapping.class);
+                    if (rm.method() == null || rm.method().length == 0 || ArrayUtils.contains(rm.method(), RequestMethod.GET)) {
+                        mappingMethod = method;
+                        break;
                     }
                 }
-
-            } catch (Exception e) {
-                Exceptions.unchecked(e);
             }
         }
         return mappingMethod;

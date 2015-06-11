@@ -8,8 +8,8 @@ import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.audit.envers.ExtRevisionListener;
 import lab.s2jh.support.service.DynamicConfigService;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.util.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -67,7 +67,7 @@ public class ControllerInvokeAuditor {
                         if (className.indexOf("$$") > -1) { // 如果是CGLIB动态生成的类  
                             className = StringUtils.substringBefore(className, "$$");
                         }
-                        Class<?> controllerClazz = ClassUtils.getClass(className);
+                        Class<?> controllerClazz = ClassUtils.forName(className);
                         String requestMappingUri = "";
                         RequestMapping classRequestMapping = controllerClazz.getAnnotation(RequestMapping.class);
                         if (classRequestMapping != null) {
@@ -104,7 +104,7 @@ public class ControllerInvokeAuditor {
                     }
                 }
             }
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             //捕获审计信息处理异常，避免影响正常的业务流程
             logger.error(e.getMessage(), e);
         }

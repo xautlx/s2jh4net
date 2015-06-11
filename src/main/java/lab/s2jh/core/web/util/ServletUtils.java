@@ -40,8 +40,8 @@ import lab.s2jh.module.sys.service.AttachmentFileService;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -145,7 +145,7 @@ public class ServletUtils {
             if (nameRules == null || DynamicConfigService.isDevMode()) {
                 nameRules = Maps.newHashMap();
                 entityValidationRulesMap.put(entityClazz, nameRules);
-                Class<?> clazz = ClassUtils.getClass(entityClazz);
+                Class<?> clazz = ClassUtils.forName(entityClazz);
 
                 Assert.notNull(clazz, "验证缓存数据错误");
                 Set<Field> fields = Sets.newHashSet(clazz.getDeclaredFields());

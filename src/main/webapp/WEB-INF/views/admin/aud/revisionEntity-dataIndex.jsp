@@ -10,13 +10,35 @@
 <body>
 	<div class="row search-form-default">
 		<div class="col-md-12">
-			<form method="get" class="form-inline form-validation form-search form-search-init control-label-sm"
-				data-grid-search="#grid-aud-revision-entity-user-index">
-				<input type="hidden" name="search['NN_authUid']" value="true" />
+			<form method="get" class="form-inline form-validation form-search control-label-sm"
+				data-grid-search="#grid-aud-data-revision-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_controllerClassLabel_OR_controllerMethodLabel_OR_authUid']"
-							class="form-control input-xlarge" placeholder="处理类 , 处理方法 , 操作账号标识...">
+						<select name="clazz" class="form-control input-large" required="true" placeholder="记录数据对象"
+							data-cascade-name="property" data-cascade-url="${ctx}/admin/aud/revision-entity/properties">
+							<c:forEach items="${clazzMapping}" var="item">
+								<option value="${item.key}">${item.value}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="controls controls-clearfix">
+						<input type="text" name="id" class="form-control input-small" required="true" placeholder="数据主键">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="controls controls-clearfix">
+						<select name="property" class="form-control input-medium" placeholder="选取变更属性">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="controls controls-clearfix">
+						<select name="changed" class="form-control input-medium" placeholder="选取变更状态">
+							<option value="true">有变更</option>
+							<option value="false">无变更</option>
+						</select>
 					</div>
 				</div>
 				<div class="form-group search-group-btn">
@@ -32,41 +54,41 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<table id="grid-aud-revision-entity-user-index"></table>
+			<table id="grid-aud-data-revision-index"></table>
 		</div>
 	</div>
 
 	<script type="text/javascript">
         $(function() {
-            $("#grid-aud-revision-entity-user-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/aud/revision-entity/user/list',
+            $("#grid-aud-data-revision-index").data("gridOptions", {
+                url : WEB_ROOT + '/admin/aud/revision-entity/data/list',
                 colModel : [ {
                     label : '版本号',
-                    name : 'rev',
+                    name : 'revisionEntity.rev',
                     width : 60,
                     align : 'center'
                 }, {
                     label : '记录时间',
-                    name : 'revstmp',
+                    name : 'revisionEntity.revstmp',
                     formatter : 'timestamp'
                 }, {
                     label : '处理类',
-                    name : 'controllerClassLabel',
+                    name : 'revisionEntity.controllerClassLabel',
                     width : 100,
                     align : 'center'
                 }, {
                     label : '处理方法',
-                    name : 'controllerMethodLabel',
+                    name : 'revisionEntity.controllerMethodLabel',
                     width : 100,
                     align : 'center'
                 }, {
                     label : '操作账号标识',
-                    name : 'authUid',
+                    name : 'revisionEntity.authUid',
                     align : 'center',
                     width : 80
                 }, {
                     label : '操作账号类型',
-                    name : 'authType',
+                    name : 'revisionEntity.authType',
                     formatter : 'select',
                     searchoptions : {
                         valueJsonString : '<tags:json value="${authTypeMap}"/>'
@@ -75,27 +97,32 @@
                     width : 60
                 }, {
                     label : '类名称',
-                    name : 'controllerClassName',
+                    name : 'revisionEntity.controllerClassName',
                     width : 200,
                     align : 'left'
                 }, {
                     label : '方法名称',
-                    name : 'controllerMethodName',
+                    name : 'revisionEntity.controllerMethodName',
                     width : 100,
                     align : 'center'
                 }, {
-                    label : '方法类型',
-                    name : 'controllerMethodType',
+                    label : '变更类型',
+                    name : 'revisionType',
                     width : 60,
                     align : 'center'
                 }, {
                     label : 'entityClassName',
-                    name : 'entityClassName',
+                    name : 'revisionEntity.entityClassName',
+                    width : 60,
+                    hidden : true,
+                    align : 'center'
+                }, {
+                    label : 'entityId',
+                    name : 'revisionEntity.extraAttributes.entityId',
                     width : 60,
                     hidden : true,
                     align : 'center'
                 } ],
-                sortname : 'rev',
                 operations : function(itemArray) {
                     var $revisionsComparet = $('<li data-position="multi" data-toolbar="show"><a href="javascript:;"><i class="fa fa-indent"></i> 数据查看/对比</a></li>');
                     $revisionsComparet.children("a").bind("click", function(e) {
@@ -109,11 +136,11 @@
                             var entityClassName = null;
                             var revs = [];
                             $.each(rowdatas, function(i, rowdata) {
-                                revs.push(rowdata['rev']);
+                                revs.push(rowdata['revisionEntity.rev']);
                                 if (entityClassName == null) {
-                                    entityClassName = rowdata['entityClassName'];
+                                    entityClassName = rowdata['revisionEntity.entityClassName'];
                                 } else {
-                                    if (rowdata['entityClassName'] != entityClassName) {
+                                    if (rowdata['revisionEntity.entityClassName'] != entityClassName) {
                                         entityClassName = false;
                                         return false;
                                     }
@@ -122,6 +149,7 @@
 
                             if (entityClassName) {
                                 url += "?clazz=" + entityClassName;
+                                url += "&entityId=" + rowdatas[0]['revisionEntity.extraAttributes.entityId'];
                                 url += "&revs=" + revs.join(",");
 
                                 $grid.popupDialog({

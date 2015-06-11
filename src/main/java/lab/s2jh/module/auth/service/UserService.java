@@ -121,7 +121,11 @@ public class UserService extends BaseService<User, Long> {
 
     public User saveCascadeR2Roles(User entity, String rawPassword) {
         updateRelatedR2s(entity, entity.getSelectedRoleIds(), "userR2Roles", "role");
-        return save(entity, rawPassword);
+        if (StringUtils.isNotBlank(rawPassword)) {
+            return save(entity, rawPassword);
+        } else {
+            return save(entity);
+        }
     }
 
     @Transactional(readOnly = true)

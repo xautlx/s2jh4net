@@ -7,9 +7,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Entity;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MetaData;
@@ -35,10 +37,15 @@ import lombok.experimental.Accessors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.util.ClassUtils;
+import org.hibernate.envers.Audited;
 import org.markdown4j.Markdown4jProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -104,6 +111,25 @@ public class DocumentController extends BaseController<MockEntity, Long> {
 
     @RequestMapping(value = "/docs/ui-feature/items", method = RequestMethod.GET)
     public String uiFeatureItems(Model model) {
+        Map<String, String> clazzMapping = Maps.newHashMap();
+        //搜索所有entity对象，并自动进行自增初始化值设置
+        ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
+        scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
+        Set<BeanDefinition> beanDefinitions = scan.findCandidateComponents("**.entity.**");
+        for (BeanDefinition beanDefinition : beanDefinitions) {
+            Class<?> entityClass = ClassUtils.forName(beanDefinition.getBeanClassName());
+            Audited audited = entityClass.getAnnotation(Audited.class);
+            if (audited != null) {
+                MetaData metaData = entityClass.getAnnotation(MetaData.class);
+                if (metaData != null) {
+                    clazzMapping.put(entityClass.getName(), metaData.value());
+                } else {
+                    clazzMapping.put(entityClass.getName(), entityClass.getName());
+                }
+            }
+        }
+        model.addAttribute("clazzMapping", clazzMapping);
+
         Map<Long, String> multiSelectItems = Maps.newLinkedHashMap();
         multiSelectItems.put(1L, "选项AAA");
         multiSelectItems.put(2L, "中文BBB");

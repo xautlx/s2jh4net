@@ -25,13 +25,13 @@ import lab.s2jh.support.service.VerifyCodeService;
 import net.sf.ehcache.CacheManager;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +107,7 @@ public class UtilController {
 
     @RequestMapping(value = "/validate/unique", method = RequestMethod.GET)
     @ResponseBody
-    public boolean formValidationUnique(HttpServletRequest request, Model model, @RequestParam("clazz") String clazz) throws ClassNotFoundException {
+    public boolean formValidationUnique(HttpServletRequest request, Model model, @RequestParam("clazz") String clazz) {
         String element = request.getParameter("element");
         Assert.notNull(element);
 
@@ -116,7 +116,7 @@ public class UtilController {
             value = ExtStringUtils.encodeUTF8(value);
         }
 
-        Class<?> entityClass = ClassUtils.getClass(clazz);
+        Class<?> entityClass = ClassUtils.forName(clazz);
         String jql = "select id from " + entityClass.getName() + " where " + element + "=:value ";
         Query query = null;
 

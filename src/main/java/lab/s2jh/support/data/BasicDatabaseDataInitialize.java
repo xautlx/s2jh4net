@@ -37,9 +37,9 @@ import lab.s2jh.module.sys.entity.UserMessage;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class BasicDatabaseDataInitialize {
     @Autowired
     private ExtPropertyPlaceholderConfigurer extPropertyPlaceholderConfigurer;
 
-    public void initialize() throws Exception {
+    public void initialize() {
 
         logger.info("Running " + this.getClass().getName());
         Date now = new Date();
@@ -82,7 +82,7 @@ public class BasicDatabaseDataInitialize {
         scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
         Set<BeanDefinition> beanDefinitions = scan.findCandidateComponents("**.entity.**");
         for (BeanDefinition beanDefinition : beanDefinitions) {
-            Class<?> entityClass = ClassUtils.getClass(beanDefinition.getBeanClassName());
+            Class<?> entityClass = ClassUtils.forName(beanDefinition.getBeanClassName());
             MetaData metaData = entityClass.getAnnotation(MetaData.class);
             if (metaData != null && metaData.autoIncrementInitValue() > 0) {
                 MockEntityUtils.autoIncrementInitValue(entityClass, entityManager);
