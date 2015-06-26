@@ -63,4 +63,9 @@ public class WebAppContextInitFilter implements Filter {
     public static String getInitedWebContextRealPath() {
         return WEB_CONTEXT_REAL_PATH;
     }
+
+    public static void reset() {
+        WEB_CONTEXT_FULL_URL = null;
+        WEB_CONTEXT_REAL_PATH = null;
+    }
 }

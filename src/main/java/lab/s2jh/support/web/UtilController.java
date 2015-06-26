@@ -19,10 +19,12 @@ import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.util.Exceptions;
 import lab.s2jh.core.util.ExtStringUtils;
+import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.support.service.VerifyCodeService;
 import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -72,9 +74,19 @@ public class UtilController {
     @RequestMapping(value = "/cache-clear", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult dataEvictCache() {
+        WebAppContextInitFilter.reset();
         if (cacheManager != null) {
-            logger.info("EhCache cacheManager clearAll...");
-            cacheManager.clearAll();
+            logger.info("Clearing EhCache cacheManager: {}", cacheManager.getName());
+            String[] cacheNames = cacheManager.getCacheNames();
+            for (String cacheName : cacheNames) {
+                //对于Apache Shiro缓存忽略
+                if (cacheName.indexOf(".authorizationCache") > -1) {
+                    continue;
+                }
+                logger.debug(" - clearing cache： {}", cacheName);
+                Ehcache cache = cacheManager.getEhcache(cacheName);
+                cache.removeAll();
+            }
             return OperationResult.buildSuccessResult("EhCache数据缓存刷新操作成功");
         }
         return OperationResult.buildFailureResult("未知缓存管理器");

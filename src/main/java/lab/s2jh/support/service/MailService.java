@@ -10,6 +10,7 @@ import lab.s2jh.aud.entity.SendMessageLog.SendMessageTypeEnum;
 import lab.s2jh.aud.service.SendMessageLogService;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.exception.ServiceException;
+import lab.s2jh.core.util.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -116,7 +117,7 @@ public class MailService {
             sml.setTargets(StringUtils.join(toAddrs));
             sml.setTitle(subject);
             sml.setMessage(text);
-            sml.setSendTime(new Date());
+            sml.setSendTime(DateUtils.currentDate());
             sendMessageLogService.asyncSave(sml);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);

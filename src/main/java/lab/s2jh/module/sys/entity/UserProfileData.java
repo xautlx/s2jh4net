@@ -38,7 +38,7 @@ public class UserProfileData extends BaseNativeEntity {
 
     @MetaData(value = "用户")
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonSerialize(using = EntityIdDisplaySerializer.class)
     private User user;
 

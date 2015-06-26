@@ -1,10 +1,9 @@
 package lab.s2jh.core.web.filter;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
@@ -19,7 +18,7 @@ public class BuildVersionEtagHeaderFilter extends ShallowEtagHeaderFilter {
         String responseETag = null;
         if (DynamicConfigService.isDevMode()) {
             //开发模式每次都添加不同时间戳以便随时获取最新代码
-            responseETag = String.valueOf(new Date().getTime());
+            responseETag = String.valueOf(DateUtils.currentDate().getTime());
         } else {
             //生成模式取构建版本，每次更新版本后都能通知浏览器更新获取最新代码
             responseETag = DynamicConfigService.getBuildVersion();
@@ -27,8 +26,7 @@ public class BuildVersionEtagHeaderFilter extends ShallowEtagHeaderFilter {
         return responseETag;
     }
 
-    protected boolean isEligibleForEtag(HttpServletRequest request, HttpServletResponse response,
-            int responseStatusCode, byte[] responseBody) {
+    protected boolean isEligibleForEtag(HttpServletRequest request, HttpServletResponse response, int responseStatusCode, byte[] responseBody) {
         return true;
     }
 }

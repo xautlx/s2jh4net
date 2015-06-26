@@ -14,8 +14,7 @@
 				data-grid-search="#grid-sys-user-message-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_titl']" class="form-control input-large"
-							placeholder="标题，内容...">
+						<input type="text" name="search['CN_titl']" class="form-control input-large" placeholder="标题，内容...">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">
@@ -95,7 +94,10 @@
                     label : '最后阅读时间',
                     name : 'lastReadTime',
                     formatter : 'timestamp'
-                } ]
+                } ],
+                multiselect : false,
+                addable : false,
+                fullediturl : WEB_ROOT + "/admin/sys/user-message/edit",
             });
         });
     </script>

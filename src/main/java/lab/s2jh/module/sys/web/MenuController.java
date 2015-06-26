@@ -47,6 +47,11 @@ public class MenuController extends BaseController<Menu, Long> {
         return menuService;
     }
 
+    @Override
+    protected Menu buildDetachedBindingEntity(Long id) {
+        return menuService.findDetachedOne(id, "parent");
+    }
+
     @MenuData("配置管理:系统管理:菜单配置")
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "", method = RequestMethod.GET)

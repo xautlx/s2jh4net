@@ -1,8 +1,7 @@
 package lab.s2jh.module.sys.service.test;
 
-import java.util.Date;
-
 import lab.s2jh.core.test.SpringTransactionalTestCase;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.sys.service.NotifyMessageService;
 
@@ -24,8 +23,8 @@ public class NotifyMessageServiceTest extends SpringTransactionalTestCase {
     
     @Test
     public void update(){
-    	notifyMessageService.updateNotifyMessageEffective(new Date());
-    	notifyMessageService.updateNotifyMessageNoneffective(new Date());
+    	notifyMessageService.updateNotifyMessageEffective(DateUtils.currentDate());
+    	notifyMessageService.updateNotifyMessageNoneffective(DateUtils.currentDate());
     }
 
 }

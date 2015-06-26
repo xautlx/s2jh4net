@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.module.schedule.BaseQuartzJobBean;
 import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.UserMessage;
@@ -34,7 +35,7 @@ public class MessageUpdateJob extends BaseQuartzJobBean {
     protected String executeInternalBiz(JobExecutionContext context) {
         //对于NotifyMessage和UserMessage对象，分别基于publishTime和expireTime更新effective属性
 
-        Date now = new Date();
+        Date now = DateUtils.currentDate();
         //检查有效消息
 
         Integer num = notifyMessageService.updateNotifyMessageEffective(now);

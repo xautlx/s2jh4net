@@ -6,6 +6,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
 import lab.s2jh.core.security.AuthContextHolder;
+import lab.s2jh.core.util.DateUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +25,7 @@ public class SaveUpdateAuditListener {
 
     private boolean dateTimeForNow = true;
     private boolean modifyOnCreation = false;
-    //考虑到效率影响和实际作用不大，默认关闭update更新记录处理
-    //如果需要记录变更过程，可以考虑使用专门的hibernate envers机制
-    private boolean skipUpdateAudit = true;
+    private boolean skipUpdateAudit = false;
 
     public void setDateTimeForNow(boolean dateTimeForNow) {
         this.dateTimeForNow = dateTimeForNow;
@@ -113,10 +112,12 @@ public class SaveUpdateAuditListener {
      */
     private Date touchDate(final DefaultAuditable<String, ?> auditable, boolean isNew) {
 
-        Date now = new Date();
+        Date now = DateUtils.currentDate();
 
         if (isNew) {
-            auditable.setCreatedDate(now);
+            if (auditable.getCreatedDate() == null) {
+                auditable.setCreatedDate(now);
+            }
 
             if (!modifyOnCreation) {
                 return now;

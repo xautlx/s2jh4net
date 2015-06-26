@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import lab.s2jh.core.util.DateUtils;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class VerifyCodeService {
             SmsCode smsCode = new SmsCode();
             smsCode.setCode(code);
             smsCode.setMobileNum(mobileNum);
-            smsCode.setGenerateTime(new Date());
+            smsCode.setGenerateTime(DateUtils.currentDate());
             smsCodeContainer.put(mobileNum, smsCode);
         }
         return code;
@@ -87,7 +89,7 @@ public class VerifyCodeService {
     public void removeExpiredDataTimely() {
         logger.debug("Timely trigger removed expired verify code cache data...");
         if (smsCodeContainer != null) {
-            Long now = new Date().getTime();
+            Long now = DateUtils.currentDate().getTime();
             List<String> toRemoves = Lists.newArrayList();
             for (Map.Entry<String, SmsCode> me : smsCodeContainer.entrySet()) {
                 SmsCode smsCode = me.getValue();

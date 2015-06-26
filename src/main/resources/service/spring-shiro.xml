@@ -119,6 +119,7 @@
 				/admin/login = authcA
 				/admin/logout = logoutAdmin
 				/admin** = authcA,anyRoles[ROLE_MGMT_USER]
+				/druid/** = authcA,anyRoles[ROLE_SUPER_USER]
 			</value>
 		</property>
 	</bean>

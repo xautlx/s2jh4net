@@ -8,6 +8,7 @@ import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter.MatchType;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.sys.dao.UserMessageDao;
 import lab.s2jh.module.sys.entity.UserMessage;
@@ -60,11 +61,11 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
 
     public void processUserRead(UserMessage entity, User user) {
         if (entity.getFirstReadTime() == null) {
-            entity.setFirstReadTime(new Date());
+            entity.setFirstReadTime(DateUtils.currentDate());
             entity.setLastReadTime(entity.getFirstReadTime());
             entity.setReadTotalCount(1);
         } else {
-            entity.setLastReadTime(new Date());
+            entity.setLastReadTime(DateUtils.currentDate());
             entity.setReadTotalCount(entity.getReadTotalCount() + 1);
         }
         userMessageDao.save(entity);
@@ -116,7 +117,7 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
             }
         }
 
-        entity.setLastPushTime(new Date());
+        entity.setLastPushTime(DateUtils.currentDate());
         userMessageDao.save(entity);
     }
 

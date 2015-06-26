@@ -16,7 +16,6 @@ import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
-import lab.s2jh.core.util.Exceptions;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

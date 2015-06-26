@@ -49,9 +49,10 @@ public class AppFormAuthenticationFilter extends FormAuthenticationFilter {
 
         SourceUsernamePasswordToken sourceUsernamePasswordToken = (SourceUsernamePasswordToken) token;
         User authAccount = userService.findByAuthTypeAndAuthUid(User.AuthTypeEnum.SYS, sourceUsernamePasswordToken.getUsername());
+        Date now = DateUtils.currentDate();
 
         //更新Access Token，并设置半年后过期
-        if (StringUtils.isBlank(authAccount.getAccessToken()) || authAccount.getAccessTokenExpireTime().before(new Date())) {
+        if (StringUtils.isBlank(authAccount.getAccessToken()) || authAccount.getAccessTokenExpireTime().before(now)) {
             authAccount.setAccessToken(UUID.randomUUID().toString());
             authAccount.setAccessTokenExpireTime(new DateTime().plusMonths(6).toDate());
             userService.save(authAccount);
@@ -59,7 +60,7 @@ public class AppFormAuthenticationFilter extends FormAuthenticationFilter {
 
         //写入登入记录信息
         UserLogonLog userLogonLog = new UserLogonLog();
-        userLogonLog.setLogonTime(new Date());
+        userLogonLog.setLogonTime(now);
         userLogonLog.setLogonYearMonthDay(DateUtils.formatDate(userLogonLog.getLogoutTime()));
         userLogonLog.setRemoteAddr(httpServletRequest.getRemoteAddr());
         userLogonLog.setRemoteHost(httpServletRequest.getRemoteHost());
@@ -89,7 +90,7 @@ public class AppFormAuthenticationFilter extends FormAuthenticationFilter {
             User authAccount = userService.findByAuthTypeAndAuthUid(User.AuthTypeEnum.SYS, sourceUsernamePasswordToken.getUsername());
             if (authAccount != null) {
                 authAccount.setLogonTimes(authAccount.getLogonTimes() + 1);
-                authAccount.setLastLogonFailureTime(new Date());
+                authAccount.setLastLogonFailureTime(DateUtils.currentDate());
                 authAccount.setLogonFailureTimes(authAccount.getLogonFailureTimes() + 1);
                 userService.save(authAccount);
             }

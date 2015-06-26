@@ -266,10 +266,10 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         private Long[] selectedIds;
 
         @DateTimeFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
-        private Date saleDate = new Date();
+        private Date saleDate = DateUtils.currentDate();
 
         @DateTimeFormat(pattern = DateUtils.SHORT_TIME_FORMAT)
-        private Date publishTime = new Date();
+        private Date publishTime = DateUtils.currentDate();
 
         private Date searchDate;
 
@@ -310,7 +310,7 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         private Department department;
 
         @DateTimeFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
-        private Date saleDate = new Date();
+        private Date saleDate = DateUtils.currentDate();
 
         private String textContent;
 

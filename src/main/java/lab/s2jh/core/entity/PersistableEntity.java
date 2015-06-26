@@ -3,11 +3,13 @@ package lab.s2jh.core.entity;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import lab.s2jh.core.security.AuthContextHolder;
-import lab.s2jh.core.util.DateUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Persistable;
@@ -18,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Maps;
 
+@Getter
+@Setter
+@Access(AccessType.FIELD)
 @MappedSuperclass
 @JsonInclude(Include.NON_NULL)
 public abstract class PersistableEntity<ID extends Serializable> implements Persistable<ID> {
@@ -38,6 +43,7 @@ public abstract class PersistableEntity<ID extends Serializable> implements Pers
 
     /** Entity本身无用，主要用于UI层辅助参数传递 */
     @Transient
+    @JsonProperty
     private Map<String, Object> extraAttributes;
 
     /*
@@ -107,22 +113,19 @@ public abstract class PersistableEntity<ID extends Serializable> implements Pers
     public abstract String getDisplay();
 
     @Transient
-    @JsonProperty
-    public Map<String, Object> getExtraAttributes() {
-        return extraAttributes;
-    }
-
-    @Transient
-    public void setExtraAttributes(Map<String, Object> extraAttributes) {
-        this.extraAttributes = extraAttributes;
-    }
-
-    @Transient
     public void addExtraAttribute(String key, Object value) {
-        if (extraAttributes == null) {
-            extraAttributes = Maps.newHashMap();
+        if (this.extraAttributes == null) {
+            this.extraAttributes = Maps.newHashMap();
         }
-        extraAttributes.put(key, value);
+        this.extraAttributes.put(key, value);
+    }
+
+    @Transient
+    public void addExtraAttributes(Map<String, Object> extraAttributes) {
+        if (this.extraAttributes == null) {
+            this.extraAttributes = Maps.newHashMap();
+        }
+        this.extraAttributes.putAll(extraAttributes);
     }
 
     /**
@@ -169,16 +172,5 @@ public abstract class PersistableEntity<ID extends Serializable> implements Pers
             op = (String) opParams;
         }
         return op;
-    }
-
-    /**
-     * 用于辅助构建最近操作说明
-     * @param lastOperation 如“审核”
-     * @return 追加了登录用户/操作时间等信息的操作说明
-     */
-    @Transient
-    @JsonIgnore
-    public String buildLastOperationSummary(String lastOperation) {
-        return AuthContextHolder.getAuthUserDisplay() + lastOperation + ":" + DateUtils.formatTimeNow();
     }
 }

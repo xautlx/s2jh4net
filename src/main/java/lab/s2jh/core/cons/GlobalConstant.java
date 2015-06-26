@@ -26,11 +26,6 @@ public class GlobalConstant {
         U;
     }
 
-    /**
-     * 用于全局控制Hibernate的外键生成策略，定义为none表示默认不生成外键一般用于开发阶段方便数据表重建，空白则一般用于生产环境正常自动生成外键定义
-     */
-    public final static String GlobalForeignKeyName = "none";
-
     @MetaData("ConfigProperty:是否禁用管理账号注册功能")
     public final static String cfg_signup_disabled = "cfg_signup_disabled";
 }

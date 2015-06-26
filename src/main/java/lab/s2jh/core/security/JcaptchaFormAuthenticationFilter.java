@@ -109,7 +109,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
             User authAccount = userService.findByAuthTypeAndAuthUid(User.AuthTypeEnum.SYS, sourceUsernamePasswordToken.getUsername());
             if (authAccount != null) {
                 authAccount.setLogonTimes(authAccount.getLogonTimes() + 1);
-                authAccount.setLastLogonFailureTime(new Date());
+                authAccount.setLastLogonFailureTime(DateUtils.currentDate());
                 authAccount.setLogonFailureTimes(authAccount.getLogonFailureTimes() + 1);
                 userService.save(authAccount);
 
@@ -135,7 +135,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
         //写入登入记录信息
         UserLogonLog userLogonLog = new UserLogonLog();
-        userLogonLog.setLogonTime(new Date());
+        userLogonLog.setLogonTime(DateUtils.currentDate());
         userLogonLog.setLogonYearMonthDay(DateUtils.formatDate(userLogonLog.getLogoutTime()));
         userLogonLog.setRemoteAddr(httpServletRequest.getRemoteAddr());
         userLogonLog.setRemoteHost(httpServletRequest.getRemoteHost());
@@ -157,7 +157,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
         //判断密码是否已到期，如果是则转向密码修改界面
         Date credentialsExpireTime = authAccount.getCredentialsExpireTime();
-        if (credentialsExpireTime != null && credentialsExpireTime.before(new Date())) {
+        if (credentialsExpireTime != null && credentialsExpireTime.before(DateUtils.currentDate())) {
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + authUserDetails.getUrlPrefixBySource()
                     + "/profile/credentials-expire");
             return false;

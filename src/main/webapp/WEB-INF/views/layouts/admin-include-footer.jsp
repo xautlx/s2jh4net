@@ -114,7 +114,7 @@
         KindEditor.options.uploadJson = '${ctx}/w/image/upload/kind-editor.json;JSESSIONID=${pageContext.session.id}'
 
         App.unblockUI($("body"));
-
+        
         //console.profileEnd();
     });
 </script>

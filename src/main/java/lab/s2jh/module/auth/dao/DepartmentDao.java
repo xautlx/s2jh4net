@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface DepartmentDao extends BaseDao<Department, Long> {
 
     @Query("from Department")
-    @QueryHints({ @QueryHint(name = org.hibernate.ejb.QueryHints.HINT_CACHEABLE, value = "true") })
+    @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     public Iterable<Department> findAllCached();
 
 }

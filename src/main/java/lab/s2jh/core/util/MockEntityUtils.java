@@ -21,6 +21,7 @@ import javax.persistence.criteria.Root;
 import javax.validation.constraints.Size;
 
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.audit.DefaultAuditable;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -82,7 +83,7 @@ public class MockEntityUtils {
                                 }
                                 value = RandomStringUtils.randomAlphabetic(columnLength);
                             } else if (parameter.isAssignableFrom(Date.class)) {
-                                value = new Date();
+                                value = DateUtils.currentDate();
                             } else if (parameter.isAssignableFrom(BigDecimal.class)) {
                                 value = new BigDecimal(10 + new Double(new Random().nextDouble() * 1000).intValue());
                             } else if (parameter.isAssignableFrom(Integer.class)) {
@@ -141,6 +142,16 @@ public class MockEntityUtils {
     }
 
     /**
+     * 返回区间段随机整数
+     * @param lower 最小值
+     * @param upper 最大值
+     * @return
+     */
+    public static long randomLong(int lower, int upper) {
+        return randomDataGenerator.nextLong(lower, upper);
+    }
+
+    /**
      * 返回区间段随机布尔值
      * @return
      */
@@ -178,6 +189,19 @@ public class MockEntityUtils {
     /**
      * 数据持久化
      * @param entity 待持久化对象实例
+     * @return
+     */
+    public static void persistNew(EntityManager entityManager, Object entity) {
+        entityManager.persist(entity);
+        //特殊处理SaveUpdateAuditListener的CreatedDate“篡改”为当前临时系统时间
+        if (entity instanceof DefaultAuditable) {
+            ((DefaultAuditable) entity).setCreatedDate(DateUtils.currentDate());
+        }
+    }
+
+    /**
+     * 数据持久化
+     * @param entity 待持久化对象实例
      * @param existCheckFields 可变参数，提供用于检查数据是否已存在的字段名称列表
      * @return
      */
@@ -206,6 +230,7 @@ public class MockEntityUtils {
                 }
             }
             entityManager.persist(entity);
+            entityManager.flush();
             return true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

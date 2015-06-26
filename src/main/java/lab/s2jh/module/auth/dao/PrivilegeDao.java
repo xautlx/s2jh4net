@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 public interface PrivilegeDao extends BaseDao<Privilege, Long> {
 
     @Query("from Privilege order by code asc")
-    @QueryHints({ @QueryHint(name = org.hibernate.ejb.QueryHints.HINT_CACHEABLE, value = "true") })
+    @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     List<Privilege> findAllCached();
 
     Iterable<Privilege> findByDisabled(Boolean disabled);

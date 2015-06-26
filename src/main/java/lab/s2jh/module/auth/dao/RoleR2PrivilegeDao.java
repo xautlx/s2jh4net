@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface RoleR2PrivilegeDao extends BaseDao<RoleR2Privilege, String> {
 
     @Query("select r2 from RoleR2Privilege r2  inner join r2.privilege as p  inner join r2.role r where p.disabled=false and r.code != :excludeRoleCode order by p.code desc")
-    @QueryHints({ @QueryHint(name = org.hibernate.ejb.QueryHints.HINT_CACHEABLE, value = "true") })
+    @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     List<RoleR2Privilege> findEnabledExcludeRole(@Param("excludeRoleCode") String excludeRoleCode);
 
     List<RoleR2Privilege> findByPrivilege_Id(String privilegeId);

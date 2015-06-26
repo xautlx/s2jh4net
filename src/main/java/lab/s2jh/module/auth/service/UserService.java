@@ -12,6 +12,7 @@ import lab.s2jh.core.dao.jpa.BaseDao;
 import lab.s2jh.core.security.PasswordService;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.service.Validation;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.module.auth.dao.PrivilegeDao;
 import lab.s2jh.module.auth.dao.RoleDao;
@@ -98,7 +99,7 @@ public class UserService extends BaseService<User, Long> {
     public User save(User entity, String rawPassword) {
         if (entity.isNew()) {
             Validation.notBlank(rawPassword, "创建账号必须提供初始密码");
-            Date now = new Date();
+            Date now = DateUtils.currentDate();
             if (entity.getCredentialsExpireTime() == null) {
                 //默认6个月后密码失效，到时用户登录强制要求重新设置密码
                 entity.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
@@ -171,7 +172,7 @@ public class UserService extends BaseService<User, Long> {
         user.setLogonTimes(user.getLogonTimes() + 1);
         user.setLastLogonIP(userLogonLog.getRemoteAddr());
         user.setLastLogonHost(userLogonLog.getRemoteHost());
-        user.setLastLogonTime(new Date());
+        user.setLastLogonTime(DateUtils.currentDate());
 
         //重置失败次数计数
         user.setLastLogonFailureTime(null);

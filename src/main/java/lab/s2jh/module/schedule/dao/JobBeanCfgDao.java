@@ -17,6 +17,6 @@ public interface JobBeanCfgDao extends BaseDao<JobBeanCfg, Long> {
     @Query("from JobBeanCfg")
     List<JobBeanCfg> findAll();
 
-    @QueryHints({ @QueryHint(name = org.hibernate.ejb.QueryHints.HINT_CACHEABLE, value = "true") })
+    @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     JobBeanCfg findByJobClass(String jobClass);
 }

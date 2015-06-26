@@ -15,7 +15,6 @@ import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.cons.GlobalConstant;
-import lab.s2jh.core.entity.AttachmentableEntity;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.WebFormatter;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
@@ -43,7 +42,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "sys_UserMessage")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "用户消息", comments = "如果用户消息量担心影响查询效率，可以考虑引入定期归档处理把过期消息搬迁归档")
-public class UserMessage extends BaseNativeEntity implements AttachmentableEntity {
+public class UserMessage extends BaseNativeEntity {
 
     private static final long serialVersionUID = 1685596718660284598L;
 
@@ -70,7 +69,7 @@ public class UserMessage extends BaseNativeEntity implements AttachmentableEntit
 
     @MetaData(value = "目标用户")
     @ManyToOne
-    @JoinColumn(name = "targetUser_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
+    @JoinColumn(name = "targetUser_id", nullable = false)
     @JsonSerialize(using = EntityIdDisplaySerializer.class)
     @JsonView(JsonViews.Admin.class)
     private User targetUser;

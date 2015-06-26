@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.pagination.GroupPropertyFilter;
+import lab.s2jh.core.pagination.PropertyFilter;
+import lab.s2jh.core.pagination.PropertyFilter.MatchType;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.service.Validation;
@@ -171,6 +174,25 @@ public class UserController extends BaseController<User, Long> {
             item.put("name", navMenuVO.getName());
             item.put("open", true);
             item.put("isParent", StringUtils.isBlank(navMenuVO.getUrl()));
+            items.add(item);
+        }
+        return items;
+    }
+
+    @RequestMapping(value = "/tags", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Map<String, Object>> tagsData(Model model, @RequestParam("q") String q) {
+        GroupPropertyFilter groupFilter = GroupPropertyFilter.buildDefaultOrGroupFilter();
+        groupFilter.append(new PropertyFilter(MatchType.CN, "authUid", q));
+        groupFilter.append(new PropertyFilter(MatchType.CN, "nickName", q));
+        groupFilter.append(new PropertyFilter(MatchType.CN, "email", q));
+        groupFilter.append(new PropertyFilter(MatchType.CN, "mobile", q));
+        List<User> users = userService.findByFilters(groupFilter);
+        List<Map<String, Object>> items = Lists.newArrayList();
+        for (User user : users) {
+            Map<String, Object> item = Maps.newHashMap();
+            item.put("id", user.getAlias());
+            item.put("text", user.getAlias());
             items.add(item);
         }
         return items;

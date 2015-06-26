@@ -15,6 +15,7 @@ import lab.s2jh.core.context.SpringContextHolder;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter.MatchType;
+import lab.s2jh.core.util.DateUtils;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
@@ -43,7 +44,7 @@ public class AuthLogonHistRefreshListener implements HttpSessionListener, Servle
             UserLogonLog userLogonLog = userLogonLogService.findBySessionId(sessionId);
             if (userLogonLog != null) {
                 logger.debug("Setup logout time for session ID: {}", sessionId);
-                userLogonLog.setLogoutTime(new Date());
+                userLogonLog.setLogoutTime(DateUtils.currentDate());
                 userLogonLog.setLogonTimeLength(userLogonLog.getLogoutTime().getTime() - userLogonLog.getLogonTime().getTime());
                 userLogonLogService.save(userLogonLog);
             }

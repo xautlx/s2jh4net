@@ -1,5 +1,7 @@
 package lab.s2jh.support.web;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
@@ -10,8 +12,10 @@ import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.service.UserService;
+import lab.s2jh.module.sys.entity.UserProfileData;
 import lab.s2jh.module.sys.service.NotifyMessageService;
 import lab.s2jh.module.sys.service.UserMessageService;
+import lab.s2jh.module.sys.service.UserProfileDataService;
 import lab.s2jh.support.service.MailService;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -40,11 +44,34 @@ public class UserProfileController {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private UserProfileDataService userProfileDataService;
+
     @MenuData("个人信息:个人配置")
     @RequiresRoles(value = AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/admin/profile/edit", method = RequestMethod.GET)
-    public String profileEditShow() {
+    public String profileLayoutShow(@ModelAttribute("user") User user, Model model) {
+        user.addExtraAttributes(userProfileDataService.findMapDataByUser(user));
         return "admin/profile/profile-edit";
+    }
+
+    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/admin/profile/layout", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult profileLayoutSave(@ModelAttribute("user") User user) {
+        Map<String, Object> extraAttributes = user.getExtraAttributes();
+        for (Map.Entry<String, Object> me : extraAttributes.entrySet()) {
+            String code = me.getKey();
+            UserProfileData entity = userProfileDataService.findByUserAndCode(user, code);
+            if (entity == null) {
+                entity = new UserProfileData();
+                entity.setUser(user);
+            }
+            entity.setCode(code);
+            entity.setValue(me.getValue().toString());
+            userProfileDataService.save(entity);
+        }
+        return OperationResult.buildSuccessResult("界面布局配置参数保存成功");
     }
 
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
@@ -94,6 +121,7 @@ public class UserProfileController {
 
     @ModelAttribute
     public void prepareModel(Model model) {
-        model.addAttribute("user", AuthContextHolder.findAuthUser());
+        User user = AuthContextHolder.findAuthUser();
+        model.addAttribute("user", user);
     }
 }

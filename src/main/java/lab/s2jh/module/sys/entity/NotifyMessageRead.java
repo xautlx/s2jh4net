@@ -43,13 +43,13 @@ public class NotifyMessageRead extends BaseNativeEntity {
 
     @MetaData(value = "公告")
     @ManyToOne
-    @JoinColumn(name = "notifyMessage_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
+    @JoinColumn(name = "notifyMessage_id", nullable = false)
     @JsonIgnore
     private NotifyMessage notifyMessage;
 
     @MetaData(value = "阅读用户")
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "readUser_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
+    @JoinColumn(name = "readUser_id", nullable = false)
     @JsonIgnore
     private User readUser;
 

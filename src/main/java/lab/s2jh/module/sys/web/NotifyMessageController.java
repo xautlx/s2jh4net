@@ -1,14 +1,19 @@
 package lab.s2jh.module.sys.web;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.util.DateUtils;
+import lab.s2jh.core.util.EnumUtils;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.sys.entity.NotifyMessage;
+import lab.s2jh.module.sys.entity.NotifyMessage.NotifyMessagePlatformEnum;
 import lab.s2jh.module.sys.entity.NotifyMessageRead;
 import lab.s2jh.module.sys.service.NotifyMessageReadService;
 import lab.s2jh.module.sys.service.NotifyMessageService;
@@ -16,10 +21,13 @@ import lab.s2jh.module.sys.service.NotifyMessageService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,6 +49,19 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
         return notifyMessageService;
     }
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        super.initBinder(binder);
+        binder.registerCustomEditor(Date.class, "publishTime", new CustomDateEditor(DateUtils.SHORT_TIME_FORMATER, true));
+        binder.registerCustomEditor(Date.class, "expireTime", new CustomDateEditor(DateUtils.SHORT_TIME_FORMATER, true));
+    }
+
+    @RequiresUser
+    @ModelAttribute
+    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        super.initPrepareModel(request, model, id);
+    }
+
     @MenuData("配置管理:系统管理:公告管理")
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -58,6 +79,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(Model model) {
+        model.addAttribute("platformMap", EnumUtils.getEnumDataMap(NotifyMessagePlatformEnum.class));
         return "admin/sys/notifyMessage-inputBasic";
     }
 
@@ -77,9 +99,4 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
         return notifyMessageReadService.findByPage(groupFilter, pageable);
     }
 
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
 }

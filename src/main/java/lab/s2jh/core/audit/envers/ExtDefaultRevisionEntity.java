@@ -2,6 +2,8 @@ package lab.s2jh.core.audit.envers;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,7 +19,10 @@ import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.PersistableEntity;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
+import lombok.Getter;
+import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
@@ -30,6 +35,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * 
  * @see http://docs.jboss.org/hibernate/orm/4.2/devguide/en-US/html/ch15.html
  */
+@Getter
+@Setter
+@Access(AccessType.FIELD)
 @Entity
 @Table(name = "aud_RevisionEntity")
 @RevisionEntity(ExtRevisionListener.class)
@@ -39,9 +47,15 @@ public class ExtDefaultRevisionEntity extends PersistableEntity<Long> {
     private static final long serialVersionUID = -2946153158442502361L;
 
     /** 记录版本 */
+    @Id
+    @GeneratedValue
+    @RevisionNumber
     private Long rev;
 
     /** 记录时间 */
+    @RevisionTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using = DateTimeJsonSerializer.class)
     private Date revstmp;
 
     private String entityClassName;
@@ -65,117 +79,17 @@ public class ExtDefaultRevisionEntity extends PersistableEntity<Long> {
     private String controllerMethodType;
 
     /** 全局唯一的用户ID，确保明确与唯一操作用户关联 */
+    @Column(length = 128)
     private String authGuid;
 
     @MetaData(value = "账号类型所对应唯一标识")
+    @Column(length = 128)
     private String authUid;
 
     @MetaData(value = "账号类型")
-    private AuthTypeEnum authType;
-
-    @Id
-    @GeneratedValue
-    @RevisionNumber
-    public Long getRev() {
-        return rev;
-    }
-
-    public void setRev(Long rev) {
-        this.rev = rev;
-    }
-
-    @RevisionTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonSerialize(using = DateTimeJsonSerializer.class)
-    public Date getRevstmp() {
-        return revstmp;
-    }
-
-    public void setRevstmp(Date revstmp) {
-        this.revstmp = revstmp;
-    }
-
-    @Column(length = 128)
-    public String getAuthGuid() {
-        return authGuid;
-    }
-
-    public void setAuthGuid(String authGuid) {
-        this.authGuid = authGuid;
-    }
-
-    @Column(length = 256)
-    public String getControllerClassName() {
-        return controllerClassName;
-    }
-
-    public void setControllerClassName(String controllerClassName) {
-        this.controllerClassName = controllerClassName;
-    }
-
-    @Column(length = 256)
-    public String getControllerMethodName() {
-        return controllerMethodName;
-    }
-
-    public void setControllerMethodName(String controllerMethodName) {
-        this.controllerMethodName = controllerMethodName;
-    }
-
-    @Column(length = 16)
-    public String getControllerMethodType() {
-        return controllerMethodType;
-    }
-
-    public void setControllerMethodType(String controllerMethodType) {
-        this.controllerMethodType = controllerMethodType;
-    }
-
-    @Column(length = 256)
-    public String getControllerMethodLabel() {
-        return controllerMethodLabel;
-    }
-
-    public void setControllerMethodLabel(String controllerMethodLabel) {
-        this.controllerMethodLabel = controllerMethodLabel;
-    }
-
-    @Column(length = 256)
-    public String getRequestMappingUri() {
-        return requestMappingUri;
-    }
-
-    public void setRequestMappingUri(String requestMappingUri) {
-        this.requestMappingUri = requestMappingUri;
-    }
-
-    @Column(length = 256)
-    public String getControllerClassLabel() {
-        return controllerClassLabel;
-    }
-
-    public void setControllerClassLabel(String controllerClassLabel) {
-        this.controllerClassLabel = controllerClassLabel;
-    }
-
-    @Column(length = 64)
-    public String getAuthUid() {
-        return authUid;
-    }
-
-    public void setAuthUid(String authUid) {
-        this.authUid = authUid;
-    }
-
-    @Column(length = 8)
+    @Column(length = 32)
     @Enumerated(EnumType.STRING)
-    public AuthTypeEnum getAuthType() {
-        return authType;
-    }
-
-    public void setAuthType(AuthTypeEnum authType) {
-        this.authType = authType;
-    }
+    private AuthTypeEnum authType;
 
     @Override
     @Transient
@@ -195,11 +109,13 @@ public class ExtDefaultRevisionEntity extends PersistableEntity<Long> {
         return String.valueOf(rev);
     }
 
-    public String getEntityClassName() {
-        return entityClassName;
+    @Transient
+    public String getControllerClassDisplay() {
+        return controllerClassName + (StringUtils.isBlank(controllerClassLabel) ? "" : "(" + controllerClassLabel + ")");
     }
 
-    public void setEntityClassName(String entityClassName) {
-        this.entityClassName = entityClassName;
+    @Transient
+    public String getControllerMethodDisplay() {
+        return controllerMethodName + (StringUtils.isBlank(controllerMethodLabel) ? "" : "(" + controllerMethodLabel + ")");
     }
 }

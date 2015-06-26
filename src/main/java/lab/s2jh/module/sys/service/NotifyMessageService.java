@@ -5,6 +5,7 @@ import java.util.List;
 
 import lab.s2jh.core.dao.jpa.BaseDao;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.sys.dao.NotifyMessageDao;
 import lab.s2jh.module.sys.dao.NotifyMessageReadDao;
@@ -205,6 +206,9 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
     public List<NotifyMessage> findStatedEffectiveMessages(User user, String platform, Boolean readState, String... tags) {
         List<NotifyMessage> statedEffectiveMessages = Lists.newArrayList();
         List<NotifyMessage> scopeEffectiveMessages = findEffectiveMessages(user, platform, tags);
+        if (CollectionUtils.isEmpty(scopeEffectiveMessages)) {
+            return statedEffectiveMessages;
+        }
         List<NotifyMessageRead> notifyMessageReads = notifyMessageReadDao.findByReadUserAndNotifyMessageIn(user, scopeEffectiveMessages);
         for (NotifyMessage notifyMessage : scopeEffectiveMessages) {
             boolean readed = false;
@@ -230,12 +234,12 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
             notifyMessageRead = new NotifyMessageRead();
             notifyMessageRead.setNotifyMessage(notifyMessage);
             notifyMessageRead.setReadUser(user);
-            notifyMessageRead.setFirstReadTime(new Date());
+            notifyMessageRead.setFirstReadTime(DateUtils.currentDate());
             notifyMessageRead.setLastReadTime(notifyMessageRead.getFirstReadTime());
             notifyMessageRead.setReadTotalCount(1);
             notifyMessage.setReadUserCount(notifyMessage.getReadUserCount() + 1);
         } else {
-            notifyMessageRead.setLastReadTime(new Date());
+            notifyMessageRead.setLastReadTime(DateUtils.currentDate());
             notifyMessageRead.setReadTotalCount(notifyMessageRead.getReadTotalCount() + 1);
         }
         notifyMessageReadDao.save(notifyMessageRead);
@@ -257,7 +261,7 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
     public void pushMessage(NotifyMessage entity) {
         if (messagePushService != null) {
             if (messagePushService.sendPush(entity)) {
-                entity.setLastPushTime(new Date());
+                entity.setLastPushTime(DateUtils.currentDate());
                 notifyMessageDao.save(entity);
             }
         } else {

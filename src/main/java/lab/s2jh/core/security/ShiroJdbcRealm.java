@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import lab.s2jh.core.security.SourceUsernamePasswordToken.AuthSourceEnum;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.module.auth.entity.Privilege;
 import lab.s2jh.module.auth.entity.Role;
 import lab.s2jh.module.auth.entity.User;
@@ -68,7 +69,7 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
         }
 
         Date accountExpireTime = authAccount.getAccountExpireTime();
-        if (accountExpireTime != null && accountExpireTime.before(new Date())) {
+        if (accountExpireTime != null && accountExpireTime.before(DateUtils.currentDate())) {
             throw new DisabledAccountException("账号已到期停用");
         }
 

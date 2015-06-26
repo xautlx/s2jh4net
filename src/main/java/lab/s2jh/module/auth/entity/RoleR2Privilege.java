@@ -3,7 +3,6 @@ package lab.s2jh.module.auth.entity;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -11,7 +10,6 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,12 +32,12 @@ public class RoleR2Privilege extends BaseNativeEntity {
 
     /** 关联权限对象 */
     @ManyToOne
-    @JoinColumn(name = "privilege_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
+    @JoinColumn(name = "privilege_id", nullable = false)
     private Privilege privilege;
 
     /** 关联角色对象 */
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false, foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @Transient

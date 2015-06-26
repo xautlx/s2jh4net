@@ -14,7 +14,8 @@
 				data-grid-search="#grid-aud-send-message-log-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_targets_OR_title_OR_message']" class="form-control input-large" placeholder="消息接受者 , 标题 , 消息内容...">
+						<input type="text" name="search['CN_targets_OR_title_OR_message']" class="form-control input-large"
+							placeholder="消息接受者 , 标题 , 消息内容...">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">
@@ -45,13 +46,13 @@
                 }, {
                     label : '消息接受者',
                     name : 'targets',
-                    width : 300,
+                    width : 150,
                     align : 'center',
                     editable : true
                 }, {
                     label : '标题',
                     name : 'title',
-                    width : 256,
+                    width : 300,
                     align : 'left',
                     editable : true
                 }, {

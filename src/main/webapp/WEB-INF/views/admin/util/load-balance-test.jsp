@@ -14,10 +14,9 @@
     int port = request.getLocalPort();
     java.util.Date time = new java.util.Date();
     String sid = session.getId();
-    String message = "[" + sid + "][" + ip + ":" + port + "][" + time
-            + "] Loading balance testing, session count=" + count;
+    String message = "[" + sid + "][" + ip + ":" + port + "][" + time + "] Loading balance testing, session count=" + count;
     System.out.println(message);
-    
+
     Map<String, Object> data = new LinkedHashMap<String, Object>();
 
     Map<String, Object> keyData = new LinkedHashMap<String, Object>();
@@ -53,9 +52,6 @@
 <title>Loading balance test page</title>
 </head>
 <body>
-	<div class="row-fluid">
-		<input type="button" value="Reload Page" class="btn" onclick="self.location.reload()" />
-	</div>
 	<%
 	    for (Map.Entry<String, Object> me : data.entrySet()) {
 	%>
@@ -84,6 +80,8 @@
 	<%
 	    }
 	%>
-
+	<div style="text-align: center; height: 50px; background-color: blue">
+		<input type="button" value="Click to refresh page" onclick="self.location.reload()" style="height: 50px;" />
+	</div>
 </body>
 </html>

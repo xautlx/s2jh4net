@@ -87,6 +87,12 @@ public class DynamicConfigService {
                 val = cfg.getSimpleValue();
             }
         }
+        
+        //从环境变量获取
+        if (val == null) {
+            val = System.getProperty(key);
+        }
+
         //未取到则继续从Spring属性文件定义取
         if (val == null) {
             if (extPropertyPlaceholderConfigurer != null) {

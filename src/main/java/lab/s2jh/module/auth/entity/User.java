@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -20,7 +19,6 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.json.DateJsonSerializer;
@@ -73,7 +71,7 @@ public class User extends BaseNativeEntity {
     @MetaData(value = "绑定目标账号", comments = "用于OAUTH类型账号绑定到SYS类型账号累加管理角色")
     @NotAudited
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "bindTo_id", foreignKey = @ForeignKey(name = GlobalConstant.GlobalForeignKeyName))
+    @JoinColumn(name = "bindTo_id")
     @JsonIgnore
     private User bindTo;
 

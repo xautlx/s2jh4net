@@ -14,6 +14,7 @@ import lab.s2jh.module.auth.service.UserService;
 import lab.s2jh.module.sys.entity.NotifyMessage.NotifyMessagePlatformEnum;
 import lab.s2jh.module.sys.service.NotifyMessageService;
 import lab.s2jh.module.sys.service.UserMessageService;
+import lab.s2jh.module.sys.service.UserProfileDataService;
 import lab.s2jh.support.service.DynamicConfigService;
 import lab.s2jh.support.service.SmsService;
 import lab.s2jh.support.service.VerifyCodeService;
@@ -53,6 +54,9 @@ public class IndexController {
     @Autowired
     private SmsService smsService;
 
+    @Autowired
+    private UserProfileDataService userProfileDataService;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String defaultIndex() {
         return "redirect:/w";
@@ -72,6 +76,9 @@ public class IndexController {
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String adminIndex(HttpServletRequest request, Model model) {
+        model.addAttribute("buildVersion", dynamicConfigService.getString("build_version"));
+        User user = AuthContextHolder.findAuthUser();
+        model.addAttribute("layoutAttributes", userProfileDataService.findMapDataByUser(user));
         model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
         return "admin/index";
     }
@@ -133,8 +140,11 @@ public class IndexController {
         AuthenticationException ae = (AuthenticationException) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
         if (ae != null) {
             model.addAttribute("error", ae.getMessage());
+            return source + "/login";
+        } else {
+            return "redirect:/" + source;
         }
-        return source + "/login";
+
     }
 
     @RequestMapping(value = "/send-sms-code/{mobile}", method = RequestMethod.GET)

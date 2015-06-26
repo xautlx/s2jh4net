@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import lab.s2jh.support.service.DynamicConfigService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
@@ -76,11 +78,11 @@ public class DateUtils {
     }
 
     public static String formatDateNow() {
-        return formatDate(new Date());
+        return formatDate(DateUtils.currentDate());
     }
 
     public static String formatTimeNow() {
-        return formatTime(new Date());
+        return formatTime(DateUtils.currentDate());
     }
 
     public static Date parseDate(String date, DateFormat df) {
@@ -232,6 +234,36 @@ public class DateUtils {
         cal.setTime(date);
         cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - n);
         return cal.getTime();
+    }
+
+    private static Date currentDate;
+
+    public static Date setCurrentDate(Date date) {
+        if (DynamicConfigService.isDevMode()) {
+            Date now = new Date();
+            if (date.after(now)) {
+                currentDate = now;
+            } else {
+                currentDate = date;
+            }
+        }
+        return currentDate;
+    }
+
+    /**
+     * 为了便于在模拟数据程序中控制业务数据获取到的当前时间
+     * 提供一个帮助类处理当前时间，为了避免误操作，只有在devMode开发模式才允许“篡改”当前时间
+     * @return
+     */
+    public static Date currentDate() {
+        if (currentDate == null) {
+            return new Date();
+        }
+        if (DynamicConfigService.isDevMode()) {
+            return currentDate;
+        } else {
+            return new Date();
+        }
     }
 
     public static void main(String[] args) {

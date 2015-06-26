@@ -35,11 +35,9 @@ import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.json.DateJsonSerializer;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
-import lab.s2jh.module.sys.entity.AttachmentFile;
-import lab.s2jh.module.sys.service.AttachmentFileService;
+import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lab.s2jh.support.service.DynamicConfigService;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.ClassUtils;
 import org.slf4j.Logger;
@@ -219,6 +217,8 @@ public class ServletUtils {
                                 rules.put("date", true);
                             } else if (DateUtils.DEFAULT_TIME_FORMAT.equals(dateTimeFormat.pattern())) {
                                 rules.put("timestamp", true);
+                            } else if (DateUtils.SHORT_TIME_FORMAT.equals(dateTimeFormat.pattern())) {
+                                rules.put("shortTimestamp", true);
                             } else {
                                 rules.put("date", true);
                             }
@@ -230,6 +230,10 @@ public class ServletUtils {
                                 rules.put("date", true);
                             } else if (DateTimeJsonSerializer.class == jsonSerialize.using()) {
                                 rules.put("timestamp", true);
+                                rules.remove("date");
+                            } else if (ShortDateTimeJsonSerializer.class == jsonSerialize.using()) {
+                                rules.put("shortTimestamp", true);
+                                rules.remove("date");
                             }
                         }
                     } else if (retType == BigDecimal.class) {
@@ -274,6 +278,14 @@ public class ServletUtils {
         dataMap.put("req.user", AuthContextHolder.getAuthUserDisplay());
         dataMap.put("req.method", request.getMethod());
         dataMap.put(ClassicConstants.REQUEST_REQUEST_URI, request.getRequestURI());
+        dataMap.put(ClassicConstants.REQUEST_USER_AGENT_MDC_KEY, request.getHeader("User-Agent"));
+
+        String clientId = request.getHeader("X-Forwarded-For");
+        if (StringUtils.isBlank(clientId)) {
+            clientId = request.getRemoteHost();
+        }
+        dataMap.put("req.clientId", clientId);
+
         if (verbose) {
             dataMap.put(ClassicConstants.REQUEST_QUERY_STRING, request.getQueryString());
             dataMap.put("req.contextPath", request.getContextPath());
@@ -285,7 +297,6 @@ public class ServletUtils {
             dataMap.put("req.localPort", String.valueOf(request.getLocalPort()));
             dataMap.put("req.serverName", request.getServerName());
             dataMap.put("req.serverPort", String.valueOf(request.getServerPort()));
-            dataMap.put(ClassicConstants.REQUEST_USER_AGENT_MDC_KEY, request.getHeader("User-Agent"));
             dataMap.put(ClassicConstants.REQUEST_X_FORWARDED_FOR, request.getHeader("X-Forwarded-For"));
             dataMap.put(ClassicConstants.REQUEST_REQUEST_URL, request.getRequestURL().toString());
         }
@@ -377,20 +388,16 @@ public class ServletUtils {
             logger.info("Setup file upload root dir:  {}", staticFileUploadDir);
         }
 
-        try {
+        //            AttachmentFile attachmentFile = AttachmentFile.buildInstance(name, length);
+        //            String path = "/upload" + attachmentFile.getFileRelativePath() + "/" + attachmentFile.getDiskFileName();
+        //            String fullPath = staticFileUploadDir + path;
+        //            logger.debug("Saving upload file: {}", fullPath);
+        //            FileUtils.copyInputStreamToFile(fis, new File(fullPath));
+        //
+        //            AttachmentFileService attachmentFileServiceService = SpringContextHolder.getBean(AttachmentFileService.class);
+        //            attachmentFileServiceService.save(attachmentFile);
 
-            AttachmentFile attachmentFile = AttachmentFile.buildInstance(name, length);
-            String path = "/upload" + attachmentFile.getFileRelativePath() + "/" + attachmentFile.getDiskFileName();
-            String fullPath = staticFileUploadDir + path;
-            logger.debug("Saving upload file: {}", fullPath);
-            FileUtils.copyInputStreamToFile(fis, new File(fullPath));
+        return "";
 
-            AttachmentFileService attachmentFileServiceService = SpringContextHolder.getBean(AttachmentFileService.class);
-            attachmentFileServiceService.save(attachmentFile);
-
-            return path;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

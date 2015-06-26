@@ -54,7 +54,7 @@
 						<div class="form-body" style="min-height: 250px">
 							<div class="note note-info">
 								<p>此功能主要用于在应用运行过程中动态修改Logger日志级别从而实现在线Debug调试系统日志信息以便实时进行一些线上问题分析排查.</p>
-								<p class="text-warning">在调低日志级别问题排查完毕后，最好把日志级别调整会预设较高级别以避免大量日志信息影响系统运行效率</p>
+								<p class="text-warning">在调低日志级别问题排查完毕后，最好把日志级别调整回预设较高级别以避免大量日志信息影响系统运行效率</p>
 							</div>
 							<div class="form-group">
 								<label class="control-label">Logger Name</label>
@@ -99,7 +99,28 @@
 					</div>
 				</div>
 				<div class="portlet-body">
+					<div class="note note-info">
+						<p>提供基本的HTTP Request和Session信息显示页面，用于在集群环境Failover切换不同主机检查确认服务是否正常，检查Session复制配置是否有效的实现了Session属性数据的无缝复制切换。</p>
+					</div>
 					<a class="btn blue" href="${ctx}/admin/util/load-balance-test" target="_blank">点击显示负载均衡信息页面</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="portlet box grey">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> Druid数据源监控
+					</div>
+					<div class="tools">
+						<a class="collapse" href="javascript:;"></a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<div class="note note-info">
+						<p>本项目采用由阿里开发维护的Druid数据库连接池。Druid能够提供强大的监控和扩展功能。Druid内置提供了一个StatViewServlet用于展示Druid的统计信息。</p>
+					</div>
+					<a class="btn blue" href="${ctx}/druid/" target="_blank">点击访问Druid数据源监控页面</a>
 				</div>
 			</div>
 		</div>

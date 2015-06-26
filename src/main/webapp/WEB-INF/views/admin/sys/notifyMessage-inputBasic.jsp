@@ -33,7 +33,7 @@
 					<div class="form-group">
 						<label class="control-label">消息内容</label>
 						<div class="controls">
-							<form:textarea path="message" class="form-control" data-htmleditor="kindeditor" data-height="400px" />
+							<form:textarea path="message" class="form-control" data-htmleditor="kindeditor" data-height="300px" />
 						</div>
 					</div>
 				</div>
@@ -41,27 +41,10 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label class="control-label">平台设置</label>
-						<div class="controls">
-							<form:input path="platform" class="form-control" />
-						</div>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label class="control-label">消息目标列表</label>
-						<div class="controls">
-							<form:input path="audienceTags" class="form-control" />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label class="control-label">消息目标组合</label>
-						<div class="controls">
-							<form:input path="audienceAndTags" class="form-control" />
+						<label class="control-label">显示平台设置</label>
+						<div class="controls controls-checkboxes">
+							<form:checkboxes items="${platformMap}" path="platformSplit" />
+							<span class="help-block">未勾选表示默认全部</span>
 						</div>
 					</div>
 				</div>
@@ -69,7 +52,34 @@
 					<div class="form-group">
 						<label class="control-label">用户标识列表</label>
 						<div class="controls">
-							<form:input path="audienceAlias" class="form-control" />
+							<form:input path="audienceAlias" class="form-control" data-select2-type="tags"
+								data-url="${ctx}/admin/auth/user/tags" />
+							<span class="help-block">定向发送给特定用户列表，输入用户信息提示选取</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">消息目标属性AND交集</label>
+						<div class="controls">
+							<form:input path="audienceAndTags" class="form-control" data-select2-type="tags" />
+							<span class="help-block">用标签来进行大规模的设备属性、用户属性分群，各元素之间为AND取交集。<br>没有值=全部，其他为数据字典项逗号分隔组合，如：student,
+								school_01
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">消息目标属性OR并集</label>
+						<div class="controls">
+							<form:input path="audienceTags" class="form-control" data-select2-type="tags" />
+							<span class="help-block">用标签来进行大规模的设备属性、用户属性分群，各元素之间为OR取并集。<br>没有值=全部，其他为数据字典项逗号分隔组合，如：student,
+								teacher
+							</span>
 						</div>
 					</div>
 				</div>

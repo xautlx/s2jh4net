@@ -72,7 +72,7 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
     @MenuData("配置管理:系统记录:业务操作记录")
     @RequiresPermissions("配置管理:系统记录:业务操作记录")
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    protected String revisionEntityUserIndex(Model model) throws Exception {
+    public String revisionEntityUserIndex(Model model) throws Exception {
         model.addAttribute("authTypeMap", EnumUtils.getEnumDataMap(AuthTypeEnum.class));
         return "admin/aud/revisionEntity-userIndex";
     }
@@ -91,7 +91,7 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
     @MenuData("配置管理:系统记录:数据变更记录")
     @RequiresPermissions("配置管理:系统记录:数据变更记录")
     @RequestMapping(value = "/data", method = RequestMethod.GET)
-    protected String revisionEntityDataIndex(Model model) {
+    public String revisionEntityDataIndex(Model model) {
         model.addAttribute("authTypeMap", EnumUtils.getEnumDataMap(AuthTypeEnum.class));
 
         Map<String, String> clazzMapping = Maps.newHashMap();
@@ -119,7 +119,7 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
     @MetaData(value = "版本对象属性列表")
     @RequestMapping(value = "/properties", method = RequestMethod.GET)
     @ResponseBody
-    protected Map<String, String> revisionEntityProperties(HttpServletRequest request) {
+    public Map<String, String> revisionEntityProperties(HttpServletRequest request) {
         String clazz = request.getParameter("clazz");
         Class<?> entityClass = ClassUtils.forName(clazz);
         Map<String, String> properties = Maps.newLinkedHashMap();
@@ -134,7 +134,7 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
     @RequiresPermissions("配置管理:系统记录:数据变更记录")
     @RequestMapping(value = "/data/list", method = RequestMethod.GET)
     @ResponseBody
-    protected Page<EntityRevision> revisionList(HttpServletRequest request) {
+    public Page<EntityRevision> revisionList(HttpServletRequest request) {
         String clazz = request.getParameter("clazz");
         Class<?> entityClass = ClassUtils.forName(clazz);
 
@@ -221,7 +221,7 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
      * @param value 版本属性数据值
      * @return 格式化后处理的字符串
      */
-    protected String convertPropertyDisplay(Object entity, Field field, Object value) {
+    private String convertPropertyDisplay(Object entity, Field field, Object value) {
         if (value == null) {
             return "";
         }

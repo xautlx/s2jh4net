@@ -51,13 +51,15 @@
                     formatter : 'timestamp'
                 }, {
                     label : '处理类',
-                    name : 'controllerClassLabel',
-                    width : 100,
-                    align : 'center'
+                    name : 'controllerClassDisplay',
+                    index : 'controllerClassName_OR_controllerClassLabel',
+                    width : 250,
+                    align : 'left'
                 }, {
                     label : '处理方法',
-                    name : 'controllerMethodLabel',
-                    width : 100,
+                    name : 'controllerMethodDisplay',
+                    index : 'controllerMethodName_OR_controllerMethodLabel',
+                    width : 150,
                     align : 'center'
                 }, {
                     label : '操作账号标识',
@@ -73,16 +75,6 @@
                     },
                     align : 'center',
                     width : 60
-                }, {
-                    label : '类名称',
-                    name : 'controllerClassName',
-                    width : 200,
-                    align : 'left'
-                }, {
-                    label : '方法名称',
-                    name : 'controllerMethodName',
-                    width : 100,
-                    align : 'center'
                 }, {
                     label : '方法类型',
                     name : 'controllerMethodType',

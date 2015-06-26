@@ -62,6 +62,15 @@
 			</props>
 		</property>
 	</bean>
+	
+	    <!-- 基础/模拟数据初始化配置 -->
+	<bean id="databaseDataInitializeTrigger" class="lab.s2jh.core.data.DatabaseDataInitializeTrigger" init-method="initialize">
+		<property name="initializeProcessors">
+			<list>
+				<ref bean="basicDatabaseDataInitialize" />
+			</list>
+		</property>
+	</bean>
 
 	<!-- JPA 事务配置 -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

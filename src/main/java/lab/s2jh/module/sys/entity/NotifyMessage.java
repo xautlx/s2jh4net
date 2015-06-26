@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.entity.AttachmentableEntity;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.WebFormatter;
 import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
@@ -35,7 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "sys_NotifyMessage")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "公告消息")
-public class NotifyMessage extends BaseNativeEntity implements AttachmentableEntity {
+public class NotifyMessage extends BaseNativeEntity {
 
     private static final long serialVersionUID = 2544390748513253055L;
 
@@ -65,11 +64,11 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
     @Column(length = 200, nullable = true)
     private String platform;
 
-    @MetaData(value = "消息目标列表", comments = "用标签来进行大规模的设备属性、用户属性分群，各元素之间为OR取并集。没有值=全部，其他为数据字典项逗号分隔组合，如：student, teacher")
+    @MetaData(value = "消息目标属性OR并集", comments = "用标签来进行大规模的设备属性、用户属性分群，各元素之间为OR取并集。没有值=全部，其他为数据字典项逗号分隔组合，如：student, teacher")
     @Column(length = 1000, nullable = true)
     private String audienceTags;
 
-    @MetaData(value = "消息目标组合", comments = "用标签来进行大规模的设备属性、用户属性分群，各元素之间为AND取交集。没有值=全部，其他为数据字典项逗号分隔组合，如：student, school_01")
+    @MetaData(value = "消息目标属性AND交集", comments = "用标签来进行大规模的设备属性、用户属性分群，各元素之间为AND取交集。没有值=全部，其他为数据字典项逗号分隔组合，如：student, school_01")
     @Column(length = 1000, nullable = true)
     private String audienceAndTags;
 
@@ -151,4 +150,15 @@ public class NotifyMessage extends BaseNativeEntity implements AttachmentableEnt
         return false;
     }
 
+    @MetaData(value = "辅助方法：用于表单数据绑定")
+    @Transient
+    public String[] getPlatformSplit() {
+        return StringUtils.isNotBlank(platform) ? platform.split(",") : null;
+    }
+
+    @MetaData(value = "辅助方法：用于表单数据绑定")
+    @Transient
+    public void setPlatformSplit(String[] platformSplit) {
+        platform = platformSplit != null ? StringUtils.join(platformSplit, ",") : null;
+    }
 }

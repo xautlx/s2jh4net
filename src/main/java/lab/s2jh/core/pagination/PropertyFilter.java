@@ -59,6 +59,8 @@ public class PropertyFilter {
 
     private final static Logger logger = LoggerFactory.getLogger(PropertyFilter.class);
 
+    private static final int DEFAULT_PAGE_ROWS = 20;
+
     /** 多个属性间OR关系的分隔符. */
     public static final String OR_SEPARATOR = "_OR_";
 
@@ -342,16 +344,17 @@ public class PropertyFilter {
 
     /**
      * 从request对象中提取组装分页和排序对象，参数列表：
-     * rows 每页记录数，默认20
+     * rows 每页记录数，如果值为空则取rows参数值；如果值为负数则返回null表示不分页
      * page 当前页码数，从1开始，默认为1
      * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
      * sidx 排序属性名称
      * sord 排序规则，asc=升序，desc=降序，默认asc
-     * @param request 
-     * @return
+     * @param request  HttpServletRequest对象
+     * @param defaultRows  如果request中未提供rows参数时默认记录数
+     * @return 
      */
-    public static Pageable buildPageableFromHttpRequest(HttpServletRequest request) {
-        return buildPageableFromHttpRequest(request, null);
+    public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, int defaultRows) {
+        return buildPageableFromHttpRequest(request, null, defaultRows);
     }
 
     /**
@@ -361,17 +364,36 @@ public class PropertyFilter {
      * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
      * sidx 排序属性名称
      * sord 排序规则，asc=升序，desc=降序，默认asc
+     * @param request  HttpServletRequest对象
+     * @return 
+     */
+    public static Pageable buildPageableFromHttpRequest(HttpServletRequest request) {
+        return buildPageableFromHttpRequest(request, null, DEFAULT_PAGE_ROWS);
+    }
+
+    /**
+     * 从request对象中提取组装分页和排序对象，参数列表：
+     * rows 每页记录数，如果值为空则取rows参数值；如果值为负数则返回null表示不分页
+     * page 当前页码数，从1开始，默认为1
+     * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
+     * sidx 排序属性名称
+     * sord 排序规则，asc=升序，desc=降序，默认asc
      * @param request 
      * @param sort 如果传入参数为null，则从request构建，否则直接取输入sort参数
+     * @param defaultRows  如果request中未提供rows参数时默认记录数
      * @return
      */
-    public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort) {
-        String strRows = StringUtils.isBlank(request.getParameter("rows")) ? "20" : request.getParameter("rows");
-        if (Integer.valueOf(strRows) < 0) {
-            return null;
+    public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort, int defaultRows) {
+        int rows = defaultRows;
+        String paramRows = request.getParameter("rows");
+        if (StringUtils.isNotBlank(paramRows)) {
+            int pr = Integer.valueOf(paramRows);
+            if (pr <= 0) {
+                return null;
+            } else {
+                rows = pr;
+            }
         }
-
-        int rows = Integer.valueOf(strRows);
         int offset = -1;
         int page = 1;
         String strStart = request.getParameter("start");
@@ -392,6 +414,22 @@ public class PropertyFilter {
             sort = buildSortFromHttpRequest(request);
         }
         return new ExtPageRequest(offset, page - 1, Integer.valueOf(rows), sort);
+    }
+
+    /**
+     * 从request对象中提取组装分页和排序对象，参数列表：
+     * rows 每页记录数，默认20
+     * page 当前页码数，从1开始，默认为1
+     * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
+     * sidx 排序属性名称
+     * sord 排序规则，asc=升序，desc=降序，默认asc
+     * @param request 
+     * @param sort 如果传入参数为null，则从request构建，否则直接取输入sort参数
+     * @param defaultRows  如果request中未提供rows参数时默认记录数
+     * @return
+     */
+    public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort) {
+        return buildPageableFromHttpRequest(request, sort, DEFAULT_PAGE_ROWS);
     }
 
     /**

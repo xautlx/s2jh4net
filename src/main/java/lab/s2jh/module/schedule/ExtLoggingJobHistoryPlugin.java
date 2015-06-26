@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import lab.s2jh.aud.entity.JobRunHist;
-import lab.s2jh.aud.service.JobRunHistService;
+import lab.s2jh.aud.service.JobRunHistFacadeService;
 import lab.s2jh.core.context.SpringContextHolder;
 
 import org.quartz.JobExecutionContext;
@@ -30,7 +30,7 @@ public class ExtLoggingJobHistoryPlugin extends LoggingJobHistoryPlugin {
             return;
         }
 
-        JobRunHistService jobRunHistService = SpringContextHolder.getBean(JobRunHistService.class);
+        JobRunHistFacadeService jobRunHistFacadeService = SpringContextHolder.getBean(JobRunHistFacadeService.class);
         JobRunHist jobRunHist = new JobRunHist();
         try {
             jobRunHist.setNodeId(InetAddress.getLocalHost().toString());
@@ -65,7 +65,7 @@ public class ExtLoggingJobHistoryPlugin extends LoggingJobHistoryPlugin {
                 jobRunHist.setResult(result);
             }
         }
-        jobRunHistService.saveWithAsyncAndNewTransition(jobRunHist);
+        jobRunHistFacadeService.saveWithAsyncAndNewTransition(jobRunHist);
     }
 
 }
