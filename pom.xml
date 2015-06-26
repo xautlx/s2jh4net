@@ -33,7 +33,6 @@
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<hibernate.version>4.3.5.Final</hibernate.version>
 		<mybatis.version>3.2.8</mybatis.version>
-		<javassist.version>3.15.0-GA</javassist.version>
 		<spring-data-jpa.version>1.7.1.RELEASE</spring-data-jpa.version>
 		<spring-data-redis.version>1.4.1.RELEASE</spring-data-redis.version>
 		<cxf.version>2.7.0</cxf.version>
@@ -201,15 +200,6 @@
 			<version>${sitemesh.version}</version>
 		</dependency>
 		<!-- WEB end -->
-
-
-
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>${javassist.version}</version>
-			<type>jar</type>
-		</dependency>
 
 		<!-- SPRING basic begin(一般不需要显式定义) -->
 		<dependency>
