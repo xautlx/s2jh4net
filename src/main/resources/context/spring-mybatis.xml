@@ -46,7 +46,7 @@
 		<!-- 显式指定Mapper文件位置 -->
 		<property name="mapperLocations">
 			<list>
-				<value>classpath*:lab/s2jh/module/**/entity/*Mapper.xml</value>
+				<value>classpath*:lab/s2jh/**/entity/*Mapper.xml</value>
 				<value>classpath*:s2jh/biz/**/entity/*Mapper.xml</value>
 			</list>
 		</property>
