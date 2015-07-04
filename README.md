@@ -53,11 +53,7 @@
 
 ![ui-signin](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/img-0065.jpg)
 
-![ui-layout](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/ui-layout.jpg)
-
 ![ui-example](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/ui-example.jpg)
-
-![grid-master-detail](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/grid-master-detail.png)
 
 ## S2JH4Net vs S2JH
 
