@@ -113,7 +113,8 @@ public class UserService extends BaseService<User, Long> {
         if (StringUtils.isNotBlank(rawPassword)) {
             String encodedPassword = encodeUserPasswd(entity, rawPassword);
             if (StringUtils.isNotBlank(entity.getPassword())) {
-                Validation.isTrue(!entity.getPassword().equals(encodedPassword), "变更密码不能与当前密码一样");
+                //为了便于开发调试，开发模式允许相同密码修改
+                Validation.isTrue(DynamicConfigService.isDevMode() || !entity.getPassword().equals(encodedPassword), "变更密码不能与当前密码一样");
             }
             entity.setPassword(encodedPassword);
         }

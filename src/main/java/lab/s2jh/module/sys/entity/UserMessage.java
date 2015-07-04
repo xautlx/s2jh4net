@@ -6,7 +6,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -14,7 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.WebFormatter;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;

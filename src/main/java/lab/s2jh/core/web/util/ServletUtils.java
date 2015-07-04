@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -38,8 +39,10 @@ import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lab.s2jh.support.service.DynamicConfigService;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.ClassUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -61,7 +64,7 @@ public class ServletUtils {
      * 返回的结果的Parameter名已去除前缀.
      */
     public static Map<String, Object> buildParameters(ServletRequest request) {
-        Enumeration paramNames = request.getParameterNames();
+        Enumeration<?> paramNames = request.getParameterNames();
         Map<String, Object> params = new TreeMap<String, Object>();
         String prefix = "search_";
         while ((paramNames != null) && paramNames.hasMoreElements()) {
@@ -373,7 +376,7 @@ public class ServletUtils {
 
     /**
      * 获取文件上传根目录：优先取write_upload_file_dir参数值，如果没有定义则取webapp/upload
-     * @return 返回图片显示的完整URL
+     * @return 返回图片访问相对路径
      */
     public static String writeUploadFile(InputStream fis, String name, long length) {
         if (staticFileUploadDir == null) {
@@ -388,16 +391,43 @@ public class ServletUtils {
             logger.info("Setup file upload root dir:  {}", staticFileUploadDir);
         }
 
-        //            AttachmentFile attachmentFile = AttachmentFile.buildInstance(name, length);
-        //            String path = "/upload" + attachmentFile.getFileRelativePath() + "/" + attachmentFile.getDiskFileName();
-        //            String fullPath = staticFileUploadDir + path;
-        //            logger.debug("Saving upload file: {}", fullPath);
-        //            FileUtils.copyInputStreamToFile(fis, new File(fullPath));
-        //
-        //            AttachmentFileService attachmentFileServiceService = SpringContextHolder.getBean(AttachmentFileService.class);
-        //            attachmentFileServiceService.save(attachmentFile);
+        //简便的做法用UUID作为主键，每次上传都会创建文件对象和数据记录，便于管理，但是存在相同文件重复保存情况
+        String id = UUID.randomUUID().toString();
 
-        return "";
+        //加上年月日分组处理，一方面便于直观看出上传文件日期信息以便批量处理，另一方面合理分组控制目录的个数和层级避免单一目录下文件过多
+        DateTime now = new DateTime();
+        StringBuilder sb = new StringBuilder();
+        int year = now.getYear();
+        sb.append("/" + year);
+        String month = "";
+        int monthOfYear = now.getMonthOfYear();
+        if (monthOfYear < 10) {
+            month = "0" + monthOfYear;
+        } else {
+            month = "" + monthOfYear;
+        }
+        String day = "";
+        int dayOfMonth = now.getDayOfMonth();
+        if (dayOfMonth < 10) {
+            day = "0" + dayOfMonth;
+        } else {
+            day = "" + dayOfMonth;
+        }
+        sb.append("/" + month);
+        sb.append("/" + day);
+        Assert.notNull(id, "id is required to buildInstance");
+        sb.append("/" + id);
+
+        String path = "/upload/" + sb + "/" + name;
+        String fullPath = staticFileUploadDir + path;
+        logger.debug("Saving upload file: {}", fullPath);
+        try {
+            FileUtils.copyInputStreamToFile(fis, new File(fullPath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return path;
 
     }
 }

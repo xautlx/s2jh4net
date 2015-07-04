@@ -1,2 +1,1 @@
-/* here you can put your own css to customize and override the theme */
-
+span.required{color:red;padding:5px}.controls-checkboxes input[type="checkbox"].form-control,.controls-radiobuttons input[type="radio"].form-control{width:10px;height:10px;margin-right:5px;display:inline;margin-right:5px;height:34px}.controls-checkboxes label,.controls-radiobuttons label{vertical-align:middle;height:34px;padding-left:5px;padding-right:15px;padding-top:8px;margin-bottom:0}

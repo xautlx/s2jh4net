@@ -17,11 +17,8 @@ import lab.s2jh.module.auth.dao.RoleR2PrivilegeDao;
 import lab.s2jh.module.auth.entity.Privilege;
 import lab.s2jh.module.auth.entity.RoleR2Privilege;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class PrivilegeService extends BaseService<Privilege, Long> {
-
-    private final Logger logger = LoggerFactory.getLogger(PrivilegeService.class);
 
     @Autowired
     private PrivilegeDao privilegeDao;
@@ -57,16 +52,14 @@ public class PrivilegeService extends BaseService<Privilege, Long> {
     }
 
     @Transactional(readOnly = true)
-    public Page<Privilege> findUnRelatedPrivilegesForRole(final String roleId, final GroupPropertyFilter groupFilter,
-            Pageable pageable) {
+    public Page<Privilege> findUnRelatedPrivilegesForRole(final String roleId, final GroupPropertyFilter groupFilter, Pageable pageable) {
         Specification<Privilege> specification = new Specification<Privilege>() {
             @Override
             public Predicate toPredicate(Root<Privilege> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 Predicate predicate = buildPredicatesFromFilters(groupFilter, root, query, builder);
                 Subquery<RoleR2Privilege> sq = query.subquery(RoleR2Privilege.class);
                 Root<RoleR2Privilege> r2 = sq.from(RoleR2Privilege.class);
-                sq.where(builder.equal(r2.get("privilege"), root), builder.equal(r2.get("role").get("id"), roleId))
-                        .select(r2);
+                sq.where(builder.equal(r2.get("privilege"), root), builder.equal(r2.get("role").get("id"), roleId)).select(r2);
                 return builder.and(predicate, builder.not(builder.exists(sq)));
             }
         };
@@ -79,31 +72,22 @@ public class PrivilegeService extends BaseService<Privilege, Long> {
     }
 
     @Override
-    @CacheEvict(value = "SpringSecurityCache", allEntries = true)
     public Privilege save(Privilege entity) {
         return super.save(entity);
     }
 
     @Override
-    @CacheEvict(value = "SpringSecurityCache", allEntries = true)
     public void delete(Privilege entity) {
         super.delete(entity);
     }
 
     @Override
-    @CacheEvict(value = "SpringSecurityCache", allEntries = true)
     public List<Privilege> save(Iterable<Privilege> entities) {
         return super.save(entities);
     }
 
     @Override
-    @CacheEvict(value = "SpringSecurityCache", allEntries = true)
     public void delete(Iterable<Privilege> entities) {
         super.delete(entities);
-    }
-
-    @CacheEvict(value = "SpringSecurityCache", allEntries = true)
-    public void updateRelatedRoleR2s(String id, String[] roleIds) {
-        //updateRelatedR2s(id, roleIds, "roleR2Privileges", "role");
     }
 }

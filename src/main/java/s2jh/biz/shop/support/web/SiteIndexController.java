@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.exception.ServiceException;
 import lab.s2jh.core.service.BaseService;
-import lab.s2jh.core.service.GlobalConfigService;
 import lab.s2jh.core.util.ImageUtils;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
@@ -21,8 +20,8 @@ import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
 import lab.s2jh.module.auth.service.UserService;
+import lab.s2jh.module.sys.service.SmsVerifyCodeService;
 import lab.s2jh.support.service.DynamicConfigService;
-import lab.s2jh.support.service.VerifyCodeService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -55,7 +54,7 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
     private SiteUserService siteUserService;
 
     @Autowired
-    private VerifyCodeService verifyCodeService;
+    private SmsVerifyCodeService smsVerifyCodeService;
 
     @Autowired
     private DynamicConfigService dynamicConfigService;
@@ -79,7 +78,7 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
     @ResponseBody
     public OperationResult passwordResetSmsValidate(HttpServletRequest request, SiteUser entity, Model model, @RequestParam("mobile") String mobile,
             @RequestParam("smsCode") String smsCode, @RequestParam(value = "newpasswd", required = false) String newpasswd) {
-        if (verifyCodeService.verifySmsCode(request, mobile, smsCode)) {
+        if (smsVerifyCodeService.verifySmsCode(request, mobile, smsCode)) {
             User user = userService.findByAuthTypeAndAuthUid(AuthTypeEnum.SYS, mobile);
             if (user == null) {
                 return OperationResult.buildFailureResult("号码尚未注册", "NoUser");

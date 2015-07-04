@@ -30,13 +30,13 @@
 			</div>
 		</div>
 		<div class="portlet-body">
-			<form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
-				action="${ctx}/todo" method="post" data-editrulesurl="false" modelAttribute="entity">
+			<form:form class="form-horizontal form-bordered form-label-stripped form-validation" action="${ctx}/todo"
+				method="post" data-editrulesurl="false" modelAttribute="entity">
 				<form:hidden path="id" />
 				<form:hidden path="version" />
 				<div class="form-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label" data-tooltips="[输入提示说明内容]" data-tooltipster-position="bottom">普通文本输入元素/输入提示</label>
 								<div class="controls">
@@ -44,12 +44,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-1">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initControlLabelTooltips" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initControlLabelTooltips" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">个人收藏支持功能的表单输入组件</label>
 								<div class="controls">
@@ -57,8 +57,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-1">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDataProfileParam" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDataProfileParam" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
@@ -82,7 +82,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-5">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">表单数据显示</label>
 								<div class="controls">
@@ -91,7 +91,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-2"></div>
 					</div>
 				</div>
 			</form:form>
@@ -169,11 +169,11 @@
 			</div>
 		</div>
 		<div class="portlet-body">
-			<form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
-				action="${ctx}/todo" method="post" data-editrulesurl="false" modelAttribute="entity">
+			<form:form class="form-horizontal form-bordered form-label-stripped form-validation" action="${ctx}/todo"
+				method="post" data-editrulesurl="false" modelAttribute="entity">
 				<div class="form-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">手机号码</label>
 								<div class="controls">
@@ -182,10 +182,9 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6"></div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">手机验证码</label>
 								<div class="controls">
@@ -197,8 +196,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindBtnSendSmsCode" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindBtnSendSmsCode" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
@@ -207,7 +206,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">图片验证码</label>
 								<div class="controls">
@@ -223,8 +222,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindCaptchaCode" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindCaptchaCode" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
@@ -234,7 +233,7 @@
 					</div>
 
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">触发弹窗组件</label>
 								<div class="controls">
@@ -244,34 +243,34 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindModalAjaxify" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindModalAjaxify" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
-								<label class="control-label">按钮直接发起POST请求</label>
+								<label class="control-label">按钮发起POST请求</label>
 								<div class="controls">
 									<button class="btn blue btn-post-url" type="button" data-url="${ctx}/docs/mock/btn-post" data-confirm="确认提交请求？">模拟按钮POST请求</button>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindBtnPostUrl" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindBtnPostUrl" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
-								<label class="control-label">扩展支持AJAX加载Tab组件</label>
+								<label class="control-label">扩展AJAX加载Tab组件</label>
 								<div class="controls">
 									<p class="form-control-static">扩展Bootstrap默认的Tab组件支持AJAX加载页面，详见各功能编辑tab界面</p>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindExtBootstrapTab" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindExtBootstrapTab" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 				</div>
@@ -295,7 +294,7 @@
 				<form:hidden path="version" />
 				<div class="form-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">基于zTree的树形选取组件</label>
 								<div class="controls">
@@ -305,12 +304,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTreeSelect" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTreeSelect" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">以Dropdown形式弹出AJAX加载DIV区域</label>
 								<div class="controls">
@@ -319,12 +318,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDropdownSelect" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDropdownSelect" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">基于Select2组件扩展标准的下拉框组件</label>
 								<div class="controls">
@@ -332,12 +331,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">基于Select2组件combobox下拉可输入组件</label>
 								<div class="controls">
@@ -345,12 +344,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">基于输入内容remote查询列表选取组件</label>
 								<div class="controls">
@@ -359,13 +358,13 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Remote" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Remote" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-10">
 						<div class="form-group">
 							<label class="control-label">自由输入多个Tag(从标签数组中选取)</label>
 							<div class="controls">
@@ -373,12 +372,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">JSDoc</a></span>
+					<div class="col-md-2">
+						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">Javascript用法文档</a></span>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-10">
 						<div class="form-group">
 							<label class="control-label">选取多个Tag(Remote查询选取)</label>
 							<div class="controls">
@@ -387,12 +386,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">JSDoc</a></span>
+					<div class="col-md-2">
+						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">Javascript用法文档</a></span>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-10">
 						<div class="form-group">
 							<label class="control-label">基于multiSelect封装的左右互选组件</label>
 							<div class="controls">
@@ -401,8 +400,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initMultiSelectDouble" target="_blank">JSDoc</a></span>
+					<div class="col-md-2">
+						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initMultiSelectDouble" target="_blank">Javascript用法文档</a></span>
 					</div>
 				</div>
 				<div class="row">
@@ -411,7 +410,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-10">
 						<div class="form-group">
 							<label class="control-label">下拉级联组件-触发元素</label>
 							<div class="controls">
@@ -424,12 +423,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">JSDoc</a></span>
+					<div class="col-md-2">
+						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a></span>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-10">
 						<div class="form-group">
 							<label class="control-label">下拉级联组件-目标元素</label>
 							<div class="controls">
@@ -438,7 +437,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6"></div>
+					<div class="col-md-2"></div>
 				</div>
 			</form:form>
 		</div>
@@ -460,7 +459,7 @@
 				<form:hidden path="version" />
 				<div class="form-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">年月日 日期选取组件</label>
 								<div class="controls">
@@ -468,12 +467,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDatePicker" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDatePicker" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">年月日-时分 选取组件</label>
 								<div class="controls">
@@ -481,12 +480,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDateTimePicker" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDateTimePicker" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">时间段 选取组件</label>
 								<div class="controls">
@@ -494,8 +493,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDateRangePicker" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDateRangePicker" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 				</div>
@@ -528,7 +527,7 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTextareaMaxlength" target="_blank">JSDoc</a></span>
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTextareaMaxlength" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
@@ -541,7 +540,7 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTextareaHtmleditor" target="_blank">JSDoc</a></span>
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTextareaHtmleditor" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 				</div>
@@ -565,7 +564,7 @@
 				<form:hidden path="version" />
 				<div class="form-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">单文件上传组件</label>
 								<div class="controls">
@@ -573,12 +572,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadSingleFile" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadSingleFile" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">单图片文件上传预览组件</label>
 								<div class="controls">
@@ -587,12 +586,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadSingleImage" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadSingleImage" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-10">
 							<div class="form-group">
 								<label class="control-label">多图片文件上传预览组件</label>
 								<div class="controls">
@@ -604,8 +603,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadMultiImage" target="_blank">JSDoc</a></span>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadMultiImage" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 				</div>
@@ -623,7 +622,7 @@
 			</div>
 		</div>
 		<div class="portlet-body">
-			<form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
+			<form:form class="form-horizontal form-bordered form-label-stripped form-validation"
 				action="${ctx}/docs/mock/dynamic-table" method="post" data-editrulesurl="false" modelAttribute="entity">
 				<form:hidden path="id" />
 				<form:hidden path="version" />
@@ -713,7 +712,7 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDynamicTable" target="_blank">JSDoc</a></span>
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDynamicTable" target="_blank">Javascript用法文档</a></span>
 						</div>
 					</div>
 				</div>
@@ -856,13 +855,97 @@
 	<div class="portlet gren">
 		<div class="portlet-title">
 			<div class="caption">
-				<i class="fa fa-reorder"></i> TODO
+				<i class="fa fa-reorder"></i> 百度地图
 			</div>
 			<div class="tools">
 				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
-		<div class="portlet-body"></div>
+		<div class="portlet-body">
+			<form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
+				action="${ctx}/todo" method="post" data-editrulesurl="false" modelAttribute="entity">
+				<div class="form-body">
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label class="control-label">以地址信息初始化地图</label>
+								<div class="controls">
+									<div class="gmaps gmaps-baidu gmaps-demo-location" data-location="北京市朝阳区望京SOHO" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initGmapsBaidu" target="_blank">Javascript用法文档</a></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label class="control-label">位置信息</label>
+								<div class="controls">
+									<input type="text" class="form-control" name="location" value="北京市朝阳区望京SOHO"> <span class="help-block">点击地图更新位置信息</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2"></div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<hr>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label class="control-label">以经纬度坐标初始化地图</label>
+								<div class="controls">
+									<div class="gmaps gmaps-baidu gmaps-demo-point" data-point-longitude="116.487423"
+										data-point-latitude="40.001965" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initGmapsBaidu" target="_blank">Javascript用法文档</a></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label class="control-label">经度坐标</label>
+								<div class="controls">
+									<input type="text" class="form-control" name="longitude" value="116.487423"> <span class="help-block">点击地图更新坐标信息</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label class="control-label">纬度坐标</label>
+								<div class="controls">
+									<input type="text" class="form-control" name="latitude" value="40.001965"> <span class="help-block">点击地图更新坐标信息</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script type="text/javascript">
+                    $(function() {
+                        $(".gmaps-demo-location").on("clickMapPoint", function(event, geocoderResult) {
+                            var $el = $(this);
+                            $el.closest("form").find("input[name='location']").val(geocoderResult.fullAddress);
+                        })
+
+                        $(".gmaps-demo-point").on("clickMapPoint", function(event, geocoderResult) {
+                            var $el = $(this);
+                            $el.closest("form").find("input[name='longitude']").val(geocoderResult.point.lng);
+                            $el.closest("form").find("input[name='latitude']").val(geocoderResult.point.lat);
+                        })
+                    });
+                </script>
+			</form:form>
+		</div>
 	</div>
 
 	<div class="portlet gren">
@@ -925,7 +1008,7 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindTableInfiniteScroll" target="_blank">JSDoc</a></span>
+					<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindTableInfiniteScroll" target="_blank">Javascript用法文档</a></span>
 				</div>
 			</div>
 

@@ -276,11 +276,11 @@
         <h5>Example</h5>
         
     <pre class="prettyprint"><code><pre>
-            <button class="btn blue btn-post-url" type="button"
-                data-url="${base}/myt/purchase/purchase-order!bpmSave?id=<s:property value='%{id}' />&taskId=<s:property value='%{#parameters.taskId}' />"
+            &lt;button class="btn blue btn-post-url" type="button"
+                data-url="${base}/myt/purchase/purchase-order!bpmSave?id=&lt;s:property value='%{id}' />&taskId=&lt;s:property value='%{#parameters.taskId}' />"
                 data-confirm="确认提交请求？">
                模拟按钮POST请求
-            </button></pre></code></pre>
+            &lt;/button></pre></code></pre>
 
     
 </dd>
@@ -539,15 +539,15 @@
         <h5>Example</h5>
         
     <pre class="prettyprint"><code><pre>
-            <div class="input-group">
-                <div class="input-icon">
-                    <i class="fa fa-qrcode"></i> <input class="form-control captcha-text" type="text" autocomplete="off"
+            &lt;div class="input-group">
+                &lt;div class="input-icon">
+                    &lt;i class="fa fa-qrcode">&lt;/i> &lt;input class="form-control captcha-text" type="text" autocomplete="off"
                         placeholder="验证码...看不清可点击图片可刷新" name="captcha" required="true" />
-                </div>
-                <span class="input-group-btn" style="cursor: pointer;"> <img alt="验证码" class="captcha-img"
+                &lt;/div>
+                &lt;span class="input-group-btn" style="cursor: pointer;"> &lt;img alt="验证码" class="captcha-img"
                     src="${ctx}/assets/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
-                </span>
-            </div></pre></code></pre>
+                &lt;/span>
+            &lt;/div></pre></code></pre>
 
     
 </dd>
@@ -704,13 +704,13 @@
         <h5>Example</h5>
         
     <pre class="prettyprint"><code><pre>
-            <div class="tabbable tabbable-custom">
-                <ul class="nav nav-tabs" data-active="${param._tab_active}">
-                    <li class="tools pull-right"><a href="javascript:;" class="btn default reload"><i class="fa fa-refresh"></i></a></li>
-                    <li><a data-toggle="tab" href="${ctx}/admin/auth/role/edit?id=${id}">基本信息</a></li>
-                    <li><a data-toggle="tab" href="${ctx}/admin/auth/role/privileges?id=${id}" data-tab-disabled="${entity.isNew()}">权限关联</a></li>
-                </ul>
-            </div></pre></code></pre>
+            &lt;div class="tabbable tabbable-custom">
+                &lt;ul class="nav nav-tabs" data-active="${param._tab_active}">
+                    &lt;li class="tools pull-right">&lt;a href="javascript:;" class="btn default reload">&lt;i class="fa fa-refresh">&lt;/i>&lt;/a>&lt;/li>
+                    &lt;li>&lt;a data-toggle="tab" href="${ctx}/admin/auth/role/edit?id=${id}">基本信息&lt;/a>&lt;/li>
+                    &lt;li>&lt;a data-toggle="tab" href="${ctx}/admin/auth/role/privileges?id=${id}" data-tab-disabled="${entity.isNew()}">权限关联&lt;/a>&lt;/li>
+                &lt;/ul>
+            &lt;/div></pre></code></pre>
 
     
 </dd>
@@ -1002,7 +1002,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line644">line 644</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line731">line 731</a>
     </li></ul></dd>
     
     
@@ -1135,7 +1135,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line693">line 693</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line702">line 702</a>
     </li></ul></dd>
     
     
@@ -1255,7 +1255,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line15">line 15</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line18">line 18</a>
     </li></ul></dd>
     
     
@@ -1369,6 +1369,24 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>data-today-btn</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">是否显示“今日”按钮，可选属性默认为true</td>
+        </tr>
+	
+	
 	</tbody>
 </table></dl>
         
@@ -1393,7 +1411,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line522">line 522</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line526">line 526</a>
     </li></ul></dd>
     
     
@@ -1531,7 +1549,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line611">line 611</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line620">line 620</a>
     </li></ul></dd>
     
     
@@ -1669,7 +1687,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line571">line 571</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line580">line 580</a>
     </li></ul></dd>
     
     
@@ -2012,6 +2030,171 @@
         <h5>Example</h5>
         
     <pre class="prettyprint"><code> &lt;label class="control-label" data-tooltips="[输入提示说明内容]">金额&lt;/label></code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="initGmapsBaidu"><span class="type-signature"></span>initGmapsBaidu<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        添加百度地图定位功能: .gmaps .gmaps-baidu地图点击后，会触发元素绑定的clickMapPoint事件，回传百度地图GeocoderResult结构对象
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-location='基于给定的地址字符串定位'</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-point-longitude='根据经纬度坐标定位'</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data-point-latitude="根据经纬度坐标定位"</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line658">line 658</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%9C%8D%E5%8A%A1%E7%B1%BB/GeocoderResult">http://developer.baidu.com/map/reference/index.php?title=Class:%E6%9C%8D%E5%8A%A1%E7%B1%BB/GeocoderResult</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Examples</h5>
+        
+    <pre class="prettyprint"><code> <pre>&lt;div class="gmaps gmaps-baidu" data-location="${entity.address}" /></pre></code></pre>
+
+    <pre class="prettyprint"><code> <pre>&lt;div class="gmaps gmaps-baidu" data-point-longitude="${entity.longitude}" data-point-latitude="${entity.latitude}" /></pre></code></pre>
 
     
 </dd>
@@ -2473,7 +2656,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line779">line 779</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line788">line 788</a>
     </li></ul></dd>
     
     
@@ -2782,7 +2965,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line2993">line 2993</a>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line3008">line 3008</a>
     </li></ul></dd>
     
     
@@ -3513,7 +3696,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line3059">line 3059</a>
+        <a href="grid.js.html">admin/app/grid.js</a>, <a href="grid.js.html#line3074">line 3074</a>
     </li></ul></dd>
     
     
@@ -3671,7 +3854,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line749">line 749</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line758">line 758</a>
     </li></ul></dd>
     
     
@@ -3791,7 +3974,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line727">line 727</a>
+        <a href="page.js_.html">w/app/page.js</a>, <a href="page.js_.html#line736">line 736</a>
     </li></ul></dd>
     
     
@@ -3947,7 +4130,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line111">line 111</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line114">line 114</a>
     </li></ul></dd>
     
     
@@ -4103,7 +4286,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line125">line 125</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line128">line 128</a>
     </li></ul></dd>
     
     
@@ -4144,7 +4327,7 @@
     
     
     <div class="description">
-        单图片上传组件: input[data-multiimage]
+        多图片上传组件: input[data-multiimage]
     </div>
     
 
@@ -4259,7 +4442,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line287">line 287</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line290">line 290</a>
     </li></ul></dd>
     
     
@@ -4379,7 +4562,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line543">line 543</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line546">line 546</a>
     </li></ul></dd>
     
     
@@ -4535,7 +4718,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line165">line 165</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line168">line 168</a>
     </li></ul></dd>
     
     
@@ -4763,7 +4946,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line585">line 585</a>
+        <a href="page.js.html">admin/app/page.js</a>, <a href="page.js.html#line588">line 588</a>
     </li></ul></dd>
     
     
@@ -5742,13 +5925,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="AdminPage.html">AdminPage</a></li><li><a href="Global_.html">Global</a></li><li><a href="Grid.html">Grid</a></li><li><a href="SitePage.html">SitePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bindBtnPostUrl">bindBtnPostUrl</a></li><li><a href="global.html#bindBtnSendSmsCode">bindBtnSendSmsCode</a></li><li><a href="global.html#bindCaptchaCode">bindCaptchaCode</a></li><li><a href="global.html#bindExtBootstrapTab">bindExtBootstrapTab</a></li><li><a href="global.html#bindModalAjaxify">bindModalAjaxify</a></li><li><a href="global.html#bindTableInfiniteScroll">bindTableInfiniteScroll</a></li><li><a href="global.html#initAjaxBeforeShow">initAjaxBeforeShow</a></li><li><a href="global.html#initControlLabelTooltips">initControlLabelTooltips</a></li><li><a href="global.html#initDataProfileParam">initDataProfileParam</a></li><li><a href="global.html#initDatePicker">initDatePicker</a></li><li><a href="global.html#initDateRangePicker">initDateRangePicker</a></li><li><a href="global.html#initDateTimePicker">initDateTimePicker</a></li><li><a href="global.html#initDropdownSelect">initDropdownSelect</a></li><li><a href="global.html#initDynamicTable">initDynamicTable</a></li><li><a href="global.html#initGrid">initGrid</a></li><li><a href="global.html#initImagePreivew">initImagePreivew</a></li><li><a href="global.html#initMultiSelectDouble">initMultiSelectDouble</a></li><li><a href="global.html#initRecursiveSubGrid">initRecursiveSubGrid</a></li><li><a href="global.html#initSelect2">initSelect2</a></li><li><a href="global.html#initSelect2Remote">initSelect2Remote</a></li><li><a href="global.html#initSelect2Tags">initSelect2Tags</a></li><li><a href="global.html#initSubGrid">initSubGrid</a></li><li><a href="global.html#initTextareaHtmleditor">initTextareaHtmleditor</a></li><li><a href="global.html#initTextareaMaxlength">initTextareaMaxlength</a></li><li><a href="global.html#initTreeSelect">initTreeSelect</a></li><li><a href="global.html#initUploadBigFile">initUploadBigFile</a></li><li><a href="global.html#initUploadMultiImage">initUploadMultiImage</a></li><li><a href="global.html#initUploadSingleFile">initUploadSingleFile</a></li><li><a href="global.html#initUploadSingleImage">initUploadSingleImage</a></li><li><a href="global.html#initXEditable">initXEditable</a></li><li><a href="global.html#jqgrid-getAtLeastOneSelectedItem">jqgrid-getAtLeastOneSelectedItem</a></li><li><a href="global.html#jqgrid-getEditingRowdata">jqgrid-getEditingRowdata</a></li><li><a href="global.html#jqgrid-getOnlyOneSelectedItem">jqgrid-getOnlyOneSelectedItem</a></li><li><a href="global.html#jqgrid-getSelectedRowdata">jqgrid-getSelectedRowdata</a></li><li><a href="global.html#jqgrid-getSelectedRowdatas">jqgrid-getSelectedRowdatas</a></li><li><a href="global.html#jqgrid-isEditingMode">jqgrid-isEditingMode</a></li><li><a href="global.html#jqgrid-refresh">jqgrid-refresh</a></li><li><a href="global.html#jqgrid-setEditingRowdata">jqgrid-setEditingRowdata</a></li><li><a href="global.html#jqgrid-sumColumn">jqgrid-sumColumn</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="AdminPage.html">AdminPage</a></li><li><a href="Global_.html">Global</a></li><li><a href="Grid.html">Grid</a></li><li><a href="SitePage.html">SitePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bindBtnPostUrl">bindBtnPostUrl</a></li><li><a href="global.html#bindBtnSendSmsCode">bindBtnSendSmsCode</a></li><li><a href="global.html#bindCaptchaCode">bindCaptchaCode</a></li><li><a href="global.html#bindExtBootstrapTab">bindExtBootstrapTab</a></li><li><a href="global.html#bindModalAjaxify">bindModalAjaxify</a></li><li><a href="global.html#bindTableInfiniteScroll">bindTableInfiniteScroll</a></li><li><a href="global.html#initAjaxBeforeShow">initAjaxBeforeShow</a></li><li><a href="global.html#initControlLabelTooltips">initControlLabelTooltips</a></li><li><a href="global.html#initDataProfileParam">initDataProfileParam</a></li><li><a href="global.html#initDatePicker">initDatePicker</a></li><li><a href="global.html#initDateRangePicker">initDateRangePicker</a></li><li><a href="global.html#initDateTimePicker">initDateTimePicker</a></li><li><a href="global.html#initDropdownSelect">initDropdownSelect</a></li><li><a href="global.html#initDynamicTable">initDynamicTable</a></li><li><a href="global.html#initGmapsBaidu">initGmapsBaidu</a></li><li><a href="global.html#initGrid">initGrid</a></li><li><a href="global.html#initImagePreivew">initImagePreivew</a></li><li><a href="global.html#initMultiSelectDouble">initMultiSelectDouble</a></li><li><a href="global.html#initRecursiveSubGrid">initRecursiveSubGrid</a></li><li><a href="global.html#initSelect2">initSelect2</a></li><li><a href="global.html#initSelect2Remote">initSelect2Remote</a></li><li><a href="global.html#initSelect2Tags">initSelect2Tags</a></li><li><a href="global.html#initSubGrid">initSubGrid</a></li><li><a href="global.html#initTextareaHtmleditor">initTextareaHtmleditor</a></li><li><a href="global.html#initTextareaMaxlength">initTextareaMaxlength</a></li><li><a href="global.html#initTreeSelect">initTreeSelect</a></li><li><a href="global.html#initUploadBigFile">initUploadBigFile</a></li><li><a href="global.html#initUploadMultiImage">initUploadMultiImage</a></li><li><a href="global.html#initUploadSingleFile">initUploadSingleFile</a></li><li><a href="global.html#initUploadSingleImage">initUploadSingleImage</a></li><li><a href="global.html#initXEditable">initXEditable</a></li><li><a href="global.html#jqgrid-getAtLeastOneSelectedItem">jqgrid-getAtLeastOneSelectedItem</a></li><li><a href="global.html#jqgrid-getEditingRowdata">jqgrid-getEditingRowdata</a></li><li><a href="global.html#jqgrid-getOnlyOneSelectedItem">jqgrid-getOnlyOneSelectedItem</a></li><li><a href="global.html#jqgrid-getSelectedRowdata">jqgrid-getSelectedRowdata</a></li><li><a href="global.html#jqgrid-getSelectedRowdatas">jqgrid-getSelectedRowdatas</a></li><li><a href="global.html#jqgrid-isEditingMode">jqgrid-isEditingMode</a></li><li><a href="global.html#jqgrid-refresh">jqgrid-refresh</a></li><li><a href="global.html#jqgrid-setEditingRowdata">jqgrid-setEditingRowdata</a></li><li><a href="global.html#jqgrid-sumColumn">jqgrid-sumColumn</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Thu Jun 11 2015 20:06:10 GMT+0800 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.3-dev</a> on Thu Jul 02 2015 10:59:54 GMT+0800 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

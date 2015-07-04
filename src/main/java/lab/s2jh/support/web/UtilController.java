@@ -22,7 +22,6 @@ import lab.s2jh.core.util.ExtStringUtils;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
-import lab.s2jh.support.service.VerifyCodeService;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 
@@ -55,9 +54,6 @@ public class UtilController {
 
     @Autowired
     private CacheManager cacheManager;
-
-    @Autowired
-    private VerifyCodeService verifyCodeService;
 
     @PersistenceContext
     private EntityManager entityManager;

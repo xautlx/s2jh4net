@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.module.bpm.service.ActivitiService;
 

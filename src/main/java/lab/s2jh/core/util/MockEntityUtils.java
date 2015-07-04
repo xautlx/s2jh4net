@@ -50,6 +50,8 @@ public class MockEntityUtils {
 
     private final static RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
 
+    private final static Random random = new Random();
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static <X> X buildMockObject(Class<X> clazz) {
         X x = null;
@@ -149,6 +151,14 @@ public class MockEntityUtils {
      */
     public static long randomLong(int lower, int upper) {
         return randomDataGenerator.nextLong(lower, upper);
+    }
+
+    /**
+     * 返回0-1区间段随机小数
+     * @return
+     */
+    public static double randomDouble() {
+        return random.nextDouble();
     }
 
     /**

@@ -88,6 +88,8 @@
 <script src="${ctx}/assets/plugins/jquery.address/jquery.address-1.5.min.js"></script>
 <script src="${ctx}/assets/plugins/jcrop/js/jquery.Jcrop.min.js"></script>
 
+<script src="http://api.map.baidu.com/api?v=2.0&ak=BuhgYHNTC0BSgrXIu4EbMqDf" type="text/javascript"></script>
+
 <script src="${ctx}/assets/admin/app/util.js"></script>
 <script src="${ctx}/assets/w/app/global.js"></script>
 <script src="${ctx}/assets/admin/app/global.js"></script>
@@ -96,7 +98,7 @@
 <script src="${ctx}/assets/w/app/form-validation.js"></script>
 <script src="${ctx}/assets/w/app/page.js"></script>
 <script src="${ctx}/assets/admin/app/page.js"></script>
-<script src="${ctx}/assets/w/app/biz.js"></script>
+<script src="${ctx}/assets/admin/app/biz.js"></script>
 
 <script>
     $(function() {

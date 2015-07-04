@@ -665,7 +665,7 @@ public class ActivitiService {
      */
     public void startProcessInstanceByKey(String processDefinitionKey, BpmTrackable entity) {
         identityService.setAuthenticatedUserId(AuthContextHolder.getAuthSysUserUid());
-        Map variables = Maps.newHashMap();
+        Map<String, Object> variables = Maps.newHashMap();
         //追加当前实体对象追加到流程变量
         variables.put(BPM_ENTITY_VAR_NAME, entity);
         runtimeService.startProcessInstanceByKey(processDefinitionKey, entity.getBpmBusinessKey(), variables);

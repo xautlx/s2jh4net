@@ -1,6 +1,5 @@
 package lab.s2jh.support.service;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.mail.internet.MimeMessage;

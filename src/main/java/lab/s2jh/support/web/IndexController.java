@@ -13,11 +13,11 @@ import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.service.UserService;
 import lab.s2jh.module.sys.entity.NotifyMessage.NotifyMessagePlatformEnum;
 import lab.s2jh.module.sys.service.NotifyMessageService;
+import lab.s2jh.module.sys.service.SmsVerifyCodeService;
 import lab.s2jh.module.sys.service.UserMessageService;
 import lab.s2jh.module.sys.service.UserProfileDataService;
 import lab.s2jh.support.service.DynamicConfigService;
 import lab.s2jh.support.service.SmsService;
-import lab.s2jh.support.service.VerifyCodeService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -40,7 +40,7 @@ public class IndexController {
     private UserService userService;
 
     @Autowired
-    private VerifyCodeService verifyCodeService;
+    private SmsVerifyCodeService smsVerifyCodeService;
 
     @Autowired
     private DynamicConfigService dynamicConfigService;
@@ -150,7 +150,7 @@ public class IndexController {
     @RequestMapping(value = "/send-sms-code/{mobile}", method = RequestMethod.GET)
     @ResponseBody
     public OperationResult sendSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
-        String code = verifyCodeService.generateSmsCode(request, mobile);
+        String code = smsVerifyCodeService.generateSmsCode(request, mobile);
         String msg = "您的操作验证码为：" + code + "。【请勿向任何人提供您收到的短信验证码】。如非本人操作，请忽略本信息。";
         if (smsService.sendSMS(msg, mobile)) {
             return OperationResult.buildSuccessResult();
