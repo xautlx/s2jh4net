@@ -73,23 +73,12 @@
 		<BUILD_ID>${maven.build.timestamp}</BUILD_ID>
 	</properties>
 
-
 	<!-- 设定除中央仓库(repo1.maven.org/maven2/)外的其他仓库,按设定顺序进行查找. -->
 	<repositories>
 		<repository>
 			<id>central</id>
 			<name>Central Repository</name>
 			<url>http://repo.maven.apache.org/maven2</url>
-		</repository>
-		<repository>
-			<id>oschina</id>
-			<name>oschina repository</name>
-			<url>http://maven.oschina.net/content/groups/public/</url>
-		</repository>
-		<repository>
-			<id>oschina-thirdparty</id>
-			<name>oschina thirdparty repository</name>
-			<url>http://maven.oschina.net/content/repositories/thirdparty/</url>
 		</repository>
 		<repository>
 			<id>org.springframework.maven.milestone</id>
@@ -251,8 +240,6 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<!-- SPRING basic end -->
-
-
 
 		<!-- PERSISTENCE begin -->
 		<!-- hibernate -->
@@ -539,16 +526,21 @@
 			<artifactId>filters</artifactId>
 			<version>2.0.235</version>
 		</dependency>
-
 		<!-- UTILS end -->
 
-		<!-- jasperreports -->
 		<dependency>
-			<groupId>net.sourceforge.jexcelapi</groupId>
-			<artifactId>jxl</artifactId>
-			<version>2.6</version>
-			<scope>compile</scope>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>2.1</version>
+		</dependency>
+		
+		<!-- jasperreports 
+
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
@@ -628,16 +620,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>core</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>javase</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>2.1.7</version>
@@ -670,18 +652,19 @@
 			<artifactId>pinyin4j</artifactId>
 			<version>2.5.0</version>
 		</dependency>
-
+        -->
+      
 		<!-- Excel Support -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.7</version>
+			<version>3.9</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jxls</groupId>
 			<artifactId>jxls-core</artifactId>
-			<version>1.0</version>
+			<version>1.0.6</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<exclusions>
@@ -698,8 +681,14 @@
 		<dependency>
 			<groupId>net.sf.jxls</groupId>
 			<artifactId>jxls-reader</artifactId>
-			<version>1.0</version>
+			<version>1.0.6</version>
 			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6</version>
 			<scope>compile</scope>
 		</dependency>
 
