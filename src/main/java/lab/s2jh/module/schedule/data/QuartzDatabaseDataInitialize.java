@@ -39,19 +39,27 @@ public class QuartzDatabaseDataInitialize {
                 String name = databaseMetaData.getDatabaseProductName().toLowerCase();
                 logger.info("Table QRTZ_TRIGGERS NOT exist, Initializing DDL for {}...", name);
                 //根据不同数据库类型执行不同初始化SQL脚本
-                ClassPathResource resource = null;
+                ResourceDatabasePopulator resourceDatabasePopulator = null;
+                String sqlFile = null;
                 if (name.indexOf("mysql") > -1) {
-                    resource = new ClassPathResource("lab/s2jh/module/schedule/data/quartz/tables_mysql.sql");
+                    sqlFile = "lab/s2jh/module/schedule/data/quartz/tables_mysql.sql";
+                    ClassPathResource resource = new ClassPathResource(sqlFile);
+                    resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
                 } else if (name.indexOf("h2") > -1) {
-                    resource = new ClassPathResource("lab/s2jh/module/schedule/data/quartz/tables_h2.sql");
-                } else if (name.indexOf("microsoft") > -1) {
+                    sqlFile = "lab/s2jh/module/schedule/data/quartz/tables_h2.sql";
+                    ClassPathResource resource = new ClassPathResource(sqlFile);
+                    resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
+                } else if (name.indexOf("microsoft") > -1 || name.indexOf("sql server") > -1) {
                     //In your Quartz properties file, you'll need to set 
                     //org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.MSSQLDelegate
-                    resource = new ClassPathResource("lab/s2jh/module/schedule/data/quartz/tables_sqlServer.sql");
+                    sqlFile = "lab/s2jh/module/schedule/data/quartz/tables_sqlServer.sql";
+                    ClassPathResource resource = new ClassPathResource(sqlFile);
+                    resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
+                    resourceDatabasePopulator.setSeparator("GO");
                 }
 
-                if (resource != null) {
-                    ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
+                if (resourceDatabasePopulator != null) {
+                    logger.info("Executing SQL Scripts: {}", sqlFile);
                     resourceDatabasePopulator.populate(connection);
                 } else {
                     throw new UnsupportedOperationException("Undefined DatabaseProductName: " + name);

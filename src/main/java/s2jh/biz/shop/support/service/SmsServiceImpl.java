@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.support.service.SmsService;
+import lab.s2jh.support.service.SmsService.SmsMessageTypeEnum;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class SmsServiceImpl implements SmsService {
      * @param mobileNum 手机号码
      */
     @Override
-    public boolean sendSMS(String smsContent, String mobileNum) {
+    public boolean sendSMS(String smsContent, String mobileNum, SmsMessageTypeEnum smsType) {
         try {
             if (mobileNum == null || mobileNum.length() != 11 || !mobileNum.startsWith("1")) {
                 logger.warn("Invalid mobile number：" + mobileNum);

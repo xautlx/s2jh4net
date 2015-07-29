@@ -42,17 +42,30 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
      * @return 6位随机数
      */
     public String generateSmsCode(HttpServletRequest request, String mobileNum) {
-        String code = RandomStringUtils.randomNumeric(6);
+
         SmsVerifyCode smsVerifyCode = smsVerifyCodeDao.findByMobileNum(mobileNum);
+        boolean updateCode = false;
         if (smsVerifyCode == null) {
+            updateCode = true;
             smsVerifyCode = new SmsVerifyCode();
             smsVerifyCode.setMobileNum(mobileNum);
+        } else {
+            //已过期
+            if (DateUtils.currentDate().after(smsVerifyCode.getExpireTime())) {
+                updateCode = true;
+            }
         }
-        smsVerifyCode.setCode(code);
-        smsVerifyCode.setGenerateTime(DateUtils.currentDate());
-        //5分钟有效期
-        smsVerifyCode.setExpireTime(new DateTime(smsVerifyCode.getGenerateTime()).plusMinutes(5).toDate());
-        smsVerifyCodeDao.save(smsVerifyCode);
+
+        //如果需要更新则刷新验证码，否则直接返回之前未过期的验证码
+        if (updateCode) {
+            String code = RandomStringUtils.randomNumeric(6);
+            smsVerifyCode.setCode(code);
+            smsVerifyCode.setGenerateTime(DateUtils.currentDate());
+            //5分钟有效期
+            smsVerifyCode.setExpireTime(new DateTime(smsVerifyCode.getGenerateTime()).plusMinutes(5).toDate());
+            smsVerifyCodeDao.save(smsVerifyCode);
+        }
+
         return smsVerifyCode.getCode();
     }
 

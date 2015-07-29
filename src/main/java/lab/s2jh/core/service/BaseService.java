@@ -30,8 +30,6 @@ import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
 
 import lab.s2jh.core.annotation.MetaData;
-import lab.s2jh.core.audit.envers.EntityRevision;
-import lab.s2jh.core.audit.envers.ExtDefaultRevisionEntity;
 import lab.s2jh.core.dao.jpa.BaseDao;
 import lab.s2jh.core.exception.ServiceException;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
@@ -47,10 +45,6 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.query.AuditEntity;
-import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.loader.criteria.CriteriaJoinWalker;
 import org.hibernate.loader.criteria.CriteriaQueryTranslator;
@@ -642,7 +636,6 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
         return getEntityDao().count(spec);
     }
 
-    @SuppressWarnings("unchecked")
     private <X> Predicate buildPredicate(String propertyName, PropertyFilter filter, Root<X> root, CriteriaQuery<?> query, CriteriaBuilder builder,
             Boolean having) {
         Object matchValue = filter.getMatchValue();

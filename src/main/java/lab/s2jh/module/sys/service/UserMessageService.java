@@ -15,6 +15,7 @@ import lab.s2jh.module.sys.entity.UserMessage;
 import lab.s2jh.support.service.MailService;
 import lab.s2jh.support.service.MessagePushService;
 import lab.s2jh.support.service.SmsService;
+import lab.s2jh.support.service.SmsService.SmsMessageTypeEnum;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -100,7 +101,7 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
             if (smsService != null) {
                 String mobileNum = targetUser.getMobile();
                 if (StringUtils.isNotBlank(mobileNum)) {
-                    smsService.sendSMS(entity.getNotification(), mobileNum);
+                    smsService.sendSMS(entity.getNotification(), mobileNum, SmsMessageTypeEnum.Default);
                 }
             } else {
                 logger.warn("SmsService implement NOT found.");
@@ -111,13 +112,15 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
         //APP推送
         if (entity.getAppPush()) {
             if (messagePushService != null) {
-                messagePushService.sendPush(entity);
+                Boolean pushResult = messagePushService.sendPush(entity);
+                if (pushResult == null || pushResult) {
+                    entity.setLastPushTime(DateUtils.currentDate());
+                }
             } else {
                 logger.warn("MessagePushService implement NOT found.");
             }
         }
 
-        entity.setLastPushTime(DateUtils.currentDate());
         userMessageDao.save(entity);
     }
 

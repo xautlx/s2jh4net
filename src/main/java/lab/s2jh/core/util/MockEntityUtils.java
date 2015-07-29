@@ -269,7 +269,7 @@ public class MockEntityUtils {
                 String sql = null;
                 if (name.indexOf("mysql") > -1) {
                     sql = "ALTER TABLE " + table.name() + " AUTO_INCREMENT =" + metaData.autoIncrementInitValue();
-                } else if (name.indexOf("SQL Server") > -1) {
+                } else if (name.indexOf("sql server") > -1) {
                     //DBCC   CHECKIDENT( 'tb ',   RESEED,   20000)  
                     sql = "DBCC CHECKIDENT('" + table.name() + "',RESEED," + metaData.autoIncrementInitValue() + ")";
                 } else if (name.indexOf("h2") > -1) {

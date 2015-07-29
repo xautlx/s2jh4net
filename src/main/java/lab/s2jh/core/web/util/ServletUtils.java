@@ -22,10 +22,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -39,6 +41,7 @@ import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lab.s2jh.support.service.DynamicConfigService;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.ClassUtils;
@@ -314,6 +317,20 @@ public class ServletUtils {
             dataMap.put("req.param[" + paramName + "]", paramValue);
         }
 
+        try {
+            Collection<Part> parts = request.getParts();
+            if (CollectionUtils.isNotEmpty(parts)) {
+                for (Part part : parts) {
+                    String fileName = getFileNameFromPart(part);
+                    dataMap.put("req.part[" + fileName + "]", part.getSubmittedFileName());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+
         if (verbose) {
             Enumeration<?> headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
@@ -355,6 +372,32 @@ public class ServletUtils {
         return dataMap;
     }
 
+    /**
+    * 根据请求头解析出文件名
+    * 请求头的格式：火狐和google浏览器下：form-data; name="file"; filename="snmp4j--api.zip"
+    *                 IE浏览器下：form-data; name="file"; filename="E:\snmp4j--api.zip"
+    * @param header 请求头
+    * @return 文件名
+    */
+    private static String getFileNameFromPart(Part part) {
+        //获取请求头，请求头的格式：form-data; name="file"; filename="snmp4j--api.zip"
+        String header = part.getHeader("content-disposition");
+        /**
+         * String[] tempArr1 = header.split(";");代码执行完之后，在不同的浏览器下，tempArr1数组里面的内容稍有区别
+         * 火狐或者google浏览器下：tempArr1={form-data,name="file",filename="snmp4j--api.zip"}
+         * IE浏览器下：tempArr1={form-data,name="file",filename="E:\snmp4j--api.zip"}
+         */
+        String[] tempArr1 = header.split(";");
+        /**
+         *火狐或者google浏览器下：tempArr2={filename,"snmp4j--api.zip"}
+         *IE浏览器下：tempArr2={filename,"E:\snmp4j--api.zip"}
+         */
+        String[] tempArr2 = tempArr1[2].split("=");
+        //获取文件名，兼容各种浏览器的写法
+        String fileName = tempArr2[1].substring(tempArr2[1].lastIndexOf("\\") + 1).replaceAll("\"", "");
+        return fileName;
+    }
+
     private static String readFileUrlPrefix;
 
     /**
@@ -370,6 +413,20 @@ public class ServletUtils {
             }
         }
         return readFileUrlPrefix;
+    }
+
+    /**
+     * 将URL进行解析处理，如果http打头直接返回，否则添加文件访问路径前缀
+     * @return
+     */
+    public static String parseReadFileUrl(String url) {
+        if (StringUtils.isBlank(url)) {
+            return null;
+        }
+        if (url.startsWith("http")) {
+            return url;
+        }
+        return getReadFileUrlPrefix() + url;
     }
 
     private static String staticFileUploadDir;

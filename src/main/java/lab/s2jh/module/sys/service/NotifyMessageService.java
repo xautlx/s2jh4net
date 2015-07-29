@@ -113,7 +113,7 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
     private List<NotifyMessage> filterByPlatform(List<NotifyMessage> notifyMessages, String platform) {
         List<NotifyMessage> returnList = Lists.newArrayList();
         for (NotifyMessage notifyMessage : notifyMessages) {
-            if (StringUtils.isBlank(notifyMessage.getPlatform()) || platform.equals(notifyMessage.getPlatform())) {
+            if (StringUtils.isBlank(notifyMessage.getPlatform()) || notifyMessage.getPlatform().indexOf(platform) != -1) {
                 returnList.add(notifyMessage);
             }
         }
@@ -260,7 +260,8 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
      */
     public void pushMessage(NotifyMessage entity) {
         if (messagePushService != null) {
-            if (messagePushService.sendPush(entity)) {
+            Boolean pushResult = messagePushService.sendPush(entity);
+            if (pushResult == null || pushResult) {
                 entity.setLastPushTime(DateUtils.currentDate());
                 notifyMessageDao.save(entity);
             }

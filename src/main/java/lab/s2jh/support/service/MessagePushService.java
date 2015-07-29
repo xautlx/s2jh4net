@@ -10,11 +10,13 @@ public interface MessagePushService {
 
     /**
      * 公告消息推送接口
+     * @return 推送结果：null=无需推送，true=推送成功；false=推送失败
      */
-    boolean sendPush(NotifyMessage notifyMessage);
+    Boolean sendPush(NotifyMessage notifyMessage);
 
     /**
      * 个人消息推送接口
+     * @return 推送结果：null=无需推送，true=推送成功；false=推送失败
      */
-    boolean sendPush(UserMessage userMessage);
+    Boolean sendPush(UserMessage userMessage);
 }

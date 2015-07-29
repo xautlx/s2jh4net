@@ -25,13 +25,13 @@
 				</div>
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_htmlContent']" class="form-control input-medium" placeholder="消息内容...">
+						<input type="text" name="search['CN_message']" class="form-control input-medium" placeholder="消息内容...">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label">发布日期</label>
 					<div class="controls">
-						<input type="text" name="search['CN_publishTime']" class="form-control input-small" data-picker="date">
+						<input type="text" name="search['EQ_publishTime']" class="form-control input-small" data-picker="date">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">

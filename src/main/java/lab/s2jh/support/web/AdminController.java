@@ -187,9 +187,9 @@ public class AdminController {
         List<NotifyMessage> notifyMessages = null;
         String readed = request.getParameter("readed");
         if (StringUtils.isBlank(readed)) {
-            notifyMessages = notifyMessageService.findStatedEffectiveMessages(user, "web-admin", null);
+            notifyMessages = notifyMessageService.findStatedEffectiveMessages(user, "web_admin", null);
         } else {
-            notifyMessages = notifyMessageService.findStatedEffectiveMessages(user, "web-admin",
+            notifyMessages = notifyMessageService.findStatedEffectiveMessages(user, "web_admin",
                     BooleanUtils.toBoolean(request.getParameter("readed")));
         }
         model.addAttribute("notifyMessages", notifyMessages);

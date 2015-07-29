@@ -31,6 +31,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 public class QrcodeUtils {
 
     private static final int BLACK = 0xff000000;
+    private static final int RED = 0xffff0000;
     private static final int WHITE = 0xFFFFFFFF;
 
     /**
@@ -77,6 +78,8 @@ public class QrcodeUtils {
             height = 200;
         }
 
+        int logoHeight = height / 5;
+
         try {
             Map<EncodeHintType, Object> hints = Maps.newHashMap();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
@@ -88,13 +91,13 @@ public class QrcodeUtils {
             BufferedImage image = new BufferedImage(bitMatrix.getWidth(), bitMatrix.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? RED : WHITE);
                 }
             }
 
             Graphics2D g = image.createGraphics();
 
-            BufferedImage logo = scale(logoPath, 50, 50, false);
+            BufferedImage logo = scale(logoPath, logoHeight, logoHeight, false);
 
             int widthLogo = logo.getWidth();
             int heightLogo = logo.getHeight();
@@ -142,6 +145,8 @@ public class QrcodeUtils {
             } else {
                 ratio = Integer.valueOf(width).doubleValue() / srcImage.getWidth();
             }
+        } else {
+            ratio = 1;
         }
 
         AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(ratio, ratio), null);
@@ -222,10 +227,10 @@ public class QrcodeUtils {
         //        System.out.println("-----解析成功----");
         //        System.out.println(s);
 
-        String srcFile = "d://kfc.png";
+        String srcFile = "d://head-portrait.jpg";
         String destFile = "d://kfcLogo.png";
         String content = "肯德基好味道";
-        BufferedImage image = createQrcodeWithLogo(content, null, srcFile);
+        BufferedImage image = createQrcodeWithLogo(content, 600, srcFile);
         ImageIO.write(image, "png", new File(destFile));
         System.out.println("-----成生成功----");
 

@@ -2,6 +2,9 @@ package lab.s2jh.module.schedule;
 
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import lab.s2jh.core.exception.ServiceException;
 import lab.s2jh.module.schedule.entity.JobBeanCfg;
 import lab.s2jh.module.schedule.service.JobBeanCfgService;
@@ -14,7 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
+import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * 自定义Quartz Job业务对象的基类定义
@@ -68,7 +74,20 @@ public abstract class BaseQuartzJobBean extends QuartzJobBean {
     public void executeInternal(JobExecutionContext context) throws JobExecutionException {
         try {
             logger.debug("Invoking executeInternalBiz for {}", this.getClass());
+
+            //绑定JPA Session到当前线程
+            EntityManagerFactory entityManagerFactory = getSpringBean(EntityManagerFactory.class);
+            if (!TransactionSynchronizationManager.hasResource(entityManagerFactory)) {
+                EntityManager entityManager = entityManagerFactory.createEntityManager();
+                TransactionSynchronizationManager.bindResource(entityManagerFactory, new EntityManagerHolder(entityManager));
+            }
+
             String result = executeInternalBiz(context);
+
+            //解绑JPA Session从当前线程
+            EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager.unbindResource(entityManagerFactory);
+            EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+
             if (context != null && StringUtils.isNotBlank(result)) {
                 context.setResult(result);
             }

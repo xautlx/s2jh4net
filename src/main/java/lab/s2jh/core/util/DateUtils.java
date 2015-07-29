@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -239,9 +240,12 @@ public class DateUtils {
     private static Date currentDate;
 
     public static Date setCurrentDate(Date date) {
-        if (DynamicConfigService.isDevMode()) {
+        Validation.isTrue(DynamicConfigService.isDevMode(), "当前操作只能在开发测试运行模式才可用");
+        if (date == null) {
+            currentDate = null;
+        } else {
             Date now = new Date();
-            if (date.after(now)) {
+            if (date.before(now)) {
                 currentDate = now;
             } else {
                 currentDate = date;

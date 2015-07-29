@@ -25,7 +25,7 @@ public interface UserMessageDao extends BaseDao<UserMessage, Long> {
     @Query("update UserMessage set effective = false where expireTime<=:now " + "and effective = true and readTotalCount = 0")
     Integer updateUserMessageNoneffective(@Param("now") Date now);
 
-    @Query("from UserMessage where effective=true and lastPushTime is null order by publishTime desc")
+    @Query("from UserMessage where effective=true and appPush=true and lastPushTime is null order by publishTime desc")
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     public List<UserMessage> findEffectiveMessages();
 }

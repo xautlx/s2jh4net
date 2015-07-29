@@ -125,5 +125,74 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="portlet box grey">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> 系统时间临时设置
+					</div>
+					<div class="tools">
+						<a class="collapse" href="javascript:;"></a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<form class="form-horizontal form-bordered form-label-stripped form-validation"
+						action='${ctx}/admin/util/systime/setup' method="post" data-editrulesurl="false">
+						<div class="form-body" style="min-height: 250px">
+							<div class="note note-info">
+								<p>此功能主要用于在开发测试阶段，临时“篡改”调整系统当前时间信息，以模拟系统运行在一段时间之后，然后执行定时任务等操作。</p>
+								<p>调整系统时间会导致整个系统一直处于一个固定的设定时间，不会往前继续推进。因此，临时操作完成后及时“恢复系统时间”以恢复当前实时系统时间。</p>
+								<p>为了避免遗忘执行手工恢复操作，在“临时调整系统时间”操作后，默认在10分钟后强制恢复为当前系统时间。</p>
+							</div>
+							<div class="form-group">
+								<label class="control-label">指定临时系统时间</label>
+								<div class="controls">
+									<input type="text" name="time" class="form-control" data-picker="date-time" required="true">
+								</div>
+							</div>
+						</div>
+						<div class="form-actions right">
+							<button class="btn blue" type="submit">
+								<i class="fa fa-check"></i> 临时调整系统时间
+							</button>
+							<button class="btn blue btn-post-url" type="button" data-url="${ctx}/admin/util/systime/reset"
+								data-confirm="false">恢复系统时间</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="portlet box grey">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> 消息服务监听器控制
+					</div>
+					<div class="tools">
+						<a class="collapse" href="javascript:;"></a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<form class="form-horizontal form-bordered form-label-stripped form-validation"
+						action='${ctx}/admin/util/systime/setup' method="post" data-editrulesurl="false">
+						<div class="form-body" style="min-height: 250px">
+							<div class="note note-info">
+								<p>在开发dev_mode=true运行模式下，为了避免相互争夺接收消息，默认关闭消息监听服务。</p>
+								<p>在开发和测试过程中，根据需要人工控制开启或关闭监听服务。</p>
+							</div>
+						</div>
+						<div class="form-actions right">
+							<button class="btn blue btn-post-url" type="button"
+								data-url="${ctx}/admin/util/brokered-message/listener-state?state=startup" data-confirm="false">启动监听服务</button>
+							<button class="btn blue btn-post-url" type="button"
+								data-url="${ctx}/admin/util/brokered-message/listener-state?state=shutdown" data-confirm="false">关闭监听服务</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

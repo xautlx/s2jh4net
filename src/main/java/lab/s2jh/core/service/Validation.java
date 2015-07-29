@@ -32,7 +32,7 @@ public class Validation {
         }
     }
 
-    public static void notEmpty(Collection collection, String message) {
+    public static void notEmpty(Collection<?> collection, String message) {
         if (CollectionUtils.isEmpty(collection)) {
             throw new ValidationException(message);
         }

@@ -5,6 +5,9 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,8 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.exception.WebException;
+import lab.s2jh.core.mq.BrokeredMessageListener;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.service.Validation;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.Exceptions;
 import lab.s2jh.core.util.ExtStringUtils;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
@@ -57,6 +62,9 @@ public class UtilController {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired(required = false)
+    private BrokeredMessageListener brokeredMessageListener;
 
     @MenuData("配置管理:系统管理:辅助管理")
     @RequiresRoles(AuthUserDetails.ROLE_SUPER_USER)
@@ -214,5 +222,50 @@ public class UtilController {
     @RequestMapping(value = "/load-balance-test", method = RequestMethod.GET)
     public String loadBalanceTest() {
         return "admin/util/load-balance-test";
+    }
+
+    @MetaData(value = "系统时间篡改更新")
+    @RequiresRoles(AuthUserDetails.ROLE_SUPER_USER)
+    @RequestMapping(value = "/systime/setup", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult systimeSetup(@RequestParam(value = "time", required = true) String time) {
+        DateUtils.setCurrentDate(DateUtils.parseMultiFormatDate(time));
+
+        //为了避免遗忘执行手工恢复操作，在“临时调整系统时间”操作后，默认在N分钟后强制恢复为当前系统时间。
+        Runnable runnable = new Runnable() {
+            public void run() {
+                DateUtils.setCurrentDate(null);
+                logger.info("Processed DateUtils.currentDate() reset to new Date()");
+            }
+        };
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.schedule(runnable, 5, TimeUnit.MINUTES);
+
+        return OperationResult.buildSuccessResult("系统时间已临时调整为：" + DateUtils.formatTime(DateUtils.currentDate()));
+    }
+
+    @MetaData(value = "系统时间篡改恢复")
+    @RequiresRoles(AuthUserDetails.ROLE_SUPER_USER)
+    @RequestMapping(value = "/systime/reset", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult systimeReset() {
+        DateUtils.setCurrentDate(null);
+        return OperationResult.buildSuccessResult("系统时间临时调整已恢复为当前系统时间：" + DateUtils.formatTime(DateUtils.currentDate()));
+    }
+
+    @MetaData(value = "消息服务监听器状态切换")
+    @RequiresRoles(AuthUserDetails.ROLE_SUPER_USER)
+    @RequestMapping(value = "/brokered-message/listener-state", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult brokeredMessageState(@RequestParam(value = "state", required = true) String state) {
+        Validation.isTrue(brokeredMessageListener != null, "BrokeredMessageListener undefined");
+        if ("startup".equals(state)) {
+            brokeredMessageListener.startup();
+            return OperationResult.buildSuccessResult("消息服务监听器已启动");
+        } else if ("shutdown".equals(state)) {
+            brokeredMessageListener.shutdown();
+            return OperationResult.buildSuccessResult("消息服务监听器已关闭");
+        }
+        return OperationResult.buildFailureResult("未知状态参数");
     }
 }

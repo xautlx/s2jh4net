@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +25,11 @@ public class ImageCaptchaServlet extends HttpServlet implements Servlet {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageCaptchaServlet.class);
 
-    public static ImageCaptchaService imageCaptchaService = new DefaultManageableImageCaptchaService(
-            new FastHashMapCaptchaStore(), new CustomCaptchaEngine(), 180, 100000, 75000);
+    public static ImageCaptchaService imageCaptchaService = new DefaultManageableImageCaptchaService(new FastHashMapCaptchaStore(),
+            new CustomCaptchaEngine(), 180, 100000, 75000);
 
     @Override
-    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         // Set to expire far in the past.
         httpServletResponse.setDateHeader("Expires", 0);
         // Set standard HTTP/1.1 no-cache headers.
@@ -43,8 +43,16 @@ public class ImageCaptchaServlet extends HttpServlet implements Servlet {
         httpServletResponse.setContentType("image/jpeg");
 
         // create the image with the text
-        BufferedImage bi = ImageCaptchaServlet.imageCaptchaService.getImageChallengeForID(httpServletRequest
-                .getSession(true).getId());
+
+        String captchaId = null;
+        String moblieUUid = httpServletRequest.getParameter("uuid");
+        if (StringUtils.isNotBlank(moblieUUid)) {
+            captchaId = moblieUUid;
+        } else {
+            captchaId = httpServletRequest.getSession().getId();
+        }
+
+        BufferedImage bi = ImageCaptchaServlet.imageCaptchaService.getImageChallengeForID(captchaId);
 
         ServletOutputStream out = httpServletResponse.getOutputStream();
 
@@ -59,8 +67,15 @@ public class ImageCaptchaServlet extends HttpServlet implements Servlet {
 
     public static boolean validateResponse(HttpServletRequest request, String userCaptchaResponse) {
         try {
-            return ImageCaptchaServlet.imageCaptchaService.validateResponseForID(request.getSession().getId(),
-                    userCaptchaResponse);
+            String captchaId = null;
+            String moblieUUid = request.getParameter("uuid");
+            if (StringUtils.isNotBlank(moblieUUid)) {
+                captchaId = moblieUUid;
+            } else {
+                captchaId = request.getSession().getId();
+            }
+
+            return ImageCaptchaServlet.imageCaptchaService.validateResponseForID(captchaId, userCaptchaResponse);
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
                 logger.warn(e.getMessage(), e);

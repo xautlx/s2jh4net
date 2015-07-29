@@ -44,6 +44,7 @@ public class HttpRequestLogFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse reponse, FilterChain chain) throws IOException, ServletException {
         if (logger.isInfoEnabled()) {
             HttpServletRequest req = (HttpServletRequest) request;
+
             String uri = req.getRequestURI();
             //静态资源直接跳过
             if (uri == null || uri.endsWith(".js") || uri.endsWith(".css") || uri.endsWith(".gif") || uri.endsWith(".png") || uri.endsWith(".jpg")
@@ -62,7 +63,7 @@ public class HttpRequestLogFilter implements Filter {
                 //在debug模式下，再提取verbose参数标识是否开启详细信息输出
                 boolean verbose = BooleanUtils.toBoolean(req.getParameter("verbose"));
 
-                Map<String, String> dataMap = ServletUtils.buildRequestInfoDataMap(req, BooleanUtils.toBoolean(verbose));
+                Map<String, String> dataMap = ServletUtils.buildRequestInfoDataMap(req, verbose);
                 StringBuilder sb = new StringBuilder("HTTP Request Info:");
                 for (Map.Entry<String, String> me : dataMap.entrySet()) {
                     sb.append(StringUtils.rightPad("\n" + me.getKey(), 50) + " : " + me.getValue());

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.security.AuthUserDetails;
+import lab.s2jh.core.security.JcaptchaFormAuthenticationFilter;
+import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.auth.entity.User;
@@ -18,6 +20,7 @@ import lab.s2jh.module.sys.service.UserMessageService;
 import lab.s2jh.module.sys.service.UserProfileDataService;
 import lab.s2jh.support.service.DynamicConfigService;
 import lab.s2jh.support.service.SmsService;
+import lab.s2jh.support.service.SmsService.SmsMessageTypeEnum;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -76,7 +79,9 @@ public class IndexController {
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String adminIndex(HttpServletRequest request, Model model) {
+        model.addAttribute("baiduMapAppkey", dynamicConfigService.getString("baidu_map_appkey"));
         model.addAttribute("buildVersion", dynamicConfigService.getString("build_version"));
+        model.addAttribute("buildTimetamp", dynamicConfigService.getString("build_timestamp"));
         User user = AuthContextHolder.findAuthUser();
         model.addAttribute("layoutAttributes", userProfileDataService.findMapDataByUser(user));
         model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
@@ -86,6 +91,7 @@ public class IndexController {
     @RequestMapping(value = "/{source}/login", method = RequestMethod.GET)
     public String adminLogin(Model model, @PathVariable("source") String source) {
         model.addAttribute("buildVersion", dynamicConfigService.getString("build_version"));
+        model.addAttribute("buildTimetamp", dynamicConfigService.getString("build_timestamp"));
         //自助注册管理账号功能开关
         model.addAttribute("signupEnabled", !dynamicConfigService.getBoolean("cfg_mgmt_signup_disabled", true));
         return source + "/login";
@@ -123,7 +129,13 @@ public class IndexController {
             datas.put("token", AuthContextHolder.getAuthUserDetails().getAccessToken());
             return OperationResult.buildSuccessResult(datas);
         } else {
-            return OperationResult.buildFailureResult(ae.getMessage());
+            OperationResult result = OperationResult.buildFailureResult(ae.getMessage());
+            Boolean captchaRequired = (Boolean) request.getAttribute(JcaptchaFormAuthenticationFilter.KEY_AUTH_CAPTCHA_REQUIRED);
+            Map<String, Object> datas = Maps.newHashMap();
+            datas.put("captchaRequired", captchaRequired);
+            datas.put("captchaImageUrl", WebAppContextInitFilter.getInitedWebContextFullUrl() + "/pub/jcaptcha.servlet");
+            result.setData(datas);
+            return result;
         }
     }
 
@@ -152,7 +164,7 @@ public class IndexController {
     public OperationResult sendSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
         String code = smsVerifyCodeService.generateSmsCode(request, mobile);
         String msg = "您的操作验证码为：" + code + "。【请勿向任何人提供您收到的短信验证码】。如非本人操作，请忽略本信息。";
-        if (smsService.sendSMS(msg, mobile)) {
+        if (smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode)) {
             return OperationResult.buildSuccessResult();
         } else {
             return OperationResult.buildFailureResult("短信发送失败");

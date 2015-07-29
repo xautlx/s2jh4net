@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
  * @see AuditingEntityListener
  *
  */
-@Component
 public class SaveUpdateAuditListener {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

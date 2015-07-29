@@ -2,10 +2,12 @@ package lab.s2jh.support.service;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
+import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.module.sys.entity.ConfigProperty;
 import lab.s2jh.module.sys.service.ConfigPropertyService;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class DynamicConfigService {
     @MetaData(value = "构建版本")
     private static String buildVersion;
 
+    @MetaData(value = "构建时间")
+    private static String buildTimestamp;
+
     public static boolean isDemoMode() {
         return demoMode;
     }
@@ -54,6 +59,15 @@ public class DynamicConfigService {
     public void setBuildVersion(String buildVersion) {
         DynamicConfigService.buildVersion = buildVersion;
         logger.info("System runnging at build_version={}", DynamicConfigService.buildVersion);
+    }
+
+    @Value("${build_timestamp:}")
+    public void setBuildTimestamp(String buildTimestamp) {
+        if (StringUtils.isBlank(buildTimestamp)) {
+            buildTimestamp = DateUtils.formatTimeNow();
+        }
+        DynamicConfigService.buildTimestamp = buildTimestamp;
+        logger.info("System runnging at build_timestamp={}", DynamicConfigService.buildTimestamp);
     }
 
     @Value("${demo_mode:false}")
@@ -87,7 +101,7 @@ public class DynamicConfigService {
                 val = cfg.getSimpleValue();
             }
         }
-        
+
         //从环境变量获取
         if (val == null) {
             val = System.getProperty(key);

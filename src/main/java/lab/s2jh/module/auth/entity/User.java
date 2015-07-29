@@ -21,8 +21,6 @@ import javax.persistence.UniqueConstraint;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.DateUtils;
-import lab.s2jh.core.web.json.DateJsonSerializer;
-import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +32,8 @@ import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Getter
 @Setter
@@ -90,10 +88,13 @@ public class User extends BaseNativeEntity {
     private String accessToken;
 
     @MetaData(value = "访问Token过期时间")
+    @DateTimeFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
+    @JsonFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
     private Date accessTokenExpireTime;
 
     @MetaData(value = "注册时间")
-    @JsonSerialize(using = DateTimeJsonSerializer.class)
+    @DateTimeFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
+    @JsonFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
     private Date signupTime;
 
     @MetaData(value = "账户未锁定标志", tooltips = "账号锁定后无法登录")
@@ -101,16 +102,17 @@ public class User extends BaseNativeEntity {
 
     @MetaData(value = "失效日期", tooltips = "设定账号访问系统的失效日期，为空表示永不失效")
     @DateTimeFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
-    @JsonSerialize(using = DateJsonSerializer.class)
+    @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     private Date accountExpireTime;
 
     @MetaData(value = "账户密码过期时间", tooltips = "到期后强制用户登录成功后必须修改密码", comments = "比如用于初始化密码时设置当前时间，这样用户下次登录成功后则强制用户必须修改密码。")
     @DateTimeFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
-    @JsonSerialize(using = DateJsonSerializer.class)
+    @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     private Date credentialsExpireTime;
 
     @MetaData(value = "最后登录时间")
-    @JsonSerialize(using = DateTimeJsonSerializer.class)
+    @DateTimeFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
+    @JsonFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
     private Date lastLogonTime;
 
     @MetaData(value = "最后登录IP")

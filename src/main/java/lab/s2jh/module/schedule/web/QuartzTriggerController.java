@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.schedule.ExtSchedulerFactoryBean;
@@ -16,6 +17,8 @@ import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -31,6 +34,8 @@ import com.google.common.collect.Maps;
 @Controller
 @RequestMapping(value = "/admin/schedule/quartz-trigger")
 public class QuartzTriggerController {
+
+    private static Logger logger = LoggerFactory.getLogger(QuartzTriggerController.class);
 
     @Autowired
     private JobBeanCfgService jobBeanCfgService;
@@ -65,7 +70,7 @@ public class QuartzTriggerController {
             triggerMap.put("runWithinCluster", schedulerFactoryBean.isRunWithinCluster());
             triggerDatas.add(triggerMap);
         }
-        return new PageImpl(triggerDatas);
+        return new PageImpl<Map<String, Object>>(triggerDatas);
     }
 
     @RequiresPermissions("配置管理:计划任务管理:任务实时控制")
@@ -75,9 +80,11 @@ public class QuartzTriggerController {
             throws SchedulerException {
         Map<Trigger, SchedulerFactoryBean> allTriggers = jobBeanCfgService.findAllTriggers();
         for (String id : ids) {
+            boolean exist = false;
             for (Map.Entry<Trigger, SchedulerFactoryBean> me : allTriggers.entrySet()) {
                 Trigger trigger = me.getKey();
                 if (trigger.getJobKey().getName().equals(id)) {
+                    exist = true;
                     if (state.equals("pause")) {
                         me.getValue().getScheduler().pauseTrigger(trigger.getKey());
                     } else if (state.equals("resume")) {
@@ -85,9 +92,11 @@ public class QuartzTriggerController {
                     } else {
                         throw new UnsupportedOperationException("state parameter [" + state + "] not in [pause, resume]");
                     }
+                    logger.debug("Switched trigger {} to state {}", id, state);
                     break;
                 }
             }
+            Validation.isTrue(exist, "Undefined trigger name: " + id);
         }
         return OperationResult.buildSuccessResult("批量状态更新操作完成");
     }

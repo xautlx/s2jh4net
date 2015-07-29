@@ -150,7 +150,7 @@
 					</div>
 				</div>
 				<div class="form-actions">
-					<button class="btn blue" type="submit" data-auto-reload="false">
+					<button class="btn blue" type="submit" data-success-reload="false">
 						<i class="fa fa-check"></i> 演示服务端确认校验
 					</button>
 					<button class="btn default" type="button" data-dismiss="modal">取消</button>
@@ -627,7 +627,7 @@
 				<form:hidden path="id" />
 				<form:hidden path="version" />
 				<div class="form-actions">
-					<button class="btn blue" type="submit" data-auto-reload="false">
+					<button class="btn blue" type="submit" data-success-reload="false">
 						<i class="fa fa-check"></i> 保存
 					</button>
 					<button class="btn default" type="button" data-dismiss="modal">取消</button>
@@ -717,7 +717,7 @@
 					</div>
 				</div>
 				<div class="form-actions right">
-					<button class="btn blue" type="submit" data-auto-reload="false">
+					<button class="btn blue" type="submit" data-success-reload="false">
 						<i class="fa fa-check"></i> 保存
 					</button>
 					<button class="btn default" type="button" data-dismiss="modal">取消</button>

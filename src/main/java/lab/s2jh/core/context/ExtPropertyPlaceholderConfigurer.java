@@ -28,6 +28,10 @@ public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigu
             String keyStr = key.toString();
             String value = props.getProperty(keyStr);
             ctxPropertiesMap.put(keyStr, value);
+
+            if (keyStr.startsWith("env.")) {
+                System.setProperty(keyStr, value);
+            }
         }
     }
 
