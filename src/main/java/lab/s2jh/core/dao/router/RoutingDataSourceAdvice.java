@@ -26,15 +26,10 @@ public class RoutingDataSourceAdvice {
         datasourceHolder.set(customerType);
     }
 
-    public static void setDatasource(final String customerType) {
-        datasourceHolder.set(customerType);
-    }
-
     public static String getDatasource() {
-        return (String) datasourceHolder.get();
-    }
-
-    public static void clearDatasource() {
+        String ds = (String) datasourceHolder.get();
+        //立即移除，避免共享线程池导致多线程数据干扰
         datasourceHolder.remove();
+        return ds;
     }
 }

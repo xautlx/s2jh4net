@@ -131,7 +131,9 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
         } else {
             preUpdate(entity);
         }
-        return getEntityDao().save(entity);
+        getEntityDao().save(entity);
+        logger.debug("Saved entity id is {}", entity.getId());
+        return entity;
     }
 
     /**

@@ -91,6 +91,14 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     }
 
     @RequiresPermissions("配置管理:系统管理:公告管理")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult delete(@ModelAttribute("entity") NotifyMessage entity, Model model, @RequestParam("ids") Long... ids) {
+
+        return super.delete(ids);
+    }
+
+    @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/read-list", method = RequestMethod.GET)
     @ResponseBody
     public Page<NotifyMessageRead> readList(HttpServletRequest request) {

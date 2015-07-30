@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.math3.random.RandomDataGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.util.Assert;
@@ -19,6 +21,8 @@ import com.google.common.collect.Lists;
  * @see org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource
  */
 public class AnnotationRoutingDataSource extends AbstractDataSource implements InitializingBean {
+
+    private static final Logger logger = LoggerFactory.getLogger(AnnotationRoutingDataSource.class);
 
     private final static RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
 
@@ -77,9 +81,6 @@ public class AnnotationRoutingDataSource extends AbstractDataSource implements I
                 index = randomDataGenerator.nextInt(0, dataSources.size() - 1);
             }
             dataSource = dataSources.get(index);
-            if (dataSource == null) {
-                dataSource = this.resolvedDefaultDataSource;
-            }
         }
         if (dataSource == null) {
             throw new IllegalStateException("Cannot determine target DataSource for lookup key [" + lookupKey + "]");
@@ -93,7 +94,9 @@ public class AnnotationRoutingDataSource extends AbstractDataSource implements I
 
     @Override
     public Connection getConnection() throws SQLException {
-        return determineTargetDataSource().getConnection();
+        DataSource dataSource = determineTargetDataSource();
+        Connection connection = dataSource.getConnection();
+        return connection;
     }
 
     @Override
@@ -147,6 +150,16 @@ public class AnnotationRoutingDataSource extends AbstractDataSource implements I
         }
         if (this.defaultTargetDataSource != null) {
             this.resolvedDefaultDataSource = resolveSpecifiedDataSource(this.defaultTargetDataSource).get(0);
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("defaultTargetDataSource is " + resolvedDefaultDataSource);
+            for (Map.Entry<Object, List<DataSource>> me : resolvedDataSources.entrySet()) {
+                logger.debug("datasource list of key: " + me.getKey());
+                for (DataSource ds : me.getValue()) {
+                    logger.debug(" - " + ds);
+                }
+            }
         }
     }
 
