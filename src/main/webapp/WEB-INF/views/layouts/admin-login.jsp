@@ -49,41 +49,47 @@
 <!-- BEGIN BODY -->
 <body class="login">
 	<!-- BEGIN LOGIN -->
-	<div class="clearfix" style="padding: 50px">
-		<div class="content" style="width: 100%; max-width: 800px">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="row">
-						<div class="col-md-4">
-							<img src="${ctx}/assets/img/logo.png" />
-						</div>
-						<div class="col-md-8">
-							<h2 style="color: #555555">${applicationScope.cfg.cfg_system_title}</h2>
+	<div class="form-group" style="margin-top: 15px">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="content" style="width: 100%;">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-3">
+								<img src="${ctx}/assets/img/logo.png" />
+							</div>
+							<div class="col-md-9">
+								<h2 style="color: #555555">${applicationScope.cfg.cfg_system_title}</h2>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<hr />
-			<div class="row">
-				<div class="col-md-12" style="text-align: right;">
-					<a href="${ctx}/w" target="_blank">前端Web站点</a> <a href="${ctx}/m" target="_blank">HTML5移动站点</a>
+				<hr />
+				<div class="row">
+					<div class="col-md-12" style="text-align: right;">
+						<a href="${ctx}/w" target="_blank">前端Web站点</a> <a href="${ctx}/m" target="_blank">HTML5移动站点</a>
+					</div>
 				</div>
-			</div>
-			<sitemesh:write property='body' />
+				<sitemesh:write property='body' />
 
-			<!-- BEGIN COPYRIGHT -->
-			<div class="row">
-				<div class="col-md-12">
-					<div class="copyright pull-right">
-						<span title="${buildVersion}|<%= request.getLocalAddr()  %>:<%=request.getLocalPort()%>]"
-							style="display: inline-block; width: 200px">2014 &copy; <%=request.getServerName()%></span>
+				<!-- BEGIN COPYRIGHT -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="copyright pull-right">
+							<span title="${buildVersion}|<%= request.getLocalAddr()  %>:<%=request.getLocalPort()%>]"
+								style="display: inline-block;">2015 &copy; <%=request.getServerName()%></span>
+							<c:if test="${cfg.dev_mode}">
+								<span>V${buildVersion} [${buildTimetamp}]</span>
+							</c:if>
+						</div>
 					</div>
 				</div>
+				<!-- END COPYRIGHT -->
 			</div>
-			<!-- END COPYRIGHT -->
 		</div>
+		<div class="col-md-3"></div>
 	</div>
-	<!-- END LOGIN -->
 
 	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 	<script type="text/javascript">
@@ -117,6 +123,7 @@
 	<script src="${ctx}/assets/plugins/jquery.form.js"></script>
 	<!-- END PAGE LEVEL PLUGINS -->
 
+	<!-- BEGIN PAGE LEVEL SCRIPTS -->
 	<script src="${ctx}/assets/admin/app/util.js"></script>
 	<script src="${ctx}/assets/w/app/global.js"></script>
 	<script src="${ctx}/assets/admin/app/global.js"></script>
@@ -134,6 +141,7 @@
             Global.init();
             AdminGlobal.init();
             FormValidation.init();
+            FormValidation.initAjax();
 
             App.unblockUI($("body"));
 

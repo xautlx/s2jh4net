@@ -38,7 +38,7 @@
 								<i class="fa fa-qrcode"></i> <input class="form-control captcha-text" type="text" autocomplete="off"
 									placeholder="验证码...看不清可点击图片可刷新" name="captcha" required="true" data-msg-required="请填写验证码" />
 							</div>
-							<span class="input-group-btn" style="cursor: pointer;"> <img alt="验证码" height="34px" class="captcha-img"
+							<span class="input-group-btn" style="cursor: pointer;"> <img alt="验证码" class="captcha-img"
 								src="${ctx}/assets/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
 							</span>
 						</div>
@@ -77,7 +77,8 @@
 			</form>
 			<!-- END LOGIN FORM -->
 		</div>
-		<div class="col-md-6" style="padding-left: 50px">
+		<div class="col-md-1"></div>
+		<div class="col-md-5">
 			<div class="form-info" style="height: 270px; margin-top: 50px">
 				<h4>访问提示</h4>
 				<p>建议使用最新版本Firefox或Chrome浏览器访问应用以避免不必要的浏览器兼容性问题。</p>
