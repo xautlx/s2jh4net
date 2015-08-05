@@ -1,5 +1,6 @@
 package lab.s2jh.module.schedule.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -54,19 +55,21 @@ public class JobBeanCfgService extends BaseService<JobBeanCfg, Long> {
         try {
             SchedulerFactoryBean quartzRAMScheduler = (SchedulerFactoryBean) SpringContextHolder.getApplicationContext().getBean(
                     "&quartzRAMScheduler");
-            if (quartzRAMScheduler != null) {
-                for (Trigger trigger : (List<Trigger>) FieldUtils.readField(quartzRAMScheduler, "triggers", true)) {
-                    allTriggers.put(trigger, quartzRAMScheduler);
-                }
+            if (quartzRAMScheduler == null) {
+                Collections.emptyMap();
+            }
+            for (Trigger trigger : (List<Trigger>) FieldUtils.readField(quartzRAMScheduler, "triggers", true)) {
+                allTriggers.put(trigger, quartzRAMScheduler);
             }
 
             SchedulerFactoryBean quartzClusterScheduler = (SchedulerFactoryBean) SpringContextHolder.getApplicationContext().getBean(
                     "&quartzClusterScheduler");
-            if (quartzClusterScheduler != null) {
-                Scheduler scheduler = quartzClusterScheduler.getScheduler();
-                for (Trigger trigger : (List<Trigger>) FieldUtils.readField(quartzClusterScheduler, "triggers", true)) {
-                    allTriggers.put(trigger, quartzClusterScheduler);
-                }
+            if (quartzClusterScheduler == null) {
+                Collections.emptyMap();
+            }
+            Scheduler scheduler = quartzClusterScheduler.getScheduler();
+            for (Trigger trigger : (List<Trigger>) FieldUtils.readField(quartzClusterScheduler, "triggers", true)) {
+                allTriggers.put(trigger, quartzClusterScheduler);
             }
         } catch (Exception e) {
             throw new ServiceException("Quartz trigger schedule error", e);
