@@ -1,7 +1,6 @@
 package lab.s2jh.core.security;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -12,6 +11,7 @@ import lab.s2jh.aud.entity.UserLogonLog;
 import lab.s2jh.core.security.SourceUsernamePasswordToken.AuthSourceEnum;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.IPAddrFetcher;
+import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.core.web.captcha.ImageCaptchaServlet;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.service.UserService;
@@ -188,7 +188,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
         //更新Access Token，并设置半年后过期
         if (StringUtils.isBlank(authAccount.getAccessToken()) || authAccount.getAccessTokenExpireTime().before(now)) {
-            authAccount.setAccessToken(UUID.randomUUID().toString());
+            authAccount.setAccessToken(UidUtils.UID());
             authAccount.setAccessTokenExpireTime(new DateTime(DateUtils.currentDate()).plusMonths(6).toDate());
             userService.save(authAccount);
         }

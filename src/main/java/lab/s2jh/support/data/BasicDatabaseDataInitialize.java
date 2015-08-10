@@ -3,7 +3,6 @@ package lab.s2jh.support.data;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javassist.ClassClassPath;
 import javassist.ClassPool;
@@ -24,6 +23,7 @@ import lab.s2jh.core.security.PasswordService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.Exceptions;
 import lab.s2jh.core.util.MockEntityUtils;
+import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.module.auth.entity.Department;
 import lab.s2jh.module.auth.entity.Privilege;
 import lab.s2jh.module.auth.entity.Role;
@@ -108,7 +108,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             MockEntityUtils.persistNew(entityManager, superRole);
             //预置超级管理员账号
             User entity = new User();
-            entity.setAuthGuid(UUID.randomUUID().toString());
+            entity.setAuthGuid(UidUtils.UID());
             entity.setAuthUid("admin");
             entity.setAuthType(AuthTypeEnum.SYS);
             entity.setMgmtGranted(true);
@@ -131,7 +131,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             MockEntityUtils.persistNew(entityManager, mgmtRole);
             //后台默认普通管理员账号
             entity = new User();
-            entity.setAuthGuid(UUID.randomUUID().toString());
+            entity.setAuthGuid(UidUtils.UID());
             entity.setAuthUid("mgmt");
             entity.setAuthType(AuthTypeEnum.SYS);
             entity.setMgmtGranted(true);

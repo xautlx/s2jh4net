@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import lab.s2jh.aud.dao.UserLogonLogDao;
 import lab.s2jh.aud.entity.UserLogonLog;
@@ -144,7 +143,7 @@ public class UserService extends BaseService<User, Long> {
         String email = user.getEmail();
         Assert.isTrue(StringUtils.isNotBlank(email), "User email required");
         String suject = dynamicConfigService.getString("cfg.user.reset.pwd.notify.email.title", "申请重置密码邮件");
-        user.setRandomCode(UUID.randomUUID().toString());
+        user.setRandomCode(UidUtils.UID()   );
         userDao.save(user);
 
         webContextUrl += ("/admin/password/reset?uid=" + user.getAuthUid() + "&email=" + email + "&code=" + user.getRandomCode());

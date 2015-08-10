@@ -14,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 public class DateUtils {
+    
+    public final static String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     public final static String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 

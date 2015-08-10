@@ -1,7 +1,6 @@
 package lab.s2jh.core.entity;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -17,15 +16,13 @@ import org.springframework.data.domain.Persistable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Maps;
 
 @Getter
 @Setter
 @Access(AccessType.FIELD)
 @MappedSuperclass
 @JsonInclude(Include.NON_NULL)
-public abstract class PersistableEntity<ID extends Serializable> implements Persistable<ID> {
+public abstract class PersistableEntity<ID extends Serializable> extends AbstractPersistableEntity<ID> {
 
     private static final long serialVersionUID = -6214804266216022245L;
 
@@ -40,11 +37,6 @@ public abstract class PersistableEntity<ID extends Serializable> implements Pers
      * 在显示或提交数据时，标识对象为脏数据需要处理
      */
     public static final String EXTRA_ATTRIBUTE_DIRTY_ROW = "dirtyRow";
-
-    /** Entity本身无用，主要用于UI层辅助参数传递 */
-    @Transient
-    @JsonProperty
-    private Map<String, Object> extraAttributes;
 
     /*
      * 用于快速判断对象是否新建状态
@@ -112,22 +104,6 @@ public abstract class PersistableEntity<ID extends Serializable> implements Pers
     @Transient
     public abstract String getDisplay();
 
-    @Transient
-    public void addExtraAttribute(String key, Object value) {
-        if (this.extraAttributes == null) {
-            this.extraAttributes = Maps.newHashMap();
-        }
-        this.extraAttributes.put(key, value);
-    }
-
-    @Transient
-    public void addExtraAttributes(Map<String, Object> extraAttributes) {
-        if (this.extraAttributes == null) {
-            this.extraAttributes = Maps.newHashMap();
-        }
-        this.extraAttributes.putAll(extraAttributes);
-    }
-
     /**
      * 从扩展属性中取值判断当前对象是否标记需要删除
      * 一般用于前端UI对关联集合对象元素移除操作
@@ -153,24 +129,5 @@ public abstract class PersistableEntity<ID extends Serializable> implements Pers
             return true;
         }
         return false;
-    }
-
-    @Transient
-    @JsonIgnore
-    public String getExtraAttributesValue(String key) {
-        if (extraAttributes == null) {
-            return null;
-        }
-        Object opParams = extraAttributes.get(key);
-        if (opParams == null) {
-            return null;
-        }
-        String op = null;
-        if (opParams instanceof String[]) {
-            op = ((String[]) opParams)[0];
-        } else if (opParams instanceof String) {
-            op = (String) opParams;
-        }
-        return op;
     }
 }

@@ -15,7 +15,6 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -35,6 +34,7 @@ import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.SpringContextHolder;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.util.DateUtils;
+import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.json.DateJsonSerializer;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
@@ -449,7 +449,7 @@ public class ServletUtils {
         }
 
         //简便的做法用UUID作为主键，每次上传都会创建文件对象和数据记录，便于管理，但是存在相同文件重复保存情况
-        String id = UUID.randomUUID().toString();
+        String id = UidUtils.UID();
 
         //加上年月日分组处理，一方面便于直观看出上传文件日期信息以便批量处理，另一方面合理分组控制目录的个数和层级避免单一目录下文件过多
         DateTime now = new DateTime();

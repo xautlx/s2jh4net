@@ -6,7 +6,7 @@ import org.springframework.data.domain.Persistable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public abstract class AbstractPersistableEntity<ID extends Serializable> implements Serializable, Persistable<ID> {
+public abstract class AbstractPersistableEntity<ID extends Serializable> extends AbstractPojo implements Persistable<ID> {
 
     private static final long serialVersionUID = 7750025843953658844L;
 

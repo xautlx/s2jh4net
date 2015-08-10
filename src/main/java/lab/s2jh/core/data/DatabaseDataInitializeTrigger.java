@@ -21,7 +21,11 @@ public class DatabaseDataInitializeTrigger {
     public void initialize() {
         for (BaseDatabaseDataInitialize initializeProcessor : initializeProcessors) {
             logger.debug("Invoking data initialize for {}", initializeProcessor);
-            initializeProcessor.initialize();
+            try {
+                initializeProcessor.initialize();
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
+            }
         }
     }
 

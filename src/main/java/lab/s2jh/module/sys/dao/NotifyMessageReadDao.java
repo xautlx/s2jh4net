@@ -9,7 +9,9 @@ import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.NotifyMessageRead;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,4 +21,8 @@ public interface NotifyMessageReadDao extends BaseDao<NotifyMessageRead, Long> {
 
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     public List<NotifyMessageRead> findByReadUserAndNotifyMessageIn(User readUser, List<NotifyMessage> scopeEffectiveMessages);
+
+    @Query("select count(nm) from NotifyMessageRead nm where nm.notifyMessage=:notifyMessage")
+    @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
+    Integer countByNotifyMessage(@Param("notifyMessage") NotifyMessage notifyMessage);
 }

@@ -185,6 +185,14 @@ public class MockEntityUtils {
     }
 
     /**
+     * 获取表数据总记录数
+     */
+    public static int countTable(Class<?> entity, EntityManager entityManager) {
+        Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
+        return Integer.valueOf(String.valueOf(count));
+    }
+
+    /**
      * 判定实体对象对应表是否为空
      */
     public static boolean isEmptyTable(Class<?> entity, EntityManager entityManager) {
@@ -194,6 +202,13 @@ public class MockEntityUtils {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 判定实体对象对应表是否为空
+     */
+    public static <X> List<X> findAll(Class<X> entity, EntityManager entityManager) {
+        return entityManager.createQuery("from " + entity.getSimpleName()).getResultList();
     }
 
     /**

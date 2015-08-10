@@ -118,6 +118,7 @@
                 inlineNav : {
                     add : false
                 },
+                multiselect : false,
                 editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
                 fullediturl : WEB_ROOT + "/admin/sys/notify-message/edit",
                 delurl : WEB_ROOT + '/admin/sys/notify-message/delete',

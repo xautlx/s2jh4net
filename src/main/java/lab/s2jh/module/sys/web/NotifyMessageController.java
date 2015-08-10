@@ -8,6 +8,7 @@ import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.service.BaseService;
+import lab.s2jh.core.service.Validation;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.EnumUtils;
 import lab.s2jh.core.web.BaseController;
@@ -93,9 +94,11 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@ModelAttribute("entity") NotifyMessage entity, Model model, @RequestParam("ids") Long... ids) {
-
-        return super.delete(ids);
+    public OperationResult delete(@ModelAttribute("entity") NotifyMessage entity, Model model) {
+        Integer readCount = notifyMessageReadService.countByNotifyMessage(entity);
+        Validation.isTrue(readCount <= 0, "该公告已经被阅读，不能被删除");
+        notifyMessageService.delete(entity);
+        return OperationResult.buildSuccessResult();
     }
 
     @RequiresPermissions("配置管理:系统管理:公告管理")
