@@ -71,13 +71,16 @@
 
 ### License Agreement
 
-* Free License
+* 免费许可
 
-本项目代码除src/main/webapp/assets目录下admin/app和w/app两个目录下相关Javascript代码以混淆方式提供外，其余开源，在保留标识本项目来源信息以及保证不对本项目进行非授权的销售行为的前提下，可以以任意方式自由免费使用：开源、非开源、商业及非商业。
+本项目代码除src/main/webapp/assets目录下admin/app和w/app两个目录下少量相关Javascript代码以混淆方式提供外，其余开源，在保留标识本项目来源信息以及保证不对本项目进行非授权的销售行为的前提下，可以以任意方式自由免费使用：开源、非开源、商业及非商业。
 
-* Charge Support Service
+若对项目有任何技术问题或Issue反馈，可加QQ群讨论组：303438676 或提交到项目站点提问或Git平台的Issue：
+http://www.oschina.net/p/s2jh4net , http://git.oschina.net/xautlx/s2jh4net/issues , https://github.com/xautlx/s2jh4net/issues
 
-如果你还有兴趣在现有开放资源基础上进一步提供定制的扩展实现/技术咨询服务/毕业设计指导/二次开发项目指导等方面的合作意向，可联系 E-Mail: s2jh-dev@hotmail.com 或 QQ: 2414521719 (加Q请注明：s2jh4net) 洽谈。[上述联系方式恕不直接提供咨询类询问！若对项目有任何技术问题或Issue反馈，请直接提交到项目站点提问或Git平台的Issue]
+* 收费服务
+
+如果你还有兴趣在现有开放资源基础上进一步获取完整源码/提供定制的扩展实现/技术咨询服务/毕业设计指导/二次开发项目指导等方面的合作意向，可联系 E-Mail: s2jh-dev@hotmail.com 或 QQ: 2414521719 (加Q请注明：s2jh4net) 洽谈。[上述个人联系方式为收费服务渠道，恕不提供免费咨询]
 
 
 ### Reference

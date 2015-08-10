@@ -69,7 +69,7 @@
                     label : '登录次数',
                     name : 'logonTimes',
                     width : 60,
-                    formatter : 'number',
+                    formatter : 'integer',
                     align : 'center'
                 }, {
                     name : 'userAgent',
