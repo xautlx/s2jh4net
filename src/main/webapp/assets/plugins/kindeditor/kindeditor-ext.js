@@ -4415,7 +4415,7 @@ function _loadStyle(url) {
     }
     head.appendChild(link);
     link.href = url;
-    link.rel = 'stylesheet';
+    //link.rel = 'stylesheet';
 }
 function _ajax(url, fn, method, param, dataType) {
     method = method || 'GET';

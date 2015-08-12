@@ -12,7 +12,7 @@
 <!-- BEGIN HEAD -->
 <head>
 <meta charset="utf-8" />
-<title><sitemesh:write property='title' /> : ${applicationScope.cfg.cfg_system_title}</title>
+<title>${applicationScope.cfg.cfg_system_title}管理平台</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 <meta content="" name="description" />
@@ -34,8 +34,8 @@
 		<!-- BEGIN TOP NAVIGATION BAR -->
 		<div class="header-inner">
 			<!-- BEGIN LOGO -->
-			<a class="navbar-brand" href="${ctx}/admin" style="width: 500px; padding-top: 10px; padding-left: 10px"><font
-				color="white" size="+2">${applicationScope.cfg.cfg_system_title}</font></a>
+			<a class="navbar-brand" href="${ctx}/admin" style="width: 500px; padding-top: 12px; padding-left: 10px"><font
+				color="white" size="+2">${applicationScope.cfg.cfg_system_title} 管理平台</font></a>
 			<!-- END LOGO -->
 			<!-- BEGIN RESPONSIVE MENU TOGGLER -->
 			<a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <img
@@ -44,6 +44,31 @@
 			<!-- END RESPONSIVE MENU TOGGLER -->
 			<!-- BEGIN TOP NAVIGATION MENU -->
 			<ul class="nav navbar-nav pull-right">
+				<!-- BEGIN NOTIFICATION DROPDOWN -->
+				<li class="dropdown hide"><a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+					data-close-others="true"> <i class="fa fa-warning"></i> <span class="badge"> 0 </span>
+				</a>
+					<ul class="dropdown-menu extended notification">
+						<li>
+							<p>You have 14 new notifications</p>
+						</li>
+						<li>
+							<ul class="dropdown-menu-list scroller">
+								<li><a href="#"> <span class="label label-sm label-icon label-success"> <i class="fa fa-plus"></i>
+									</span> New user registered. <span class="time"> Just now </span>
+								</a></li>
+								<li><a href="#"> <span class="label label-sm label-icon label-danger"> <i class="fa fa-bolt"></i>
+									</span> Server #12 overloaded. <span class="time"> 15 mins </span>
+								</a></li>
+								<li><a href="#"> <span class="label label-sm label-icon label-warning"> <i class="fa fa-bell-o"></i>
+									</span> Server #2 not responding. <span class="time"> 22 mins </span>
+								</a></li>
+							</ul>
+						</li>
+						<li class="external"><a href="#">See all notifications <i class="m-icon-swapright"></i></a></li>
+					</ul></li>
+				<!-- END NOTIFICATION DROPDOWN -->
+
 				<!-- BEGIN NOTIFICATION DROPDOWN -->
 				<li class="dropdown" id="header_notification_bar"><a href="javascript:;" class="dropdown-toggle"
 					data-toggle="dropdown" data-hover="dropdown" data-close-others="true"
@@ -88,7 +113,7 @@
 		<!-- END TOP NAVIGATION BAR -->
 
 		<!-- BEGIN STYLE CUSTOMIZER -->
-		<div class="theme-panel hidden-xs hidden-sm pull-right" style="margin-top: -3px; position: absolute; right: 0px">
+		<div class="theme-panel hidden-xs hidden-sm" style="margin-top: -3px; position: absolute; right: 0px">
 			<div class="toggler"></div>
 			<div class="toggler-close"></div>
 			<div class="theme-options">
@@ -104,37 +129,36 @@
 					</ul>
 				</div>
 				<div class="theme-option">
-					<span>页面布局</span> <select class="layout-option form-control input-small">
+					<span>页面布局</span> <select class="layout-option form-control input-small"
+						data-selected="${layoutAttributes['_layout_page']}">
 						<option value="fluid" selected="selected">扩展</option>
 						<option value="boxed">收缩</option>
 					</select>
 				</div>
 				<div class="theme-option">
-					<span>页面头部</span> <select class="header-option form-control input-small">
-						<option value="fixed" selected="selected">固定</option>
-						<option value="default">自动</option>
-					</select>
-				</div>
-				<div class="theme-option">
-					<span>侧边菜单</span> <select class="sidebar-option form-control input-small">
-						<option value="fixed">浮动</option>
-						<option value="default" selected="selected">自动</option>
-					</select>
-				</div>
-				<div class="theme-option">
-					<span>页面底部</span> <select class="footer-option form-control input-small">
+					<span>页面头部</span> <select class="header-option form-control input-small"
+						data-selected="${layoutAttributes['_layout_header']}">
 						<option value="fixed">固定</option>
 						<option value="default" selected="selected">自动</option>
 					</select>
 				</div>
 				<div class="theme-option">
-					<span>右键菜单</span> <select class="context-menu-option form-control input-small">
+					<span>页面底部</span> <select class="footer-option form-control input-small"
+						data-selected="${layoutAttributes['_layout_footer']}">
+						<option value="fixed">固定</option>
+						<option value="default" selected="selected">自动</option>
+					</select>
+				</div>
+				<div class="theme-option">
+					<span>右键菜单</span> <select class="context-menu-option form-control input-small"
+						data-selected="${layoutAttributes['_layout_context_menu']}">
 						<option value="enable" selected="selected">启用</option>
 						<option value="disable">禁用</option>
 					</select>
 				</div>
 				<div class="theme-option">
-					<span>表格布局</span> <select class="grid-shrink-option form-control input-small">
+					<span>表格布局</span> <select class="grid-shrink-option form-control input-small"
+						data-selected="${layoutAttributes['_layout_grid_shrink']}">
 						<option value="auto">自动</option>
 						<option value="true" selected="selected">收缩</option>
 					</select>
@@ -142,136 +166,145 @@
 			</div>
 		</div>
 		<!-- END BEGIN STYLE CUSTOMIZER -->
+
 	</div>
 	<!-- END HEADER -->
 	<div class="clearfix"></div>
 	<!-- BEGIN CONTAINER -->
 	<div class="page-container">
 		<!-- BEGIN SIDEBAR -->
-		<div class="page-sidebar navbar-collapse collapse">
-			<!-- BEGIN SIDEBAR MENU -->
-			<ul class="page-sidebar-menu">
-				<li>
-					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-					<div class="sidebar-toggler hidden-phone" style="margin-top: 5px; margin-bottom: 5px"></div> <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-				</li>
-				<li>
-					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
-					<div class="sidebar-search">
-						<div class="form-container">
-							<div class="input-box">
-								<a href="javascript:;" class="remove"></a> <input type="text" name="search" placeholder="菜单项快速查询过滤..." value=""
-									title="试试输入菜单名称拼音首字母" /> <input type="button" class="submit" value=" " />
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar navbar-collapse collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->
+				<ul class="page-sidebar-menu">
+					<li>
+						<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+						<div class="sidebar-toggler hidden-phone" style="margin-top: 5px; margin-bottom: 5px"></div> <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+					</li>
+					<li>
+						<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+						<div class="sidebar-search">
+							<div class="form-container">
+								<div class="input-box">
+									<a href="javascript:;" class="remove"></a> <input type="text" name="search" placeholder="菜单项快速查询过滤..." value=""
+										title="试试输入菜单名称拼音首字母" /> <input type="button" class="submit" value=" " />
+								</div>
 							</div>
-						</div>
-					</div> <!-- END RESPONSIVE QUICK SEARCH FORM -->
-				</li>
-			</ul>
-			<!-- END SIDEBAR MENU -->
+						</div> <!-- END RESPONSIVE QUICK SEARCH FORM -->
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
 		</div>
 		<!-- END SIDEBAR -->
 
-		<!-- BEGIN PAGE -->
-		<div class="page-content">
-			<div class="row" style="margin-left: 0px; margin-right: 0px">
-				<div class="col-md-12" style="padding-left: 0px; padding-right: 0px">
-					<ul class="page-breadcrumb breadcrumb" id="layout-nav" style="margin-top: 0px; margin-bottom: 5px;">
-						<li class="btn-group" style="right: 0px;">
-							<button data-close-others="true" data-delay="1000" data-toggle="dropdown" class="btn default dropdown-toggle"
-								type="button">
-								<span><i class="fa fa-reorder"></i> 访问列表</span> <i class="fa fa-angle-down"></i>
-							</button>
-							<ul role="menu" class="dropdown-menu">
-							</ul>
-							<button class="btn default btn-close-active" type="button">
-								<i class="fa fa-times"></i>
-							</button>
-						</li>
-						<li><a class="btn-dashboard" href="#dashboard"><i class="fa fa-home"></i> 首页 </a></li>
-					</ul>
-					<div class="tab-content">
-						<div id="tab_content_dashboard"></div>
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<div class="row" style="margin-left: 0px; margin-right: 0px">
+					<div class="col-md-12" style="padding-left: 0px; padding-right: 0px">
+						<ul class="page-breadcrumb breadcrumb" id="layout-nav" style="margin-top: 0px; margin-bottom: 5px;">
+							<li class="btn-group" style="right: 0px;">
+								<button data-close-others="true" data-delay="1000" data-toggle="dropdown" class="btn default dropdown-toggle"
+									type="button">
+									<span><i class="fa fa-reorder"></i> 访问列表</span> <i class="fa fa-angle-down"></i>
+								</button>
+								<ul role="menu" class="dropdown-menu">
+								</ul>
+								<button class="btn default btn-close-active" type="button">
+									<i class="fa fa-times"></i>
+								</button>
+							</li>
+							<li><a class="btn-dashboard" href="#/dashboard"><i class="fa fa-home"></i> 首页 </a></li>
+						</ul>
+						<div class="tab-content">
+							<div id="tab_content_dashboard"></div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- BEGIN PAGE -->
+		<!-- BEGIN CONTENT -->
 	</div>
 	<!-- END CONTAINER -->
+
 	<!-- BEGIN FOOTER -->
 	<div class="footer">
-		<div class="footer-inner">&copy; S2JH4Net 2014</div>
+		<div class="footer-inner">
+			&copy; S2JH4Net 2014
+			<c:if test="${cfg.dev_mode}">
+				<span>V${buildVersion} [${buildTimetamp}]</span>
+			</c:if>
+		</div>
 		<div class="footer-tools">
 			<span class="go-top"> <i class="fa fa-angle-up"></i>
 			</span>
 		</div>
+
+		<div class="hide">
+			<form class="form-horizontal" id="singleFileUploadForm" enctype="multipart/form-data" method="post">
+				<input type="file" name="fileUpload" />
+				<button type="submit" class="btn">提交</button>
+			</form>
+		</div>
+
+		<!-- BEGIN FileUpload FORM -->
+		<div class="modal fade" id="fileupload-dialog" tabindex="-1" role="basic" aria-hidden="true">
+			<div class="modal-dialog modal-wide">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						<h4 class="modal-title">文件上传</h4>
+					</div>
+					<div class="modal-body">
+						<form id="fileupload" enctype="multipart/form-data" method="POST">
+							<input type="hidden" name="attachmentName" value="attachments" />
+							<div class="row fileupload-buttonbar">
+								<div class="col-lg-7">
+									<!-- The fileinput-button span is used to style the file input field as button -->
+									<span class="btn green fileinput-button"> <i class="fa fa-plus"></i> <span>添加文件...</span> <input
+										type="file" multiple="" name="files">
+									</span>
+									<button class="btn blue start" type="submit">
+										<i class="fa fa-upload"></i> <span>开始上传</span>
+									</button>
+									<button class="btn yellow cancel" type="reset">
+										<i class="fa fa-ban"></i> <span>取消上传</span>
+									</button>
+									<!-- The loading indicator is shown during file processing -->
+									<span class="fileupload-loading"></span>
+								</div>
+								<!-- The global progress information -->
+								<div class="col-lg-5 fileupload-progress fade">
+									<!-- The global progress bar -->
+									<div aria-valuemax="100" aria-valuemin="0" role="progressbar" class="progress progress-striped active">
+										<div style="width: 0%;" class="progress-bar progress-bar-success"></div>
+									</div>
+									<!-- The extended global progress information -->
+									<div class="progress-extended">&nbsp;</div>
+								</div>
+							</div>
+							<table class="table table-striped clearfix" role="presentation">
+								<tbody class="files"></tbody>
+							</table>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn default" data-dismiss="modal">取消</button>
+						<button type="submit" class="btn blue btn-add">添加</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- END FileUpload FORM -->
+
+		<button type="button" class="btn " id="btn-profile-param" title="点击收藏记忆当前表单元素数据" style="display: none">
+			<i class="fa fa-heart-o"></i>
+		</button>
 	</div>
 	<!-- END FOOTER -->
-
-
-	<div class="hide">
-		<form class="form-horizontal" action="${ctx}/w/file/upload/single" id="singleFileUploadForm"
-			enctype="multipart/form-data" method="post">
-			<input type="file" name="fileUpload" />
-			<button type="submit" class="btn">提交</button>
-		</form>
-	</div>
-
-	<!-- BEGIN FileUpload FORM -->
-	<div class="modal fade" id="fileupload-dialog" tabindex="-1" role="basic" aria-hidden="true">
-		<div class="modal-dialog modal-wide">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-					<h4 class="modal-title">文件上传</h4>
-				</div>
-				<div class="modal-body">
-					<form id="fileupload" enctype="multipart/form-data" method="POST">
-						<input type="hidden" name="attachmentName" value="attachments" />
-						<div class="row fileupload-buttonbar">
-							<div class="col-lg-7">
-								<!-- The fileinput-button span is used to style the file input field as button -->
-								<span class="btn green fileinput-button"> <i class="fa fa-plus"></i> <span>添加文件...</span> <input
-									type="file" multiple="" name="files">
-								</span>
-								<button class="btn blue start" type="submit">
-									<i class="fa fa-upload"></i> <span>开始上传</span>
-								</button>
-								<button class="btn yellow cancel" type="reset">
-									<i class="fa fa-ban"></i> <span>取消上传</span>
-								</button>
-								<!-- The loading indicator is shown during file processing -->
-								<span class="fileupload-loading"></span>
-							</div>
-							<!-- The global progress information -->
-							<div class="col-lg-5 fileupload-progress fade">
-								<!-- The global progress bar -->
-								<div aria-valuemax="100" aria-valuemin="0" role="progressbar" class="progress progress-striped active">
-									<div style="width: 0%;" class="progress-bar progress-bar-success"></div>
-								</div>
-								<!-- The extended global progress information -->
-								<div class="progress-extended">&nbsp;</div>
-							</div>
-						</div>
-						<table class="table table-striped clearfix" role="presentation">
-							<tbody class="files"></tbody>
-						</table>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn default" data-dismiss="modal">取消</button>
-					<button type="submit" class="btn blue btn-add">添加</button>
-				</div>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- END FileUpload FORM -->
-
-	<button type="button" class="btn " id="btn-profile-param" title="点击收藏记忆当前表单元素数据" style="display: none">
-		<i class="fa fa-heart-o"></i>
-	</button>
 
 	<%@include file="/WEB-INF/views/layouts/admin-include-footer.jsp"%>
 </body>
