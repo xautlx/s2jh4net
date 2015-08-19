@@ -27,7 +27,6 @@ public abstract class BaseQuartzJobTestCase extends AbstractTransactionalJUnit4S
     public void execute() {
         try {
             BaseQuartzJobBean jobBean = (BaseQuartzJobBean) getJobClass().newInstance();
-            jobBean.setApplicationContext(applicationContext);
             jobBean.executeInternal(null);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

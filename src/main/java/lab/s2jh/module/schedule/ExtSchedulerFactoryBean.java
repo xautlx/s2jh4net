@@ -59,6 +59,7 @@ public class ExtSchedulerFactoryBean extends SchedulerFactoryBean {
         super.setApplicationContext(applicationContext);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void registerJobsAndTriggers() throws SchedulerException {
         logger.debug("Invoking registerJobsAndTriggers...");

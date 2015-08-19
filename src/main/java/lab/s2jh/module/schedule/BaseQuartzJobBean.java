@@ -15,12 +15,12 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
  * 自定义Quartz Job业务对象的基类定义
@@ -31,23 +31,14 @@ public abstract class BaseQuartzJobBean extends QuartzJobBean {
 
     private static Logger logger = LoggerFactory.getLogger(BaseQuartzJobBean.class);
 
-    protected ApplicationContext applicationContext;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
-    /**
-     * 从SchedulerFactoryBean注入的applicationContext.
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        logger.debug("Set applicationContext for QuartzJobBean");
-        this.applicationContext = applicationContext;
-    }
+    @Autowired
+    private JobBeanCfgService jobBeanCfgService;
 
-    protected <X> X getSpringBean(Class<X> clazz) {
-        return this.applicationContext.getBean(clazz);
-    }
-
-    protected JdbcTemplate getJdbcTemplate() {
-        return getSpringBean(JdbcTemplate.class);
-    }
+    @Autowired
+    private FreemarkerService freemarkerService;
 
     /**
      * 基于Freemarker组装任务结果数据文本
@@ -56,9 +47,6 @@ public abstract class BaseQuartzJobBean extends QuartzJobBean {
      * @return
      */
     protected String buildJobResultByTemplate(JobExecutionContext context, Map<String, Object> dataMap) {
-        JobBeanCfgService jobBeanCfgService = getSpringBean(JobBeanCfgService.class);
-        FreemarkerService freemarkerService = getSpringBean(FreemarkerService.class);
-
         JobBeanCfg jobBeanCfg = jobBeanCfgService.findByJobClass(context.getJobDetail().getJobClass().getName());
         if (jobBeanCfg != null) {
             String resultTemplate = jobBeanCfg.getResultTemplate();
@@ -75,8 +63,10 @@ public abstract class BaseQuartzJobBean extends QuartzJobBean {
         try {
             logger.debug("Invoking executeInternalBiz for {}", this.getClass());
 
+            // Process @Autowired injection for the given target object, based on the current web application context. 
+            SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
             //绑定JPA Session到当前线程
-            EntityManagerFactory entityManagerFactory = getSpringBean(EntityManagerFactory.class);
             if (!TransactionSynchronizationManager.hasResource(entityManagerFactory)) {
                 EntityManager entityManager = entityManagerFactory.createEntityManager();
                 TransactionSynchronizationManager.bindResource(entityManagerFactory, new EntityManagerHolder(entityManager));
