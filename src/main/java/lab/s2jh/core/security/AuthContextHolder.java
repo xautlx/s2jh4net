@@ -9,6 +9,7 @@ import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
 import lab.s2jh.module.auth.service.UserService;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,18 @@ public class AuthContextHolder {
         try {
             subject = SecurityUtils.getSubject();
         } catch (Exception e) {
-            logger.debug(e.getMessage());
+            logger.trace(e.getMessage());
         }
         if (subject == null) {
             return null;
         }
-        Object principal = subject.getPrincipal();
+        Object principal = null;
+        try {
+            principal = subject.getPrincipal();
+        } catch (InvalidSessionException e) {
+            //如果是没有有效的Shiro Session则直接返回null，避免在后台处理时相关审计处理逻辑代码异常
+            logger.trace(e.getMessage());
+        }
         if (principal == null) {
             return null;
         }

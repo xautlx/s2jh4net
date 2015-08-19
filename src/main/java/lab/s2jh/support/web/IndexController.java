@@ -65,11 +65,6 @@ public class IndexController {
         return "redirect:/w";
     }
 
-    @RequestMapping(value = "/m", method = RequestMethod.GET)
-    public String mobileIndex() {
-        return "m/index";
-    }
-
     @RequestMapping(value = "/unauthorized", method = RequestMethod.GET)
     public String unauthorizedUrl(HttpServletRequest request, Model model) {
         model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());

@@ -1,7 +1,5 @@
 package lab.s2jh.core.hib.search;
 
-import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
-
 import org.hibernate.search.indexes.interceptor.EntityIndexingInterceptor;
 import org.hibernate.search.indexes.interceptor.IndexingOverride;
 import org.slf4j.Logger;

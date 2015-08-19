@@ -38,13 +38,17 @@ public class NotifyMessage extends BaseNativeEntity {
 
     private static final long serialVersionUID = 2544390748513253055L;
 
+    @MetaData(value = "消息类型", comments = "从数据字典定义的消息类型")
+    @Column(length = 32, nullable = true)
+    private String type;
+
     @MetaData(value = "标题")
-    @Column(nullable = false)
+    @Column(length = 128, nullable = false)
     private String title;
 
     @MetaData(value = "生效标识", comments = "安排定时任务，基于publishTime和expireTime更新此值")
-    @Column(nullable = false)
-    private Boolean effective = Boolean.FALSE;
+    @Column(nullable = true)
+    private Boolean effective;
 
     @MetaData(value = "标识必须登录才能访问")
     @Column(nullable = false)
@@ -52,6 +56,7 @@ public class NotifyMessage extends BaseNativeEntity {
 
     @MetaData(value = "发布时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Column(nullable = false)
     @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
     private Date publishTime;
 
@@ -109,6 +114,9 @@ public class NotifyMessage extends BaseNativeEntity {
 
         @MetaData(value = "前端网站")
         web_site,
+
+        @MetaData(value = "移动网站")
+        html5_site,
 
         @MetaData(value = "苹果iOS")
         ios,

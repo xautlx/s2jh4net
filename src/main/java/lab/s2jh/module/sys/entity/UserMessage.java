@@ -18,7 +18,6 @@ import lab.s2jh.core.util.WebFormatter;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lab.s2jh.core.web.json.EntityIdDisplaySerializer;
 import lab.s2jh.core.web.json.JsonViews;
-import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lab.s2jh.module.auth.entity.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +26,6 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -44,26 +42,13 @@ public class UserMessage extends BaseNativeEntity {
 
     private static final long serialVersionUID = 1685596718660284598L;
 
+    @MetaData(value = "消息类型", comments = "从数据字典定义的消息类型")
+    @Column(length = 32, nullable = true)
+    private String type;
+
     @MetaData(value = "标题")
     @Column(nullable = false)
     private String title;
-
-    @MetaData(value = "生效标识", comments = "安排定时任务，基于publishTime和expireTime更新此值")
-    @Column(nullable = false)
-    @JsonView(JsonViews.Admin.class)
-    private Boolean effective = Boolean.FALSE;
-
-    @MetaData(value = "发布时间")
-    @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
-    private Date publishTime;
-
-    @MetaData(value = "失效时间", comments = "预计的到期时间，过期后则消息不再提示用户")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
-    @JsonView(JsonViews.Admin.class)
-    private Date expireTime;
 
     @MetaData(value = "目标用户")
     @ManyToOne
@@ -76,17 +61,25 @@ public class UserMessage extends BaseNativeEntity {
     @JsonView(JsonViews.Admin.class)
     private Boolean emailPush = Boolean.FALSE;
 
+    @MetaData(value = "邮件推送消息时间", comments = "为空表示尚未推送过")
+    @JsonView(JsonViews.Admin.class)
+    private Date emailPushTime;
+
     @MetaData(value = "短信推送消息")
     @JsonView(JsonViews.Admin.class)
     private Boolean smsPush = Boolean.FALSE;
+
+    @MetaData(value = "短信推送消息时间", comments = "为空表示尚未推送过")
+    @JsonView(JsonViews.Admin.class)
+    private Date smsPushTime;
 
     @MetaData(value = "APP推送消息")
     @JsonView(JsonViews.Admin.class)
     private Boolean appPush = Boolean.FALSE;
 
-    @MetaData(value = "最近推送时间", comments = "为空表示尚未推送过")
+    @MetaData(value = "APP推送消息时间", comments = "为空表示尚未推送过")
     @JsonView(JsonViews.Admin.class)
-    private Date lastPushTime;
+    private Date appPushTime;
 
     @MetaData(value = "APP弹出提示内容", comments = "如果不为空则触发APP弹出通知，为空则不会弹出而只会推送应用消息")
     @Column(length = 200)

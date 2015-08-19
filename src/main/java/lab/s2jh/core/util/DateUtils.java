@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 public class DateUtils {
-    
+
     public final static String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     public final static String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -38,6 +38,8 @@ public class DateUtils {
     public final static String FORMAT_YYYYMM = "yyyyMM";
 
     public final static String FORMAT_YYYYMMDD = "yyyyMMdd";
+
+    public final static String FORMAT_YYYYMMDDHH = "yyyyMMddHH";
 
     public final static DateFormat FORMAT_YYYY_FORMATER = new SimpleDateFormat(FORMAT_YYYY);
 
@@ -64,6 +66,13 @@ public class DateUtils {
             return null;
         }
         return Integer.valueOf(new SimpleDateFormat(format).format(date));
+    }
+
+    public static Long formatDateToLong(Date date, String format) {
+        if (date == null) {
+            return null;
+        }
+        return Long.valueOf(new SimpleDateFormat(format).format(date));
     }
 
     public static String formatTime(Date date) {
@@ -246,12 +255,7 @@ public class DateUtils {
         if (date == null) {
             currentDate = null;
         } else {
-            Date now = new Date();
-            if (date.before(now)) {
-                currentDate = now;
-            } else {
-                currentDate = date;
-            }
+            currentDate = date;
         }
         return currentDate;
     }
@@ -272,8 +276,17 @@ public class DateUtils {
         }
     }
 
-    public static void main(String[] args) {
+    public static Integer getWeekOfYear(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return Integer.valueOf(formatDate(date, FORMAT_YYYY) + c.get(Calendar.WEEK_OF_YEAR));
+    }
 
+    public static void main(String[] args) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH, 0);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        System.out.println(DateUtils.formatDate(c.getTime(), DateUtils.FORMAT_YYYYMMDD));
     }
 
 }

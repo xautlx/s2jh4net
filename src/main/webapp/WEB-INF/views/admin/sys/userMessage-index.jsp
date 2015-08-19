@@ -55,8 +55,8 @@
                     index : 'externalLink_OR_htmlContent',
                     align : 'left'
                 }, {
-                    label : '生效时间',
-                    name : 'publishTime',
+                    label : '发布时间',
+                    name : 'createdDate',
                     formatter : 'timestamp',
                     editable : true,
                     editoptions : {

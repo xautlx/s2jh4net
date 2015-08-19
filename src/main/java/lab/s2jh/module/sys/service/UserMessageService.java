@@ -1,8 +1,5 @@
 package lab.s2jh.module.sys.service;
 
-import java.util.Date;
-import java.util.List;
-
 import lab.s2jh.core.dao.jpa.BaseDao;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
@@ -54,7 +51,6 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
     @Transactional(readOnly = true)
     public Long findCountToRead(User user) {
         GroupPropertyFilter filter = GroupPropertyFilter.buildDefaultAndGroupFilter();
-        filter.append(new PropertyFilter(MatchType.EQ, "effective", Boolean.TRUE));
         filter.append(new PropertyFilter(MatchType.EQ, "targetUser", user));
         filter.append(new PropertyFilter(MatchType.NU, "firstReadTime", Boolean.TRUE));
         return count(filter);
@@ -72,14 +68,6 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
         userMessageDao.save(entity);
     }
 
-    public Integer updateUserMessageEffective(Date now) {
-        return userMessageDao.updateUserMessageEffective(now);
-    }
-
-    public Integer updateUserMessageNoneffective(Date now) {
-        return userMessageDao.updateUserMessageNoneffective(now);
-    }
-
     /**
      * 消息推送处理
      * @param entity
@@ -89,19 +77,23 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
         User targetUser = entity.getTargetUser();
 
         //邮件推送处理
-        if (entity.getEmailPush()) {
+        if (entity.getEmailPush() && entity.getEmailPushTime() == null) {
             String email = targetUser.getEmail();
             if (StringUtils.isNotBlank(email)) {
                 mailService.sendHtmlMail(entity.getTitle(), entity.getMessage(), true, email);
+                entity.setEmailPushTime(DateUtils.currentDate());
             }
         }
 
         //短信推送处理
-        if (entity.getSmsPush()) {
+        if (entity.getSmsPush() && entity.getSmsPushTime() == null) {
             if (smsService != null) {
                 String mobileNum = targetUser.getMobile();
                 if (StringUtils.isNotBlank(mobileNum)) {
-                    smsService.sendSMS(entity.getNotification(), mobileNum, SmsMessageTypeEnum.Default);
+                    Boolean pushResult = smsService.sendSMS(entity.getNotification(), mobileNum, SmsMessageTypeEnum.Default);
+                    if (pushResult == null || pushResult) {
+                        entity.setSmsPushTime(DateUtils.currentDate());
+                    }
                 }
             } else {
                 logger.warn("SmsService implement NOT found.");
@@ -110,11 +102,11 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
         }
 
         //APP推送
-        if (entity.getAppPush()) {
+        if (entity.getAppPush() && entity.getAppPushTime() == null) {
             if (messagePushService != null) {
                 Boolean pushResult = messagePushService.sendPush(entity);
                 if (pushResult == null || pushResult) {
-                    entity.setLastPushTime(DateUtils.currentDate());
+                    entity.setAppPushTime(DateUtils.currentDate());
                 }
             } else {
                 logger.warn("MessagePushService implement NOT found.");
@@ -124,7 +116,10 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
         userMessageDao.save(entity);
     }
 
-    public List<UserMessage> findEffectiveMessages() {
-        return userMessageDao.findEffectiveMessages();
+    @Override
+    public UserMessage save(UserMessage entity) {
+        super.save(entity);
+        pushMessage(entity);
+        return entity;
     }
 }

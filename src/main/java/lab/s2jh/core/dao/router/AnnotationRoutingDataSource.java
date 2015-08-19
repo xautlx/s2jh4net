@@ -82,6 +82,7 @@ public class AnnotationRoutingDataSource extends AbstractDataSource implements I
             }
             dataSource = dataSources.get(index);
         }
+        //logger.debug("Using lookupKey: {}, datasource: {}", lookupKey, dataSource);
         if (dataSource == null) {
             throw new IllegalStateException("Cannot determine target DataSource for lookup key [" + lookupKey + "]");
         }

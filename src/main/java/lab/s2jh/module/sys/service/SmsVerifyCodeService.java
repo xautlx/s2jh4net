@@ -26,7 +26,7 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
 
     private static final Logger logger = LoggerFactory.getLogger(SmsVerifyCodeService.class);
 
-    private final static int VERIFY_CODE_MAX_LIVE_TIME = 5 * 60 * 1000;
+    private final static int VERIFY_CODE_LIVE_MINUTES = 5;
 
     @Autowired
     private SmsVerifyCodeDao smsVerifyCodeDao;
@@ -62,7 +62,7 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
             smsVerifyCode.setCode(code);
             smsVerifyCode.setGenerateTime(DateUtils.currentDate());
             //5分钟有效期
-            smsVerifyCode.setExpireTime(new DateTime(smsVerifyCode.getGenerateTime()).plusMinutes(5).toDate());
+            smsVerifyCode.setExpireTime(new DateTime(smsVerifyCode.getGenerateTime()).plusMinutes(VERIFY_CODE_LIVE_MINUTES).toDate());
             smsVerifyCodeDao.save(smsVerifyCode);
         }
 
@@ -76,7 +76,7 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
      * @return 布尔类型是否有效
      */
     public boolean verifySmsCode(HttpServletRequest request, String mobileNum, String code) {
-        //如果是开发模式，则123456作为默认验证码始终通过
+        //如果是开发模式，则123456作为默认验证码始终通过，方便开发测试
         if (DynamicConfigService.isDevMode()) {
             if ("123456".equals(code)) {
                 return true;
@@ -107,10 +107,12 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
     /**
      * 定时把超时的验证码移除  
      */
-    @Scheduled(fixedRate = VERIFY_CODE_MAX_LIVE_TIME)
+    @Scheduled(fixedRate = 1 * 60 * 1000)
     public void removeExpiredDataTimely() {
-        logger.debug("Timely trigger removed expired verify code cache data...");
-        int effectiveCount = smsVerifyCodeDao.batchDeleteExpireItems(DateUtils.currentDate());
-        logger.debug("Removed expired verify code cache data number: {}", effectiveCount);
+        logger.debug("Timely trigger removed expired verify code cache data at Thread: {}...", Thread.currentThread().getId());
+        if (smsVerifyCodeDao.countTodoItems() > 0) {
+            int effectiveCount = smsVerifyCodeDao.batchDeleteExpireItems(DateUtils.currentDate());
+            logger.debug("Removed expired verify code cache data number: {}", effectiveCount);
+        }
     }
 }

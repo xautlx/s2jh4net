@@ -30,12 +30,11 @@ import lab.s2jh.module.auth.entity.Role;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
 import lab.s2jh.module.auth.entity.UserR2Role;
-import lab.s2jh.module.schedule.entity.JobBeanCfg;
 import lab.s2jh.module.sys.entity.ConfigProperty;
+import lab.s2jh.module.sys.entity.DataDict;
 import lab.s2jh.module.sys.entity.Menu;
 import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.UserMessage;
-import lab.s2jh.module.sys.job.MessageUpdateJob;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -87,15 +86,6 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             if (metaData != null && metaData.autoIncrementInitValue() > 0) {
                 MockEntityUtils.autoIncrementInitValue(entityClass, entityManager);
             }
-        }
-
-        //Cron表达式的格式：秒 分 时 日 月 周 年(可选)
-        {
-            JobBeanCfg entity = new JobBeanCfg();
-            entity.setJobClass(MessageUpdateJob.class.getName());
-            entity.setCronExpression("0 0/5 * * * ?");
-            entity.setAutoStartup(!DynamicConfigService.isDevMode());
-            MockEntityUtils.persistSilently(entityManager, entity, "jobClass");
         }
 
         //角色、用户等数据初始化,默认密码为:账号+123
@@ -204,12 +194,34 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             MockEntityUtils.persistNew(entityManager, entity);
         }
 
+        {
+            DataDict entity = new DataDict();
+            entity.setPrimaryKey(GlobalConstant.DataDict_Message_Type);
+            entity.setPrimaryValue("消息类型");
+            //如果主对像创建成功则继续处理子对象
+            if (MockEntityUtils.persistSilently(entityManager, entity, "parent", "primaryKey")) {
+                DataDict item = new DataDict();
+                item.setPrimaryKey("notify");
+                item.setPrimaryValue("通知");
+                item.setSecondaryValue("00FF00");
+                item.setParent(entity);
+                MockEntityUtils.persistSilently(entityManager, item, "parent", "primaryKey");
+
+                item = new DataDict();
+                item.setPrimaryKey("bulletin");
+                item.setPrimaryValue("喜报");
+                item.setSecondaryValue("FF0000");
+                item.setParent(entity);
+                MockEntityUtils.persistSilently(entityManager, item, "parent", "primaryKey");
+            }
+        }
+
         //初始化演示通知消息
         if (MockEntityUtils.isEmptyTable(NotifyMessage.class, entityManager)) {
             NotifyMessage entity = new NotifyMessage();
+
             entity.setTitle("欢迎访问" + systemTitle);
             entity.setPublishTime(now);
-            entity.setEffective(true);
             entity.setMessage("<p>系统初始化时间：" + DateUtils.formatTime(now) + "</p>");
             MockEntityUtils.persistNew(entityManager, entity);
         }
@@ -219,17 +231,15 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             User admin = (User) entityManager.createQuery("from User where authUid='admin'").getSingleResult();
 
             UserMessage entity = new UserMessage();
+            entity.setType("notify");
             entity.setTitle("演示个人消息1");
-            entity.setPublishTime(now);
-            entity.setEffective(true);
             entity.setTargetUser(admin);
             entity.setMessage("<p>演示定向发送个人消息1内容</p>");
             MockEntityUtils.persistNew(entityManager, entity);
 
             entity = new UserMessage();
+            entity.setType("bulletin");
             entity.setTitle("演示个人消息2");
-            entity.setPublishTime(now);
-            entity.setEffective(true);
             entity.setTargetUser(admin);
             entity.setMessage("<p>演示定向发送个人消息2内容</p>");
             MockEntityUtils.persistNew(entityManager, entity);

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -246,12 +247,33 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
         notifyMessageDao.save(notifyMessage);
     }
 
-    public Integer updateNotifyMessageEffective(Date now) {
-        return notifyMessageDao.updateNotifyMessageEffective(now);
-    }
-
-    public Integer updateNotifyMessageNoneffective(Date now) {
-        return notifyMessageDao.updateNotifyMessageNoneffective(now);
+    /**
+     * 定时更新公告消息生效状态
+     */
+    @Scheduled(fixedRate = 5 * 60 * 1000)
+    public void updateTobeEffectiveMessagesTimely() {
+        logger.debug("Timely updateTobeEffectiveMessages at Thread: {}...", Thread.currentThread().getId());
+        List<NotifyMessage> notifyMessages = notifyMessageDao.findTobeEffectiveMessages();
+        if (CollectionUtils.isNotEmpty(notifyMessages)) {
+            Date now = DateUtils.currentDate();
+            for (NotifyMessage notifyMessage : notifyMessages) {
+                Boolean oldState = notifyMessage.getEffective();
+                //当前时间已过计划发布时间，则置为生效
+                if (now.after(notifyMessage.getPublishTime())) {
+                    notifyMessage.setEffective(Boolean.TRUE);
+                }
+                //当前时间已过计划过期时间，则置为失效
+                if (notifyMessage.getExpireTime() != null && now.after(notifyMessage.getExpireTime())) {
+                    notifyMessage.setEffective(Boolean.FALSE);
+                }
+                if (notifyMessage.getEffective() != null && !notifyMessage.getEffective().equals(oldState)) {
+                    logger.debug("Update notifyMessage[{}] effective state from {} to {}", notifyMessage.getDisplay(), oldState,
+                            notifyMessage.getEffective());
+                    notifyMessageDao.save(notifyMessage);
+                    pushMessage(notifyMessage);
+                }
+            }
+        }
     }
 
     /**
@@ -260,10 +282,12 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
      */
     public void pushMessage(NotifyMessage entity) {
         if (messagePushService != null) {
-            Boolean pushResult = messagePushService.sendPush(entity);
-            if (pushResult == null || pushResult) {
-                entity.setLastPushTime(DateUtils.currentDate());
-                notifyMessageDao.save(entity);
+            if (entity.getLastPushTime() == null && Boolean.TRUE.equals(entity.getEffective())) {
+                Boolean pushResult = messagePushService.sendPush(entity);
+                if (pushResult == null || pushResult) {
+                    entity.setLastPushTime(DateUtils.currentDate());
+                    notifyMessageDao.save(entity);
+                }
             }
         } else {
             logger.warn("MessagePushService implement NOT found.");
@@ -272,5 +296,12 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
 
     public List<NotifyMessage> findEffectiveMessage() {
         return notifyMessageDao.findEffectiveMessages();
+    }
+
+    @Override
+    public NotifyMessage save(NotifyMessage entity) {
+        super.save(entity);
+        updateTobeEffectiveMessagesTimely();
+        return entity;
     }
 }

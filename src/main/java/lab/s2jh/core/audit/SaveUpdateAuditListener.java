@@ -11,7 +11,6 @@ import lab.s2jh.core.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.stereotype.Component;
 
 /**
  * 审计记录记录创建和修改信息

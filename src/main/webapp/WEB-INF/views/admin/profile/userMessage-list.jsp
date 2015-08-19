@@ -28,7 +28,7 @@
 									</c:if> ${item.title}
 							</a></td>
 							<td>${item.messageAbstract}</td>
-							<td><fmt:formatDate value="${item.publishTime}" type="both" pattern="yyyy-MM-dd mm:HH:ss" /></td>
+							<td><fmt:formatDate value="${item.createdDate}" type="both" pattern="yyyy-MM-dd mm:HH:ss" /></td>
 						</tr>
 					</c:forEach>
 				</tbody>

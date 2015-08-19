@@ -222,7 +222,6 @@ public class AdminController {
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
         GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(NotifyMessage.class, request);
         groupFilter.append(new PropertyFilter(MatchType.EQ, "targetUser", user));
-        groupFilter.append(new PropertyFilter(MatchType.EQ, "effective", Boolean.TRUE));
         String readed = request.getParameter("readed");
         if (StringUtils.isNotBlank(readed)) {
             if (BooleanUtils.toBoolean(request.getParameter("readed"))) {

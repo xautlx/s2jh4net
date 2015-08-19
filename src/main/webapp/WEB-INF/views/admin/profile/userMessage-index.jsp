@@ -31,7 +31,7 @@
 				<div class="form-group">
 					<label class="control-label">发布日期</label>
 					<div class="controls">
-						<input type="text" name="search['EQ_publishTime']" class="form-control input-small" data-picker="date">
+						<input type="text" name="search['EQ_createdDate']" class="form-control input-small" data-picker="date">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">

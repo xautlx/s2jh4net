@@ -28,4 +28,7 @@ public class GlobalConstant {
 
     @MetaData("ConfigProperty:是否禁用管理账号注册功能")
     public final static String cfg_signup_disabled = "cfg_signup_disabled";
+
+    @MetaData("数据字典:消息类型")
+    public final static String DataDict_Message_Type = "DataDict_Message_Type";
 }

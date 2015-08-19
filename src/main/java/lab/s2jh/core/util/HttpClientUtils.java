@@ -29,6 +29,10 @@ public class HttpClientUtils {
         httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
     }
 
+    public static String doGet(String url) {
+        return doGet(url, null, CHARSET_UTF8);
+    }
+
     public static String doGet(String url, Map<String, String> params) {
         return doGet(url, params, CHARSET_UTF8);
     }
