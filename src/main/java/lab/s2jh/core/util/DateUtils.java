@@ -1,6 +1,5 @@
 package lab.s2jh.core.util;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,12 +26,6 @@ public class DateUtils {
 
     public final static String[] MULTI_FORMAT = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM" };
 
-    public final static DateFormat DEFAULT_TIME_FORMATER = new SimpleDateFormat(DEFAULT_TIME_FORMAT);
-
-    public final static DateFormat DEFAULT_DATE_FORMATER = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-
-    public final static DateFormat SHORT_TIME_FORMATER = new SimpleDateFormat(SHORT_TIME_FORMAT);
-
     public final static String FORMAT_YYYY = "yyyy";
 
     public final static String FORMAT_YYYYMM = "yyyyMM";
@@ -41,17 +34,11 @@ public class DateUtils {
 
     public final static String FORMAT_YYYYMMDDHH = "yyyyMMddHH";
 
-    public final static DateFormat FORMAT_YYYY_FORMATER = new SimpleDateFormat(FORMAT_YYYY);
-
-    public final static DateFormat FORMAT_YYYYMM_FORMATER = new SimpleDateFormat(FORMAT_YYYYMM);
-
-    public final static DateFormat FORMAT_YYYYMMDD_FORMATER = new SimpleDateFormat(FORMAT_YYYYMMDD);
-
     public static String formatDate(Date date) {
         if (date == null) {
             return "";
         }
-        return DEFAULT_DATE_FORMATER.format(date);
+        return new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(date);
     }
 
     public static String formatDate(Date date, String format) {
@@ -79,14 +66,14 @@ public class DateUtils {
         if (date == null) {
             return null;
         }
-        return DEFAULT_TIME_FORMATER.format(date);
+        return new SimpleDateFormat(DEFAULT_TIME_FORMAT).format(date);
     }
 
     public static String formatShortTime(Date date) {
         if (date == null) {
             return null;
         }
-        return SHORT_TIME_FORMATER.format(date);
+        return new SimpleDateFormat(SHORT_TIME_FORMAT).format(date);
     }
 
     public static String formatDateNow() {
@@ -97,34 +84,34 @@ public class DateUtils {
         return formatTime(DateUtils.currentDate());
     }
 
-    public static Date parseDate(String date, DateFormat df) {
+    public static Date parseDate(String date, String format) {
         if (date == null) {
             return null;
         }
         try {
-            return df.parse(date);
+            return new SimpleDateFormat(format).parse(date);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Date parseTime(String date, DateFormat df) {
+    public static Date parseTime(String date, String format) {
         if (date == null) {
             return null;
         }
         try {
-            return df.parse(date);
+            return new SimpleDateFormat(format).parse(date);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static Date parseDate(String date) {
-        return parseDate(date, DEFAULT_DATE_FORMATER);
+        return parseDate(date, DEFAULT_DATE_FORMAT);
     }
 
     public static Date parseTime(String date) {
-        return parseTime(date, DEFAULT_TIME_FORMATER);
+        return parseTime(date, DEFAULT_TIME_FORMAT);
     }
 
     public static String plusOneDay(String date) {

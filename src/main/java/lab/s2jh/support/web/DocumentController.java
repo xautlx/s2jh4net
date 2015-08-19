@@ -3,6 +3,7 @@ package lab.s2jh.support.web;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -109,7 +110,7 @@ public class DocumentController extends BaseController<MockEntity, Long> {
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Date.class, "publishTime", new CustomDateEditor(DateUtils.SHORT_TIME_FORMATER, true));
+        binder.registerCustomEditor(Date.class, "publishTime", new CustomDateEditor(new SimpleDateFormat(DateUtils.SHORT_TIME_FORMAT), true));
         super.initBinder(binder);
     }
 

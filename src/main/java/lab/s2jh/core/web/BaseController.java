@@ -2,6 +2,7 @@ package lab.s2jh.core.web;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -216,7 +217,7 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(DateUtils.DEFAULT_DATE_FORMATER, true));
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(DateUtils.DEFAULT_DATE_FORMAT), true));
         //binder.setAllowedFields("nick", "gender", "name", "idCardNo", "studentExt.dormitory");
     }
 

@@ -1,5 +1,6 @@
 package lab.s2jh.module.sys.web;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,8 +54,8 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         super.initBinder(binder);
-        binder.registerCustomEditor(Date.class, "publishTime", new CustomDateEditor(DateUtils.SHORT_TIME_FORMATER, true));
-        binder.registerCustomEditor(Date.class, "expireTime", new CustomDateEditor(DateUtils.SHORT_TIME_FORMATER, true));
+        binder.registerCustomEditor(Date.class, "publishTime", new CustomDateEditor(new SimpleDateFormat(DateUtils.SHORT_TIME_FORMAT), true));
+        binder.registerCustomEditor(Date.class, "expireTime", new CustomDateEditor(new SimpleDateFormat(DateUtils.SHORT_TIME_FORMAT), true));
     }
 
     @RequiresUser
