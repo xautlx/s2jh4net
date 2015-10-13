@@ -1,5 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
+<c:if test="${cfg.dev_mode}">
+    <jsp:useBean id="now" class="java.util.Date" scope="page" />
+    <c:set var="build_version" value="${now.getTime()}" />
+</c:if>
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!--[if lt IE 9]>
 <script src="${ctx}/assets/plugins/respond.min.js"></script>
@@ -119,17 +123,17 @@
 
 <script src="http://api.map.baidu.com/api?v=2.0&ak=${baiduMapAppkey}" type="text/javascript"></script>
 
-<link href="${ctx}/assets/admin/app/custom.css" rel="stylesheet" type="text/css" />
+<link href="${ctx}/assets/admin/app/custom.css?_=${build_version}" rel="stylesheet" type="text/css" />
 
-<script src="${ctx}/assets/admin/app/util.js"></script>
-<script src="${ctx}/assets/w/app/global.js"></script>
-<script src="${ctx}/assets/admin/app/global.js"></script>
-<script src="${ctx}/assets/admin/app/grid.js"></script>
-<script src="${ctx}/assets/admin/app/dynamic-table.js"></script>
-<script src="${ctx}/assets/w/app/form-validation.js"></script>
-<script src="${ctx}/assets/w/app/page.js"></script>
-<script src="${ctx}/assets/admin/app/page.js"></script>
-<script src="${ctx}/assets/admin/app/biz.js"></script>
+<script src="${ctx}/assets/admin/app/util.js?_=${build_version}"></script>
+<script src="${ctx}/assets/w/app/global.js?_=${build_version}"></script>
+<script src="${ctx}/assets/admin/app/global.js?_=${build_version}"></script>
+<script src="${ctx}/assets/admin/app/grid.js?_=${build_version}"></script>
+<script src="${ctx}/assets/admin/app/dynamic-table.js?_=${build_version}"></script>
+<script src="${ctx}/assets/w/app/form-validation.js?_=${build_version}"></script>
+<script src="${ctx}/assets/w/app/page.js?_=${build_version}"></script>
+<script src="${ctx}/assets/admin/app/page.js?_=${build_version}"></script>
+<script src="${ctx}/assets/admin/app/biz.js?_=${build_version}"></script>
 
 <script>
     $(function() {

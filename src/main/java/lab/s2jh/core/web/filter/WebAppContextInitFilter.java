@@ -13,8 +13,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import lab.s2jh.support.service.DynamicConfigService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * 通过过滤器基于request对象初始化并缓存记录当前应用上下文路径
@@ -57,6 +60,13 @@ public class WebAppContextInitFilter implements Filter {
     }
 
     public static String getInitedWebContextFullUrl() {
+        if (WEB_CONTEXT_FULL_URL == null) {
+            if (DynamicConfigService.isDemoMode()) {
+                return "http://runing.at.demo.mode";
+            } else {
+                Assert.notNull(WEB_CONTEXT_FULL_URL, "WEB_CONTEXT_FULL_URL must NOT null");
+            }
+        }
         return WEB_CONTEXT_FULL_URL;
     }
 
