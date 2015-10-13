@@ -29,7 +29,7 @@ public class SmsVerifyCode extends BaseNativeEntity {
 
     private static final long serialVersionUID = 615208416034164816L;
 
-    @Column(length = 32, nullable = false)
+    @Column(length = 32, nullable = false, unique = true)
     private String mobileNum;
 
     @Column(length = 32, nullable = false)

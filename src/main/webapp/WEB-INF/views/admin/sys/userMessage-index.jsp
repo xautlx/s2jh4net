@@ -14,7 +14,7 @@
 				data-grid-search="#grid-sys-user-message-index">
 				<div class="form-group">
 					<div class="controls controls-clearfix">
-						<input type="text" name="search['CN_titl']" class="form-control input-large" placeholder="标题，内容...">
+						<input type="text" name="search['CN_title_OR_message']" class="form-control input-large" placeholder="标题，内容...">
 					</div>
 				</div>
 				<div class="form-group search-group-btn">
@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-sys-user-message-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/sys/user-message/list',
+                url : WEB_ROOT + "/admin/sys/user-message/list?search['EQ_targetUser']=${param.siteUserId}",
                 colModel : [ {
                     label : '目标用户',
                     name : 'targetUser.display',

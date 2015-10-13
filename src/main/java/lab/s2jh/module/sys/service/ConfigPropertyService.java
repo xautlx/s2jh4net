@@ -34,4 +34,13 @@ public class ConfigPropertyService extends BaseService<ConfigProperty, Long> {
         }
         return null;
     }
+
+    @Transactional(readOnly = true)
+    public String findHtmlByPropKey(String propKey) {
+        ConfigProperty configProperty = configPropertyDao.findByPropKey(propKey);
+        if (configProperty != null) {
+            return configProperty.getHtmlValue();
+        }
+        return null;
+    }
 }

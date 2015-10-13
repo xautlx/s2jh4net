@@ -4,7 +4,9 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.dao.jpa.BaseDao;
+import lab.s2jh.core.exception.ServiceException;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.module.sys.dao.SmsVerifyCodeDao;
@@ -31,6 +33,9 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
     @Autowired
     private SmsVerifyCodeDao smsVerifyCodeDao;
 
+    @Autowired
+    private DynamicConfigService dynamicConfigService;
+
     @Override
     protected BaseDao<SmsVerifyCode, Long> getEntityDao() {
         return smsVerifyCodeDao;
@@ -41,11 +46,19 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
      * @param mobileNum 手机号码
      * @return 6位随机数
      */
-    public String generateSmsCode(HttpServletRequest request, String mobileNum) {
+    public String generateSmsCode(HttpServletRequest request, String mobileNum, boolean mustExist) {
+        if (mustExist && dynamicConfigService.getBoolean(GlobalConstant.cfg_public_send_sms_disabled, false)) {
+            throw new ServiceException("非注册手机号短信发送功能已暂停");
+        }
 
         SmsVerifyCode smsVerifyCode = smsVerifyCodeDao.findByMobileNum(mobileNum);
         boolean updateCode = false;
         if (smsVerifyCode == null) {
+            //要求手机号之前必须已经成功验证过
+            if (mustExist && !DynamicConfigService.isDevMode()) {
+                throw new ServiceException("手机号无效");
+            }
+
             updateCode = true;
             smsVerifyCode = new SmsVerifyCode();
             smsVerifyCode.setMobileNum(mobileNum);

@@ -18,6 +18,7 @@ import lab.s2jh.core.util.WebFormatter;
 import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lab.s2jh.core.web.json.EntityIdDisplaySerializer;
 import lab.s2jh.core.web.json.JsonViews;
+import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lab.s2jh.module.auth.entity.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -50,12 +52,29 @@ public class UserMessage extends BaseNativeEntity {
     @Column(nullable = false)
     private String title;
 
+    @MetaData(value = "APP弹出提示内容", comments = "如果不为空则触发APP弹出通知，为空则不会弹出而只会推送应用消息")
+    @Column(length = 200)
+    @JsonView(JsonViews.Admin.class)
+    private String notification;
+
+    @MetaData(value = "消息内容", comments = "可以是无格式的TEXT或格式化的HTMl，一般是在邮件或WEB页面查看的HTML格式详细内容")
+    @Lob
+    @Column(nullable = false)
+    @JsonView(JsonViews.AppDetail.class)
+    private String message;
+
     @MetaData(value = "目标用户")
     @ManyToOne
     @JoinColumn(name = "targetUser_id", nullable = false)
     @JsonSerialize(using = EntityIdDisplaySerializer.class)
     @JsonView(JsonViews.Admin.class)
     private User targetUser;
+
+    @MetaData(value = "发布时间", comments = "全局的消息创建时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Column(nullable = false)
+    @JsonSerialize(using = ShortDateTimeJsonSerializer.class)
+    private Date publishTime;
 
     @MetaData(value = "邮件推送消息")
     @JsonView(JsonViews.Admin.class)
@@ -80,16 +99,6 @@ public class UserMessage extends BaseNativeEntity {
     @MetaData(value = "APP推送消息时间", comments = "为空表示尚未推送过")
     @JsonView(JsonViews.Admin.class)
     private Date appPushTime;
-
-    @MetaData(value = "APP弹出提示内容", comments = "如果不为空则触发APP弹出通知，为空则不会弹出而只会推送应用消息")
-    @Column(length = 200)
-    @JsonView(JsonViews.Admin.class)
-    private String notification;
-
-    @MetaData(value = "消息内容", comments = "可以是无格式的TEXT或格式化的HTMl，一般是在邮件或WEB页面查看的HTML格式详细内容")
-    @Lob
-    @Column(nullable = false)
-    private String message;
 
     @MetaData(value = "关联附件个数", comments = "用于列表显示和关联处理附件清理判断")
     @JsonView(JsonViews.Admin.class)

@@ -79,7 +79,7 @@ public class DataDict extends BaseNativeEntity {
      * 对于返回的数据，根据实际业务定制化使用即可
      */
     @MetaData(value = "次要数据")
-    @JsonView(JsonViews.Admin.class)
+    @JsonView(JsonViews.List.class)
     private String secondaryValue;
 
     /**

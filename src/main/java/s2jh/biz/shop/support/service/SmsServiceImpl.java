@@ -4,7 +4,6 @@ import javax.annotation.PostConstruct;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.support.service.SmsService;
-import lab.s2jh.support.service.SmsService.SmsMessageTypeEnum;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
@@ -38,31 +37,28 @@ public class SmsServiceImpl implements SmsService {
      * 短信发送接口
      * @param smsContent 短信内容
      * @param mobileNum 手机号码
+     * 
+     * @return 如果成功则返回null；否则失败返回异常消息
      */
     @Override
-    public boolean sendSMS(String smsContent, String mobileNum, SmsMessageTypeEnum smsType) {
-        try {
-            if (mobileNum == null || mobileNum.length() != 11 || !mobileNum.startsWith("1")) {
-                logger.warn("Invalid mobile number：" + mobileNum);
-                return false;
-            }
-
-            //追加签名信息
-            smsContent += smsSignature;
-
-            if (bSmsMockMode) {
-                logger.warn("SMS Service running at MOCK mode, just print SMS content:" + smsContent);
-                return true;
-            }
-
-            logger.debug("Sending SMS to {} ： {}", mobileNum, smsContent);
-
-            //TODO 实际短信通道接口调用发送
-            throw new UnsupportedOperationException("SMS API NOT Implements");
-        } catch (Exception e) {
-            logger.error("sms api error", e);
+    public String sendSMS(String smsContent, String mobileNum, SmsMessageTypeEnum smsType) {
+        if (mobileNum == null || mobileNum.length() != 11 || !mobileNum.startsWith("1")) {
+            String message = "Invalid mobile number：" + mobileNum;
+            logger.warn(message);
+            return message;
         }
 
-        return false;
+        //追加签名信息
+        smsContent += smsSignature;
+
+        if (bSmsMockMode) {
+            logger.warn("SMS Service running at MOCK mode, just print SMS content:" + smsContent);
+            return null;
+        }
+
+        logger.debug("Sending SMS to {} ： {}", mobileNum, smsContent);
+
+        //TODO 实际短信通道接口调用发送
+        throw new UnsupportedOperationException("SMS API NOT Implements");
     }
 }

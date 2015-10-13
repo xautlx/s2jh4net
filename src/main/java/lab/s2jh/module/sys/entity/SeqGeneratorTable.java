@@ -1,0 +1,35 @@
+package lab.s2jh.module.sys.entity;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * 用于 @see SeqGeneratorTableService 所需的数据表结构定义之用
+ */
+@Getter
+@Setter
+@Access(AccessType.FIELD)
+@Entity
+@Table(name = "seq_generator_table")
+public class SeqGeneratorTable {
+
+    @Id
+    private String code;
+
+    @Column(name = "initial_value")
+    private Integer initialValue;
+
+    @Column(name = "increment_size")
+    private Integer incrementSize;
+
+    @Column(name = "next_val")
+    private Long nextVal;
+
+}

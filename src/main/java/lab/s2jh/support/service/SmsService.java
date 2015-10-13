@@ -7,8 +7,10 @@ public interface SmsService {
      * 短信发送接口
      * @param smsContent 短信内容
      * @param mobileNum 手机号码
+     * 
+     * @return 如果成功则返回null；否则失败返回异常消息
      */
-    boolean sendSMS(String smsContent, String mobileNum, SmsMessageTypeEnum smsType);
+    String sendSMS(String smsContent, String mobileNum, SmsMessageTypeEnum smsType);
 
     public static enum SmsMessageTypeEnum {
         @MetaData(value = "缺省", comments = "一般是程序触发，不做限制的短信发送")

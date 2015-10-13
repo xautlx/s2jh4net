@@ -1,10 +1,14 @@
 package lab.s2jh.core.test;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+
+import lab.s2jh.core.context.SpringContextHolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -27,10 +31,16 @@ public abstract class SpringTransactionalTestCase extends AbstractTransactionalJ
 
     protected DataSource dataSource;
 
+    @PostConstruct
+    public void init() {
+        SpringContextHolder.setApplicationContext(applicationContext);
+    }
+
     @Override
     @Autowired
     public void setDataSource(DataSource dataSource) {
         super.setDataSource(dataSource);
         this.dataSource = dataSource;
     }
+
 }

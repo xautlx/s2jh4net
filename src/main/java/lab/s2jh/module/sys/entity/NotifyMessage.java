@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.WebFormatter;
+import lab.s2jh.core.web.json.JsonViews;
 import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Getter
@@ -91,7 +93,7 @@ public class NotifyMessage extends BaseNativeEntity {
     @MetaData(value = "消息内容", comments = "可以是无格式的TEXT或格式化的HTMl，一般是在邮件或WEB页面查看的HTML格式详细内容")
     @Lob
     @Column(nullable = false)
-    @JsonIgnore
+    @JsonView(JsonViews.AppDetail.class)
     private String message;
 
     @MetaData(value = "总计查看用户数")

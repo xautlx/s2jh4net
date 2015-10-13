@@ -19,7 +19,6 @@ import javax.persistence.Version;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.audit.DefaultAuditable;
 import lab.s2jh.core.audit.SaveUpdateAuditListener;
-import lab.s2jh.core.web.json.DateTimeJsonSerializer;
 import lab.s2jh.core.web.json.JsonViews;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +30,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Getter
 @Setter
@@ -64,18 +62,8 @@ public abstract class BaseEntity<ID extends Serializable> extends PersistableEnt
     private String lastModifiedBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonSerialize(using = DateTimeJsonSerializer.class)
     @JsonIgnore
     private Date lastModifiedDate;
-
-    public abstract void setId(final ID id);
-
-    @Transient
-    public void resetCommonProperties() {
-        setId(null);
-        version = 0;
-        addExtraAttribute(PersistableEntity.EXTRA_ATTRIBUTE_DIRTY_ROW, true);
-    }
 
     private static final String[] PROPERTY_LIST = new String[] { "id", "version" };
 

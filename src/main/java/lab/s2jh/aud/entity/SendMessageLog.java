@@ -54,6 +54,11 @@ public class SendMessageLog extends PersistableEntity<Long> {
     @Column(nullable = false)
     private String message;
 
+    @MetaData(value = "消息响应", comments = "如JSON，HTML响应文本")
+    @Lob
+    @Column(nullable = true)
+    private String response;
+
     @MetaData(value = "消息类型")
     @Column(length = 16, nullable = false)
     @Enumerated(EnumType.STRING)
@@ -64,6 +69,8 @@ public class SendMessageLog extends PersistableEntity<Long> {
     private Date sendTime;
 
     public static enum SendMessageTypeEnum {
+        @MetaData(value = "API")
+        API,
 
         @MetaData(value = "电子邮件")
         EMAIL,

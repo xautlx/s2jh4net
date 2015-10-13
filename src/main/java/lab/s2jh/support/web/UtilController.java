@@ -102,8 +102,8 @@ public class UtilController {
     @ResponseBody
     public OperationResult loggerLevelUpdate(@RequestParam(value = "loggerName", required = false) String loggerName,
             @RequestParam("loggerLevel") String loggerLevel) {
-        Validation.notDemoMode();
         if (StringUtils.isBlank(loggerName)) {
+            Validation.notDemoMode();
             loggerName = Logger.ROOT_LOGGER_NAME;
         }
         Logger logger = LoggerFactory.getLogger(loggerName);

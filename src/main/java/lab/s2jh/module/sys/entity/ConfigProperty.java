@@ -10,6 +10,7 @@ import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
+import lab.s2jh.core.web.json.JsonViews;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -19,6 +20,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Getter
 @Setter
@@ -47,7 +49,7 @@ public class ConfigProperty extends BaseNativeEntity {
 
     @MetaData(value = "HTML属性值")
     @Lob
-    @JsonIgnore
+    @JsonView(JsonViews.AppDetail.class)
     private String htmlValue;
 
     @MetaData(value = "参数属性用法说明")

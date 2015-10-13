@@ -526,6 +526,18 @@
 			<artifactId>filters</artifactId>
 			<version>2.0.235</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.drewnoakes</groupId>
+			<artifactId>metadata-extractor</artifactId>
+			<version>2.8.1</version>
+		</dependency>
 		<!-- UTILS end -->
 
 		<dependency>
@@ -897,6 +909,9 @@
 						<includes>
 							<include>**/*Test.java</include>
 						</includes>
+						<excludes>
+							<exclude>**/*ManualTest.java</exclude>
+						</excludes>
 					</configuration>
 				</plugin>
 

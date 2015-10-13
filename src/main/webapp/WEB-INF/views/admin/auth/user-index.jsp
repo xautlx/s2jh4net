@@ -116,20 +116,20 @@
                     }
                 }, {
                     label : '注册时间',
-                    name : 'signupTime',
+                    name : 'userExt.signupTime',
                     sorttype : 'date'
                 }, {
                     label : '最后登录时间',
-                    name : 'lastLogonTime',
+                    name : 'userExt.lastLogonTime',
                     sorttype : 'date'
                 }, {
                     label : '总计登录次数',
-                    name : 'logonTimes',
+                    name : 'userExt.logonTimes',
                     align : 'center',
                     width : 80
                 }, {
                     label : '最近认证失败时间',
-                    name : 'lastLogonFailureTime',
+                    name : 'userExt.lastLogonFailureTime',
                     sorttype : 'date'
                 }, {
                     label : '最近认证失败次数',

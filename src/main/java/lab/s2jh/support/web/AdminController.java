@@ -140,7 +140,7 @@ public class AdminController {
             @RequestParam("code") String code, @RequestParam("newpasswd") String newpasswd, RedirectAttributes redirectAttributes) throws IOException {
         User user = userService.findByAuthTypeAndAuthUid(AuthTypeEnum.SYS, uid);
         if (user != null) {
-            if (code.equals(user.getRandomCode())) {
+            if (code.equals(user.getUserExt().getRandomCode())) {
                 //user.setRandomCode(null);
                 //更新密码失效日期为6个月后
                 user.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());

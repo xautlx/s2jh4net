@@ -29,6 +29,13 @@ public class GlobalConstant {
     @MetaData("ConfigProperty:是否禁用管理账号注册功能")
     public final static String cfg_signup_disabled = "cfg_signup_disabled";
 
+    @MetaData("ConfigProperty:是否全局禁用开放手机号短信发送功能")
+    public final static String cfg_public_send_sms_disabled = "cfg_public_send_sms_disabled";
+
     @MetaData("数据字典:消息类型")
     public final static String DataDict_Message_Type = "DataDict_Message_Type";
+
+    public final static String SESSION_KEY_MOBILE = "SESSION_KEY_MOBILE";
+    public final static String COOKIE_KEY_APPLY_TYPE = "applyType";
+    public final static String COOKIE_KEY_APPLY_SOURCE = "applySource";
 }

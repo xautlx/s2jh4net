@@ -62,7 +62,7 @@ public class IndexController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String defaultIndex() {
-        return "redirect:/w";
+        return "w";
     }
 
     @RequestMapping(value = "/unauthorized", method = RequestMethod.GET)
@@ -154,15 +154,58 @@ public class IndexController {
 
     }
 
+    /** 
+     * <h3>APP接口: 发送短信验证码。</h3>
+     * <p>从接口会向所有手机号发送短信验证码，但是可能在极端情况通过全局系统参数关闭向开放手机发送短信功能。</p>
+     * <p>此接口主要适用于开放式的注册验证码发送功能，如果调用端功能能明确是向已注册用户发送短信，如找回密码功能，则请用/user-sms-code接口</p>
+     * 
+     * 
+     * <p>
+     * 业务输入参数列表：
+     * <ul> 
+     * <li><b>mobile</b> 手机号</li>
+     * </ul> 
+     * </p>
+     * 
+     * @return  {@link OperationResult} 通用标准结构
+     * 
+     */
     @RequestMapping(value = "/send-sms-code/{mobile}", method = RequestMethod.GET)
     @ResponseBody
     public OperationResult sendSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
-        String code = smsVerifyCodeService.generateSmsCode(request, mobile);
+        String code = smsVerifyCodeService.generateSmsCode(request, mobile, false);
         String msg = "您的操作验证码为：" + code + "。【请勿向任何人提供您收到的短信验证码】。如非本人操作，请忽略本信息。";
-        if (smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode)) {
+        String errorMessage = smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode);
+        if (StringUtils.isBlank(errorMessage)) {
             return OperationResult.buildSuccessResult();
         } else {
-            return OperationResult.buildFailureResult("短信发送失败");
+            return OperationResult.buildFailureResult(errorMessage);
+        }
+    }
+
+    /** 
+     * <h3>APP接口: 只会向平台已验证过的手机号发送短信验证码。</h3>
+     * <p>此接口主要适用于向已通过短信验证成功注册用户发送短信，如找回密码功能，其他开放注册功能请用/send-sms-code接口</p>
+     * <p>
+     * 业务输入参数列表：
+     * <ul> 
+     * <li><b>mobile</b> 手机号</li>
+     * </ul> 
+     * </p>
+     * 
+     * @return  {@link OperationResult} 通用标准结构
+     * 
+     */
+    @RequestMapping(value = "/user-sms-code/{mobile}", method = RequestMethod.GET)
+    @ResponseBody
+    public OperationResult userSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
+        String code = smsVerifyCodeService.generateSmsCode(request, mobile, true);
+        String msg = "您的操作验证码为：" + code + "。【请勿向任何人提供您收到的短信验证码】。如非本人操作，请忽略本信息。";
+        String errorMessage = smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode);
+        if (StringUtils.isBlank(errorMessage)) {
+            return OperationResult.buildSuccessResult();
+        } else {
+            return OperationResult.buildFailureResult(errorMessage);
         }
     }
 
