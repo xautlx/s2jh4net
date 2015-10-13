@@ -100,6 +100,15 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     }
 
     /**
+     * 强制从数据库刷新加载实体对象
+     * 主要用于Spring DATA JPA Modifying操作后强制refresh重新从数据库加载数据
+     * @param entity
+     */
+    protected void foreceRefreshEntity(Object entity) {
+        entityManager.refresh(entity);
+    }
+
+    /**
      * 创建数据保存数据之前额外操作回调方法 默认为空逻辑，子类根据需要覆写添加逻辑即可
      * 
      * @param entity
