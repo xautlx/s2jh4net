@@ -56,6 +56,12 @@ public class QuartzDatabaseDataInitialize {
                     ClassPathResource resource = new ClassPathResource(sqlFile);
                     resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
                     resourceDatabasePopulator.setSeparator("GO");
+                } else if (name.indexOf("oracle") > -1) {
+                    //In your Quartz properties file, you'll need to set 
+                    //org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
+                    sqlFile = "lab/s2jh/module/schedule/data/quartz/tables_oracle.sql";
+                    ClassPathResource resource = new ClassPathResource(sqlFile);
+                    resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
                 }
 
                 if (resourceDatabasePopulator != null) {

@@ -129,6 +129,8 @@ public class DatabaseDataInitializeExecutor {
                     sql = "DBCC CHECKIDENT('" + table.name() + "',RESEED," + metaData.autoIncrementInitValue() + ")";
                 } else if (name.indexOf("h2") > -1) {
                     //DO Nothing;
+                } else if (name.indexOf("oracle") > -1) {
+                    //DO Nothing;
                 } else {
                     throw new UnsupportedOperationException(name);
                 }
