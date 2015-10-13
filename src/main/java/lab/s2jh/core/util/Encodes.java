@@ -123,4 +123,9 @@ public class Encodes {
             throw Exceptions.unchecked(e);
         }
     }
+
+    public static void main(String[] args) {
+        String text = "18696597327";
+        System.out.println("Base64 encode for '" + text + "' is " + encodeBase64(text.getBytes()));
+    }
 }

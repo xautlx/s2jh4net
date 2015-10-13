@@ -2,9 +2,6 @@ package lab.s2jh.core.util;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,30 +10,24 @@ import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
-import javax.persistence.Table;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.Size;
 
-import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.audit.DefaultAuditable;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.apache.shiro.util.CollectionUtils;
-import org.hibernate.Session;
-import org.hibernate.jdbc.Work;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -130,6 +121,9 @@ public class MockEntityUtils {
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
+        if (list.size() == 1) {
+            return list.get(0);
+        }
         return list.get(randomDataGenerator.nextInt(0, list.size() - 1));
     }
 
@@ -185,38 +179,11 @@ public class MockEntityUtils {
     }
 
     /**
-     * 获取表数据总记录数
-     */
-    public static int countTable(Class<?> entity, EntityManager entityManager) {
-        Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
-        return Integer.valueOf(String.valueOf(count));
-    }
-
-    /**
-     * 判定实体对象对应表是否为空
-     */
-    public static boolean isEmptyTable(Class<?> entity, EntityManager entityManager) {
-        Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
-        if (count == null || String.valueOf(count).equals("0")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 判定实体对象对应表是否为空
-     */
-    public static <X> List<X> findAll(Class<X> entity, EntityManager entityManager) {
-        return entityManager.createQuery("from " + entity.getSimpleName()).getResultList();
-    }
-
-    /**
      * 数据持久化
      * @param entity 待持久化对象实例
      * @return
      */
-    public static void persistNew(EntityManager entityManager, Object entity) {
+    private static void persistNew(EntityManager entityManager, Object entity) {
         entityManager.persist(entity);
         //特殊处理SaveUpdateAuditListener的CreatedDate“篡改”为当前临时系统时间
         if (entity instanceof DefaultAuditable) {
@@ -261,44 +228,6 @@ public class MockEntityUtils {
             logger.error(e.getMessage(), e);
         }
         return false;
-    }
-
-    /**
-     * 初始化自增对象起始值
-     */
-    public static void autoIncrementInitValue(final Class<?> entity, final EntityManager entityManager) {
-        if (!MockEntityUtils.isEmptyTable(entity, entityManager)) {
-            logger.debug("Skipped autoIncrementInitValue as exist data: {}", entity.getClass());
-            return;
-        }
-        Session session = entityManager.unwrap(Session.class);
-        session.doWork(new Work() {
-            public void execute(Connection connection) throws SQLException {
-                Table table = entity.getAnnotation(Table.class);
-                MetaData metaData = entity.getAnnotation(MetaData.class);
-                Assert.isTrue(metaData.autoIncrementInitValue() > 1, "Undefined MetaData autoIncrementInitValue for entity: " + entity.getClass());
-
-                DatabaseMetaData databaseMetaData = connection.getMetaData();
-                String name = databaseMetaData.getDatabaseProductName().toLowerCase();
-                //根据不同数据库类型执行不同初始化SQL脚本
-                String sql = null;
-                if (name.indexOf("mysql") > -1) {
-                    sql = "ALTER TABLE " + table.name() + " AUTO_INCREMENT =" + metaData.autoIncrementInitValue();
-                } else if (name.indexOf("sql server") > -1) {
-                    //DBCC   CHECKIDENT( 'tb ',   RESEED,   20000)  
-                    sql = "DBCC CHECKIDENT('" + table.name() + "',RESEED," + metaData.autoIncrementInitValue() + ")";
-                } else if (name.indexOf("h2") > -1) {
-                    //DO Nothing;
-                } else {
-                    throw new UnsupportedOperationException(name);
-                }
-
-                if (StringUtils.isNotBlank(sql)) {
-                    logger.debug("Execute autoIncrementInitValue SQL: {}", sql);
-                    entityManager.createNativeQuery(sql).executeUpdate();
-                }
-            }
-        });
     }
 
     public static class TestVO {

@@ -14,6 +14,8 @@ import org.joda.time.DateTime;
 
 public class DateUtils {
 
+    public final static String DEFAULT_TIMEZONE = "GMT+8";
+
     public final static String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     public final static String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -24,7 +26,7 @@ public class DateUtils {
 
     public final static String FULL_SEQ_FORMAT = "yyyyMMddHHmmssSSS";
 
-    public final static String[] MULTI_FORMAT = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM" };
+    public final static String[] MULTI_FORMAT = { DEFAULT_DATE_FORMAT, ISO_DATE_TIME_FORMAT, DEFAULT_TIME_FORMAT, SHORT_TIME_FORMAT, "yyyy-MM" };
 
     public final static String FORMAT_YYYY = "yyyy";
 

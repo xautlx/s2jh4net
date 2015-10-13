@@ -9,9 +9,11 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -54,6 +56,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ch.qos.logback.classic.ClassicConstants;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -397,6 +400,30 @@ public class ServletUtils {
             return url;
         }
         return getReadFileUrlPrefix() + url;
+    }
+
+    /**
+     * 将URL基于/切分，把路径中的中文部分做UTF8编码后再组装返回
+     * @return
+     */
+    public static String encodeUtf8Url(String url) {
+        if (url == null) {
+            return null;
+        }
+        String[] splits = url.split("/");
+        List<String> urls = Lists.newArrayList();
+        try {
+            for (String split : splits) {
+                if (StringUtils.isNotBlank(split)) {
+                    urls.add(URLEncoder.encode(split, "UTF-8"));
+                } else {
+                    urls.add("");
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return StringUtils.join(urls, "/");
     }
 
     private static String staticFileUploadDir;
