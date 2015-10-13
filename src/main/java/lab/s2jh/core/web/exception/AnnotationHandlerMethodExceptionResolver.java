@@ -14,8 +14,6 @@ import lab.s2jh.core.exception.ValidationException;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.util.WebUtils;
@@ -103,10 +101,10 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
 
             //构建和记录友好和详细的错误信息及消息
             //生成一个异常流水号，追加到错误消息上显示到前端用户，用户反馈问题时给出此流水号给运维或开发人员快速定位对应具体异常细节
-            String rand = DateFormatUtils.format(new java.util.Date(), "yyMMddHHmmss") + RandomStringUtils.randomNumeric(3);
+            String exceptionCode = BaseRuntimeException.buildExceptionCode();
             //标记有些校验类型异常无需调用logger对象写入日志
             boolean skipLog = false;
-            String errorTitle = "ERR" + rand + ": ";
+            String errorTitle = exceptionCode + ": ";
             errorMessage = errorTitle + "系统运行错误，请联系管理员！";
 
             //先判断明确子类异常，优先匹配后则终止其他判断
