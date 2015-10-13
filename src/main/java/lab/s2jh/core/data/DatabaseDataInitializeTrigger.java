@@ -12,21 +12,35 @@ public class DatabaseDataInitializeTrigger {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseDataInitializeTrigger.class);
 
+    private DatabaseDataInitializeExecutor databaseDataInitializeExecutor;
+
     private List<BaseDatabaseDataInitialize> initializeProcessors;
+
+    public void initialize() {
+        try {
+            databaseDataInitializeExecutor.initialize(initializeProcessors);
+        } catch (Exception e) {
+            String msg = null;
+            Throwable msgException = e;
+            do {
+                msg = msgException.getMessage();
+                msgException = msgException.getCause();
+            } while (msgException != null);
+
+            if (msg != null && msg.indexOf("Transaction not active") > -1) {
+                logger.warn(msg);
+            } else {
+                logger.warn(e.getMessage(), e);
+            }
+        }
+
+    }
 
     public void setInitializeProcessors(List<BaseDatabaseDataInitialize> initializeProcessors) {
         this.initializeProcessors = initializeProcessors;
     }
 
-    public void initialize() {
-        for (BaseDatabaseDataInitialize initializeProcessor : initializeProcessors) {
-            logger.debug("Invoking data initialize for {}", initializeProcessor);
-            try {
-                initializeProcessor.initialize();
-            } catch (Exception e) {
-                logger.warn(e.getMessage(), e);
-            }
-        }
+    public void setDatabaseDataInitializeExecutor(DatabaseDataInitializeExecutor databaseDataInitializeExecutor) {
+        this.databaseDataInitializeExecutor = databaseDataInitializeExecutor;
     }
-
 }

@@ -8,21 +8,13 @@ import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import lab.s2jh.core.annotation.MenuData;
-import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
 import lab.s2jh.core.data.BaseDatabaseDataInitialize;
 import lab.s2jh.core.security.AuthUserDetails;
-import lab.s2jh.core.security.PasswordService;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.Exceptions;
-import lab.s2jh.core.util.MockEntityUtils;
 import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.module.auth.entity.Department;
 import lab.s2jh.module.auth.entity.Privilege;
@@ -30,17 +22,24 @@ import lab.s2jh.module.auth.entity.Role;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
 import lab.s2jh.module.auth.entity.UserR2Role;
+import lab.s2jh.module.auth.service.DepartmentService;
+import lab.s2jh.module.auth.service.PrivilegeService;
+import lab.s2jh.module.auth.service.RoleService;
+import lab.s2jh.module.auth.service.UserService;
 import lab.s2jh.module.sys.entity.ConfigProperty;
 import lab.s2jh.module.sys.entity.DataDict;
 import lab.s2jh.module.sys.entity.Menu;
 import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.UserMessage;
+import lab.s2jh.module.sys.service.ConfigPropertyService;
+import lab.s2jh.module.sys.service.DataDictService;
+import lab.s2jh.module.sys.service.MenuService;
+import lab.s2jh.module.sys.service.NotifyMessageService;
+import lab.s2jh.module.sys.service.UserMessageService;
 import lab.s2jh.support.service.DynamicConfigService;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,23 +48,46 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
  * 数据库基础数据初始化处理器
  */
 @Component
-@Transactional
 public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitialize.class);
 
     @Autowired
-    private PasswordService passwordService;
+    private RoleService roleService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private PrivilegeService privilegeService;
+
+    @Autowired
+    private MenuService menuService;
+
+    @Autowired
+    private ConfigPropertyService configPropertyService;
+
+    @Autowired
+    private DataDictService dataDictService;
+
+    @Autowired
+    private UserMessageService userMessageService;
+
+    @Autowired
+    private NotifyMessageService notifyMessageService;
 
     @Autowired
     private ExtPropertyPlaceholderConfigurer extPropertyPlaceholderConfigurer;
@@ -76,41 +98,27 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
         logger.info("Running " + this.getClass().getName());
         Date now = DateUtils.currentDate();
 
-        //搜索所有entity对象，并自动进行自增初始化值设置
-        ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
-        scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-        Set<BeanDefinition> beanDefinitions = scan.findCandidateComponents("**.entity.**");
-        for (BeanDefinition beanDefinition : beanDefinitions) {
-            Class<?> entityClass = ClassUtils.forName(beanDefinition.getBeanClassName());
-            MetaData metaData = entityClass.getAnnotation(MetaData.class);
-            if (metaData != null && metaData.autoIncrementInitValue() > 0) {
-                MockEntityUtils.autoIncrementInitValue(entityClass, entityManager);
-            }
-        }
-
         //角色、用户等数据初始化,默认密码为:账号+123
-        if (MockEntityUtils.isEmptyTable(User.class, entityManager)) {
+        if (isEmptyTable(User.class)) {
             //后端预置超级管理员，无需配置相关权限，默认自动赋予所有权限
             Role superRole = new Role();
             superRole.setCode(AuthUserDetails.ROLE_SUPER_USER);
             superRole.setName("后端超级管理员角色");
             superRole.setDescription("系统预置，请勿随意修改");
-            MockEntityUtils.persistNew(entityManager, superRole);
+            roleService.save(superRole);
+
             //预置超级管理员账号
             User entity = new User();
-            entity.setAuthGuid(UidUtils.UID());
             entity.setAuthUid("admin");
             entity.setAuthType(AuthTypeEnum.SYS);
             entity.setMgmtGranted(true);
             entity.setNickName("后端预置超级管理员");
-            entity.setSignupTime(now);
-            entity.setPassword(passwordService.entryptPassword(entity.getAuthUid() + "123", entity.getAuthGuid()));
-            MockEntityUtils.persistNew(entityManager, entity);
             //关联超级管理员角色
             UserR2Role r2 = new UserR2Role();
             r2.setUser(entity);
             r2.setRole(superRole);
-            MockEntityUtils.persistNew(entityManager, r2);
+            entity.setUserR2Roles(Lists.newArrayList(r2));
+            userService.save(entity, entity.getAuthUid() + "123");
 
             //后端登录用户默认角色，具体权限可通过管理界面配置
             //所有后端登录用户默认关联此角色，无需额外写入用户和角色关联数据
@@ -118,7 +126,8 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             mgmtRole.setCode(AuthUserDetails.ROLE_MGMT_USER);
             mgmtRole.setName("后端登录用户默认角色");
             mgmtRole.setDescription("系统预置，请勿随意修改");
-            MockEntityUtils.persistNew(entityManager, mgmtRole);
+            roleService.save(mgmtRole);
+
             //后台默认普通管理员账号
             entity = new User();
             entity.setAuthGuid(UidUtils.UID());
@@ -126,11 +135,9 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             entity.setAuthType(AuthTypeEnum.SYS);
             entity.setMgmtGranted(true);
             entity.setNickName("后台默认普通管理员");
-            entity.setSignupTime(now);
-            entity.setPassword(passwordService.entryptPassword(entity.getAuthUid() + "123", entity.getAuthGuid()));
             //默认密码失效，用户初始密码登录后则强制修改密码
             entity.setCredentialsExpireTime(now);
-            MockEntityUtils.persistNew(entityManager, entity);
+            userService.save(entity, entity.getAuthUid() + "123");
 
             //前端登录用户默认角色，，具体权限可通过管理界面配置
             //所有前端登录用户默认关联此角色，无需额外写入用户和角色关联数据
@@ -138,39 +145,33 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             siteUserRole.setCode(AuthUserDetails.ROLE_SITE_USER);
             siteUserRole.setName("前端登录用户默认角色");
             siteUserRole.setDescription("系统预置，请勿随意修改");
-            MockEntityUtils.persistNew(entityManager, siteUserRole);
+            roleService.save(siteUserRole);
 
-            if (DynamicConfigService.isDevMode()) {
+            if (DynamicConfigService.isDemoMode()) {
                 Department department = new Department();
                 department.setCode("SC00");
                 department.setName("市场部");
-                MockEntityUtils.persistNew(entityManager, department);
+                departmentService.save(department);
 
                 Department department1 = new Department();
                 department1.setCode("SC01");
                 department1.setName("市场一部");
                 department1.setParent(department);
-                MockEntityUtils.persistNew(entityManager, department1);
+                departmentService.save(department1);
 
                 Department department2 = new Department();
                 department2.setCode("SC02");
                 department2.setName("市场二部");
                 department2.setParent(department);
-                MockEntityUtils.persistNew(entityManager, department2);
-            }
-        } else {
-            //如果不是开发模式，则直接退出防止意外更新已有数据
-            //为了稳妥，生产环境数据采用手工更新方式
-            if (!DynamicConfigService.isDevMode()) {
-                return;
+                departmentService.save(department2);
             }
         }
 
         //权限数据初始化
-        rebuildPrivilageDataFromControllerAnnotation(entityManager);
+        rebuildPrivilageDataFromControllerAnnotation();
 
         //菜单数据初始化
-        rebuildMenuDataFromControllerAnnotation(entityManager);
+        rebuildMenuDataFromControllerAnnotation();
 
         //属性文件中配置的系统名称
         String systemTitle = "未定义";
@@ -179,83 +180,103 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
         }
 
         //系统配置参数初始化
-        if (MockEntityUtils.isEmptyTable(ConfigProperty.class, entityManager)) {
+        if (isEmptyTable(ConfigProperty.class)) {
             ConfigProperty entity = new ConfigProperty();
             entity.setPropKey("cfg_system_title");
             entity.setPropName("系统名称");
             entity.setSimpleValue(systemTitle);
-            MockEntityUtils.persistNew(entityManager, entity);
+            configPropertyService.save(entity);
 
             entity = new ConfigProperty();
             entity.setPropKey(GlobalConstant.cfg_signup_disabled);
             entity.setPropName("禁用自助注册功能");
             entity.setSimpleValue("false");
             entity.setPropDescn("设置为true禁用则登录界面屏蔽自助注册功能");
-            MockEntityUtils.persistNew(entityManager, entity);
+            configPropertyService.save(entity);
+
+            entity = new ConfigProperty();
+            entity.setPropKey(GlobalConstant.cfg_public_send_sms_disabled);
+            entity.setPropName("是否全局禁用开放手机号短信发送功能");
+            entity.setSimpleValue("false");
+            entity.setPropDescn("如果为true则只会向已在平台验证通过的手机号发送短信，其他在平台从未验证过的手机号不再发送短信");
+            configPropertyService.save(entity);
         }
 
         {
-            DataDict entity = new DataDict();
-            entity.setPrimaryKey(GlobalConstant.DataDict_Message_Type);
-            entity.setPrimaryValue("消息类型");
-            //如果主对像创建成功则继续处理子对象
-            if (MockEntityUtils.persistSilently(entityManager, entity, "parent", "primaryKey")) {
+            if (dataDictService.findByProperty("primaryKey", GlobalConstant.DataDict_Message_Type) == null) {
+                DataDict entity = new DataDict();
+                entity.setPrimaryKey(GlobalConstant.DataDict_Message_Type);
+                entity.setPrimaryValue("消息类型");
+                dataDictService.save(entity);
+
                 DataDict item = new DataDict();
                 item.setPrimaryKey("notify");
                 item.setPrimaryValue("通知");
-                item.setSecondaryValue("00FF00");
+                item.setSecondaryValue("#32CFC4");
                 item.setParent(entity);
-                MockEntityUtils.persistSilently(entityManager, item, "parent", "primaryKey");
+                dataDictService.save(item);
 
                 item = new DataDict();
                 item.setPrimaryKey("bulletin");
                 item.setPrimaryValue("喜报");
-                item.setSecondaryValue("FF0000");
+                item.setSecondaryValue("#FF645D");
                 item.setParent(entity);
-                MockEntityUtils.persistSilently(entityManager, item, "parent", "primaryKey");
+                dataDictService.save(item);
+
+                item = new DataDict();
+                item.setPrimaryKey("remind");
+                item.setPrimaryValue("提醒");
+                item.setSecondaryValue("#FF8524");
+                item.setParent(entity);
+                dataDictService.save(item);
             }
         }
 
         //初始化演示通知消息
-        if (MockEntityUtils.isEmptyTable(NotifyMessage.class, entityManager)) {
+        if (isEmptyTable(NotifyMessage.class)) {
             NotifyMessage entity = new NotifyMessage();
-
+            entity.setType("notify");
             entity.setTitle("欢迎访问" + systemTitle);
             entity.setPublishTime(now);
             entity.setMessage("<p>系统初始化时间：" + DateUtils.formatTime(now) + "</p>");
-            MockEntityUtils.persistNew(entityManager, entity);
+            notifyMessageService.save(entity);
         }
 
         //初始化演示通知消息
-        if (MockEntityUtils.isEmptyTable(UserMessage.class, entityManager)) {
-            User admin = (User) entityManager.createQuery("from User where authUid='admin'").getSingleResult();
+        if (isEmptyTable(UserMessage.class)) {
+            User admin = userService.findByAuthUid("admin");
 
             UserMessage entity = new UserMessage();
             entity.setType("notify");
+            entity.setPublishTime(DateUtils.currentDate());
             entity.setTitle("演示个人消息1");
             entity.setTargetUser(admin);
             entity.setMessage("<p>演示定向发送个人消息1内容</p>");
-            MockEntityUtils.persistNew(entityManager, entity);
+            userMessageService.save(entity);
 
             entity = new UserMessage();
             entity.setType("bulletin");
+            entity.setPublishTime(DateUtils.currentDate());
             entity.setTitle("演示个人消息2");
             entity.setTargetUser(admin);
             entity.setMessage("<p>演示定向发送个人消息2内容</p>");
-            MockEntityUtils.persistNew(entityManager, entity);
+            userMessageService.save(entity);
         }
     }
 
     /**
      * 基于Controller的@MenuData注解重建菜单基础数据
      */
-    private void rebuildMenuDataFromControllerAnnotation(EntityManager entityManager) {
+    private void rebuildMenuDataFromControllerAnnotation() {
         try {
             Date now = DateUtils.currentDate();
+
+            Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Controller.class));
-            //扫码所有代码
-            Set<BeanDefinition> beanDefinitions = scan.findCandidateComponents("");
+            beanDefinitions.addAll(scan.findCandidateComponents("lab.s2jh.**.web.**"));
+            beanDefinitions.addAll(scan.findCandidateComponents("s2jh.biz.**.web.**"));
+
             ClassPool pool = ClassPool.getDefault();
             //The default ClassPool returned by a static method ClassPool.getDefault() searches the same path that the underlying JVM (Java virtual machine) has. 
             //If a program is running on a web application server such as JBoss and Tomcat, 
@@ -275,21 +296,14 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
                         String[] names = fullpath.split(":");
                         for (int i = 0; i < names.length; i++) {
                             String path = StringUtils.join(names, ":", 0, i + 1);
-                            Query query = entityManager.createQuery("from Menu where path=:path");
-                            query.setParameter("path", path);
-                            Menu menu = null;
-                            if (CollectionUtils.isNotEmpty(query.getResultList())) {
-                                menu = (Menu) query.getResultList().get(0);
-                            }
-
+                            Menu menu = menuService.findByProperty("path", path);
                             if (menu == null) {
                                 menu = new Menu();
                                 menu.setPath(path);
                                 menu.setName(names[i]);
                                 if (i > 0) {
                                     String parentPath = StringUtils.join(names, ":", 0, i);
-                                    Menu parent = (Menu) entityManager.createQuery("from Menu where path=:path").setParameter("path", parentPath)
-                                            .getSingleResult();
+                                    Menu parent = menuService.findByProperty("path", parentPath);
                                     menu.setParent(parent);
                                 }
                             }
@@ -312,7 +326,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
                             }
 
                             menu.setRebuildTime(now);
-                            entityManager.merge(menu);
+                            menuService.save(menu);
                         }
                     }
 
@@ -326,14 +340,16 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
     /**
      * 扫码Spring MVC Controller的所有方法的@RequiresPermissions注解，重建权限基础数据
      */
-    private void rebuildPrivilageDataFromControllerAnnotation(EntityManager entityManager) {
+    private void rebuildPrivilageDataFromControllerAnnotation() {
         try {
             Date now = DateUtils.currentDate();
+            Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Controller.class));
-            Set<BeanDefinition> beanDefinitions = scan.findCandidateComponents("");
-            @SuppressWarnings("unchecked")
-            List<Privilege> privileges = entityManager.createQuery("from Privilege").getResultList();
+            beanDefinitions.addAll(scan.findCandidateComponents("lab.s2jh.**.web.**"));
+            beanDefinitions.addAll(scan.findCandidateComponents("s2jh.biz.**.web.**"));
+
+            List<Privilege> privileges = privilegeService.findAllCached();
             ClassPool pool = ClassPool.getDefault();
             //The default ClassPool returned by a static method ClassPool.getDefault() searches the same path that the underlying JVM (Java virtual machine) has. 
             //If a program is running on a web application server such as JBoss and Tomcat, 
@@ -372,7 +388,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
                     entity.setCode(perm);
                 }
                 entity.setRebuildTime(now);
-                entityManager.merge(entity);
+                privilegeService.save(entity);
             }
         } catch (Exception e) {
             Exceptions.unchecked(e);
