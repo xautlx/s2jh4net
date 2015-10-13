@@ -83,19 +83,6 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-    <!-- 为自定义的JS和CSS等资源添加ETAG过滤控制，基于版本更新标识触发客户端资源更新 -->
-	<filter>
-		<filter-name>buildVersionEtagHeaderFilter</filter-name>
-		<filter-class>lab.s2jh.core.web.filter.BuildVersionEtagHeaderFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>buildVersionEtagHeaderFilter</filter-name>
-		<url-pattern>/assets/w/app/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>buildVersionEtagHeaderFilter</filter-name>
-		<url-pattern>/assets/admin/app/*</url-pattern>
-	</filter-mapping>
 	<filter>
 		<filter-name>openEntityManagerInViewFilter</filter-name>
 		<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
