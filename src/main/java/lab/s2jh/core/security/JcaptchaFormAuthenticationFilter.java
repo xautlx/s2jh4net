@@ -14,6 +14,7 @@ import lab.s2jh.core.util.IPAddrFetcher;
 import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.core.web.captcha.ImageCaptchaServlet;
 import lab.s2jh.module.auth.entity.User;
+import lab.s2jh.module.auth.entity.UserExt;
 import lab.s2jh.module.auth.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -158,15 +159,18 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
             e = new IncorrectCredentialsException("登录账号或密码不正确");
             //失败记录
             SourceUsernamePasswordToken sourceUsernamePasswordToken = (SourceUsernamePasswordToken) token;
-            User authAccount = userService.findByAuthTypeAndAuthUid(User.AuthTypeEnum.SYS, sourceUsernamePasswordToken.getUsername());
-            if (authAccount != null) {
-                authAccount.setLogonTimes(authAccount.getLogonTimes() + 1);
-                authAccount.setLastLogonFailureTime(DateUtils.currentDate());
-                authAccount.setLogonFailureTimes(authAccount.getLogonFailureTimes() + 1);
-                userService.save(authAccount);
+            User user = userService.findByAuthTypeAndAuthUid(User.AuthTypeEnum.SYS, sourceUsernamePasswordToken.getUsername());
+            if (user != null) {
+                UserExt userExt = user.getUserExt();
+                userExt.setLogonTimes(userExt.getLogonTimes() + 1);
+                userExt.setLastLogonFailureTime(DateUtils.currentDate());
+                userService.saveExt(userExt);
+
+                user.setLogonFailureTimes(user.getLogonFailureTimes() + 1);
+                userService.save(user);
 
                 //达到验证失败次数限制，传递标志属性，登录界面显示验证码输入
-                if (authAccount.getLogonFailureTimes() > LOGON_FAILURE_LIMIT) {
+                if (user.getLogonFailureTimes() > LOGON_FAILURE_LIMIT) {
                     request.setAttribute(KEY_AUTH_CAPTCHA_REQUIRED, Boolean.TRUE);
                 }
             }

@@ -38,6 +38,9 @@ public class ApplicationContextPostListener implements ServletContextListener {
             String appName = sc.getServletContextName();
             logger.info("[{}] init context ...", appName);
 
+            //构建版本
+            sc.setAttribute("build_version", new Boolean(DynamicConfigService.getBuildVersion()));
+
             DynamicConfigService dynamicConfigService = SpringContextHolder.getBean(DynamicConfigService.class);
             Map<String, Object> globalCfg = Maps.newHashMap();
             sc.setAttribute(Application_Configuation_Value_Key, globalCfg);

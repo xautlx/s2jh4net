@@ -20,6 +20,4 @@ public interface UserDao extends BaseDao<User, Long> {
 
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     User findByAuthUid(String authUid);
-
-    User findByRandomCodeAndAuthUid(String randomCode, String authUid);
 }

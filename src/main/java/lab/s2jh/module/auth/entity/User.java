@@ -7,13 +7,15 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ForeignKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -21,6 +23,7 @@ import javax.persistence.UniqueConstraint;
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.BaseNativeEntity;
 import lab.s2jh.core.util.DateUtils;
+import lab.s2jh.core.web.json.JsonViews;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +37,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Getter
 @Setter
@@ -66,13 +70,6 @@ public class User extends BaseNativeEntity {
     @MetaData(value = "登录后友好显示昵称")
     private String nickName;
 
-    @MetaData(value = "绑定目标账号", comments = "用于OAUTH类型账号绑定到SYS类型账号累加管理角色")
-    @NotAudited
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "bindTo_id")
-    @JsonIgnore
-    private User bindTo;
-
     @MetaData(value = "SYS自建类型用户的密码", comments = "加密算法：MD5({authGuid}+原始密码)")
     @JsonIgnore
     private String password;
@@ -92,11 +89,6 @@ public class User extends BaseNativeEntity {
     @JsonFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
     private Date accessTokenExpireTime;
 
-    @MetaData(value = "注册时间")
-    @DateTimeFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
-    @JsonFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
-    private Date signupTime;
-
     @MetaData(value = "账户未锁定标志", tooltips = "账号锁定后无法登录")
     private Boolean accountNonLocked = Boolean.TRUE;
 
@@ -110,34 +102,20 @@ public class User extends BaseNativeEntity {
     @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     private Date credentialsExpireTime;
 
-    @MetaData(value = "最后登录时间")
-    @DateTimeFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
-    @JsonFormat(pattern = DateUtils.DEFAULT_TIME_FORMAT)
-    private Date lastLogonTime;
-
-    @MetaData(value = "最后登录IP")
-    private String lastLogonIP;
-
-    @MetaData(value = "最后登录主机名")
-    private String lastLogonHost;
-
-    @MetaData(value = "总计登录次数")
-    private Integer logonTimes = 0;
-
     @MetaData(value = "最近认证失败次数", comments = "认证失败累加，成功后清零。达到设定失败次数后锁定帐号，防止无限制次数尝试猜测密码")
     private Integer logonFailureTimes = 0;
-
-    @MetaData(value = "最近认证失败时间")
-    private Date lastLogonFailureTime;
-
-    @MetaData(value = "随机数", comments = "用于找回密码设定的随机UUID字符串")
-    private String randomCode;
 
     @MetaData(value = "角色关联")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @NotAudited
     @JsonIgnore
     private List<UserR2Role> userR2Roles;
+
+    @MetaData(value = "扩展信息对象")
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @PrimaryKeyJoinColumn(foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    @JsonView(JsonViews.Admin.class)
+    private UserExt userExt;
 
     @MetaData(value = "已关联角色主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
     @Transient

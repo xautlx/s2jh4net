@@ -64,6 +64,18 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
             }
         }
 
+        //把盐值注入到用户输入密码，用于后续加密算法使用
+        token.setPassword(passwordService.injectPasswordSalt(String.valueOf(token.getPassword()), authAccount.getAuthGuid()).toCharArray());
+
+        AuthUserDetails authUserDetails = buildAuthUserDetails(authAccount);
+        authUserDetails.setSource(token.getSource());
+        authUserDetails.setAccessToken(authAccount.getAccessToken());
+
+        return new SimpleAuthenticationInfo(authUserDetails, authAccount.getPassword(), "Shiro JDBC Realm");
+    }
+
+    public static AuthUserDetails buildAuthUserDetails(User authAccount) {
+        //状态校验
         if (Boolean.FALSE.equals(authAccount.getAccountNonLocked())) {
             throw new LockedAccountException("账号已锁定停用");
         }
@@ -73,19 +85,14 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
             throw new DisabledAccountException("账号已到期停用");
         }
 
-        //把盐值注入到用户输入密码，用于后续加密算法使用
-        token.setPassword(passwordService.injectPasswordSalt(String.valueOf(token.getPassword()), authAccount.getAuthGuid()).toCharArray());
-
         //构造权限框架认证用户信息对象
         AuthUserDetails authUserDetails = new AuthUserDetails();
         authUserDetails.setAuthGuid(authAccount.getAuthGuid());
         authUserDetails.setAuthType(authAccount.getAuthType());
         authUserDetails.setAuthUid(authAccount.getAuthUid());
         authUserDetails.setNickName(authAccount.getNickName());
-        authUserDetails.setSource(token.getSource());
-        authUserDetails.setAccessToken(authAccount.getAccessToken());
 
-        return new SimpleAuthenticationInfo(authUserDetails, authAccount.getPassword(), "Shiro JDBC Realm");
+        return authUserDetails;
     }
 
     /**
@@ -114,15 +121,6 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
         List<Role> userRoles = userService.findRoles(user);
         for (Role role : userRoles) {
             info.addRole(role.getCode());
-        }
-
-        //处理绑定用户
-        User bindToUser = user.getBindTo();
-        if (bindToUser != null) {
-            List<Role> bindToUserRoles = userService.findRoles(bindToUser);
-            for (Role role : bindToUserRoles) {
-                info.addRole(role.getCode());
-            }
         }
 
         //超级管理员特殊处理

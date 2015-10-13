@@ -1,6 +1,5 @@
 package lab.s2jh.module.auth.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,10 +15,12 @@ import lab.s2jh.core.util.UidUtils;
 import lab.s2jh.module.auth.dao.PrivilegeDao;
 import lab.s2jh.module.auth.dao.RoleDao;
 import lab.s2jh.module.auth.dao.UserDao;
+import lab.s2jh.module.auth.dao.UserExtDao;
 import lab.s2jh.module.auth.entity.Privilege;
 import lab.s2jh.module.auth.entity.Role;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
+import lab.s2jh.module.auth.entity.UserExt;
 import lab.s2jh.support.service.DynamicConfigService;
 import lab.s2jh.support.service.FreemarkerService;
 import lab.s2jh.support.service.MailService;
@@ -40,6 +41,9 @@ public class UserService extends BaseService<User, Long> {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserExtDao userExtDao;
 
     @Autowired
     private UserLogonLogDao userLogonLogDao;
@@ -95,20 +99,24 @@ public class UserService extends BaseService<User, Long> {
         return super.save(entity);
     }
 
+    public UserExt saveExt(UserExt entity) {
+        return userExtDao.save(entity);
+    }
+
     public User save(User entity, String rawPassword) {
         if (entity.isNew()) {
             Validation.notBlank(rawPassword, "创建账号必须提供初始密码");
-            Date now = DateUtils.currentDate();
             if (entity.getCredentialsExpireTime() == null) {
                 //默认6个月后密码失效，到时用户登录强制要求重新设置密码
                 entity.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
             }
-            entity.setSignupTime(now);
             entity.setAuthGuid(UidUtils.UID());
+
+            if (StringUtils.isBlank(entity.getNickName())) {
+                entity.setNickName(entity.getAuthUid());
+            }
         }
-        if (StringUtils.isBlank(entity.getNickName())) {
-            entity.setNickName(entity.getAuthUid());
-        }
+
         if (StringUtils.isNotBlank(rawPassword)) {
             String encodedPassword = encodeUserPasswd(entity, rawPassword);
             if (StringUtils.isNotBlank(entity.getPassword())) {
@@ -117,7 +125,19 @@ public class UserService extends BaseService<User, Long> {
             }
             entity.setPassword(encodedPassword);
         }
-        return userDao.save(entity);
+
+        if (entity.isNew()) {
+            userDao.save(entity);
+
+            UserExt userExt = new UserExt();
+            userExt.setId(entity.getId());
+            userExt.setSignupTime(DateUtils.currentDate());
+            userExtDao.save(userExt);
+        } else {
+            userDao.save(entity);
+        }
+
+        return entity;
     }
 
     public User saveCascadeR2Roles(User entity, String rawPassword) {
@@ -143,10 +163,11 @@ public class UserService extends BaseService<User, Long> {
         String email = user.getEmail();
         Assert.isTrue(StringUtils.isNotBlank(email), "User email required");
         String suject = dynamicConfigService.getString("cfg.user.reset.pwd.notify.email.title", "申请重置密码邮件");
-        user.setRandomCode(UidUtils.UID()   );
-        userDao.save(user);
+        UserExt userExt = user.getUserExt();
+        userExt.setRandomCode(UidUtils.UID());
+        userExtDao.save(userExt);
 
-        webContextUrl += ("/admin/password/reset?uid=" + user.getAuthUid() + "&email=" + email + "&code=" + user.getRandomCode());
+        webContextUrl += ("/admin/password/reset?uid=" + user.getAuthUid() + "&email=" + email + "&code=" + userExt.getRandomCode());
         if (freemarkerService != null) {
             Map<String, Object> params = Maps.newHashMap();
             params.put("user", user);
@@ -169,17 +190,19 @@ public class UserService extends BaseService<User, Long> {
         }
 
         //登录记录
-        user.setLogonTimes(user.getLogonTimes() + 1);
-        user.setLastLogonIP(userLogonLog.getRemoteAddr());
-        user.setLastLogonHost(userLogonLog.getRemoteHost());
-        user.setLastLogonTime(DateUtils.currentDate());
+        UserExt userExt = user.getUserExt();
+        userExt.setLogonTimes(userExt.getLogonTimes() + 1);
+        userExt.setLastLogonIP(userLogonLog.getRemoteAddr());
+        userExt.setLastLogonHost(userLogonLog.getRemoteHost());
+        userExt.setLastLogonTime(DateUtils.currentDate());
 
         //重置失败次数计数
-        user.setLastLogonFailureTime(null);
+        userExt.setLastLogonFailureTime(null);
+        userExtDao.save(userExt);
         user.setLogonFailureTimes(0);
         userDao.save(user);
 
-        userLogonLog.setLogonTimes(user.getLogonTimes());
+        userLogonLog.setLogonTimes(userExt.getLogonTimes());
         userLogonLogDao.save(userLogonLog);
     }
 
@@ -188,6 +211,13 @@ public class UserService extends BaseService<User, Long> {
     }
 
     public User findByRandomCodeAndAuthUid(String randomCode, String moblie) {
-        return userDao.findByRandomCodeAndAuthUid(randomCode, moblie);
+        UserExt userExt = userExtDao.findByRandomCode(randomCode);
+        if (userExt != null) {
+            User user = userDao.findOne(userExt.getId());
+            if (moblie.equals(user.getMobile())) {
+                return user;
+            }
+        }
+        return null;
     }
 }

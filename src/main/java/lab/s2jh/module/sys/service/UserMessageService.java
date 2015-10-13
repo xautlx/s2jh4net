@@ -90,8 +90,8 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
             if (smsService != null) {
                 String mobileNum = targetUser.getMobile();
                 if (StringUtils.isNotBlank(mobileNum)) {
-                    Boolean pushResult = smsService.sendSMS(entity.getNotification(), mobileNum, SmsMessageTypeEnum.Default);
-                    if (pushResult == null || pushResult) {
+                    String errorMessage = smsService.sendSMS(entity.getNotification(), mobileNum, SmsMessageTypeEnum.Default);
+                    if (StringUtils.isBlank(errorMessage)) {
                         entity.setSmsPushTime(DateUtils.currentDate());
                     }
                 }

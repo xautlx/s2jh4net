@@ -65,6 +65,27 @@
 		<property name="userService" ref="userService" />
 	</bean>
 
+
+	<bean id="appFormAuthenticationFilter" class="lab.s2jh.core.security.JcaptchaFormAuthenticationFilter">
+		<property name="loginUrl" value="/app/login" />
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<bean id="appBasicAuthenticationFilter" class="lab.s2jh.core.security.AppBasicAuthenticationFilter">
+		<property name="appKeySecrets">
+			<props>
+				<prop key="aqbx_app_android">${aqbx_app_android}</prop>
+				<prop key="aqbx_app_ios">${aqbx_app_ios}</prop>
+				<prop key="aqbx_app_weixin">${aqbx_app_weixin}</prop>
+				<prop key="aqbx_api_jenkins">${aqbx_api_jenkins}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="bearerTokenAuthenticatingFilter" class="lab.s2jh.core.security.BearerTokenAuthenticatingFilter">
+
+	</bean>
+
 	<bean id="wwwLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
 		<property name="redirectUrl" value="/w" />
 	</bean>
@@ -76,6 +97,10 @@
 	<bean id="adminLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
 		<property name="redirectUrl" value="/admin" />
 	</bean>
+
+	<bean id="appLogoutFilter" class="lab.s2jh.core.security.AppLogoutFilter">
+		<property name="userService" ref="userService" />
+	</bean>
 	
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -85,9 +110,13 @@
 				<entry key="authcWww" value-ref="wwwJcaptchaFormAuthenticationFilter" />
 				<entry key="authcMobile" value-ref="mobileJcaptchaFormAuthenticationFilter" />
 				<entry key="authcA" value-ref="adminJcaptchaFormAuthenticationFilter" />
+				<entry key="authcBearerToken" value-ref="bearerTokenAuthenticatingFilter" />
+				<entry key="authcAppSecret" value-ref="appBasicAuthenticationFilter" />
+				<entry key="authcAppForm" value-ref="appFormAuthenticationFilter" />
 				<entry key="logoutWww" value-ref="wwwLogoutFilter" />
 				<entry key="logoutMobile" value-ref="mobileLogoutFilter" />
 				<entry key="logoutAdmin" value-ref="adminLogoutFilter" />
+				<entry key="logoutApp" value-ref="appLogoutFilter" />
 			</map>
 		</property>
 		<property name="securityManager" ref="securityManager" />
@@ -107,31 +136,26 @@
 		<property name="filterChainDefinitions">
 			<value>
 				/assets/** = anon
-				
+
 				/w/login = authcWww
 				/w/logout = logoutWww
 				/w* = anon
 
 				/m/login = authcMobile
 				/m/logout = logoutMobile
-				/m* = anon
+				/m/** = authcBearerToken,anon
 
 				/admin/login = authcA
 				/admin/logout = logoutAdmin
 				/admin** = authcA,anyRoles[ROLE_MGMT_USER]
 				/druid/** = authcA,anyRoles[ROLE_SUPER_USER]
+
+				/app/login = authcAppForm
+				/app/logout = logoutApp
+				/app/** = authcAppSecret,authcBearerToken
+
+				/api/** = authcAppSecret
 			</value>
 		</property>
-	</bean>
-
-	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
-	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
-
-	<!-- AOP式方法级权限检查,开启shiro注解 -->
-	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
-		<property name="proxyTargetClass" value="true" />
-	</bean>
-	<bean id="authorizationAttributeSourceAdvisor" class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-		<property name="securityManager" ref="securityManager" />
 	</bean>
 </beans>
