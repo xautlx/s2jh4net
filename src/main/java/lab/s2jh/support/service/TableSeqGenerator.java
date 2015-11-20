@@ -21,7 +21,8 @@ import org.hibernate.id.enhanced.AccessCallback;
 import org.hibernate.id.enhanced.Optimizer;
 import org.hibernate.id.enhanced.PooledLoOptimizer;
 import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.orm.jpa.AbstractEntityManagerFactoryBean;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 
 /**
  * 参考Hibernate的TableGenerator原理实现一个定制的业务流水号生成器
@@ -109,7 +110,8 @@ public class TableSeqGenerator {
             this.incrementSize = incrementSize;
 
             //获取方言类型和对象
-            HibernateJpaVendorAdapter jpaVendorAdapter = SpringContextHolder.getBean(HibernateJpaVendorAdapter.class);
+            AbstractEntityManagerFactoryBean emf = SpringContextHolder.getBean(AbstractEntityManagerFactoryBean.class);
+            JpaVendorAdapter jpaVendorAdapter = emf.getJpaVendorAdapter();
             Dialect dialect = (Dialect) ClassUtils.newInstance((String) jpaVendorAdapter.getJpaPropertyMap().get(Environment.DIALECT));
 
             selectQuery = "select " + valueColumnName + " as id_val" + " from " + dialect.appendLockHint(LockMode.PESSIMISTIC_WRITE, tableName)

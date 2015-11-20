@@ -18,20 +18,16 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
 	default-lazy-init="false">
 	
-    <!-- 用于获取当前Dialect对象之用 -->
-	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-		<!-- 微软云平台返回的SQL Server MetaData不准确导致无法准确采用2012方言,因此手工设置 
-		jpa_database_platform=org.hibernate.dialect.SQLServer2012Dialect
-		<property name="databasePlatform" value="${jpa_database_platform}" />
-		-->
-	</bean>
-
 	<!-- JPA Entity Manager 配置, 设置depends-on="cacheManager"，确保共享模式下优先加载Spring CacheManager -->
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		depends-on="cacheManager">
 		<property name="dataSource" ref="dataSource" />
 		<property name="persistenceUnitName" value="entityManager" />
-		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="databasePlatform" value="${jpa_database_platform}" />
+			</bean>
+		</property>
 		<property name="packagesToScan">
 			<list>
 				<value>lab.s2jh.core.audit.envers</value>
