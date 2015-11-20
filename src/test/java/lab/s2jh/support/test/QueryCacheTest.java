@@ -29,6 +29,10 @@ public class QueryCacheTest extends SpringTransactionalTestCase {
 
         logger.debug("05. Query user1...");
         UserExt userExt = entity1.getUserExt();
+        if (userExt == null) {
+            userExt = new UserExt();
+            userExt.setId(entity1.getId());
+        }
         userExt.setLogonTimes(userExt.getLogonTimes() + 1);
         userService.saveExt(userExt);
 
