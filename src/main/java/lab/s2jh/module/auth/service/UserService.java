@@ -91,6 +91,16 @@ public class UserService extends BaseService<User, Long> {
         return userDao.findByAuthTypeAndAccessToken(authType, accessToken);
     }
 
+    @Transactional(readOnly = true)
+    public List<User> findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> findByMobile(String mobile) {
+        return userDao.findByMobile(mobile);
+    }
+
     public String encodeUserPasswd(User user, String rawPassword) {
         return passwordService.entryptPassword(rawPassword, user.getAuthGuid());
     }

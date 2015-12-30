@@ -7,7 +7,6 @@
 <title>管理登录</title>
 </head>
 <body>
-
 	<div class="row">
 		<div class="col-md-6">
 			<!-- BEGIN LOGIN FORM -->
@@ -66,7 +65,7 @@
 						<div class="col-md-9">
 							<p class="pull-right">
 								忘记密码? <a href="${ctx}/admin/password/forget" data-toggle="modal-ajaxify" title="找回密码" data-modal-size="550px">找回密码</a>
-								<c:if test="${signupEnabled}">
+								<c:if test="${mgmtSignupEnabled}">
                                 &nbsp; &nbsp;&nbsp; &nbsp; 没有账号? <a href="${ctx}/admin/signup"
 										data-toggle="modal-ajaxify" title="自助注册">自助注册</a>
 								</c:if>

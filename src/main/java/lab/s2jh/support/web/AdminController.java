@@ -20,8 +20,10 @@ import lab.s2jh.core.security.ShiroJdbcRealm;
 import lab.s2jh.core.web.captcha.ImageCaptchaServlet;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.view.OperationResult;
+import lab.s2jh.module.auth.entity.SignupUser;
 import lab.s2jh.module.auth.entity.User;
 import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
+import lab.s2jh.module.auth.service.SignupUserService;
 import lab.s2jh.module.auth.service.UserService;
 import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.UserMessage;
@@ -36,12 +38,14 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
+import org.apache.shiro.util.CollectionUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,6 +63,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SignupUserService signupUserService;
 
     @Autowired
     private PasswordService passwordService;
@@ -161,15 +168,87 @@ public class AdminController {
 
     @RequestMapping(value = "/admin/signup", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult signupSave(HttpServletRequest request, @RequestParam("captcha") String captcha) {
+    public OperationResult signupSave(HttpServletRequest request, @RequestParam("captcha") String captcha, @ModelAttribute("entity") SignupUser entity) {
         if (!ImageCaptchaServlet.validateResponse(request, captcha)) {
             return OperationResult.buildFailureResult("验证码不正确，请重新输入");
         }
-        if (dynamicConfigService.getBoolean(GlobalConstant.cfg_signup_disabled, false)) {
+        if (dynamicConfigService.getBoolean(GlobalConstant.cfg_mgmt_signup_disabled, false)) {
             return OperationResult.buildFailureResult("系统暂未开发账号注册功能，如有疑问请联系管理员");
         }
-        //TODO 
+        signupUserService.signup(entity, request.getParameter("password"));
         return OperationResult.buildSuccessResult("注册成功。需要等待管理员审批通过后方可登录系统。");
+    }
+    
+    /**
+     * 验证手机唯一性
+     * <p>
+     * 业务输入参数列表：
+     * <ul>
+     * <li><b>mobile</b> 手机号</li>
+     * </ul>
+     * </p>
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/admin/signup/unique/mobile", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean authMobileUnique(HttpServletRequest request) {
+        String mobile = request.getParameter("mobile");
+        if (!CollectionUtils.isEmpty(userService.findByMobile(mobile))) {
+            return false;
+        }
+        if (!CollectionUtils.isEmpty(signupUserService.findByMobile(mobile))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 验证电子邮件唯一性
+     * <p>
+     * 业务输入参数列表：
+     * <ul>
+     * <li><b>email</b> 电子邮件</li>
+     * </ul>
+     * </p>
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/admin/signup/unique/email", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean authEmailUnique(HttpServletRequest request) {
+        String email = request.getParameter("email");
+        if (!CollectionUtils.isEmpty(userService.findByEmail(email))) {
+            return false;
+        }
+        if (!CollectionUtils.isEmpty(signupUserService.findByEmail(email))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 验证电子邮件唯一性
+     * <p>
+     * 业务输入参数列表：
+     * <ul>
+     * <li><b>email</b> 电子邮件</li>
+     * </ul>
+     * </p>
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/admin/signup/unique/uid", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean authUidUnique(HttpServletRequest request) {
+        String authUid = request.getParameter("authUid");
+        if (userService.findByAuthUid(authUid) != null) {
+            return false;
+        }
+        if (signupUserService.findByAuthUid(authUid) != null) {
+            return false;
+        }
+        return true;
     }
 
     @MenuData("个人信息:公告消息")

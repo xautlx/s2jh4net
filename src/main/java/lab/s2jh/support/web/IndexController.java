@@ -5,9 +5,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.security.JcaptchaFormAuthenticationFilter;
+import lab.s2jh.core.web.captcha.ImageCaptchaServlet;
 import lab.s2jh.core.web.filter.WebAppContextInitFilter;
 import lab.s2jh.core.web.util.ServletUtils;
 import lab.s2jh.core.web.view.OperationResult;
@@ -80,7 +82,14 @@ public class IndexController {
         User user = AuthContextHolder.findAuthUser();
         model.addAttribute("layoutAttributes", userProfileDataService.findMapDataByUser(user));
         model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
+        model.addAttribute("globalProperties", dynamicConfigService.getAllPrperties());
         return "admin/index";
+    }
+
+    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/admin/", method = RequestMethod.GET)
+    public String adminIndexMore(HttpServletRequest request, Model model) {
+        return adminIndex(request, model);
     }
 
     @RequestMapping(value = "/{source}/login", method = RequestMethod.GET)
@@ -88,7 +97,7 @@ public class IndexController {
         model.addAttribute("buildVersion", dynamicConfigService.getString("build_version"));
         model.addAttribute("buildTimetamp", dynamicConfigService.getString("build_timestamp"));
         //自助注册管理账号功能开关
-        model.addAttribute("signupEnabled", !dynamicConfigService.getBoolean("cfg_mgmt_signup_disabled", true));
+        model.addAttribute("mgmtSignupEnabled", !dynamicConfigService.getBoolean(GlobalConstant.cfg_mgmt_signup_disabled, true));
         return source + "/login";
     }
 
@@ -173,8 +182,17 @@ public class IndexController {
     @RequestMapping(value = "/send-sms-code/{mobile}", method = RequestMethod.GET)
     @ResponseBody
     public OperationResult sendSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
+
+        String captcha = request.getParameter("code");
+        if (StringUtils.isNotBlank(captcha)) {
+            boolean result = ImageCaptchaServlet.validateResponse(request, captcha);
+            if (!result) {
+                return OperationResult.buildFailureResult("图片验证码不正确");
+            }
+        }
+
         String code = smsVerifyCodeService.generateSmsCode(request, mobile, false);
-        String msg = "您的操作验证码为：" + code + "。【请勿向任何人提供您收到的短信验证码】。如非本人操作，请忽略本信息。";
+        String msg = "您的操作验证码为：" + code + "。请勿向任何人提供您收到的短信验证码。如非本人操作，请忽略本信息。";
         String errorMessage = smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode);
         if (StringUtils.isBlank(errorMessage)) {
             return OperationResult.buildSuccessResult();
@@ -200,7 +218,7 @@ public class IndexController {
     @ResponseBody
     public OperationResult userSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
         String code = smsVerifyCodeService.generateSmsCode(request, mobile, true);
-        String msg = "您的操作验证码为：" + code + "。【请勿向任何人提供您收到的短信验证码】。如非本人操作，请忽略本信息。";
+        String msg = "您的操作验证码为：" + code + "。请勿向任何人提供您收到的短信验证码。如非本人操作，请忽略本信息。";
         String errorMessage = smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode);
         if (StringUtils.isBlank(errorMessage)) {
             return OperationResult.buildSuccessResult();
