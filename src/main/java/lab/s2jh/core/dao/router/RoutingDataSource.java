@@ -16,5 +16,5 @@ public @interface RoutingDataSource {
     /**
      * 数据源（集合）名称
      */
-    String value();
+    String value() default "slave";;
 }

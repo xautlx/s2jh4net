@@ -26,6 +26,11 @@ public class RoutingDataSourceAdvice {
         datasourceHolder.set(customerType);
     }
 
+    public static void setSlaveDatasource() {
+        logger.debug(" Routing to Datasource: {}", "slave");
+        datasourceHolder.set("slave");
+    }
+
     public static String getDatasource() {
         String ds = (String) datasourceHolder.get();
         //立即移除，避免共享线程池导致多线程数据干扰

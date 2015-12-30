@@ -41,7 +41,8 @@
 	<!-- APP数据源配置 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
-		<property name="dataSource" ref="dataSource" />
+		<!-- 框架限定MyBatis只做查询处理，默认访问读写分离只读从库 -->
+		<property name="dataSource" ref="dataSourceSlave" />
 		<property name="databaseIdProvider" ref="databaseIdProvider" />  
 		<!-- 显式指定Mapper文件位置 -->
 		<property name="mapperLocations">
