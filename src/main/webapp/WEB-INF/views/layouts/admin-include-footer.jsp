@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <c:if test="${cfg.dev_mode}">
-    <jsp:useBean id="now" class="java.util.Date" scope="page" />
-    <c:set var="build_version" value="${now.getTime()}" />
+	<jsp:useBean id="now" class="java.util.Date" scope="page" />
+	<c:set var="build_version" value="${now.getTime()}" />
 </c:if>
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!--[if lt IE 9]>
@@ -87,6 +87,9 @@
 
 <script src="${ctx}/assets/plugins/JSPinyin.js"></script>
 
+<%-- https://github.com/BorisMoore/jquery-tmpl --%>
+<script src="${ctx}/assets/plugins/jquery-tmpl/jquery.tmpl.min.js"></script>
+
 <script src="${ctx}/assets/plugins/echarts/dist/echarts-all.js"></script>
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -121,17 +124,21 @@
 <script src="${ctx}/assets/plugins/jcrop/js/jquery.Jcrop.min.js"></script>
 <link href="${ctx}/assets/plugins/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet" />
 
+<script src="${ctx}/assets/plugins/jquery.qrcode.min.js" type="text/javascript"></script>
+<script src="${ctx}/assets/plugins/html2canvas/html2canvas.min.js" type="text/javascript"></script>
+<script src="${ctx}/assets/plugins/canvas2image.js" type="text/javascript"></script>
+
 <script src="http://api.map.baidu.com/api?v=2.0&ak=${baiduMapAppkey}" type="text/javascript"></script>
 
 <link href="${ctx}/assets/admin/app/custom.css?_=${build_version}" rel="stylesheet" type="text/css" />
 
 <script src="${ctx}/assets/admin/app/util.js?_=${build_version}"></script>
-<script src="${ctx}/assets/w/app/global.js?_=${build_version}"></script>
+<script src="${ctx}/assets/w/scripts/global.js?_=${build_version}"></script>
 <script src="${ctx}/assets/admin/app/global.js?_=${build_version}"></script>
 <script src="${ctx}/assets/admin/app/grid.js?_=${build_version}"></script>
 <script src="${ctx}/assets/admin/app/dynamic-table.js?_=${build_version}"></script>
-<script src="${ctx}/assets/w/app/form-validation.js?_=${build_version}"></script>
-<script src="${ctx}/assets/w/app/page.js?_=${build_version}"></script>
+<script src="${ctx}/assets/w/scripts/form-validation.js?_=${build_version}"></script>
+<script src="${ctx}/assets/w/scripts/page.js?_=${build_version}"></script>
 <script src="${ctx}/assets/admin/app/page.js?_=${build_version}"></script>
 <script src="${ctx}/assets/admin/app/biz.js?_=${build_version}"></script>
 

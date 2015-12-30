@@ -97,9 +97,6 @@
 					data-close-others="true"><span class="username"><shiro:principal property="nickName" />(<shiro:principal
 								property="authUid" />)</span> <i class="fa fa-angle-down"></i> </a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/w" target="_blank"><i class="fa fa-windows"></i> 前端Web站点</a></li>
-						<li><a href="${ctx}/m" target="_blank"><i class="fa fa-html5"></i> HTML5移动站点</a></li>
-						<li class="divider"></li>
 						<li><a href="javascript:;" id="trigger_fullscreen"><i class="fa fa-move"></i> 全屏显示</a></li>
 						<li><a href="${ctx}/admin/profile/password" data-toggle="modal-ajaxify" data-modal-size="600px" title="修改密码"><i
 								class="fa fa-key"></i> 修改密码</a></li>
