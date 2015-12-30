@@ -150,6 +150,10 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         MockEntity entity = new MockEntity();
         entity.setSelectedIds(new Long[] { 2L });
         model.addAttribute("entity", entity);
+        
+        //上下文完整路径
+        model.addAttribute("webContextFullUrl", WebAppContextInitFilter.getInitedWebContextFullUrl());
+        
         return "admin/docs/ui-feature-items";
     }
 

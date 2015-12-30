@@ -9,10 +9,11 @@
 		<li>点击元素后方的"JSDoc"链接可查看组件的具体用法Javascript注释文档</li>
 		<li>鼠标双击portlet标题区域可以切换单个展开或收拢
 			<div data-toggle="buttons" class="btn-group">
-				<label class="btn btn-default active" onclick="$('#docs-demo-list a.expand').click()"> <input type="radio"
-					class="toggle"> 展开全部
-				</label> <label class="btn btn-default" onclick="$('#docs-demo-list a.collapse').click()"> <input type="radio"
-					class="toggle"> 收拢全部
+				<label class="btn btn-default active" onclick="$('#docs-demo-list a.expand').click()">
+					<input type="radio" class="toggle"> 展开全部
+				</label>
+				<label class="btn btn-default" onclick="$('#docs-demo-list a.collapse').click()">
+					<input type="radio" class="toggle"> 收拢全部
 				</label>
 			</div>
 		</li>
@@ -26,7 +27,8 @@
 				<i class="fa fa-reorder"></i> 基础组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -40,12 +42,15 @@
 							<div class="form-group">
 								<label class="control-label" data-tooltips="[输入提示说明内容]" data-tooltipster-position="bottom">普通文本输入元素/输入提示</label>
 								<div class="controls">
-									<input type="text" class="form-control" /> <span class="help-block">鼠标移动到label区域自动生成的小图标会出现美化的tooltips内容</span>
+									<input type="text" class="form-control" />
+									<span class="help-block">鼠标移动到label区域自动生成的小图标会出现美化的tooltips内容</span>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initControlLabelTooltips" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initControlLabelTooltips" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -58,7 +63,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDataProfileParam" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initDataProfileParam" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -104,7 +111,8 @@
 				<i class="fa fa-reorder"></i> 表单控制及校验
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -119,33 +127,44 @@
 								<label class="control-label">发货开始日期</label>
 								<div class="controls">
 									<input type="text" class="form-control" name="startDate" required="true" data-rule-dateLT="endDate"
-										data-picker="date"><span class="help-block">日期前后关系关联校验</span>
+										data-picker="date">
+									<span class="help-block">日期前后关系关联校验</span>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="control-label">发货结束日期</label>
 								<div class="controls">
 									<input type="text" class="form-control" name="endDate" required="true" data-rule-dateGT="startDate"
-										data-picker="date"><span class="help-block">日期前后关系关联校验</span>
+										data-picker="date">
+									<span class="help-block">日期前后关系关联校验</span>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="control-label">计划发货量</label>
 								<div class="controls">
-									<input type="text" class="form-control" name="quantity" required="true" data-rule-digits="true"> <span
-										class="help-block">模拟规则：大于100提交表单触发confirm确认提示，小于100通过</span>
+									<input type="text" class="form-control" name="quantity" required="true" data-rule-digits="true">
+									<span class="help-block">模拟规则：大于100提交表单触发confirm确认提示，小于100通过</span>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<p class="form-control-static">当前页面相关表单和框架已有基础功能包含一系列表单控制处理演示，可直接参考各功能点设计实现</p>
 							<p class="form-control-static">点击相关链接可查阅主要技术点文说明文档:</p>
-							<span class="help-block"><a href="${ctx}/docs/markdown/表单控制#get" target="_blank">列表界面的GET查询表单</a></span> <span
-								class="help-block"><a href="${ctx}/docs/markdown/表单控制#post" target="_blank">编辑界面的POST提交表单</a></span><span
-								class="help-block"><a href="${ctx}/docs/markdown/表单控制#jsr303" target="_blank">集成服务端和客户端的Form/Data
-									Validation的设计处理</a></span> <span class="help-block"><a href="${ctx}/docs/markdown/表单控制#rules" target="_blank">基于JQuery
-									Validation及扩展的校验语法规则定义</a></span> <span class="help-block"><a href="${ctx}/docs/markdown/表单控制#confirm"
-								target="_blank">Form表单数据的提交Confirm确认处理</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/markdown/表单控制#get" target="_blank">列表界面的GET查询表单</a>
+							</span>
+							<span class="help-block">
+								<a href="${ctx}/docs/markdown/表单控制#post" target="_blank">编辑界面的POST提交表单</a>
+							</span>
+							<span class="help-block">
+								<a href="${ctx}/docs/markdown/表单控制#jsr303" target="_blank">集成服务端和客户端的Form/Data Validation的设计处理</a>
+							</span>
+							<span class="help-block">
+								<a href="${ctx}/docs/markdown/表单控制#rules" target="_blank">基于JQuery Validation及扩展的校验语法规则定义</a>
+							</span>
+							<span class="help-block">
+								<a href="${ctx}/docs/markdown/表单控制#confirm" target="_blank">Form表单数据的提交Confirm确认处理</a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -165,7 +184,8 @@
 				<i class="fa fa-reorder"></i> 扩展组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -177,8 +197,8 @@
 							<div class="form-group">
 								<label class="control-label">手机号码</label>
 								<div class="controls">
-									<input type="text" class="form-control" name="mobile" required="true" data-rule-mobile="true"> <span
-										class="help-block">手机号码格式校验；输入手机号用于发送验证码关联校验</span>
+									<input type="text" class="form-control" name="mobile" required="true" data-rule-mobile="true">
+									<span class="help-block">手机号码格式校验；输入手机号用于发送验证码关联校验</span>
 								</div>
 							</div>
 						</div>
@@ -189,7 +209,8 @@
 								<label class="control-label">手机验证码</label>
 								<div class="controls">
 									<div class="input-group">
-										<input type="text" class="form-control" name="code" required="true"> <span class="input-group-btn">
+										<input type="text" class="form-control" name="code" required="true">
+										<span class="input-group-btn">
 											<button type="button" class="btn red btn-send-sms-code" data-mobile-el="mobile">获取验证码</button>
 										</span>
 									</div>
@@ -197,7 +218,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindBtnSendSmsCode" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#bindBtnSendSmsCode" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -215,15 +238,17 @@
 											<i class="fa fa-qrcode"></i> <input class="form-control captcha-text" type="text" autocomplete="off"
 												placeholder="验证码...看不清可点击图片可刷新" name="captcha" required="true" />
 										</div>
-										<span class="input-group-btn" style="cursor: pointer;"> <img alt="验证码" class="captcha-img"
-											src="${ctx}/assets/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
+										<span class="input-group-btn" style="cursor: pointer;">
+											<img alt="验证码" class="captcha-img" src="${ctx}/assets/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
 										</span>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindCaptchaCode" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#bindCaptchaCode" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -238,13 +263,15 @@
 								<label class="control-label">触发弹窗组件</label>
 								<div class="controls">
 									<p class="form-control-static">
-										<a title="修改密码" data-modal-size="600px" data-toggle="modal-ajaxify" href="/aqbx/admin/profile/password">修改密码</a>
+										<a title="修改密码" data-modal-size="600px" data-toggle="modal-ajaxify" href="${ctx}/admin/profile/password">修改密码</a>
 									</p>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindModalAjaxify" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#bindModalAjaxify" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -257,7 +284,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindBtnPostUrl" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#bindBtnPostUrl" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -270,7 +299,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindExtBootstrapTab" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#bindExtBootstrapTab" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -284,7 +315,8 @@
 				<i class="fa fa-reorder"></i> 下拉、选取等处理组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -305,7 +337,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTreeSelect" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initTreeSelect" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -319,7 +353,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDropdownSelect" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initDropdownSelect" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -332,7 +368,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -345,7 +383,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -359,7 +399,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Remote" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initSelect2Remote" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -373,7 +415,9 @@
 						</div>
 					</div>
 					<div class="col-md-2">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">Javascript用法文档</a></span>
+						<span class="help-block">
+							<a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">Javascript用法文档</a>
+						</span>
 					</div>
 				</div>
 				<div class="row">
@@ -387,7 +431,9 @@
 						</div>
 					</div>
 					<div class="col-md-2">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">Javascript用法文档</a></span>
+						<span class="help-block">
+							<a href="${ctx}/docs/jsdoc/global.html#initSelect2Tags" target="_blank">Javascript用法文档</a>
+						</span>
 					</div>
 				</div>
 				<div class="row">
@@ -401,7 +447,9 @@
 						</div>
 					</div>
 					<div class="col-md-2">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initMultiSelectDouble" target="_blank">Javascript用法文档</a></span>
+						<span class="help-block">
+							<a href="${ctx}/docs/jsdoc/global.html#initMultiSelectDouble" target="_blank">Javascript用法文档</a>
+						</span>
 					</div>
 				</div>
 				<div class="row">
@@ -424,7 +472,9 @@
 						</div>
 					</div>
 					<div class="col-md-2">
-						<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a></span>
+						<span class="help-block">
+							<a href="${ctx}/docs/jsdoc/global.html#initSelect2" target="_blank">Javascript用法文档</a>
+						</span>
 					</div>
 				</div>
 				<div class="row">
@@ -449,7 +499,8 @@
 				<i class="fa fa-reorder"></i> 日期、时间等处理组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -468,7 +519,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDatePicker" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initDatePicker" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -481,7 +534,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDateTimePicker" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initDateTimePicker" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -494,7 +549,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDateRangePicker" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initDateRangePicker" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -508,7 +565,8 @@
 				<i class="fa fa-reorder"></i> Text、HTML等处理组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -527,7 +585,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTextareaMaxlength" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initTextareaMaxlength" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -540,7 +600,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initTextareaHtmleditor" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initTextareaHtmleditor" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -554,7 +616,8 @@
 				<i class="fa fa-reorder"></i> 文件、图片等处理组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -573,7 +636,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadSingleFile" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initUploadSingleFile" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -587,13 +652,15 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadSingleImage" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initUploadSingleImage" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-10">
 							<div class="form-group">
-								<label class="control-label">多图片文件上传预览组件</label>
+								<label class="control-label">多图片文件上传预览组件(集合数组方式)</label>
 								<div class="controls">
 									<c:forEach items="${imagePaths}" var="item" varStatus="status">
 										<input type="hidden" name="imagePaths[${status.index}]" data-multiimage="edit" data-pk="${status.index}"
@@ -604,7 +671,41 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initUploadMultiImage" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initUploadMultiImage" target="_blank">Javascript用法文档</a>
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label class="control-label">多图片文件上传预览组件(逗号分隔方式)</label>
+								<div class="controls">
+									<input type="hidden" name="imagePaths" class="form-control" data-multisplitimage="edit" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initUploadMultiSplitImage" target="_blank">Javascript用法文档</a>
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-10">
+							<div class="form-group">
+								<label class="control-label">二维码组件</label>
+								<div class="controls">
+									<div data-qrcode="${webContextFullUrl}/admin" data-qrcode-icon="${ctx}/assets/img/favicon.ico"
+										data-qrcode-header="欢迎访问" data-qrcode-footer="扫码查看详情" />
+									<span class="help-block">点击二维码自动转换为图片下载，方便线下使用</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initQrCode" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -618,7 +719,8 @@
 				<i class="fa fa-reorder"></i> 动态表格等处理组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -712,7 +814,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initDynamicTable" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initDynamicTable" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -732,7 +836,8 @@
 				<i class="fa fa-reorder"></i> 递归树形和拖放操作Grid组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -841,16 +946,122 @@
                     </script>
 				</div>
 				<div class="col-md-2">
-					<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initGrid" target="_blank">主表格JSDoc</a></span><span
-						class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initSubGrid" target="_blank">子表格JSDoc</a></span><span
-						class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initRecursiveSubGrid" target="_blank">父子表格JSDoc</a></span>
+					<span class="help-block">
+						<a href="${ctx}/docs/jsdoc/global.html#initGrid" target="_blank">主表格JSDoc</a>
+					</span>
+					<span class="help-block">
+						<a href="${ctx}/docs/jsdoc/global.html#initSubGrid" target="_blank">子表格JSDoc</a>
+					</span>
+					<span class="help-block">
+						<a href="${ctx}/docs/jsdoc/global.html#initRecursiveSubGrid" target="_blank">父子表格JSDoc</a>
+					</span>
 				</div>
 			</div>
-
-
 		</div>
 	</div>
 
+	<div class="portlet gren">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="fa fa-reorder"></i> 为Grid组件数据添加功能操作
+			</div>
+			<div class="tools">
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
+			</div>
+		</div>
+		<div class="portlet-body">
+
+			<div class="row">
+				<div class="col-md-10">
+					<div class="note note-danger">
+						<p>仅作UI效果展示，屏蔽实际提交操作。实际操作可直接访问“任务实时控制”功能体验和参考实现。</p>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<table id="grid-schedule-triggers-demo" data-grid="table"></table>
+						</div>
+					</div>
+					<script type="text/javascript">
+                        $(function() {
+                            $("#grid-schedule-triggers-demo").data("gridOptions", {
+                                url : WEB_ROOT + '/admin/schedule/quartz-trigger/list',
+                                colNames : [ '任务名称', 'CRON表达式', '当前状态', '上次触发时间', '下次触发时间', '集群运行模式' ],
+                                colModel : [ {
+                                    name : 'jobName',
+                                    width : 240,
+                                    align : 'left'
+                                }, {
+                                    name : 'cronExpression',
+                                    width : 100,
+                                    align : 'right'
+                                }, {
+                                    name : 'stateLabel',
+                                    width : 60,
+                                    align : 'center'
+                                }, {
+                                    name : 'previousFireTime',
+                                    sorttype : 'date',
+                                    align : 'center'
+                                }, {
+                                    name : 'nextFireTime',
+                                    sorttype : 'date',
+                                    align : 'center'
+                                }, {
+                                    name : 'runWithinCluster',
+                                    formatter : 'checkbox'
+                                } ],
+                                rowNum : -1,
+                                loadonce : true,
+                                addable : false,
+                                loadonce : true,
+                                operations : function(items) {
+                                    var $grid = $(this);
+                                    /**
+                                    * @property data-position 在下拉和右键菜单显示操作区域位置，multi=多选操作区域；single=单选操作区域；未定义=无需选取区域
+                                    * @property data-toolbar 工具条显示控制，show=显示在工具条，hide或其他=不显示
+                                    * @property data-text    工具条区域文字显示控制，show=除了显示图标外还显示文字，hide或其他=只显示图标不显示对应文字
+                                    */
+                                    var $resume = $('<li data-position="multi" data-toolbar="show" data-text="show"><a><i class="fa fa-play"></i> 启动</a></li>');
+                                    $resume.children("a").bind("click", function(e) {
+                                        e.preventDefault();
+                                        var ids = $grid.getAtLeastOneSelectedItem();
+                                        if (ids) {
+                                            alert("请直接参考quartzTrigger-index.jsp页面代码");
+                                        }
+                                    });
+                                    items.push($resume);
+                                    var $pause = $('<li data-position="multi" data-toolbar="show" data-text="show"><a><i class="fa fa-pause"></i> 暂停</a></li>');
+                                    $pause.children("a").bind("click", function(e) {
+                                        e.preventDefault();
+                                        var ids = $grid.getAtLeastOneSelectedItem();
+                                        if (ids) {
+                                            alert("请直接参考quartzTrigger-index.jsp页面代码");
+                                        }
+                                    });
+                                    items.push($pause);
+                                    var $run = $('<li data-position="multi" data-toolbar="show" data-text="show"><a><i class="fa fa-bolt"></i> 立即执行</a></li>');
+                                    $run.children("a").bind("click", function(e) {
+                                        e.preventDefault();
+                                        var ids = $grid.getAtLeastOneSelectedItem();
+                                        if (ids) {
+                                            alert("请直接参考quartzTrigger-index.jsp页面代码");
+                                        }
+                                    });
+                                    items.push($run);
+                                }
+                            });
+                        });
+                    </script>
+				</div>
+				<div class="col-md-2">
+					<span class="help-block">
+						<a href="${ctx}/docs/jsdoc/global.html#initGrid" target="_blank">主表格JSDoc</a>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="portlet gren">
 		<div class="portlet-title">
@@ -858,7 +1069,8 @@
 				<i class="fa fa-reorder"></i> 百度地图
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -875,7 +1087,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initGmapsBaidu" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initGmapsBaidu" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -883,7 +1097,8 @@
 							<div class="form-group">
 								<label class="control-label">位置信息</label>
 								<div class="controls">
-									<input type="text" class="form-control" name="location" value="北京市朝阳区望京SOHO"> <span class="help-block">点击地图更新位置信息</span>
+									<input type="text" class="form-control" name="location" value="北京市朝阳区望京SOHO">
+									<span class="help-block">点击地图更新位置信息</span>
 								</div>
 							</div>
 						</div>
@@ -906,7 +1121,9 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#initGmapsBaidu" target="_blank">Javascript用法文档</a></span>
+							<span class="help-block">
+								<a href="${ctx}/docs/jsdoc/global.html#initGmapsBaidu" target="_blank">Javascript用法文档</a>
+							</span>
 						</div>
 					</div>
 					<div class="row">
@@ -914,7 +1131,8 @@
 							<div class="form-group">
 								<label class="control-label">经度坐标</label>
 								<div class="controls">
-									<input type="text" class="form-control" name="longitude" value="116.487423"> <span class="help-block">点击地图更新坐标信息</span>
+									<input type="text" class="form-control" name="longitude" value="116.487423">
+									<span class="help-block">点击地图更新坐标信息</span>
 								</div>
 							</div>
 						</div>
@@ -924,7 +1142,8 @@
 							<div class="form-group">
 								<label class="control-label">纬度坐标</label>
 								<div class="controls">
-									<input type="text" class="form-control" name="latitude" value="40.001965"> <span class="help-block">点击地图更新坐标信息</span>
+									<input type="text" class="form-control" name="latitude" value="40.001965">
+									<span class="help-block">点击地图更新坐标信息</span>
 								</div>
 							</div>
 						</div>
@@ -954,7 +1173,8 @@
 				<i class="fa fa-reorder"></i> TODO
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body"></div>
@@ -966,7 +1186,8 @@
 				<i class="fa fa-reorder"></i> 无限滚动表格组件
 			</div>
 			<div class="tools">
-				<a class="collapse" href="javascript:;"></a><a class="remove" href="javascript:;"></a>
+				<a class="collapse" href="javascript:;"></a>
+				<a class="remove" href="javascript:;"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
@@ -1008,11 +1229,11 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<span class="help-block"><a href="${ctx}/docs/jsdoc/global.html#bindTableInfiniteScroll" target="_blank">Javascript用法文档</a></span>
+					<span class="help-block">
+						<a href="${ctx}/docs/jsdoc/global.html#bindTableInfiniteScroll" target="_blank">Javascript用法文档</a>
+					</span>
 				</div>
 			</div>
-
-
 		</div>
 	</div>
 </div>
