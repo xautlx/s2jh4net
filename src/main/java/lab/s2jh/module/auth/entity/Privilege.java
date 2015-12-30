@@ -19,6 +19,7 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
@@ -31,6 +32,7 @@ import com.google.common.collect.Lists;
 @Table(name = "auth_Privilege")
 @MetaData(value = "权限")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Audited
 public class Privilege extends BaseNativeEntity {
 
     private static final long serialVersionUID = 5139319086984812835L;

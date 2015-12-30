@@ -17,6 +17,7 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 @Getter
 @Setter
@@ -26,6 +27,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "auth_RoleR2Privilege", uniqueConstraints = @UniqueConstraint(columnNames = { "privilege_id", "role_id" }))
 @MetaData(value = "角色与权限关联")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Audited
 public class RoleR2Privilege extends BaseNativeEntity {
 
     private static final long serialVersionUID = -4312077296555510354L;

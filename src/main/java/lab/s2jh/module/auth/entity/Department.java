@@ -20,6 +20,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "auth_Department")
 @MetaData(value = "部门")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Audited
 public class Department extends BaseNativeEntity implements Comparable<Department> {
 
     private static final long serialVersionUID = -7634994834209530394L;

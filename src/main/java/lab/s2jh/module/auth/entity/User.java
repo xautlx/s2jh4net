@@ -31,7 +31,9 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -47,6 +49,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Table(name = "auth_User", uniqueConstraints = @UniqueConstraint(columnNames = { "authUid", "authType" }))
 @MetaData(value = "登录认证账号信息")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Audited
 public class User extends BaseNativeEntity {
 
     private static final long serialVersionUID = 8728775138491827366L;
@@ -67,7 +70,12 @@ public class User extends BaseNativeEntity {
     @MetaData(value = "管理授权", tooltips = "标识用户是否可访问管理端")
     private Boolean mgmtGranted = Boolean.FALSE;
 
+    @MetaData(value = "真实姓名")
+    @Column(length = 128)
+    private String trueName;
+
     @MetaData(value = "登录后友好显示昵称")
+    @Column(length = 128)
     private String nickName;
 
     @MetaData(value = "SYS自建类型用户的密码", comments = "加密算法：MD5({authGuid}+原始密码)")
@@ -107,7 +115,7 @@ public class User extends BaseNativeEntity {
 
     @MetaData(value = "角色关联")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotAudited
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @JsonIgnore
     private List<UserR2Role> userR2Roles;
 
@@ -115,6 +123,7 @@ public class User extends BaseNativeEntity {
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @PrimaryKeyJoinColumn(foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @JsonView(JsonViews.Admin.class)
+    @NotAudited
     private UserExt userExt;
 
     @MetaData(value = "已关联角色主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
@@ -149,7 +158,7 @@ public class User extends BaseNativeEntity {
     @Override
     @Transient
     public String getDisplay() {
-        return authType + "-" + authUid;
+        return authType + "_" + authUid;
     }
 
     @MetaData(value = "用户标识别名", comments = "用户在多个终端登录，需要一个标识同一个身份以便多终端推送消息")

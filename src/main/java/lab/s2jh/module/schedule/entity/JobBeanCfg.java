@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 @Getter
 @Setter
@@ -24,6 +25,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "sche_JobBeanCfg")
 @MetaData(value = "定时任务配置")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Audited
 public class JobBeanCfg extends BaseNativeEntity {
 
     private static final long serialVersionUID = -416068377592076851L;

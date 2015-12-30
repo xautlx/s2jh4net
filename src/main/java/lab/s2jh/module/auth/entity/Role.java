@@ -21,7 +21,8 @@ import lombok.experimental.Accessors;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
@@ -34,6 +35,7 @@ import com.google.common.collect.Lists;
 @Table(name = "auth_Role")
 @MetaData(value = "角色")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Audited
 public class Role extends BaseNativeEntity {
 
     private static final long serialVersionUID = 7955799161213060384L;
@@ -57,13 +59,13 @@ public class Role extends BaseNativeEntity {
 
     @MetaData(value = "角色权限关联")
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotAudited
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @JsonIgnore
     private List<RoleR2Privilege> roleR2Privileges = Lists.newArrayList();
 
     @MetaData(value = "角色关联用户")
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotAudited
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @JsonIgnore
     private List<UserR2Role> roleR2Users = Lists.newArrayList();
 
