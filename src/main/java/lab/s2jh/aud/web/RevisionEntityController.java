@@ -29,6 +29,7 @@ import lab.s2jh.module.auth.entity.User.AuthTypeEnum;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.util.ClassUtils;
@@ -144,8 +145,10 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
         if (StringUtils.isNotBlank(changed)) {
             hasChanged = BooleanUtils.toBooleanObject(changed);
         }
-        Long id = Long.valueOf(request.getParameter("id"));
-        List<EntityRevision> entityRevisions = revisionEntityService.findEntityRevisions(entityClass, id, property, hasChanged);
+
+        String id = request.getParameter("id");
+        List<EntityRevision> entityRevisions = revisionEntityService.findEntityRevisions(entityClass, NumberUtils.isDigits(id) ? Long.valueOf(id)
+                : id, property, hasChanged);
         for (EntityRevision entityRevision : entityRevisions) {
             ExtDefaultRevisionEntity revEntity = entityRevision.getRevisionEntity();
             revEntity.setEntityClassName(clazz);
