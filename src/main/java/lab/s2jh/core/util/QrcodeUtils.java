@@ -41,39 +41,10 @@ public class QrcodeUtils {
      * @return
      */
     public static BufferedImage createQrcode(String content, Integer height) {
-        if (height == null || height < 100) {
-            height = 200;
-        }
-
-        try {
-            Map<EncodeHintType, Object> hints = Maps.newHashMap();
-            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-            hints.put(EncodeHintType.MARGIN, 1);
-            BitMatrix bitMatrix = new QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, height, height, hints);
-
-            int width = bitMatrix.getWidth();
-            BufferedImage image = new BufferedImage(bitMatrix.getWidth(), bitMatrix.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
-                }
-            }
-            return image;
-
-            // 输出方式  
-            // 网页  
-            // ImageIO.write(image, "png", response.getOutputStream());  
-
-            // 文件  
-            // ImageIO.write(image, "png", file);  
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return createQrcode(content, height, null);
     }
 
-    public static BufferedImage createQrcodeWithLogo(String content, Integer height, String logoPath) {
+    public static BufferedImage createQrcode(String content, Integer height, String logoPath) {
         if (height == null || height < 100) {
             height = 200;
         }
@@ -83,7 +54,7 @@ public class QrcodeUtils {
         try {
             Map<EncodeHintType, Object> hints = Maps.newHashMap();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
             hints.put(EncodeHintType.MARGIN, 0);
             BitMatrix bitMatrix = new QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, height, height, hints);
 
@@ -93,6 +64,10 @@ public class QrcodeUtils {
                 for (int y = 0; y < height; y++) {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? RED : WHITE);
                 }
+            }
+
+            if (logoPath == null) {
+                return image;
             }
 
             Graphics2D g = image.createGraphics();
@@ -230,7 +205,7 @@ public class QrcodeUtils {
         String srcFile = "d://head-portrait.jpg";
         String destFile = "d://kfcLogo.png";
         String content = "肯德基好味道";
-        BufferedImage image = createQrcodeWithLogo(content, 600, srcFile);
+        BufferedImage image = createQrcode(content, 600, srcFile);
         ImageIO.write(image, "png", new File(destFile));
         System.out.println("-----成生成功----");
 

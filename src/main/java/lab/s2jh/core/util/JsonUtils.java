@@ -32,4 +32,11 @@ public class JsonUtils {
         }
         return Maps.newHashMap();
     }
+
+    public static void main(String[] args) {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("id", 123);
+        data.put("time", DateUtils.formatTime(DateUtils.currentDate()));
+        System.out.println(JsonUtils.writeValueAsString(data));
+    }
 }

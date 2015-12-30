@@ -36,7 +36,7 @@ public class Encodes {
     public static byte[] decodeHex(String input) {
         try {
             return Hex.decodeHex(input.toCharArray());
-        } catch (DecoderException e) {
+        } catch (Exception e) {
             throw Exceptions.unchecked(e);
         }
     }
@@ -46,6 +46,17 @@ public class Encodes {
      */
     public static String encodeBase64(byte[] input) {
         return Base64.encodeBase64String(input);
+    }
+
+    /**
+     * Base64编码.
+     */
+    public static String encodeBase64(String input) {
+        try {
+            return Base64.encodeBase64String(input.getBytes(HttpClientUtils.CHARSET_UTF8));
+        } catch (Exception e) {
+            throw Exceptions.unchecked(e);
+        }
     }
 
     /**

@@ -19,7 +19,7 @@ public class WebFormatter {
             sb = sb.append(token.getText());
             start += token.getLength();
         }
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     private static Token parse(char[] data, int start, boolean previousIsPre) {

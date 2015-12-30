@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lab.s2jh.core.service.Validation;
 import lab.s2jh.support.service.DynamicConfigService;
@@ -18,6 +20,8 @@ public class DateUtils {
 
     public final static String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
+    public final static String ISO_SHORT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
     public final static String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
@@ -26,7 +30,8 @@ public class DateUtils {
 
     public final static String FULL_SEQ_FORMAT = "yyyyMMddHHmmssSSS";
 
-    public final static String[] MULTI_FORMAT = { DEFAULT_DATE_FORMAT, ISO_DATE_TIME_FORMAT, DEFAULT_TIME_FORMAT, SHORT_TIME_FORMAT, "yyyy-MM" };
+    public final static String[] MULTI_FORMAT = { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, ISO_DATE_TIME_FORMAT, ISO_SHORT_DATE_TIME_FORMAT,
+            SHORT_TIME_FORMAT, "yyyy-MM" };
 
     public final static String FORMAT_YYYY = "yyyy";
 
@@ -276,6 +281,21 @@ public class DateUtils {
         c.add(Calendar.MONTH, 0);
         c.set(Calendar.DAY_OF_MONTH, 1);
         System.out.println(DateUtils.formatDate(c.getTime(), DateUtils.FORMAT_YYYYMMDD));
-    }
 
+        DateUtils.formatDate(new Date(), DEFAULT_DATE_FORMAT);
+
+        Pattern p = Pattern.compile("(\\d{4})-(\\d{1,2})-(\\d{1,2})");
+        Matcher m = p.matcher(DateUtils.formatDate(new Date(), DEFAULT_DATE_FORMAT));
+
+        if (m.find()) {
+            System.out.println("日期:" + m.group());
+            System.out.println("年:" + m.group(1));
+            System.out.println("月:" + m.group(2));
+            System.out.println("日:" + m.group(3));
+        }
+
+        String time = "2015/11/02 ";
+
+        System.out.println(parseDate(time, "yyyy/MM/dd"));
+    }
 }
