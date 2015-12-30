@@ -97,6 +97,7 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
     }
 
     protected Page<T> findByPage(Class<T> clazz, HttpServletRequest request, EntityProcessCallbackHandler<T> handler) {
+        //RoutingDataSourceAdvice.setSlaveDatasource();
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
         GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(clazz, request);
         appendFilterProperty(groupFilter);
@@ -144,7 +145,6 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
                     handler.processEntity(entity);
                 } catch (EntityProcessCallbackException e) {
                     msg = e.getMessage();
-                    break;
                 }
             }
             if (StringUtils.isBlank(msg)) {
@@ -179,7 +179,7 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
 
     protected T initPrepareModel(HttpServletRequest request, Model model, ID id) {
         T entity = null;
-        if (id != null) {
+        if (id != null && StringUtils.isNotBlank(id.toString())) {
             //如果是以POST方式请求数据，则获取Detach状态的对象，其他则保留Session方式以便获取Lazy属性
             if (request.getMethod().equalsIgnoreCase("POST")) {
                 entity = buildDetachedBindingEntity(id);
