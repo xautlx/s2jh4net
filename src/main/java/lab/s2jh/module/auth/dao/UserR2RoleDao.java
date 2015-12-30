@@ -16,9 +16,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserR2RoleDao extends BaseDao<UserR2Role, String> {
 
-    @Query("select r2 from Role r, UserR2Role r2 where r=r2.role and r2.user=:user and r.disabled=false ")
+    @Query("select r2 from Role r, UserR2Role r2 where r=r2.role and r2.user.id=:userId and r.disabled=false ")
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
-    List<UserR2Role> findEnabledRolesForUser(@Param("user") User user);
+    List<UserR2Role> findEnabledRolesForUser(@Param("userId") Long userId);
 
     List<UserR2Role> findByRole_Id(String roleId);
 
