@@ -15,7 +15,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.web.util.ServletUtils;
-import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,23 +52,15 @@ public class HttpRequestLogFilter implements Filter {
                 return;
             }
 
-            //如果是开发模式则开启debug
-            boolean debug = DynamicConfigService.isDevMode();
-            if (debug == false) {
-                //如果是非开发模式，提取请求参数标识开启参数debug
-                debug = BooleanUtils.toBoolean(req.getParameter("debug"));
-            }
-            if (debug) {
-                //在debug模式下，再提取verbose参数标识是否开启详细信息输出
-                boolean verbose = BooleanUtils.toBoolean(req.getParameter("verbose"));
+            //提取verbose参数标识是否开启详细信息输出
+            boolean verbose = logger.isTraceEnabled() || BooleanUtils.toBoolean(req.getParameter("verbose"));
 
-                Map<String, String> dataMap = ServletUtils.buildRequestInfoDataMap(req, verbose);
-                StringBuilder sb = new StringBuilder("HTTP Request Info:");
-                for (Map.Entry<String, String> me : dataMap.entrySet()) {
-                    sb.append(StringUtils.rightPad("\n" + me.getKey(), 50) + " : " + me.getValue());
-                }
-                logger.info(sb.toString());
+            Map<String, String> dataMap = ServletUtils.buildRequestInfoDataMap(req, verbose);
+            StringBuilder sb = new StringBuilder("HTTP Request Info:");
+            for (Map.Entry<String, String> me : dataMap.entrySet()) {
+                sb.append(StringUtils.rightPad("\n" + me.getKey(), 50) + " : " + me.getValue());
             }
+            logger.info(sb.toString());
         }
         chain.doFilter(request, reponse);
     }
