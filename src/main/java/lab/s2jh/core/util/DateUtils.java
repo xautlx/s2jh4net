@@ -13,8 +13,12 @@ import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DateUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
     public final static String DEFAULT_TIMEZONE = "GMT+8";
 
@@ -298,4 +302,5 @@ public class DateUtils {
 
         System.out.println(parseDate(time, "yyyy/MM/dd"));
     }
+
 }

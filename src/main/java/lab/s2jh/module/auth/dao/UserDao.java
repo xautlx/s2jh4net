@@ -1,5 +1,7 @@
 package lab.s2jh.module.auth.dao;
 
+import java.util.List;
+
 import javax.persistence.QueryHint;
 
 import lab.s2jh.core.dao.jpa.BaseDao;
@@ -20,4 +22,10 @@ public interface UserDao extends BaseDao<User, Long> {
 
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     User findByAuthUid(String authUid);
+
+    @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
+    List<User> findByEmail(String email);
+
+    @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
+    List<User> findByMobile(String mobile);
 }

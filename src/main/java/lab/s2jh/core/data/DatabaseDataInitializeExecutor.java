@@ -55,17 +55,11 @@ public class DatabaseDataInitializeExecutor {
 
     @Transactional
     public void initialize(List<BaseDatabaseDataInitialize> initializeProcessors) {
-        //如果不是开发模式，则直接退出防止意外更新已有数据
-        //为了稳妥，生产环境数据采用手工更新方式
-        if (!DynamicConfigService.isDevMode()) {
-            logger.info("Skipped DatabaseDataInitializeExecutor as NOT dev mode.");
-            return;
-        }
-
         CountThread countThread = new CountThread();
         countThread.start();
 
-        if ("create-drop".equalsIgnoreCase(hbm2ddl)) {
+        //必须是开发模式才允许删除数据库
+        if (DynamicConfigService.isDevMode() && "create-drop".equalsIgnoreCase(hbm2ddl)) {
             logger.debug("Invoke hibernate sessionFactory.close() to trigger drop tables as hbm2ddl={}.", hbm2ddl);
             SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
             sessionFactory.close();

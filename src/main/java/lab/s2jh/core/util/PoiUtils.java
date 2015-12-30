@@ -27,6 +27,18 @@ public class PoiUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(PoiUtils.class);
 
+    /**
+     * <pre>
+     *    指定获取某列所有数据
+     * </pre>
+     * 
+     * @return
+     */
+    public static List<Map<String, String>> readExcelSpecifyColNum(InputStream is, Integer readFromRowNum, Integer specifyColNum) {
+
+        return readExcelSpecifyColNum(is, null, readFromRowNum, specifyColNum);
+    }
+
     public static List<Map<String, String>> readExcelContent(MultipartFile excelFile, Integer sheetIndex, Integer readFromRowNum,
             Integer readFromColNum) {
         return readExcelContent(excelFile, sheetIndex, null, readFromRowNum, readFromColNum);
@@ -100,21 +112,7 @@ public class PoiUtils {
         try {
             //读取Excel文件
             is = excelFile.getInputStream(); //this.getClass().getResourceAsStream(excelName);
-            if (excelName.toLowerCase().endsWith(".csv")) {
-                /*
-                 * TODO:待完成解析csv文件
-                 * int cnt = 0;
-                isr = new InputStreamReader(is, Charset.forName("GBK"));
-                //读取CSV文件
-                br = new BufferedReader(isr);
-
-                String rec = null;
-                while ((rec = br.readLine()) != null) {
-                    ++cnt;
-                    System.out.println(rec);
-                }
-                */
-            } else if (excelName.toLowerCase().endsWith(".xls")) {
+            if (excelName.toLowerCase().endsWith(".xls")) {
 
                 Workbook wb = new HSSFWorkbook(is);
                 Sheet sheet = null;
@@ -243,6 +241,98 @@ public class PoiUtils {
             cellvalue = cellvalue.trim();
         }
         return cellvalue;
+    }
+
+    /**
+     * <pre>
+     *   读取Excel指定列内容
+     * </pre>
+     * 
+     * @param excelName                  表格名称
+     * @param sheetName                  读取工作标签项名称
+     * @param readFromRowNum             以readFromRowNum作为标题开始读取
+     * @param readFromColNum             从readFromColNum列开始读取
+     * @return Map                       包含单元格数据内容的Map对象
+     */
+    public static List<Map<String, String>> readExcelSpecifyColNum(InputStream is, Integer sheetIndex, Integer readFromRowNum, Integer specifyColNum) {
+        List<Map<String, String>> rows = Lists.newArrayList();
+        String sheetName = "defaultSheet";
+        try {
+            //读取Excel文件
+            Workbook wb = new HSSFWorkbook(is);
+            Sheet sheet = null;
+            if (null == sheetIndex) {
+                sheetIndex = 0;
+            }
+
+            if (null == readFromRowNum) {
+                readFromRowNum = 0;
+            }
+            sheet = wb.getSheetAt(sheetIndex);
+            int colNum = 0;
+            Row row0 = sheet.getRow(readFromRowNum);
+            // 标题总列数
+            List<String> titleList = Lists.newArrayList();
+            while (colNum <= specifyColNum) {
+
+                Cell cell = row0.getCell(colNum);
+                if (cell == null) {
+                    break;
+                }
+                String title = getCellFormatValue(cell);
+                if (StringUtils.isBlank(title)) {
+                    break;
+                }
+                titleList.add(title);
+                logger.debug(" - Title : {} = {}", colNum, title);
+                colNum++;
+            }
+            logger.debug("Sheet: {}, Column Num: {}", sheetIndex, colNum);
+            String[] titles = titleList.toArray(new String[titleList.size()]);
+
+            // 正文内容应该从第readFromRowNum + 1行开始,第readFromRowNum行为表头的标题
+            int rowNum = readFromRowNum + 1;
+            while (rowNum > readFromRowNum) {
+                Row row = sheet.getRow(rowNum++);
+                if (row == null) {
+                    break;
+                }
+                Map<String, String> rowMap = Maps.newHashMap();
+                rowMap.put("sheetName", sheetName);
+
+                Cell firstCell = row.getCell(specifyColNum);
+                //假如第colNum列并且为空则终止行项数据处理
+                if (firstCell == null) {
+                    logger.info("End as first cell is Null at row: {}", rowNum);
+                    break;
+                }
+
+                int j = 0;
+                int titleCnt = 0;
+                while (j < colNum) {
+                    Cell cell = row.getCell(j);
+                    if (cell != null) {
+                        String cellValue = getCellFormatValue(cell);
+                        if (StringUtils.isNotBlank(cellValue)) {
+                            rowMap.put(titles[titleCnt], cellValue);
+                        }
+                    }
+                    titleCnt++;
+                    j++;
+                }
+                if (rowNum > readFromRowNum) {
+                    rows.add(rowMap);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
+        logger.debug("Row Map Data: {}", rows);
+        return rows;
     }
 
     public static void main(String[] args) {

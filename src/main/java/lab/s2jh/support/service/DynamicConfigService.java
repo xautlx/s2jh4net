@@ -1,5 +1,8 @@
 package lab.s2jh.support.service;
 
+import java.util.List;
+import java.util.Map;
+
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
 import lab.s2jh.core.util.DateUtils;
@@ -127,4 +130,12 @@ public class DynamicConfigService {
         return BooleanUtils.toBoolean(getString(key, String.valueOf(defaultValue)));
     }
 
+    public Map<String, String> getAllPrperties() {
+        Map<String, String> properties = extPropertyPlaceholderConfigurer.getPropertiesMap();
+        List<ConfigProperty> configProperties = configPropertyService.findAllCached();
+        for (ConfigProperty configProperty : configProperties) {
+            properties.put(configProperty.getPropKey(), configProperty.getSimpleValue());
+        }
+        return properties;
+    }
 }

@@ -216,12 +216,13 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         userLogonLog.setAuthGuid(authAccount.getAuthGuid());
         userService.userLogonLog(authAccount, userLogonLog);
 
+        AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
+        authUserDetails.setAccessToken(authAccount.getAccessToken());
+
+        //根据不同登录类型转向不同成功界面
         if (isMobileAppAccess(request)) {
             return true;
         } else {
-            //根据不同登录类型转向不同成功界面
-            AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
-
             //判断密码是否已到期，如果是则转向密码修改界面
             Date credentialsExpireTime = authAccount.getCredentialsExpireTime();
             if (credentialsExpireTime != null && credentialsExpireTime.before(DateUtils.currentDate())) {
