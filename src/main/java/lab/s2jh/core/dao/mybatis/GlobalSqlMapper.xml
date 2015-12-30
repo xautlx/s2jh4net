@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Global">
+
+	<sql id="propertyFiltersSQL">
+		<foreach collection="propertyFilters" item="propertyFilter">
+			<bind name="skipped" value="'0'" />
+			<foreach collection="skipPropertyFilters.split(',')" item="skip">
+				<if test="skip==propertyFilter.propertyName">
+					<bind name="skipped" value="'1'" />
+				</if>
+			</foreach>
+			<choose>
+				<when test="skipped == '1'"></when>
+				<when test="propertyFilter.matchType.name() == 'EQ'">
+					and ${propertyFilter.propertyName} = #{propertyFilter.matchValue}
+				</when>
+				<when test="propertyFilter.matchType.name() == 'NE'">
+					and ${propertyFilter.propertyName} != #{propertyFilter.matchValue}
+				</when>
+				<when test="propertyFilter.matchType.name() == 'BK'">
+					and (${propertyFilter.propertyName} is null or ${propertyFilter.propertyName}=='')
+				</when>
+				<when test="propertyFilter.matchType.name() == 'NB'">
+					and (${propertyFilter.propertyName} is not null and ${propertyFilter.propertyName}!='')
+				</when>
+				<when test="propertyFilter.matchType.name() == 'NU'">
+					and ${propertyFilter.propertyName} is null
+				</when>
+				<when test="propertyFilter.matchType.name() == 'NN'">
+					and ${propertyFilter.propertyName} is not null
+				</when>
+				<when test="propertyFilter.matchType.name() == 'CN'">
+					and ${propertyFilter.propertyName} like '%${propertyFilter.matchValue}%'
+				</when>
+				<when test="propertyFilter.matchType.name() == 'NC'">
+					and ${propertyFilter.propertyName} not like '%${propertyFilter.matchValue}%'
+				</when>
+				<when test="propertyFilter.matchType.name() == 'BW'">
+					and ${propertyFilter.propertyName} like '${propertyFilter.matchValue}%'
+				</when>
+				<when test="propertyFilter.matchType.name() == 'BN'">
+					and ${propertyFilter.propertyName} not like '${propertyFilter.matchValue}%'
+				</when>
+				<when test="propertyFilter.matchType.name() == 'EW'">
+					and ${propertyFilter.propertyName} like '%${propertyFilter.matchValue}'
+				</when>
+				<when test="propertyFilter.matchType.name() == 'EN'">
+					and ${propertyFilter.propertyName} not like '%${propertyFilter.matchValue}'
+				</when>
+				<when test="propertyFilter.matchType.name() == 'BT'">
+					and (${propertyFilter.propertyName} &gt;= #{propertyFilter.matchValue[0]} and
+					${propertyFilter.propertyName} &lt;
+					#{propertyFilter.matchValue[1]})
+				</when>
+				<when test="propertyFilter.matchType.name() == 'GT'">
+					and ${propertyFilter.propertyName} &gt; #{propertyFilter.matchValue}
+				</when>
+				<when test="propertyFilter.matchType.name() == 'GE'">
+					and ${propertyFilter.propertyName} &gt;= #{propertyFilter.matchValue}
+				</when>
+				<when test="propertyFilter.matchType.name() == 'LT'">
+					and ${propertyFilter.propertyName} &lt; #{propertyFilter.matchValue}
+				</when>
+				<when test="propertyFilter.matchType.name() == 'LE'">
+					and ${propertyFilter.propertyName} &lt;= #{propertyFilter.matchValue}
+				</when>
+				<otherwise>
+					and undefined sql process
+				</otherwise>
+			</choose>
+		</foreach>
+	</sql>
+</mapper>

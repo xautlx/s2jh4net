@@ -38,6 +38,7 @@ public class MyBatisGenerialDaoImpl implements MyBatisDao {
     public <E> List<E> findSortList(String namespace, String statementId, GroupPropertyFilter groupPropertyFilter, Sort sort) {
         String statement = namespace + "." + statementId;
         Map<String, Object> parameters = groupPropertyFilter.convertToMapParameters();
+        parameters.put("propertyFilters", groupPropertyFilter.convertToPropertyFilters());
         if (sort != null) {
             RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
             PaginationInterceptor.setPaginationOrderby(sort);
@@ -63,6 +64,7 @@ public class MyBatisGenerialDaoImpl implements MyBatisDao {
     public <E> Page<E> findPage(String namespace, String statementId, GroupPropertyFilter groupPropertyFilter, Pageable pageable) {
         String statement = namespace + "." + statementId;
         Map<String, Object> parameters = groupPropertyFilter.convertToMapParameters();
+        parameters.put("propertyFilters", groupPropertyFilter.convertToPropertyFilters());
         RowBounds rowBounds = new RowBounds(pageable.getOffset(), pageable.getPageSize());
         PaginationInterceptor.setPaginationOrderby(pageable.getSort());
         List<E> rows = sqlSession.selectList(statement, parameters, rowBounds);
