@@ -180,21 +180,23 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
         }
 
         //系统配置参数初始化
-        if (isEmptyTable(ConfigProperty.class)) {
+        if (configPropertyService.findByPropKey(GlobalConstant.cfg_system_title) == null) {
             ConfigProperty entity = new ConfigProperty();
-            entity.setPropKey("cfg_system_title");
+            entity.setPropKey(GlobalConstant.cfg_system_title);
             entity.setPropName("系统名称");
             entity.setSimpleValue(systemTitle);
             configPropertyService.save(entity);
-
-            entity = new ConfigProperty();
-            entity.setPropKey(GlobalConstant.cfg_signup_disabled);
+        }
+        if (configPropertyService.findByPropKey(GlobalConstant.cfg_mgmt_signup_disabled) == null) {
+            ConfigProperty entity = new ConfigProperty();
+            entity.setPropKey(GlobalConstant.cfg_mgmt_signup_disabled);
             entity.setPropName("禁用自助注册功能");
             entity.setSimpleValue("false");
             entity.setPropDescn("设置为true禁用则登录界面屏蔽自助注册功能");
             configPropertyService.save(entity);
-
-            entity = new ConfigProperty();
+        }
+        if (configPropertyService.findByPropKey(GlobalConstant.cfg_public_send_sms_disabled) == null) {
+            ConfigProperty entity = new ConfigProperty();
             entity.setPropKey(GlobalConstant.cfg_public_send_sms_disabled);
             entity.setPropName("是否全局禁用开放手机号短信发送功能");
             entity.setSimpleValue("false");
@@ -202,34 +204,33 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             configPropertyService.save(entity);
         }
 
-        {
-            if (dataDictService.findByProperty("primaryKey", GlobalConstant.DataDict_Message_Type) == null) {
-                DataDict entity = new DataDict();
-                entity.setPrimaryKey(GlobalConstant.DataDict_Message_Type);
-                entity.setPrimaryValue("消息类型");
-                dataDictService.save(entity);
+        //数据字典项初始化
+        if (dataDictService.findByProperty("primaryKey", GlobalConstant.DataDict_Message_Type) == null) {
+            DataDict entity = new DataDict();
+            entity.setPrimaryKey(GlobalConstant.DataDict_Message_Type);
+            entity.setPrimaryValue("消息类型");
+            dataDictService.save(entity);
 
-                DataDict item = new DataDict();
-                item.setPrimaryKey("notify");
-                item.setPrimaryValue("通知");
-                item.setSecondaryValue("#32CFC4");
-                item.setParent(entity);
-                dataDictService.save(item);
+            DataDict item = new DataDict();
+            item.setPrimaryKey("notify");
+            item.setPrimaryValue("通知");
+            item.setSecondaryValue("#32CFC4");
+            item.setParent(entity);
+            dataDictService.save(item);
 
-                item = new DataDict();
-                item.setPrimaryKey("bulletin");
-                item.setPrimaryValue("喜报");
-                item.setSecondaryValue("#FF645D");
-                item.setParent(entity);
-                dataDictService.save(item);
+            item = new DataDict();
+            item.setPrimaryKey("bulletin");
+            item.setPrimaryValue("喜报");
+            item.setSecondaryValue("#FF645D");
+            item.setParent(entity);
+            dataDictService.save(item);
 
-                item = new DataDict();
-                item.setPrimaryKey("remind");
-                item.setPrimaryValue("提醒");
-                item.setSecondaryValue("#FF8524");
-                item.setParent(entity);
-                dataDictService.save(item);
-            }
+            item = new DataDict();
+            item.setPrimaryKey("remind");
+            item.setPrimaryValue("提醒");
+            item.setSecondaryValue("#FF8524");
+            item.setParent(entity);
+            dataDictService.save(item);
         }
 
         //初始化演示通知消息
