@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -42,6 +43,7 @@ import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.ClassUtils;
 import org.joda.time.DateTime;
@@ -63,6 +65,17 @@ import com.google.common.collect.Sets;
 public class ServletUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(ServletUtils.class);
+
+    // \b 是单词边界(连着的两个(字母字符 与 非字母字符) 之间的逻辑上的间隔),    
+    // 字符串在编译时会被转码一次,所以是 "\\b"    
+    // \B 是单词内部逻辑间隔(连着的两个字母字符之间的逻辑上的间隔)    
+    static String phoneReg = "\\b(ip(hone|od)|android|opera m(ob|in)i" + "|windows (phone|ce)|blackberry"
+            + "|s(ymbian|eries60|amsung)|p(laybook|alm|rofile/midp" + "|laystation portable)|nokia|fennec|htc[-_]"
+            + "|mobile|up.browser|[1-4][0-9]{2}x[1-4][0-9]{2})\\b";
+    static String tableReg = "\\b(ipad|tablet|(Nexus 7)|up.browser" + "|[1-4][0-9]{2}x[1-4][0-9]{2})\\b";
+    //移动设备正则匹配：手机端、平板  
+    static java.util.regex.Pattern phonePat = java.util.regex.Pattern.compile(phoneReg, java.util.regex.Pattern.CASE_INSENSITIVE);
+    static java.util.regex.Pattern tablePat = java.util.regex.Pattern.compile(tableReg, java.util.regex.Pattern.CASE_INSENSITIVE);
 
     /**
      * 取得带相同前缀的Request Parameters, copy from spring WebUtils.
@@ -396,7 +409,7 @@ public class ServletUtils {
         if (StringUtils.isBlank(url)) {
             return null;
         }
-        if (url.startsWith("http")) {
+        if (url.startsWith("http") || url.startsWith("itms-services://")) {
             return url;
         }
         return getReadFileUrlPrefix() + url;
@@ -483,5 +496,74 @@ public class ServletUtils {
 
         return path;
 
+    }
+
+    public static boolean isMobileAndroidClient(HttpServletRequest request) {
+        String android = request.getParameter("_android_");
+        if (BooleanUtils.toBoolean(android)) {
+            return true;
+        }
+        String userAgent = request.getHeader("user-agent");
+        if (StringUtils.isBlank(userAgent)) {
+            return false;
+        }
+        if (userAgent.toLowerCase().contains("android")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isMobileIOSClient(HttpServletRequest request) {
+        String ios = request.getParameter("_ios_");
+        if (BooleanUtils.toBoolean(ios)) {
+            return true;
+        }
+        String userAgent = request.getHeader("user-agent");
+        if (StringUtils.isBlank(userAgent)) {
+            return false;
+        }
+        userAgent = userAgent.toLowerCase();
+        if (userAgent.contains("iphone") || userAgent.contains("ipod") || userAgent.contains("ipad")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isMobileClient(HttpServletRequest request) {
+        //特殊参数处理
+        String mobile = request.getParameter("_mobile_");
+        if (BooleanUtils.toBoolean(mobile)) {
+            return true;
+        }
+        String userAgent = request.getHeader("USER-AGENT");
+        if (null == userAgent) {
+            userAgent = "";
+        }
+        // 匹配    
+        Matcher matcherPhone = phonePat.matcher(userAgent);
+        Matcher matcherTable = tablePat.matcher(userAgent);
+        if (matcherPhone.find() || matcherTable.find()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isMicroMessengerClient(HttpServletRequest request) {
+        //特殊参数处理
+        String mobile = request.getParameter("_weixin_");
+        if (BooleanUtils.toBoolean(mobile)) {
+            return true;
+        }
+        String userAgent = request.getHeader("user-agent");
+        if (StringUtils.isBlank(userAgent)) {
+            return false;
+        }
+        userAgent = userAgent.toLowerCase();
+        if (userAgent.contains("micromessenger")) {
+            return true;
+        }
+
+        return false;
     }
 }
