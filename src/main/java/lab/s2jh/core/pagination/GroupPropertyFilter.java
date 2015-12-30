@@ -285,8 +285,30 @@ public class GroupPropertyFilter {
             }
         }
         for (PropertyFilter propertyFilter : propertyFilters) {
-            parameters.put(propertyFilter.getPropertyName(), propertyFilter.getMatchValue());
+            String name = propertyFilter.getPropertyName();
+            //把.分隔转换为_形式，以便在MyBatis中引用
+            name = name.replaceAll("\\.", "_");
+            parameters.put(name, propertyFilter.getMatchValue());
         }
         return parameters;
+    }
+
+    /**
+     * 转换为PropertyFilter查询集合，用于传递给MyBatis作为动态查询参数
+     * 注意限制：仅考虑最常用的一个层次的查询调整合并处理，暂不支持复杂的多级嵌套层次查询
+     * @return 
+     */
+    public List<PropertyFilter> convertToPropertyFilters() {
+        List<PropertyFilter> propertyFilters = Lists.newArrayList();
+        propertyFilters.addAll(this.getFilters());
+        if (CollectionUtils.isNotEmpty(this.getGroups())) {
+            for (GroupPropertyFilter group : this.getGroups()) {
+                if (CollectionUtils.isEmpty(group.getFilters()) && CollectionUtils.isEmpty(group.getForceAndFilters())) {
+                    continue;
+                }
+                propertyFilters.addAll(group.getFilters());
+            }
+        }
+        return propertyFilters;
     }
 }
