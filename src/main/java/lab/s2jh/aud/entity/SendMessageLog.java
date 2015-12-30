@@ -16,13 +16,20 @@ import javax.persistence.Transient;
 
 import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.entity.PersistableEntity;
+import lab.s2jh.core.util.ExtStringUtils;
+import lab.s2jh.core.util.WebFormatter;
+import lab.s2jh.core.web.json.JsonViews;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Getter
 @Setter
@@ -52,6 +59,7 @@ public class SendMessageLog extends PersistableEntity<Long> {
     @MetaData(value = "消息内容", comments = "可以是无格式的TEXT或格式化的HTMl")
     @Lob
     @Column(nullable = false)
+    @JsonIgnore
     private String message;
 
     @MetaData(value = "消息响应", comments = "如JSON，HTML响应文本")
@@ -86,5 +94,16 @@ public class SendMessageLog extends PersistableEntity<Long> {
     @Transient
     public String getDisplay() {
         return title;
+    }
+
+    @Transient
+    @JsonView(JsonViews.Admin.class)
+    public String getMessageAbstract() {
+        if (!StringUtils.isEmpty(message)) {
+            String text = WebFormatter.html2text(message);
+            return ExtStringUtils.cutRedundanceStr(text, 200);
+        } else {
+            return "";
+        }
     }
 }

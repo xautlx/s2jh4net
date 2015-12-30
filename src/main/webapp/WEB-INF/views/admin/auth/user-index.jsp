@@ -86,11 +86,13 @@
                 }, {
                     label : '账号失效日期',
                     name : 'accountExpireTime',
+                    formatter : 'timestamp',
                     editable : true,
                     sorttype : 'date'
                 }, {
                     label : '密码失效日期',
                     name : 'credentialsExpireTime',
+                    formatter : 'timestamp',
                     editable : true,
                     sorttype : 'date'
                 }, {
@@ -117,10 +119,12 @@
                 }, {
                     label : '注册时间',
                     name : 'userExt.signupTime',
+                    formatter : 'timestamp',
                     sorttype : 'date'
                 }, {
                     label : '最后登录时间',
                     name : 'userExt.lastLogonTime',
+                    formatter : 'timestamp',
                     sorttype : 'date'
                 }, {
                     label : '总计登录次数',
@@ -130,6 +134,7 @@
                 }, {
                     label : '最近认证失败时间',
                     name : 'userExt.lastLogonFailureTime',
+                    formatter : 'timestamp',
                     sorttype : 'date'
                 }, {
                     label : '最近认证失败次数',

@@ -136,7 +136,7 @@
 			</div>
 		</div>
 		<div class="form-actions right">
-			<button class="btn blue" type="submit" data-grid-reload=".grid-auth-user-index">
+			<button class="btn blue" type="submit" data-grid-reload="#grid-auth-user-index">
 				<i class="fa fa-check"></i> 保存
 			</button>
 			<button class="btn default" type="button" data-dismiss="modal">取消</button>

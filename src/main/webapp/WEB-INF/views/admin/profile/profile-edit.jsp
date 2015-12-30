@@ -11,6 +11,7 @@
 </head>
 <body>
 	<div class="row">
+		<%-- 
 		<div class="col-md-6">
 			<div class="portlet box blue">
 				<div class="portlet-title">
@@ -90,6 +91,7 @@
 				</div>
 			</div>
 		</div>
+		--%>
 		<div class="col-md-6">
 			<div class="portlet box blue">
 				<div class="portlet-title">
