@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemesh>
 
-	<mapping path="/w" decorator="/WEB-INF/views/layouts/www.jsp" />
-	<mapping path="/w/*" decorator="/WEB-INF/views/layouts/www.jsp" />
-
-	<mapping path="/m" decorator="/WEB-INF/views/layouts/mobile.jsp" />
-	<mapping path="/m/*" decorator="/WEB-INF/views/layouts/mobile.jsp" />
-
     <mapping path="/admin/password/reset" decorator="/WEB-INF/views/layouts/admin-login.jsp" />
     <mapping path="/admin/login" decorator="/WEB-INF/views/layouts/admin-login.jsp" />
 	<mapping path="/admin" decorator="/WEB-INF/views/layouts/admin-index.jsp" />
