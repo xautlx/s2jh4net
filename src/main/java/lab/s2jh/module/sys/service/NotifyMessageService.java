@@ -50,12 +50,20 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
      */
     @Transactional(readOnly = true)
     public Long findCountToRead(User user, String platform, String... tags) {
+        if (user == null) {
+            return 0L;
+        }
         List<NotifyMessage> scopeEffectiveMessages = findEffectiveMessages(user, platform, tags);
         if (CollectionUtils.isEmpty(scopeEffectiveMessages)) {
             return 0L;
         }
 
-        List<NotifyMessageRead> notifyMessageReads = notifyMessageReadDao.findByReadUserAndNotifyMessageIn(user, scopeEffectiveMessages);
+        List<Long> scopeEffectiveMessageIds = Lists.newArrayList();
+        for (NotifyMessage nm : scopeEffectiveMessages) {
+            scopeEffectiveMessageIds.add(nm.getId());
+        }
+
+        List<NotifyMessageRead> notifyMessageReads = notifyMessageReadDao.findByReadUserAndNotifyMessageIn(user.getId(), scopeEffectiveMessageIds);
         return scopeEffectiveMessages.size() - (notifyMessageReads == null ? 0L : notifyMessageReads.size());
     }
 
@@ -114,7 +122,8 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
     private List<NotifyMessage> filterByPlatform(List<NotifyMessage> notifyMessages, String platform) {
         List<NotifyMessage> returnList = Lists.newArrayList();
         for (NotifyMessage notifyMessage : notifyMessages) {
-            if (StringUtils.isBlank(notifyMessage.getPlatform()) || notifyMessage.getPlatform().indexOf(platform) != -1) {
+            if (StringUtils.isBlank(notifyMessage.getPlatform()) || StringUtils.isBlank(platform)
+                    || notifyMessage.getPlatform().indexOf(platform) != -1) {
                 returnList.add(notifyMessage);
             }
         }
@@ -187,8 +196,14 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
                 returnList.add(notifyMessage);
             } else {
                 if (user != null) {
-                    for (String tag : tags) {
-                        if (tag.trim().equals(user.getAlias())) {
+                    //                    for (String tag : tags) {
+                    //                        if (tag.trim().equals(user.getAlias())) {
+                    //                            returnList.add(notifyMessage);
+                    //                        }
+                    //                    }
+                    String[] aliasArray = notifyMessage.getAudienceAlias().trim().split(",");
+                    for (String alias : aliasArray) {
+                        if (user.getAlias().equals(alias)) {
                             returnList.add(notifyMessage);
                         }
                     }
@@ -207,10 +222,16 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
     public List<NotifyMessage> findStatedEffectiveMessages(User user, String platform, Boolean readState, String... tags) {
         List<NotifyMessage> statedEffectiveMessages = Lists.newArrayList();
         List<NotifyMessage> scopeEffectiveMessages = findEffectiveMessages(user, platform, tags);
-        if (CollectionUtils.isEmpty(scopeEffectiveMessages)) {
+        if (CollectionUtils.isEmpty(scopeEffectiveMessages) || user == null) {
             return statedEffectiveMessages;
         }
-        List<NotifyMessageRead> notifyMessageReads = notifyMessageReadDao.findByReadUserAndNotifyMessageIn(user, scopeEffectiveMessages);
+
+        List<Long> scopeEffectiveMessageIds = Lists.newArrayList();
+        for (NotifyMessage nm : scopeEffectiveMessages) {
+            scopeEffectiveMessageIds.add(nm.getId());
+        }
+
+        List<NotifyMessageRead> notifyMessageReads = notifyMessageReadDao.findByReadUserAndNotifyMessageIn(user.getId(), scopeEffectiveMessageIds);
         for (NotifyMessage notifyMessage : scopeEffectiveMessages) {
             boolean readed = false;
             for (NotifyMessageRead notifyMessageRead : notifyMessageReads) {
@@ -252,7 +273,9 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
      */
     @Scheduled(fixedRate = 5 * 60 * 1000)
     public void updateTobeEffectiveMessagesTimely() {
-        logger.debug("Timely updateTobeEffectiveMessages at Thread: {}...", Thread.currentThread().getId());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Timely updateTobeEffectiveMessages at Thread: {}...", Thread.currentThread().getId());
+        }
         List<NotifyMessage> notifyMessages = notifyMessageDao.findTobeEffectiveMessages();
         if (CollectionUtils.isNotEmpty(notifyMessages)) {
             Date now = DateUtils.currentDate();

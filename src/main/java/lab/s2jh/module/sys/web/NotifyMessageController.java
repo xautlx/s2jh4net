@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
+import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.service.BaseService;
@@ -17,6 +18,7 @@ import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.sys.entity.NotifyMessage;
 import lab.s2jh.module.sys.entity.NotifyMessage.NotifyMessagePlatformEnum;
 import lab.s2jh.module.sys.entity.NotifyMessageRead;
+import lab.s2jh.module.sys.service.DataDictService;
 import lab.s2jh.module.sys.service.NotifyMessageReadService;
 import lab.s2jh.module.sys.service.NotifyMessageService;
 
@@ -45,6 +47,9 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
 
     @Autowired
     private NotifyMessageReadService notifyMessageReadService;
+
+    @Autowired
+    private DataDictService dataDictService;
 
     @Override
     protected BaseService<NotifyMessage, Long> getEntityService() {
@@ -82,6 +87,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(Model model) {
         model.addAttribute("platformMap", EnumUtils.getEnumDataMap(NotifyMessagePlatformEnum.class));
+        model.addAttribute("messageTypeMap", dataDictService.findMapDataByRootPrimaryKey(GlobalConstant.DataDict_Message_Type));
         return "admin/sys/notifyMessage-inputBasic";
     }
 

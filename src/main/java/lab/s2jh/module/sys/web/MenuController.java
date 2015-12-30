@@ -82,6 +82,13 @@ public class MenuController extends BaseController<Menu, Long> {
         return super.editSave(entity);
     }
 
+    @RequiresPermissions("配置管理:系统管理:菜单配置")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult delete(@RequestParam("id") Long... id) {
+        return super.delete(id);
+    }
+
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/data", method = RequestMethod.GET)
     @ResponseBody

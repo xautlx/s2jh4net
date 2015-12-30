@@ -8,7 +8,6 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -54,7 +53,7 @@ public class Menu extends BaseNativeEntity {
 
     @MetaData(value = "父节点")
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "none"))
+    @JoinColumn(name = "parent_id")
     @JsonIgnore
     private Menu parent;
 

@@ -19,7 +19,7 @@
 		</div>
 		<div class="form-body">
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label">标题</label>
 						<div class="controls">
@@ -27,6 +27,14 @@
 						</div>
 					</div>
 				</div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label">类型</label>
+                        <div class="controls">
+                            <form:select path="type" class="form-control" items="${messageTypeMap }"/>
+                        </div>
+                    </div>
+                </div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">

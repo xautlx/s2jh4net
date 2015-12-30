@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 public interface SmsVerifyCodeDao extends BaseDao<SmsVerifyCode, Long> {
 
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
-    public SmsVerifyCode findByMobileNum(String mobileNum);
+    public SmsVerifyCode findByMobileNum(@Param("mobileNum") String mobileNum);
 
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
     @Query("select count(1) from SmsVerifyCode where firstVerifiedTime is null")

@@ -19,10 +19,12 @@ public interface NotifyMessageReadDao extends BaseDao<NotifyMessageRead, Long> {
 
     NotifyMessageRead findByNotifyMessageAndReadUser(NotifyMessage notifyMessage, User user);
 
+    @Query("from NotifyMessageRead where readUser.id=:readUserId and notifyMessage.id in (:scopeEffectiveMessageIds)")
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
-    public List<NotifyMessageRead> findByReadUserAndNotifyMessageIn(User readUser, List<NotifyMessage> scopeEffectiveMessages);
+    public List<NotifyMessageRead> findByReadUserAndNotifyMessageIn(@Param("readUserId") Long readUserId,
+            @Param("scopeEffectiveMessageIds") List<Long> scopeEffectiveMessageIds);
 
-    @Query("select count(nm) from NotifyMessageRead nm where nm.notifyMessage=:notifyMessage")
+    @Query("select count(nm) from NotifyMessageRead nm where nm.notifyMessage.id=:notifyMessageId")
     @QueryHints({ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
-    Integer countByNotifyMessage(@Param("notifyMessage") NotifyMessage notifyMessage);
+    Integer countByNotifyMessage(@Param("notifyMessageId") Long notifyMessageId);
 }

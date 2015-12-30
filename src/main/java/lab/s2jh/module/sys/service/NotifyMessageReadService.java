@@ -23,7 +23,7 @@ public class NotifyMessageReadService extends BaseService<NotifyMessageRead, Lon
     }
 
     public Integer countByNotifyMessage(NotifyMessage notifyMessage) {
-        return notifyMessageReadDao.countByNotifyMessage(notifyMessage);
+        return notifyMessageReadDao.countByNotifyMessage(notifyMessage.getId());
     }
 
 }

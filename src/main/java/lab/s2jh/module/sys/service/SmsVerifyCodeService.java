@@ -28,7 +28,7 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
 
     private static final Logger logger = LoggerFactory.getLogger(SmsVerifyCodeService.class);
 
-    private final static int VERIFY_CODE_LIVE_MINUTES = 5;
+    private final static int VERIFY_CODE_LIVE_MINUTES = 60;
 
     @Autowired
     private SmsVerifyCodeDao smsVerifyCodeDao;
@@ -120,7 +120,7 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
     /**
      * 定时把超时的验证码移除  
      */
-    @Scheduled(fixedRate = 1 * 60 * 1000)
+    //@Scheduled(fixedRate = 60 * 60 * 1000)
     public void removeExpiredDataTimely() {
         logger.debug("Timely trigger removed expired verify code cache data at Thread: {}...", Thread.currentThread().getId());
         if (smsVerifyCodeDao.countTodoItems() > 0) {
