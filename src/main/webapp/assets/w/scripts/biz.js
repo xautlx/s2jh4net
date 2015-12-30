@@ -10,7 +10,6 @@ var Biz = function() {
 
         // main function
         init : function() {
-            // initialize here something.
 
         }
     };
