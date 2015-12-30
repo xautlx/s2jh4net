@@ -50,7 +50,8 @@ public abstract class BaseEntity<ID extends Serializable> extends PersistableEnt
     private Integer version = 0;
 
     @Column(length = 100)
-    @JsonIgnore
+    @JsonProperty
+    @JsonView(JsonViews.Admin.class)
     private String createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -58,12 +59,19 @@ public abstract class BaseEntity<ID extends Serializable> extends PersistableEnt
     protected Date createdDate;
 
     @Column(length = 100)
-    @JsonIgnore
+    @JsonProperty
+    @JsonView(JsonViews.Admin.class)
     private String lastModifiedBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonIgnore
+    @JsonProperty
+    @JsonView(JsonViews.Admin.class)
     private Date lastModifiedDate;
+
+    @MetaData(value = "数据分组记录", comments = "标识数据来源，比如不同工厂，结构代码，APP名称等")
+    @Column(length = 100)
+    @JsonView(JsonViews.Admin.class)
+    private String dataGroup;
 
     private static final String[] PROPERTY_LIST = new String[] { "id", "version" };
 
