@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+import lab.s2jh.core.entity.BaseEntity;
 import lab.s2jh.core.security.AuthContextHolder;
 import lab.s2jh.core.util.DateUtils;
 
@@ -24,6 +25,15 @@ public class SaveUpdateAuditListener {
     private boolean dateTimeForNow = true;
     private boolean modifyOnCreation = false;
     private boolean skipUpdateAudit = false;
+
+    /**
+     * @see BaseEntity#dataGroup
+     */
+    private static final ThreadLocal<String> DATA_GROUP = new ThreadLocal<String>();
+
+    public static void setDataGroup(String dataGroup) {
+        SaveUpdateAuditListener.DATA_GROUP.set(dataGroup);
+    }
 
     public void setDateTimeForNow(boolean dateTimeForNow) {
         this.dateTimeForNow = dateTimeForNow;
@@ -97,6 +107,7 @@ public class SaveUpdateAuditListener {
         }
 
         auditable.setLastModifiedBy(auditor);
+        auditable.setDataGroup(DATA_GROUP.get());
 
         return auditor;
     }

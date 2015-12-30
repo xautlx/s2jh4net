@@ -62,4 +62,8 @@ public interface DefaultAuditable<U, ID extends Serializable> extends Persistabl
      * @param lastModifiedDate the date of the last modification to set
      */
     void setLastModifiedDate(final Date lastModifiedDate);
+
+    String getDataGroup();
+
+    void setDataGroup(final String dataGroup);
 }
