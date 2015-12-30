@@ -46,15 +46,21 @@
                 }, {
                     label : '消息接受者',
                     name : 'targets',
-                    width : 150,
+                    width : 100,
                     align : 'center',
                     editable : true
                 }, {
                     label : '标题',
                     name : 'title',
-                    width : 300,
+                    width : 200,
                     align : 'left',
                     editable : true
+                }, {
+                    label : '消息摘要',
+                    index : 'message',
+                    name : 'messageAbstract',
+                    width : 300,
+                    align : 'left'
                 }, {
                     label : '消息类型',
                     name : 'messageType',
@@ -70,9 +76,12 @@
                     name : 'sendTime',
                     width : 150,
                     align : 'center',
+                    formatter : 'timestamp',
                     editable : true
                 } ],
-                multiselect : false
+                multiselect : false,
+                addable : false,
+                fullediturl : WEB_ROOT + '/admin/aud/send-message-log/edit-tabs'
             });
         });
     </script>

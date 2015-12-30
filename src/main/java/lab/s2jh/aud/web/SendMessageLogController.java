@@ -11,6 +11,7 @@ import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.util.EnumUtils;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.json.JsonViews;
+import lab.s2jh.core.web.view.OperationResult;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +66,25 @@ public class SendMessageLogController extends BaseController<SendMessageLog, Lon
     }
 
     //@RequiresPermissions("TODO {PATH}:SendMessageLog")
+    @RequiresPermissions("配置管理:系统记录:发送消息记录")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow() {
+    public String editShow(Model model) {
+        model.addAttribute("messageTypeMap", EnumUtils.getEnumDataMap(SendMessageTypeEnum.class));
         return "admin/aud/sendMessageLog-inputBasic";
+    }
+
+    @RequiresPermissions("配置管理:系统记录:发送消息记录")
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult editSave(@ModelAttribute("entity") SendMessageLog entity) {
+        return super.editSave(entity);
+    }
+
+    @RequiresPermissions("配置管理:系统记录:发送消息记录")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult delete(@RequestParam("ids") Long... ids) {
+        return super.delete(ids);
     }
 
 }

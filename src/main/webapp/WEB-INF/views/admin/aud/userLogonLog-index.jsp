@@ -41,7 +41,7 @@
                 url : WEB_ROOT + '/admin/aud/user-logon-log/list',
                 colModel : [ {
                     label : '登录账号',
-                    name : 'display',
+                    name : 'authUid',
                     width : 100,
                     align : 'center'
                 }, {
