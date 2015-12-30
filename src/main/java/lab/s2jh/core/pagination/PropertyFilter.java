@@ -176,6 +176,19 @@ public class PropertyFilter {
     public PropertyFilter(Class<?> entityClass, String filterName, String... values) {
 
         String matchTypeCode = StringUtils.substringBefore(filterName, "_");
+        if (matchTypeCode.indexOf("@") > -1) {
+            String[] matchTypeCodes = matchTypeCode.split("@");
+            matchTypeCode = matchTypeCodes[0];
+
+            String propertyType = matchTypeCodes[1];
+            if (Date.class.getName().equalsIgnoreCase(propertyType)) {
+                propertyClass = Date.class;
+            } else if (Number.class.getName().equalsIgnoreCase(propertyType)) {
+                propertyClass = Number.class;
+            } else {
+                propertyClass = String.class;
+            }
+        }
 
         try {
             matchType = Enum.valueOf(MatchType.class, matchTypeCode);
@@ -186,14 +199,27 @@ public class PropertyFilter {
         String propertyNameStr = StringUtils.substringAfter(filterName, "_");
         Assert.isTrue(StringUtils.isNotBlank(propertyNameStr), "filter名称" + filterName + "没有按规则编写,无法得到属性名称.");
         propertyNames = StringUtils.splitByWholeSeparator(propertyNameStr, PropertyFilter.OR_SEPARATOR);
-        try {
-            if (propertyNameStr.indexOf("count(") > -1) {
-                propertyClass = Integer.class;
-            } else if (propertyNameStr.indexOf("(") > -1) {
-                propertyClass = BigDecimal.class;
+        //计算属性对应Class类型
+        if (propertyNameStr.indexOf("count(") > -1) {
+            propertyClass = Integer.class;
+        } else if (propertyNameStr.indexOf("(") > -1) {
+            propertyClass = BigDecimal.class;
+        } else {
+            String firstPropertyName = propertyNames[0];
+            if (firstPropertyName.indexOf("@") > -1) {
+                String propertyType = firstPropertyName.split("@")[1];
+                if (Date.class.getSimpleName().equalsIgnoreCase(propertyType)) {
+                    propertyClass = Date.class;
+                } else if (Number.class.getSimpleName().equalsIgnoreCase(propertyType)) {
+                    propertyClass = Number.class;
+                } else if (Boolean.class.getSimpleName().equalsIgnoreCase(propertyType)) {
+                    propertyClass = Boolean.class;
+                } else if (String.class.getSimpleName().equalsIgnoreCase(propertyType)) {
+                    propertyClass = String.class;
+                }
             } else {
                 Method method = null;
-                String[] namesSplits = StringUtils.split(propertyNames[0], ".");
+                String[] namesSplits = StringUtils.split(firstPropertyName, ".");
                 if (namesSplits.length == 1) {
                     method = MethodUtils.getAccessibleMethod(entityClass, "get" + StringUtils.capitalize(propertyNames[0]));
                 } else {
@@ -210,10 +236,12 @@ public class PropertyFilter {
                         }
                     }
                 }
-                propertyClass = method.getReturnType();
+                if (method == null) {
+                    propertyClass = String.class;
+                } else {
+                    propertyClass = method.getReturnType();
+                }
             }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("无效对象属性定义：" + entityClass + ":" + propertyNames[0], e);
         }
 
         if (values.length == 1) {
@@ -228,6 +256,13 @@ public class PropertyFilter {
                     if (matchType.equals(MatchType.BT)) {
                         values[0] = values[0].trim();
                         values[1] = values[1].trim();
+
+                        // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
+                        // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
+                        DateTime dateTo = new DateTime(DateUtils.parseDate(values[1].trim()));
+                        if (dateTo.getHourOfDay() == 0 && dateTo.getMinuteOfHour() == 0 && dateTo.getSecondOfMinute() == 0) {
+                            values[1] = DateUtils.formatDate(dateTo.plusDays(1).toDate());
+                        }
                     } else {
                         values = new String[] { values[0].trim() };
                     }
@@ -455,6 +490,10 @@ public class PropertyFilter {
                 if (sortname.indexOf(OR_SEPARATOR) > -1) {
                     sortname = StringUtils.substringBefore(sortname, OR_SEPARATOR);
                 }
+
+                //去除类型标识信息
+                sortname = sortname.split("@")[0];
+
                 //如果单个属性没有跟随排序方向，则取Grid组件传入的sord参数定义
                 if (sidxItemWithOrder.length == 1) {
                     if (sort == null) {
@@ -504,7 +543,9 @@ public class PropertyFilter {
      */
     public String getPropertyName() {
         Assert.isTrue(propertyNames.length == 1, "There are not only one property in this filter.");
-        return propertyNames[0];
+        String propertyName = propertyNames[0];
+        //移除@后面的类型标识信息
+        return propertyName.split("@")[0];
     }
 
     /**
