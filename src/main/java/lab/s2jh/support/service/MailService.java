@@ -86,41 +86,40 @@ public class MailService {
 
         if (DynamicConfigService.isDevMode()) {
             logger.debug("Mock sending  mail at DEV mode...");
-            return;
-        }
-
-        MimeMessage message = javaMailSender.createMimeMessage();
-        String from = dynamicConfigService.getString("cfg_mail_from", null);
-        Assert.notNull(from);
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            if (StringUtils.isNotBlank(from)) {
-                helper.setFrom(from);
-            }
-            helper.setSubject(subject);
-            helper.setText(text, true);
-
-            if (singleMode == false) {
-                helper.setTo(toAddrs);
-                javaMailSender.send(message);
-            } else {
-                for (String to : toAddrs) {
-                    helper.setTo(to);
-                    javaMailSender.send(message);
+        } else {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            String from = dynamicConfigService.getString("mail_username");
+            Assert.notNull(from);
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+                if (StringUtils.isNotBlank(from)) {
+                    helper.setFrom(from);
                 }
-            }
+                helper.setSubject(subject);
+                helper.setText(text, true);
 
-            //消息历史记录
-            SendMessageLog sml = new SendMessageLog();
-            sml.setMessageType(SendMessageTypeEnum.APP_PUSH);
-            sml.setTargets(StringUtils.join(toAddrs));
-            sml.setTitle(subject);
-            sml.setMessage(text);
-            sml.setSendTime(DateUtils.currentDate());
-            sendMessageLogService.asyncSave(sml);
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage(), e);
+                if (singleMode == false) {
+                    helper.setTo(toAddrs);
+                    javaMailSender.send(message);
+                } else {
+                    for (String to : toAddrs) {
+                        helper.setTo(to);
+                        javaMailSender.send(message);
+                    }
+                }
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage(), e);
+            }
         }
+
+        //消息历史记录
+        SendMessageLog sml = new SendMessageLog();
+        sml.setMessageType(SendMessageTypeEnum.EMAIL);
+        sml.setTargets(StringUtils.join(toAddrs));
+        sml.setTitle(subject);
+        sml.setMessage(text);
+        sml.setSendTime(DateUtils.currentDate());
+        sendMessageLogService.asyncSave(sml);
     }
 
     private static class MailMessage {
