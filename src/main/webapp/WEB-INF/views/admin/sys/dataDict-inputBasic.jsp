@@ -9,7 +9,7 @@
 </head>
 <body>
 	<form:form class="form-horizontal form-bordered form-label-stripped form-validation"
-		action="${ctx}/admin/sys/data-dict/edit" method="post" modelAttribute="entity"
+		action="${ctx}/admin/sys/data-dict/edit?parent.id=${param['parent.id']}" method="post" modelAttribute="entity"
 		data-editrulesurl="${ctx}/admin/util/validate?clazz=${clazz}">
 		<form:hidden path="id" />
 		<div class="form-actions">
@@ -54,6 +54,28 @@
 						<div class="controls">
 							<form:input path="secondaryValue" class="form-control" />
 							<div class="help-block">在主要数据基础上可以再额外维护一个次要数据，在业务逻辑中根据需要定制使用</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label">文件路径数据</label>
+						<div class="controls">
+                            <form:input path="filePathValue" class="form-control" data-upload="single-file" />
+							<div class="help-block">在主要数据基础上可以再额外维护一个文件路径数据，在业务逻辑中根据需要定制使用</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label">图片路径数据</label>
+						<div class="controls">
+                            <div class="help-block">在主要数据基础上可以再额外维护一个图片路径数据，在业务逻辑中根据需要定制使用</div>
+							<form:hidden path="imagePathValue" class="form-control"  data-multisplitimage="edit"/>
 						</div>
 					</div>
 				</div>

@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -61,7 +62,7 @@ public class DataDict extends BaseNativeEntity {
      */
     @MetaData(value = "次标识")
     @Column(length = 128)
-    @JsonView(JsonViews.Admin.class)
+    @JsonView(JsonViews.List.class)
     private String secondaryKey;
 
     /**
@@ -81,6 +82,26 @@ public class DataDict extends BaseNativeEntity {
     @MetaData(value = "次要数据")
     @JsonView(JsonViews.List.class)
     private String secondaryValue;
+
+    /**
+     * 字典数据对应的补充文件类型Value值，页面以文件组件方式维护
+     * 对于扩展数据的获取一般通过{@link lab.s2jh.sys.service.DataDictService#findByPrimaryKey(String)}
+     * 对于返回的数据，根据实际业务定制化使用即可
+     */
+    @MetaData(value = "文件路径数据")
+    @JsonView(JsonViews.List.class)
+    @Column(length = 512)
+    private String filePathValue;
+    
+    /**
+     * 字典数据对应的补充图片类型Value值，页面以多图组件方式维护
+     * 对于扩展数据的获取一般通过{@link lab.s2jh.sys.service.DataDictService#findByPrimaryKey(String)}
+     * 对于返回的数据，根据实际业务定制化使用即可
+     */
+    @MetaData(value = "图片路径数据")
+    @JsonView(JsonViews.List.class)
+    @Column(length = 1024)
+    private String imagePathValue;
 
     /**
      * 字典数据对应的补充数据大文本类型Value值，如果除了primaryValue业务设计需要其他补充数据可启用扩展Value字段存取这些值
@@ -119,4 +140,17 @@ public class DataDict extends BaseNativeEntity {
         return primaryKey + ":" + primaryValue;
     }
 
+    @Transient
+    @JsonIgnore
+    public String getUniqueKey() {
+        StringBuilder sb = new StringBuilder();
+        if (parent != null) {
+            sb.append(parent.getPrimaryKey() + "_");
+        }
+        sb.append(primaryKey);
+        if (StringUtils.isNotBlank(secondaryKey)) {
+            sb.append("_" + secondaryKey);
+        }
+        return sb.toString();
+    }
 }

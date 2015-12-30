@@ -54,7 +54,6 @@
                 }, {
                     label : '次标识',
                     name : 'secondaryKey',
-                    hidden : true,
                     editable : true,
                     width : 50
                 }, {

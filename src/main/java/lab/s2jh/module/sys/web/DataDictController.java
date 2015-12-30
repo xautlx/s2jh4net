@@ -1,10 +1,12 @@
 package lab.s2jh.module.sys.web;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
+import lab.s2jh.core.annotation.MetaData;
 import lab.s2jh.core.pagination.GroupPropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter;
 import lab.s2jh.core.pagination.PropertyFilter.MatchType;
@@ -93,5 +95,12 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
         super.initPrepareModel(request, model, id);
+    }
+
+    @MetaData(value = "级联子数据集合")
+    @RequestMapping(value = "/children", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, String> children(HttpServletRequest request, @RequestParam(value = "id") Long id) {
+        return dataDictService.findMapDataById(id);
     }
 }
