@@ -74,10 +74,10 @@
 	<bean id="appBasicAuthenticationFilter" class="lab.s2jh.core.security.AppBasicAuthenticationFilter">
 		<property name="appKeySecrets">
 			<props>
-				<prop key="aqbx_app_android">${aqbx_app_android}</prop>
-				<prop key="aqbx_app_ios">${aqbx_app_ios}</prop>
-				<prop key="aqbx_app_weixin">${aqbx_app_weixin}</prop>
-				<prop key="aqbx_api_jenkins">${aqbx_api_jenkins}</prop>
+				<prop key="auth_app_android">${auth_app_android}</prop>
+				<prop key="auth_app_ios">${auth_app_ios}</prop>
+				<prop key="auth_app_weixin">${auth_app_weixin}</prop>
+				<prop key="auth_api_jenkins">${auth_api_jenkins}</prop>
 			</props>
 		</property>
 	</bean>
