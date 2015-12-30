@@ -48,90 +48,92 @@
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="login">
-	<!-- BEGIN LOGIN -->
-	<div class="form-group" style="margin-top: 15px">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-			<div class="content" style="width: 100%;">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="row">
-							<div class="col-md-3">
-								<img src="${ctx}/assets/img/logo.png" />
-							</div>
-							<div class="col-md-9">
-								<h2 style="color: #555555">${applicationScope.cfg.cfg_system_title}</h2>
-							</div>
-						</div>
-					</div>
-				</div>
-				<hr />
-				<div class="row">
-					<div class="col-md-12" style="text-align: right;">
-						<a href="${ctx}/w" target="_blank">前端Web站点</a> <a href="${ctx}/m" target="_blank">HTML5移动站点</a>
-					</div>
-				</div>
-				<sitemesh:write property='body' />
+    <!-- BEGIN LOGIN -->
+    <div class="row hidden-xs hidden-sm" style="margin: 0px">
+        <div class="col-md-12" style="margin: 0px">
+            <div style="padding: 80px"></div>
+        </div>
+    </div>
+    <div class="form-group" style="margin: 0px">
+        <div class="col-md-3"></div>
+        <div class="col-md-6" style="padding: 0px">
+            <div class="content" style="width: 100%;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <img src="${ctx}/assets/img/logo.png" width="100px" />
+                            </div>
+                            <div class="col-md-8">
+                                <h2 style="color: #555555">${applicationScope.cfg.cfg_system_title}-管理平台</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <sitemesh:write property='body' />
 
-				<!-- BEGIN COPYRIGHT -->
-				<div class="row">
-					<div class="col-md-12">
-						<div class="copyright pull-right">
-							<span title="${buildVersion}|<%= request.getLocalAddr()  %>:<%=request.getLocalPort()%>]"
-								style="display: inline-block;">2015 &copy; <%=request.getServerName()%></span>
-							<c:if test="${cfg.dev_mode}">
-								<span>V${buildVersion} [${buildTimetamp}]</span>
-							</c:if>
-						</div>
-					</div>
-				</div>
-				<!-- END COPYRIGHT -->
-			</div>
-		</div>
-		<div class="col-md-3"></div>
-	</div>
+                <!-- BEGIN COPYRIGHT -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="copyright pull-right">
+                            <span title="${buildVersion}|<%= request.getLocalAddr()  %>:<%=request.getLocalPort()%>]"
+                                style="display: inline-block;">
+                                2015 &copy;
+                                <%=request.getServerName()%></span>
+                            <c:if test="${cfg.dev_mode}">
+                                <span>V${buildVersion} [${buildTimetamp}]</span>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+                <!-- END COPYRIGHT -->
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
 
-	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-	<script type="text/javascript">
+    <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+    <script type="text/javascript">
         var WEB_ROOT = "${ctx}";
     </script>
-	<!-- BEGIN CORE PLUGINS -->
-	<!--[if lt IE 9]>
-	<script src="${ctx}/assets/plugins/respond.min.js"></script>
-	<script src="${ctx}/assets/plugins/excanvas.min.js"></script> 
-	<![endif]-->
-	<script src="${ctx}/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/jquery.cookie.min.js" type="text/javascript"></script>
-	<!-- END CORE PLUGINS -->
-	<!-- BEGIN PAGE LEVEL PLUGINS -->
+    <!-- BEGIN CORE PLUGINS -->
+    <!--[if lt IE 9]>
+    <script src="${ctx}/assets/plugins/respond.min.js"></script>
+    <script src="${ctx}/assets/plugins/excanvas.min.js"></script> 
+    <![endif]-->
+    <script src="${ctx}/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <script src="${ctx}/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="${ctx}/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+    <script src="${ctx}/assets/plugins/jquery.cookie.min.js" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
 
-	<script src="${ctx}/assets/admin/scripts/app.js" type="text/javascript"></script>
+    <script src="${ctx}/assets/admin/scripts/app.js" type="text/javascript"></script>
 
-	<script src="${ctx}/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/localization/messages_zh.js"></script>
-	<script src="${ctx}/assets/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="${ctx}/assets/plugins/jquery.pulsate.min.js"></script>
-	<script src="${ctx}/assets/plugins/bootstrap-toastr/toastr.min.js"></script>
-	<!-- The basic File Upload plugin -->
-	<script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
+    <script src="${ctx}/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/localization/messages_zh.js"></script>
+    <script src="${ctx}/assets/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
+    <script src="${ctx}/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
+    <script src="${ctx}/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="${ctx}/assets/plugins/jquery.pulsate.min.js"></script>
+    <script src="${ctx}/assets/plugins/bootstrap-toastr/toastr.min.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
 
-	<script src="${ctx}/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
-	<script src="${ctx}/assets/plugins/jquery.form.js"></script>
-	<!-- END PAGE LEVEL PLUGINS -->
+    <script src="${ctx}/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
+    <script src="${ctx}/assets/plugins/jquery.form.js"></script>
+    <!-- END PAGE LEVEL PLUGINS -->
 
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
-	<script src="${ctx}/assets/admin/app/util.js"></script>
-	<script src="${ctx}/assets/w/app/global.js"></script>
-	<script src="${ctx}/assets/admin/app/global.js"></script>
-	<script src="${ctx}/assets/w/app/form-validation.js"></script>
-	<script src="${ctx}/assets/w/app/page.js"></script>
-	<script src="${ctx}/assets/admin/app/page.js"></script>
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="${ctx}/assets/admin/app/util.js"></script>
+    <script src="${ctx}/assets/w/scripts/global.js"></script>
+    <script src="${ctx}/assets/admin/app/global.js"></script>
+    <script src="${ctx}/assets/w/scripts/form-validation.js"></script>
+    <script src="${ctx}/assets/w/scripts/page.js"></script>
+    <script src="${ctx}/assets/admin/app/page.js"></script>
 
-	<script>
+    <script>
         $(function() {
 
             // console.profile('Profile Sttart');
@@ -149,8 +151,8 @@
         });
     </script>
 
-	<script src="${ctx}/assets/admin/app/login.js"></script>
-	<!-- END PAGE LEVEL SCRIPTS -->
+    <script src="${ctx}/assets/admin/app/login.js"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
 </body>
 <!-- END BODY -->
 </html>
