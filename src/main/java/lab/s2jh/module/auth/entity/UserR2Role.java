@@ -2,6 +2,7 @@ package lab.s2jh.module.auth.entity;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,12 +34,12 @@ public class UserR2Role extends BaseNativeEntity {
     private static final long serialVersionUID = -1727859177925448384L;
 
     @MetaData(value = "登录账号对象")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @MetaData(value = "关联角色对象")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

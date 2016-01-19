@@ -277,7 +277,12 @@ public class DateUtils {
     public static Integer getWeekOfYear(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        return Integer.valueOf(formatDate(date, FORMAT_YYYY) + c.get(Calendar.WEEK_OF_YEAR));
+        String yearString = formatDate(date, FORMAT_YYYY);
+        int weekNum = c.get(Calendar.WEEK_OF_YEAR);
+        if (weekNum < 10) {
+            yearString = StringUtils.rightPad(yearString, 5, "0");
+        }
+        return Integer.valueOf(yearString + weekNum);
     }
 
     public static void main(String[] args) {
