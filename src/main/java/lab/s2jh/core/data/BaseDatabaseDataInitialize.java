@@ -107,16 +107,13 @@ public abstract class BaseDatabaseDataInitialize {
      * 提交当前事务并新起一个事务
      */
     protected void commitAndResumeTransaction() {
-
-        entityManager.flush();
-        entityManager.clear();
-
         Session session = entityManager.unwrap(org.hibernate.Session.class);
 
         //提交当前事务
         Transaction existingTransaction = session.getTransaction();
         existingTransaction.commit();
         Assert.isTrue(existingTransaction.wasCommitted(), "Transaction should have been committed.");
+        entityManager.clear();
 
         // Cannot reuse existing Hibernate transaction, so start a new one.
         Transaction newTransaction = session.beginTransaction();

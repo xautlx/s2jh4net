@@ -169,9 +169,11 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
 
         //权限数据初始化
         rebuildPrivilageDataFromControllerAnnotation();
+        commitAndResumeTransaction();
 
         //菜单数据初始化
         rebuildMenuDataFromControllerAnnotation();
+        commitAndResumeTransaction();
 
         //属性文件中配置的系统名称
         String systemTitle = "未定义";
@@ -270,6 +272,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
      */
     private void rebuildMenuDataFromControllerAnnotation() {
         try {
+            logger.debug("Start to rebuildMenuDataFromControllerAnnotation...");
             Date now = DateUtils.currentDate();
 
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
@@ -284,6 +287,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             //the ClassPool object may not be able to find user classes since such a web application server uses multiple class loaders as well as the system class loader. 
             //In that case, an additional class path must be registered to the ClassPool. Suppose that pool refers to a ClassPool object:  
             pool.insertClassPath(new ClassClassPath(this.getClass()));
+
             for (BeanDefinition beanDefinition : beanDefinitions) {
                 String className = beanDefinition.getBeanClassName();
                 CtClass cc = pool.get(className);
@@ -330,7 +334,15 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
                             menuService.save(menu);
                         }
                     }
+                }
+            }
 
+            //清理过期没用的菜单数据，倒序删除否则会有外键约束问题
+            List<Menu> menus = menuService.findAllCached();
+            for (int i = menus.size(); i > 0; i--) {
+                Menu menu = menus.get(i - 1);
+                if (menu.getRebuildTime().before(now)) {
+                    menuService.delete(menu);
                 }
             }
         } catch (Exception e) {
@@ -343,6 +355,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
      */
     private void rebuildPrivilageDataFromControllerAnnotation() {
         try {
+            logger.debug("Start to rebuildPrivilageDataFromControllerAnnotation...");
             Date now = DateUtils.currentDate();
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
@@ -390,6 +403,13 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
                 }
                 entity.setRebuildTime(now);
                 privilegeService.save(entity);
+            }
+
+            //清理过期没用的权限数据
+            for (Privilege privilege : privileges) {
+                if (privilege.getRebuildTime().before(now)) {
+                    privilegeService.delete(privilege);
+                }
             }
         } catch (Exception e) {
             Exceptions.unchecked(e);
