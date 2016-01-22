@@ -21,7 +21,7 @@ import lombok.Setter;
 public class SeqGeneratorTable {
 
     @Id
-    private String code;
+    private String id;
 
     @Column(name = "initial_value")
     private Integer initialValue;
