@@ -299,7 +299,7 @@ public class AdminController {
     public String userMessageList(HttpServletRequest request, Model model) {
         User user = AuthContextHolder.findAuthUser();
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
-        GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(NotifyMessage.class, request);
+        GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(UserMessage.class, request);
         groupFilter.append(new PropertyFilter(MatchType.EQ, "targetUser", user));
         String readed = request.getParameter("readed");
         if (StringUtils.isNotBlank(readed)) {
@@ -321,7 +321,7 @@ public class AdminController {
         User user = AuthContextHolder.findAuthUser();
         UserMessage userMessage = userMessageService.findOne(messageId);
         userMessageService.processUserRead(userMessage, user);
-        model.addAttribute("notifyMessage", userMessage);
-        return "admin/profile/notifyMessage-view";
+        model.addAttribute("userMessage", userMessage);
+        return "admin/profile/userMessage-view";
     }
 }

@@ -291,6 +291,12 @@ public class PropertyFilter {
             return new Boolean(BooleanUtils.toBoolean(value));
         } else if (propertyClass.equals(Date.class)) {
             return DateUtils.parseMultiFormatDate((String) value);
+        } else if (propertyClass.equals(Number.class)) {
+            if (value.indexOf(".") > -1) {
+                return new Double(value);
+            } else {
+                return new Long(value);
+            }
         } else {
             return ConvertUtils.convertStringToObject(value, propertyClass);
         }
@@ -534,14 +540,18 @@ public class PropertyFilter {
     /**
      * 获取比较属性名称列表.
      */
-    public String[] getPropertyNames() {
-        return propertyNames;
+    public String[] getConvertedPropertyNames() {
+        String[] convertedPropertyNames = new String[propertyNames.length];
+        for (int i = 0; i < propertyNames.length; i++) {
+            convertedPropertyNames[i] = propertyNames[i].split("@")[0];
+        }
+        return convertedPropertyNames;
     }
 
     /**
      * 获取唯一的比较属性名称.
      */
-    public String getPropertyName() {
+    public String getConvertedPropertyName() {
         Assert.isTrue(propertyNames.length == 1, "There are not only one property in this filter.");
         String propertyName = propertyNames[0];
         //移除@后面的类型标识信息

@@ -285,7 +285,7 @@ public class GroupPropertyFilter {
             }
         }
         for (PropertyFilter propertyFilter : propertyFilters) {
-            String name = propertyFilter.getPropertyName();
+            String name = propertyFilter.getConvertedPropertyName();
             //把.分隔转换为_形式，以便在MyBatis中引用
             name = name.replaceAll("\\.", "_");
             parameters.put(name, propertyFilter.getMatchValue());

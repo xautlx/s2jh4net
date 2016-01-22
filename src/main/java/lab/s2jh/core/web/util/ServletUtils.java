@@ -1,10 +1,9 @@
 package lab.s2jh.core.web.util;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -43,6 +42,7 @@ import lab.s2jh.core.web.json.ShortDateTimeJsonSerializer;
 import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.ClassUtils;
@@ -107,47 +107,24 @@ public class ServletUtils {
     }
 
     /**
-     * 设置让浏览器弹出下载对话框的Header.
-     * 
-     * @param fileName 下载后的文件名.
+     * 基于文件对象渲染文件下载响应
+     * @param response
+     * @param file
      */
-    public static void setFileDownloadHeader(HttpServletResponse response, String fileName) {
+    public static void renderFileDownload(HttpServletResponse response, File file) {
+        OutputStream output = null;
         try {
             //中文文件名支持
-            String encodedfileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+            String encodedfileName = new String(file.getName().getBytes("UTF-8"), "ISO8859-1");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");
-        } catch (UnsupportedEncodingException e) {
-        }
-    }
 
-    public static void renderFileDownload(HttpServletResponse response, byte[] fileData) {
-        byte[] buffer = new byte[4096];
-        BufferedOutputStream output = null;
-        ByteArrayInputStream input = null;
-        try {
-            output = new BufferedOutputStream(response.getOutputStream());
-            input = new ByteArrayInputStream(fileData);
-
-            int n = (-1);
-            while ((n = input.read(buffer, 0, 4096)) > -1) {
-                output.write(buffer, 0, n);
-            }
+            output = response.getOutputStream();
+            FileUtils.copyFile(file, output);
             response.flushBuffer();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         } finally {
-            if (input != null)
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            if (output != null)
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            IOUtils.closeQuietly(output);
         }
     }
 

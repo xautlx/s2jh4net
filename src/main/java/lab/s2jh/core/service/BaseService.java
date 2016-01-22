@@ -909,13 +909,13 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
         if (CollectionUtils.isNotEmpty(filters)) {
             for (PropertyFilter filter : filters) {
                 if (!filter.hasMultiProperties()) { // 只有一个属性需要比较的情况.
-                    Predicate predicate = buildPredicate(filter.getPropertyName(), filter, root, query, builder, having);
+                    Predicate predicate = buildPredicate(filter.getConvertedPropertyName(), filter, root, query, builder, having);
                     if (predicate != null) {
                         predicates.add(predicate);
                     }
                 } else {// 包含多个属性需要比较的情况,进行or处理.
                     List<Predicate> orpredicates = Lists.newArrayList();
-                    for (String param : filter.getPropertyNames()) {
+                    for (String param : filter.getConvertedPropertyNames()) {
                         Predicate predicate = buildPredicate(param, filter, root, query, builder, having);
                         if (predicate != null) {
                             orpredicates.add(predicate);

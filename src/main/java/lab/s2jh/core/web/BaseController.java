@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
@@ -218,6 +219,10 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(DateUtils.DEFAULT_DATE_FORMAT), true));
+        
+        // Converts empty strings into null when a form is submitted
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));  
+        
         //binder.setAllowedFields("nick", "gender", "name", "idCardNo", "studentExt.dormitory");
     }
 

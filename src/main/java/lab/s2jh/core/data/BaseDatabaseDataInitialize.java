@@ -48,6 +48,9 @@ public abstract class BaseDatabaseDataInitialize {
 
         initializeInternal();
 
+        //确保最后提交事务
+        commitAndResumeTransaction();
+
         if (DynamicConfigService.isDevMode()) {
             //重置恢复模拟数据设置的临时时间
             DateUtils.setCurrentDate(null);

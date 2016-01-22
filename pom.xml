@@ -62,7 +62,7 @@
 		<redis.version>2.5.1</redis.version>
 		<sitemesh.version>3.0.0</sitemesh.version>
 		<shiro.version>1.2.3</shiro.version>
-		<httpcomponents.version>4.3.1</httpcomponents.version>
+		<httpcomponents.version>4.4.1</httpcomponents.version>
 
 		<!-- Plugin的属性定义 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -470,7 +470,7 @@
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
 		</dependency>
-
+        
 		<!-- google java library -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -526,13 +526,13 @@
 			<artifactId>filters</artifactId>
 			<version>2.0.235</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
 			<version>2.5.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.drewnoakes</groupId>
 			<artifactId>metadata-extractor</artifactId>
@@ -703,7 +703,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-
 		<!-- LOGGING begin -->
 		<!-- slf4j -->
 		<dependency>
@@ -716,6 +715,12 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.7</version>
 		</dependency>
+        <!-- https://github.com/alexvictoor/web-logback -->
+        <dependency>
+            <groupId>com.github.alexvictoor</groupId>
+            <artifactId>web-logback</artifactId>
+            <version>0.2</version>
+        </dependency>
 
 		<!-- common-logging 实际调用slf4j -->
 		<dependency>
@@ -809,6 +814,65 @@
 			<version>1.16.2</version>
 			<scope>provided</scope>
 		</dependency>
+		
+        <!-- https://docs.mongodb.org/ecosystem/drivers/java/ -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.13.2</version>
+		</dependency>
+
+        <!-- HTML Fetch and Parse -->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>${httpcomponents.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpcomponents.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>org.ccil.cowan.tagsoup</groupId>
+			<artifactId>tagsoup</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>1.9.19</version>
+		</dependency>
+        <!--  
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.15</version>
+        </dependency>
+        -->
+
+        <!-- https://github.com/nguyenq/tess4j -->
+		<dependency>
+			<groupId>net.sourceforge.tess4j</groupId>
+			<artifactId>tess4j</artifactId>
+			<version>2.0.1</version>
+		</dependency>		
 
 		<!-- jetty standard runtime-->
 		<dependency>

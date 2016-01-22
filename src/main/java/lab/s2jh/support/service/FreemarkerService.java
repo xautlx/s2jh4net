@@ -70,14 +70,13 @@ public class FreemarkerService extends Configuration {
     }
 
     public String processTemplateByFileName(String templateFileName, Map<String, Object> dataMap) {
-        String templateDir = System.getProperty("java.io.tmpdir") + File.separator + "template" + File.separator + "freemarker";
+        String templateDir = FileUtils.getTempDirectoryPath() + File.separator + "template" + File.separator + "freemarker";
         File targetTemplateFile = new File(templateDir + File.separator + templateFileName + ".ftl");
         if (!targetTemplateFile.exists()) {
             try {
                 //从classpath加载文件处理写入临时文件
                 InputStream source = this.getClass().getResourceAsStream("/template/freemarker/" + templateFileName + ".ftl");
                 FileUtils.copyInputStreamToFile(source, targetTemplateFile);
-
             } catch (IOException e) {
                 throw new ServiceException(e.getMessage(), e);
             }
