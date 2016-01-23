@@ -10,16 +10,31 @@
 </head>
 <body>
 	<div class="row">
-		<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-			<div class="dashboard-stat blue">
+		<div class="col-md-3">
+			<div class="dashboard-stat yellow">
 				<div class="visual">
-					<i class="fa fa-comments"></i>
+					<i class="fa fa-bullhorn"></i>
 				</div>
 				<div class="details">
-					<div class="number">1349</div>
-					<div class="desc">注册用户数</div>
+					<div class="number number-notify-message-count">-</div>
+					<div class="desc">未读公告消息</div>
 				</div>
-				<a href="#" class="more"> View more <i class="m-icon-swapright m-icon-white"></i>
+				<a href="javascript:;" rel="address:/admin/profile/notify-message|公告消息列表" class="more">
+					View more <i class="m-icon-swapright m-icon-white"></i>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="dashboard-stat blue">
+				<div class="visual">
+					<i class="fa fa-envelope"></i>
+				</div>
+				<div class="details">
+					<div class="number number-user-message-count">-</div>
+					<div class="desc">未读个人消息</div>
+				</div>
+				<a href="javascript:;" rel="address:/admin/profile/user-message|个人消息列表" class="more">
+					View more <i class="m-icon-swapright m-icon-white"></i>
 				</a>
 			</div>
 		</div>
@@ -32,7 +47,8 @@
 					<div class="number">549</div>
 					<div class="desc">New Orders</div>
 				</div>
-				<a href="#" class="more"> View more <i class="m-icon-swapright m-icon-white"></i>
+				<a href="#" class="more">
+					View more <i class="m-icon-swapright m-icon-white"></i>
 				</a>
 			</div>
 		</div>
@@ -45,7 +61,8 @@
 					<div class="number">+89%</div>
 					<div class="desc">Brand Popularity</div>
 				</div>
-				<a href="#" class="more"> View more <i class="m-icon-swapright m-icon-white"></i>
+				<a href="#" class="more">
+					View more <i class="m-icon-swapright m-icon-white"></i>
 				</a>
 			</div>
 		</div>
@@ -58,7 +75,8 @@
 					<div class="number">12,5M$</div>
 					<div class="desc">Total Profit</div>
 				</div>
-				<a href="#" class="more"> View more <i class="m-icon-swapright m-icon-white"></i>
+				<a href="#" class="more">
+					View more <i class="m-icon-swapright m-icon-white"></i>
 				</a>
 			</div>
 		</div>
@@ -78,22 +96,24 @@
 						<a class="list-group-item" href="${ctx}/docs/markdown/README" target="_blank">
 							<h4 class="list-group-item-heading">开发框架介绍与开发指南</h4>
 							<p class="list-group-item-text">对整个开发框架整体的设计说明和开发指南。</p>
-						</a> <a class="list-group-item" href="javascript:;" rel="address:/docs/ui-feature/items|UI组件用法示例">
+						</a>
+						<a class="list-group-item" href="javascript:;" rel="address:/docs/ui-feature/items|UI组件用法示例">
 							<h4 class="list-group-item-heading">UI组件用法示例</h4>
 							<p class="list-group-item-text">针对典型的UI组件，提供一个基本的用法示意参考，结合对应的JSDoc文档了解相关UI组件的用法和支持的功能属性。</p>
-						</a> <a class="list-group-item" href="${ctx}/docs/jsdoc/global.html" target="_blank">
+						</a>
+						<a class="list-group-item" href="${ctx}/docs/jsdoc/global.html" target="_blank">
 							<h4 class="list-group-item-heading">Javascript注释JSDoc文档</h4>
 							<p class="list-group-item-text">基于框架主要Javascript代码文件注释，用jsdoc3-maven-plugin生成的UI组件用法参考文档。</p>
-						</a> <a class="list-group-item" href="${ctx}/docs/javadoc/" target="_blank">
-							<h4 class="list-group-item-heading">Javadoc文档</h4>
-							<p class="list-group-item-text">基于maven-javadoc-plugin插件生成的项目Javadoc。</p>
 						</a>
 					</div>
 				</div>
 			</div>
 		</div>
-
 	</c:if>
-
+	<script type="text/javascript">
+        $(function() {
+            AdminGlobal.updateMessageCount();
+        });
+    </script>
 </body>
 </html>

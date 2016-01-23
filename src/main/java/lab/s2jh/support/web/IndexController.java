@@ -152,6 +152,11 @@ public class IndexController {
      */
     @RequestMapping(value = "/{source}/login", method = RequestMethod.POST)
     public String loginFailure(@PathVariable("source") String source, HttpServletRequest request, Model model) {
+        model.addAttribute("buildVersion", dynamicConfigService.getString("build_version"));
+        model.addAttribute("buildTimetamp", dynamicConfigService.getString("build_timestamp"));
+        //自助注册管理账号功能开关
+        model.addAttribute("mgmtSignupEnabled", !dynamicConfigService.getBoolean(GlobalConstant.cfg_mgmt_signup_disabled, true));
+
         //获取认证异常的类名
         AuthenticationException ae = (AuthenticationException) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
         if (ae != null) {

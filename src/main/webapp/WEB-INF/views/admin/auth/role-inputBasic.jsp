@@ -9,7 +9,7 @@
 <title>角色基本信息</title>
 </head>
 <body>
-	<form:form class="form-horizontal  form-label-stripped form-validation"
+	<form:form class="form-horizontal form-bordered  form-label-stripped form-validation"
 		action="${ctx}/admin/auth/role/edit" method="post" modelAttribute="entity"
 		data-editrulesurl="${ctx}/admin/util/validate?clazz=${clazz}">
 		<form:hidden path="id" />
@@ -21,24 +21,36 @@
 			<button class="btn default" type="button" data-dismiss="modal">取消</button>
 		</div>
 		<div class="form-body">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label class="control-label">代码</label>
-						<div class="controls">
-							<form:input path="code" />
-						</div>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label class="control-label">名称</label>
-						<div class="controls">
-							<form:input path="name" />
-						</div>
-					</div>
+			<div class="form-group">
+				<label class="control-label">代码</label>
+				<div class="controls">
+					<form:input path="code" />
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="control-label">名称</label>
+				<div class="controls">
+					<form:input path="name" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">禁用</label>
+				<div class="controls controls-radiobuttons">
+					<form:radiobuttons path="disabled" items="${applicationScope.cons.booleanLabelMap}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">描述</label>
+				<div class="controls">
+					<form:textarea path="description" rows="3" />
+				</div>
+			</div>
+		</div>
+		<div class="form-actions right">
+			<button class="btn blue" type="submit" data-grid-reload="#grid-auth-role-index">
+				<i class="fa fa-check"></i> 保存
+			</button>
+			<button class="btn default" type="button" data-dismiss="modal">取消</button>
 		</div>
 	</form:form>
 </body>

@@ -8,14 +8,10 @@
 <title>权限管理</title>
 </head>
 <body>
-	<div class="portlet">
-		<div class="portlet-title">
-			<div class="caption">
-				<i class="fa fa-reorder"></i>权限数据列表
-			</div>
-		</div>
-		<div class="portlet-body" id="admin-auth-privilege-list"></div>
+	<div class="note note-info">
+		<p>提示说明：系统权限数据列表基于开发配置代码自动生成，无需手工维护。</p>
 	</div>
+	<div id="admin-auth-privilege-list"></div>
 	<script type="text/javascript">
         jQuery(document).ready(function() {
             $("#admin-auth-privilege-list").ajaxJsonUrl(WEB_ROOT + "/admin/auth/privilege/list", function(data) {

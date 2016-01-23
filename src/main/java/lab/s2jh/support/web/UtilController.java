@@ -102,6 +102,7 @@ public class UtilController {
     @ResponseBody
     public OperationResult loggerLevelUpdate(@RequestParam(value = "loggerName", required = false) String loggerName,
             @RequestParam("loggerLevel") String loggerLevel) {
+        Assert.isTrue(false, "模拟异常");
         if (StringUtils.isBlank(loggerName)) {
             Validation.notDemoMode();
             loggerName = Logger.ROOT_LOGGER_NAME;

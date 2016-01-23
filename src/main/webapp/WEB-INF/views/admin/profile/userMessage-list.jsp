@@ -22,7 +22,7 @@
 				<tbody>
 					<c:forEach var="item" items="${pageData.content}">
 						<tr>
-							<td><a href="${ctx}/admin/profile/user-message-view/${item.id}" data-toggle="modal-ajaxify" title="查看消息">
+							<td><a href="${ctx}/admin/profile/user-message-view/${item.id}?readed=${item.lastReadTime!=null}" data-toggle="modal-ajaxify" title="查看消息">
 									<c:if test="${item.lastReadTime==null}">
 										<i class="fa fa-envelope-o"></i>
 									</c:if> ${item.title}

@@ -19,6 +19,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 @Getter
 @Setter
@@ -36,6 +37,7 @@ public class RoleR2Privilege extends BaseNativeEntity {
     /** 关联权限对象 */
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "privilege_id", nullable = false)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Privilege privilege;
 
     /** 关联角色对象 */

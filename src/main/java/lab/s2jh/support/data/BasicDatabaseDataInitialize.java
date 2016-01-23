@@ -104,7 +104,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             Role superRole = new Role();
             superRole.setCode(AuthUserDetails.ROLE_SUPER_USER);
             superRole.setName("后端超级管理员角色");
-            superRole.setDescription("系统预置，请勿随意修改");
+            superRole.setDescription("系统预置，请勿随意修改。后端预置超级管理员，无需配置相关权限，默认自动赋予所有权限。");
             roleService.save(superRole);
 
             //预置超级管理员账号
@@ -125,7 +125,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             Role mgmtRole = new Role();
             mgmtRole.setCode(AuthUserDetails.ROLE_MGMT_USER);
             mgmtRole.setName("后端登录用户默认角色");
-            mgmtRole.setDescription("系统预置，请勿随意修改");
+            mgmtRole.setDescription("系统预置，请勿随意修改。注意：所有后端登录用户默认关联此角色，无需额外写入用户和角色关联数据。");
             roleService.save(mgmtRole);
 
             //后台默认普通管理员账号
@@ -144,7 +144,7 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             Role siteUserRole = new Role();
             siteUserRole.setCode(AuthUserDetails.ROLE_SITE_USER);
             siteUserRole.setName("前端登录用户默认角色");
-            siteUserRole.setDescription("系统预置，请勿随意修改");
+            siteUserRole.setDescription("系统预置，请勿随意修改。注意：所有前端登录用户默认关联此角色，无需额外写入用户和角色关联数据。");
             roleService.save(siteUserRole);
 
             if (DynamicConfigService.isDemoMode()) {

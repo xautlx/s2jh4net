@@ -106,7 +106,7 @@
 <link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-jqgrid/css/ui.jqgrid.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/assets/admin/app/bootstrap-jqgrid.css" />
 
-<script type="text/javascript" src="${ctx}/assets/plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="${ctx}/assets/plugins/select2/select2.js"></script>
 <script type="text/javascript" src="${ctx}/assets/plugins/select2/select2_locale_zh-CN.js"></script>
 <link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/select2/select2_metro.css" />
 

@@ -73,6 +73,7 @@
                     searchoptions : {
                         valueJsonString : '<tags:json value="${authTypeMap}"/>'
                     },
+                    hidden : true,                    
                     align : 'center',
                     width : 60
                 }, {

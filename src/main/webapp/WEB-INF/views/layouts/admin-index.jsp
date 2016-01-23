@@ -72,7 +72,7 @@
 				<!-- BEGIN NOTIFICATION DROPDOWN -->
 				<li class="dropdown" id="header_notification_bar"><a href="javascript:;" class="dropdown-toggle"
 					data-toggle="dropdown" data-hover="dropdown" data-close-others="true"
-					rel="address:/admin/profile/notify-message|公告信息列表"> <i class="fa fa-warning"></i> <span class="badge"
+					rel="address:/admin/profile/notify-message|公告信息列表"> <i class="fa fa-bullhorn"></i> <span class="badge"
 						style="display: none"></span>
 				</a>
 					<ul class="dropdown-menu extended notification">
@@ -302,6 +302,7 @@
 		</button>
 	</div>
 	<!-- END FOOTER -->
+
 
 	<%@include file="/WEB-INF/views/layouts/admin-include-footer.jsp"%>
 </body>

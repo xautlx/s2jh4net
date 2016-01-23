@@ -14,11 +14,18 @@
 		<div class="form-body">
 			<h3 class="margin-bottom-20">${notifyMessage.title}</h3>
 			<div class="row">
-				<div class="col-md-12">
-					${notifyMessage.message}
-				</div>
+				<div class="col-md-12">${notifyMessage.message}</div>
 			</div>
 		</div>
 	</div>
+	<c:if test="${param.readed=='false'}">
+		<script type="text/javascript">
+            $(function() {
+                setTimeout(function() {
+                    AdminGlobal.updateMessageCount();
+                }, 1000)
+            });
+        </script>
+	</c:if>
 </body>
 </html>

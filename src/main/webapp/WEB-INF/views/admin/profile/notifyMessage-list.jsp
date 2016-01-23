@@ -23,11 +23,13 @@
 				<tbody>
 					<c:forEach var="item" items="${notifyMessages}">
 						<tr>
-							<td><a href="${ctx}/admin/profile/notify-message-view/${item.id}" data-toggle="modal-ajaxify" title="查看消息">
+							<td><a href="${ctx}/admin/profile/notify-message-view/${item.id}?readed=${item.readed}"
+									data-toggle="modal-ajaxify" title="查看消息">
 									<c:if test="${!item.readed}">
 										<i class="fa fa-envelope-o"></i>
-									</c:if> ${item.title}
-							</a></td>
+									</c:if>
+									${item.title}
+								</a></td>
 							<td>${item.messageAbstract}</td>
 							<td><fmt:formatDate value="${item.publishTime}" type="both" pattern="yyyy-MM-dd mm:HH:ss" /></td>
 						</tr>

@@ -112,7 +112,6 @@
 									<p class="form-control-static">${user.authUid}</p>
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="control-label">移动电话</label>
 								<div class="controls">
@@ -129,7 +128,7 @@
 								<label class="control-label">注册时间</label>
 								<div class="controls">
 									<p class="form-control-static">
-										<%-- <fmt:formatDate value="${user.signupTime}" type="both" /> --%>
+										<fmt:formatDate value="${user.userExt.signupTime}" type="both" />
 									</p>
 								</div>
 							</div>
@@ -146,7 +145,7 @@
 								<label class="control-label">最近登录时间</label>
 								<div class="controls">
 									<p class="form-control-static">
-										<%-- <fmt:formatDate value="${user.lastLogonTime}" type="both" /> --%>
+										<fmt:formatDate value="${user.userExt.lastLogonTime}" type="both" />
 									</p>
 								</div>
 							</div>

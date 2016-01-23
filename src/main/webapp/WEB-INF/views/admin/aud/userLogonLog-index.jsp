@@ -34,7 +34,6 @@
 			<table id="grid-aud-user-logon-log-index"></table>
 		</div>
 	</div>
-
 	<script type="text/javascript">
         $(function() {
             $("#grid-aud-user-logon-log-index").data("gridOptions", {
@@ -119,6 +118,7 @@
                 multiselect : false,
                 sortorder : "desc",
                 sortname : "logonTime",
+                addable : false,
                 fullediturl : WEB_ROOT + '/admin/aud/user-logon-log/edit-tabs'
             });
         });

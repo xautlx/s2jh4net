@@ -111,11 +111,17 @@ public class ExtDefaultRevisionEntity extends PersistableEntity<Long> {
 
     @Transient
     public String getControllerClassDisplay() {
+        if (StringUtils.isBlank(controllerClassName)) {
+            return null;
+        }
         return controllerClassName + (StringUtils.isBlank(controllerClassLabel) ? "" : "(" + controllerClassLabel + ")");
     }
 
     @Transient
     public String getControllerMethodDisplay() {
+        if (StringUtils.isBlank(controllerMethodName)) {
+            return null;
+        }
         return controllerMethodName + (StringUtils.isBlank(controllerMethodLabel) ? "" : "(" + controllerMethodLabel + ")");
     }
 }

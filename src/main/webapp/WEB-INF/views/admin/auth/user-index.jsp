@@ -52,6 +52,7 @@
                     label : '账号类型',
                     name : 'authType',
                     editable : true,
+                    hidden : true,
                     formatter : 'select',
                     searchoptions : {
                         valueJsonString : '<tags:json value="${authTypeMap}"/>'
@@ -135,11 +136,13 @@
                     label : '最近认证失败时间',
                     name : 'userExt.lastLogonFailureTime',
                     formatter : 'timestamp',
+                    hidden : true,
                     sorttype : 'date'
                 }, {
                     label : '最近认证失败次数',
                     name : 'logonFailureTimes',
                     align : 'center',
+                    hidden : true,
                     width : 80
                 } ],
                 editurl : WEB_ROOT + '/admin/auth/user/edit',

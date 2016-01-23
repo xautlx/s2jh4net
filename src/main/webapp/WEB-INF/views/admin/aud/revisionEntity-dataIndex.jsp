@@ -57,7 +57,6 @@
 			<table id="grid-aud-data-revision-index"></table>
 		</div>
 	</div>
-
 	<script type="text/javascript">
         $(function() {
             $("#grid-aud-data-revision-index").data("gridOptions", {
@@ -73,12 +72,14 @@
                     formatter : 'timestamp'
                 }, {
                     label : '处理类',
-                    name : 'revisionEntity.controllerClassLabel',
-                    width : 100,
-                    align : 'center'
+                    name : 'revisionEntity.controllerClassDisplay',
+                    index : 'revisionEntity.controllerClassName_OR_revisionEntity.controllerClassLabel',
+                    width : 250,
+                    align : 'left'
                 }, {
                     label : '处理方法',
-                    name : 'revisionEntity.controllerMethodLabel',
+                    name : 'revisionEntity.controllerMethodDisplay',
+                    index : 'revisionEntity.controllerMethodName_OR_revisionEntity.controllerMethodLabel',
                     width : 100,
                     align : 'center'
                 }, {
@@ -93,18 +94,9 @@
                     searchoptions : {
                         valueJsonString : '<tags:json value="${authTypeMap}"/>'
                     },
+                    hidden : true,
                     align : 'center',
                     width : 60
-                }, {
-                    label : '类名称',
-                    name : 'revisionEntity.controllerClassName',
-                    width : 200,
-                    align : 'left'
-                }, {
-                    label : '方法名称',
-                    name : 'revisionEntity.controllerMethodName',
-                    width : 100,
-                    align : 'center'
                 }, {
                     label : '变更类型',
                     name : 'revisionType',

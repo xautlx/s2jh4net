@@ -94,9 +94,12 @@ public class UserController extends BaseController<User, Long> {
 
     @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow(Model model) {
+    public String editShow(Model model, @ModelAttribute("entity") User entity) {
         model.addAttribute("authTypeMap", EnumUtils.getEnumDataMap(AuthTypeEnum.class));
         model.addAttribute("roles", roleService.findAllCached());
+        if (entity.isNew()) {
+            entity.setMgmtGranted(true);
+        }
         return "admin/auth/user-inputBasic";
     }
 
@@ -149,8 +152,7 @@ public class UserController extends BaseController<User, Long> {
             }
         }
         model.addAttribute("r2PrivilegeIds", StringUtils.join(r2PrivilegeIds, ","));
-        model.addAttribute("readonly", true);
-        return "admin/auth/role-privileges";
+        return "admin/auth/user-privileges";
     }
 
     @MetaData(value = "汇总用户关联菜单集合")

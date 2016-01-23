@@ -8,6 +8,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
+	<div class="note note-info">
+		<p>提示说明：用户的可见菜单列表是基于用户配置的关联角色，以及角色与权限的关联关系，自动匹配计算出来的。只需设置好用户和角色关联，角色和权限关联即可。如果需要调整菜单显示顺序，可以访问菜单配置功能变更设置相对排序号即可。</p>
+	</div>
 	<div class="row">
 		<div class="col-md-6">
 			<ul class="breadcrumb">
@@ -22,7 +25,6 @@
 			<ul id="allMenuTree_${id}" class="ztree"></ul>
 		</div>
 	</div>
-
 	<script type="text/javascript">
         $(function() {
 

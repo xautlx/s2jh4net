@@ -34,7 +34,6 @@
 			<table id="grid-aud-logging-event-index"></table>
 		</div>
 	</div>
-
 	<script type="text/javascript">
         $(function() {
             $("#grid-aud-logging-event-index").data("gridOptions", {
@@ -96,6 +95,7 @@
                     align : 'center',
                     editable : true
                 } ],
+                addable : false,
                 fullediturl : WEB_ROOT + '/admin/aud/logging-event/edit'
             });
         });
