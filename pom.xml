@@ -973,6 +973,7 @@
 						</includes>
 						<excludes>
 							<exclude>**/*ManualTest.java</exclude>
+							<exclude>s2jh/biz/crawl/**/*Test.java</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
