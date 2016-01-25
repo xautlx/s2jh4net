@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
- 
-    <property resource="jdbc.properties" />
-    <property file="/j2ee/showcase/config/s2jh4net.properties" />
+
+	<property resource="jdbc.properties" />
+	<property file="/j2ee/showcase/config/s2jh4net.properties" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -22,16 +22,16 @@
 		<buffer>1</buffer> <!-- Optional, the size of a replay buffer for late joiners that will receive already emmited messages -->
 	</appender>
 
-    <appender name="CRAWL_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{MM-dd HH:mm:ss.SSS} %-5level %19logger{19}[%-4line] [%-10thread] - %msg %n</pattern>
-        </encoder>
-    </appender>
+	<appender name="CRAWL_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{MM-dd HH:mm:ss.SSS} %-5level %19logger{19}[%-4line] [%-10thread] - %msg %n</pattern>
+		</encoder>
+	</appender>
 
-    <logger name="crawl" level="DEBUG" additivity="false">
-        <appender-ref ref="CRAWL_STDOUT" />
-        <appender-ref ref="WEBOUT" />
-    </logger>
+	<logger name="crawl" level="DEBUG" additivity="false">
+		<appender-ref ref="CRAWL_STDOUT" />
+		<appender-ref ref="WEBOUT" />
+	</logger>
 
 	<logger name="s2jh.biz" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
@@ -39,6 +39,10 @@
 	<logger name="lab.s2jh" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
+	<logger name="io.netty.channel" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 
 	<root level="WARN">
 		<appender-ref ref="STDOUT" />
