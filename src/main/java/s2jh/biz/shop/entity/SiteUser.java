@@ -1,8 +1,9 @@
-package s2jh.biz.app.entity;
+package s2jh.biz.shop.entity;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,6 +36,10 @@ public class SiteUser extends BaseNativeEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @MetaData(value = "头像")
+    @Column(length = 512)
+    private String headPhoto;
 
     @Override
     @Transient

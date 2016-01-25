@@ -71,6 +71,7 @@
 		<property name="initializeProcessors">
 			<list>
 				<ref bean="basicDatabaseDataInitialize" />
+				<ref bean="bizDatabaseDataInitialize" />
 			</list>
 		</property>
 	</bean>

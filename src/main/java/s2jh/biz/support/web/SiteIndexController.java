@@ -36,8 +36,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import s2jh.biz.app.entity.SiteUser;
-import s2jh.biz.app.service.SiteUserService;
+import s2jh.biz.shop.entity.SiteUser;
+import s2jh.biz.shop.service.SiteUserService;
 
 import com.google.common.collect.Maps;
 
