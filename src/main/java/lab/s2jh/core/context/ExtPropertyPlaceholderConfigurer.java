@@ -43,6 +43,7 @@ public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigu
         for (Object key : props.keySet()) {
             String keyStr = key.toString();
             String value = props.getProperty(keyStr);
+            logger.debug(" - {}={}", key, value);
             ctxPropertiesMap.put(keyStr, value);
 
             if (keyStr.startsWith("env.") || keyStr.startsWith("env_")) {
