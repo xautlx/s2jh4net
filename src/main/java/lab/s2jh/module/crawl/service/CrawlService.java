@@ -578,6 +578,9 @@ public class CrawlService {
                     }
                 } while (running && sleepSeconds < 30);
 
+                //重置计数器
+                pages = new AtomicInteger(0);
+
                 logger.info("Crawl thread terminated at {} , start from {}", new Date(), crawlStartTime);
             }
         }, null);
