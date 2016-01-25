@@ -2,7 +2,7 @@
 
 > **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
 
-## Features
+## 框架特色
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
 * 主体基于主流的（Spring MVC + Spring3 + Hibernate4）架构
@@ -11,17 +11,26 @@
 * 提供一个基础的代码生成框架，简化实现基本的CRUD功能开发
 * 基于Maven的项目和组件依赖管理模式，便捷高效的与持续集成开发集成
 
-## Architecture
+## 技术架构
 
-* [Technical List](技术列表.md) - 框架主要技术(Java/Web/Tool)组件列表介绍
-* [Enhanced Grid](表格组件.md) - 功能强大的Grid表格组件扩展增强
-* [Technical Features](技术特性.md) - 主要技术选型和设计说明
-* [Mobile Support](移动支持.md) - 以Android为例的Web App与Native App整合应用
+* [技术列表](技术列表.md) - 框架主要技术(Java/Web/Tool)组件列表介绍
+* [技术特性](技术特性.md) - 主要技术选型和设计说明
+* [异常处理](异常处理.md) - 介绍框架的异常处理的策略设计
+* [移动支持](移动支持.md) - 以Android为例的Web App与Native App整合应用
 
-## Development Guide
+## 开发指南
 
-* [Code Generator](代码生成.md) - 用于基本CURD框架代码生成的工具
-* [Basic Functions(TODO)](TODO) - 框架已经实现的基础功能介绍说明
-* [Development Configuration](开发配置.md) - 开发基础环境配置说明
-* [Development Steps(TODO)](TODO) - 基于开发框架进行功能开发的基本过程介绍
-* [FAQ(TODO)](TODO) - 常见问题或设计思路说明
+* [开发配置](开发配置.md) - 开发基础环境配置说明
+* [工程结构](工程结构.md) - 对整个项目工程代码结构进行概要性介绍
+* [代码生成](代码生成.md) - 用于基本CURD框架代码生成的工具
+* [基础功能](基础功能.md) - 框架已经实现的基础功能介绍说明
+* [UI组件](UI组件.md)    - 框架UI组件设计思路和用法演示
+* [表格组件](表格组件.md) - 功能强大的Grid表格组件扩展增强
+* [表单控制](表单控制.md) - 介绍Web开发过程最主要的表单处理设计
+
+## 核心模块
+
+* [基础数据](基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
+* [数据审计](数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
+* [计划任务](计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
+
