@@ -113,11 +113,11 @@ public class TableSeqGenerator {
             Dialect dialect = (Dialect) ClassUtils.newInstance((String) jpaVendorAdapter.getJpaPropertyMap().get(Environment.DIALECT));
 
             selectQuery = "select " + valueColumnName + " as id_val" + " from " + dialect.appendLockHint(LockMode.PESSIMISTIC_WRITE, tableName)
-                    + " where code=? " + dialect.getForUpdateString();
+                    + " where id=? " + dialect.getForUpdateString();
 
-            insertQuery = "insert into " + tableName + "(code," + valueColumnName + ",initial_value,increment_size) values (?,?,?,?)";
+            insertQuery = "insert into " + tableName + "(id," + valueColumnName + ",initial_value,increment_size) values (?,?,?,?)";
 
-            updateQuery = "update " + tableName + " set " + valueColumnName + "= ?" + " where " + valueColumnName + "=? and code=?";
+            updateQuery = "update " + tableName + " set " + valueColumnName + "= ?" + " where " + valueColumnName + "=? and id=?";
         }
 
         public IntegralDataTypeHolder execute(Connection connection, String key) {

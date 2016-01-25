@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 @ActiveProfiles("test")
 @ContextConfiguration(locations = { "classpath:/context/context-profiles.xml", "classpath:/context/spring-mongo.xml",
         "classpath:/service/spring-crawl.xml" })
-public class CrawlServiceTest extends AbstractJUnit4SpringContextTests {
+public abstract class CrawlServiceTest extends AbstractJUnit4SpringContextTests {
 
     @Autowired
     protected CrawlService crawlService;
