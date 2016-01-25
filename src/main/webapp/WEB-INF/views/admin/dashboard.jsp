@@ -9,6 +9,10 @@
 <title>Dashboard</title>
 </head>
 <body>
+	<div class="note note-info">
+		<h4 class="block">提示说明</h4>
+		<p>以下Dashboard内容定义主要是演示效果之用，实际需要根据项目业务需求定制设计开发。</p>
+	</div>
 	<div class="row">
 		<div class="col-md-3">
 			<div class="dashboard-stat yellow">
@@ -66,24 +70,10 @@
 				</a>
 			</div>
 		</div>
-		<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-			<div class="dashboard-stat yellow">
-				<div class="visual">
-					<i class="fa fa-bar-chart-o"></i>
-				</div>
-				<div class="details">
-					<div class="number">12,5M$</div>
-					<div class="desc">Total Profit</div>
-				</div>
-				<a href="#" class="more">
-					View more <i class="m-icon-swapright m-icon-white"></i>
-				</a>
-			</div>
-		</div>
 	</div>
 	<div class="well well-large">
-		<h4>业务Dashboard展示区域</h4>
-		根据业务定制
+		<h3>项目简介</h3>
+		<p>集结最新主流时尚开源技术的面向互联网Web应用的整合前端门户站点、HTML5移动站点及后端管理系统一体的的基础开发框架，提供一个J2EE相关主流开源技术架构整合及一些企业应用基础通用功能和组件的设计实现的最佳实践和原型参考。</p>
 	</div>
 	<c:if test="${cfg.dev_mode}">
 		<div class="alert alert-block alert-info fade in">

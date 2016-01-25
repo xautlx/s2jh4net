@@ -21,6 +21,7 @@ import lab.s2jh.core.web.view.OperationResult;
 import lab.s2jh.module.crawl.vo.CrawlConfig;
 import lab.s2jh.module.crawl.vo.Outlink;
 import lab.s2jh.module.crawl.vo.WebPage;
+import lab.s2jh.support.service.DynamicConfigService;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -402,6 +403,12 @@ public class CrawlService {
      * @return 
      */
     public synchronized int generator(CrawlConfig crawlConfig, boolean seedMode) {
+        //为了避免过度消耗演示环境的宽带和存储资源，限制处理总数
+        if (DynamicConfigService.isDemoMode() && pages.get() > 100) {
+            logger.info("Skipped generator as running DEMO mode.");
+            return 0;
+        }
+
         DBCollection dbColl = buildFetchObjectCollection();
 
         //http://www.chaolv.com/about/contact.html  http://shkangdexin.b2b.hc360.com/    http://4001671615ylj.b2b.hc360.com/  http://huxinsheng1969.b2b.hc360.com/shop/show.html
@@ -563,7 +570,7 @@ public class CrawlService {
                         ThreadUtils.sleepOneSecond();
                         //并累加连续休眠计数器，如果达到一定阈值则说明已经没有新的URL需要处理，终止爬虫主线程
                         sleepSeconds++;
-                        logger.info("Crawl thread sleep {} seconds.", sleepSeconds);
+                        logger.info("Crawl thread sleep {} seconds for more generate URL.", sleepSeconds);
                     } else {
                         //如果生成了待爬取URL集合数据，则重置连续休眠计数器，并调用抓取接口
                         sleepSeconds = 0;
