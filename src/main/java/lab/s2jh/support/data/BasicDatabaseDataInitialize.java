@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
@@ -278,8 +279,11 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Controller.class));
-            beanDefinitions.addAll(scan.findCandidateComponents("lab.s2jh.**.web.**"));
-            beanDefinitions.addAll(scan.findCandidateComponents("s2jh.biz.**.web.**"));
+            String[] packages = StringUtils.split(ExtPropertyPlaceholderConfigurer.getBasePackages(),
+                    ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+            for (String pkg : packages) {
+                beanDefinitions.addAll(scan.findCandidateComponents(pkg));
+            }
 
             ClassPool pool = ClassPool.getDefault();
             //The default ClassPool returned by a static method ClassPool.getDefault() searches the same path that the underlying JVM (Java virtual machine) has. 
@@ -360,8 +364,11 @@ public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Controller.class));
-            beanDefinitions.addAll(scan.findCandidateComponents("lab.s2jh.**.web.**"));
-            beanDefinitions.addAll(scan.findCandidateComponents("s2jh.biz.**.web.**"));
+            String[] packages = StringUtils.split(ExtPropertyPlaceholderConfigurer.getBasePackages(),
+                    ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+            for (String pkg : packages) {
+                beanDefinitions.addAll(scan.findCandidateComponents(pkg));
+            }
 
             List<Privilege> privileges = privilegeService.findAllCached();
             ClassPool pool = ClassPool.getDefault();

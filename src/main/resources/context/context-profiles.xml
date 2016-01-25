@@ -18,6 +18,7 @@
 	<beans profile="development">
         <!-- 缺省PropertyPlaceholder定义 -->
 		<bean id="extPropertyPlaceholderConfigurer" class="lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer">
+			<property name="basePackages" value="lab.s2jh,s2jh.biz" />
 			<property name="locations">
 				<list>
 					<value>classpath*:/application.properties</value>
@@ -131,6 +132,7 @@
 	<beans profile="production">
         <!-- 缺省PropertyPlaceholder定义 -->
 		<bean id="extPropertyPlaceholderConfigurer" class="lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer">
+			<property name="basePackages" value="lab.s2jh,s2jh.biz" />
 			<property name="locations">
 				<list>
 					<value>classpath*:/application.properties</value>
@@ -247,6 +249,7 @@
 	<beans profile="test">
         <!-- 缺省PropertyPlaceholder定义 -->
 		<bean id="extPropertyPlaceholderConfigurer" class="lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer">
+			<property name="basePackages" value="lab.s2jh,s2jh.biz" />
 			<property name="locations">
 				<list>
 					<value>classpath:/application.properties</value>

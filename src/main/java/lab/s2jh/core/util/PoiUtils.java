@@ -194,6 +194,79 @@ public class PoiUtils {
     }
 
     /**
+     * 读取Excel数据内容
+     * 约定格式要求：第一行为标题行，之后为数据行
+     * 返回结构为Map结构的List集合：每行的key=第一行的标题，value=单元格值，统一为字符串，根据需要自行转换数据类型
+     * 
+     * @param InputStream
+     * @return Map 包含单元格数据内容的Map对象
+     */
+    public static List<Map<String, String>> readExcelContent(InputStream is, String excelName, String sheetName) {
+        List<Map<String, String>> rows = Lists.newArrayList();
+        try {
+            Workbook wb = new HSSFWorkbook(is);
+            logger.debug("Excel: {}, Sheet: {}", excelName, sheetName);
+            Sheet sheet = wb.getSheet(sheetName);
+            Row row0 = sheet.getRow(0);
+            // 标题总列数
+            int colNum = 0;
+            List<String> titleList = Lists.newArrayList();
+            while (true) {
+                Cell cell = row0.getCell(colNum);
+                if (cell == null) {
+                    break;
+                }
+                String title = getCellFormatValue(cell);
+                if (StringUtils.isBlank(title)) {
+                    break;
+                }
+                titleList.add(title);
+                colNum++;
+                logger.debug(" - Title : {} = {}", colNum, title);
+            }
+            logger.debug("Excel: {}, Sheet: {}, Column Num: {}", excelName, sheetName, colNum);
+            String[] titles = titleList.toArray(new String[titleList.size()]);
+
+            // 正文内容应该从第二行开始,第一行为表头的标题
+            int rowNum = 1;
+            while (rowNum > 0) {
+                Row row = sheet.getRow(rowNum++);
+                if (row == null) {
+                    break;
+                }
+                Map<String, String> rowMap = Maps.newHashMap();
+                rowMap.put("sheetName", sheetName);
+
+                Cell firstCell = row.getCell(0);
+                //假如第一列并且为空则终止行项数据处理
+                if (firstCell == null) {
+                    logger.info("End as firt cell is Null at row: {}", rowNum);
+                    break;
+                }
+
+                int j = 0;
+                while (j < colNum) {
+                    Cell cell = row.getCell(j);
+                    if (cell != null) {
+                        String cellValue = getCellFormatValue(cell);
+                        rowMap.put(titles[j], cellValue);
+                    }
+                    j++;
+                }
+                if (rowNum > 0) {
+                    rows.add(rowMap);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
+        logger.debug("Row Map Data: {}", rows);
+        return rows;
+    }
+
+    /**
      * 根据HSSFCell类型设置数据
      * 
      * @param cell

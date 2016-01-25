@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.transaction.Transactional;
 
 import lab.s2jh.core.annotation.MetaData;
+import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.support.service.DynamicConfigService;
 
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
@@ -72,8 +74,12 @@ public class DatabaseDataInitializeExecutor {
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-            beanDefinitions.addAll(scan.findCandidateComponents("lab.s2jh.**.entity.**"));
-            beanDefinitions.addAll(scan.findCandidateComponents("s2jh.biz.**.entity.**"));
+            scan.addIncludeFilter(new AnnotationTypeFilter(MetaData.class));
+            String[] packages = StringUtils.split(ExtPropertyPlaceholderConfigurer.getBasePackages(),
+                    ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+            for (String pkg : packages) {
+                beanDefinitions.addAll(scan.findCandidateComponents(pkg));
+            }
 
             for (BeanDefinition beanDefinition : beanDefinitions) {
                 Class<?> entityClass = ClassUtils.forName(beanDefinition.getBeanClassName());

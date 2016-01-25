@@ -8,10 +8,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.persistence.Entity;
+
 import lab.s2jh.core.security.BearerTokenRealm;
 import lab.s2jh.core.security.ShiroJdbcRealm;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Cache;
 import org.hibernate.cache.internal.StandardQueryCache;
 import org.hibernate.cache.spi.UpdateTimestampsCache;
 import org.slf4j.Logger;
@@ -20,6 +23,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
@@ -35,6 +39,8 @@ public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigu
 
     private static Map<String, String> ctxPropertiesMap;
 
+    private static String basePackages;
+
     @Override
     protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
         super.processProperties(beanFactoryToProcess, props);
@@ -43,7 +49,6 @@ public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigu
         for (Object key : props.keySet()) {
             String keyStr = key.toString();
             String value = props.getProperty(keyStr);
-            logger.debug(" - {}={}", key, value);
             ctxPropertiesMap.put(keyStr, value);
 
             if (keyStr.startsWith("env.") || keyStr.startsWith("env_")) {
@@ -68,9 +73,12 @@ public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigu
 
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
-            scan.addIncludeFilter(new AnnotationTypeFilter(org.hibernate.annotations.Cache.class));
-            beanDefinitions.addAll(scan.findCandidateComponents("lab.s2jh.**.entity"));
-            beanDefinitions.addAll(scan.findCandidateComponents("s2jh.biz.**.entity"));
+            scan.addIncludeFilter(new AnnotationTypeFilter(Cache.class));
+            scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
+            String[] packages = StringUtils.split(basePackages, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+            for (String pkg : packages) {
+                beanDefinitions.addAll(scan.findCandidateComponents(pkg));
+            }
 
             //取当前主机名，后续添加RMI Manual列表把当前主机排除掉，否则会导致当前缓存同时也被remove清空导致缓存数据访问丢失
             String hostName = null;
@@ -117,5 +125,13 @@ public class ExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigu
 
     public String getProperty(String name) {
         return ctxPropertiesMap.get(name);
+    }
+
+    public void setBasePackages(String basePackages) {
+        ExtPropertyPlaceholderConfigurer.basePackages = basePackages;
+    }
+
+    public static String getBasePackages() {
+        return basePackages;
     }
 }
