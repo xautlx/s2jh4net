@@ -2,7 +2,7 @@
 <configuration>
  
     <property resource="jdbc.properties" />
-    <property file="/data/showcase/config/s2jh4net.properties" />
+    <property file="/j2ee/showcase/config/s2jh4net.properties" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
