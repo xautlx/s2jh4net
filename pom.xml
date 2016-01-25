@@ -716,11 +716,11 @@
 			<version>1.0.7</version>
 		</dependency>
         <!-- https://github.com/alexvictoor/web-logback -->
-        <dependency>
-            <groupId>com.github.alexvictoor</groupId>
-            <artifactId>web-logback</artifactId>
-            <version>0.2</version>
-        </dependency>
+		<dependency>
+			<groupId>com.github.alexvictoor</groupId>
+			<artifactId>web-logback</artifactId>
+			<version>0.2</version>
+		</dependency>
 
 		<!-- common-logging 实际调用slf4j -->
 		<dependency>
@@ -761,12 +761,6 @@
 		<!-- Quartz Plugin <dependency> <groupId>org.quartz-scheduler</groupId> <artifactId>quartz-oracle</artifactId> <version>${quartz.version}</version> 
 			</dependency> <dependency> <groupId>org.quartz-scheduler</groupId> <artifactId>quartz-weblogic</artifactId> <version>${quartz.version}</version> 
 			</dependency> -->
-
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
-			<version>${httpcomponents.version}</version>
-		</dependency>
 
         <!-- activiti -->
 		<dependency>
@@ -823,21 +817,21 @@
 		</dependency>
 
         <!-- HTML Fetch and Parse -->
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-            <version>${httpcomponents.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpcomponents.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${httpcomponents.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpcomponents.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.ccil.cowan.tagsoup</groupId>
 			<artifactId>tagsoup</artifactId>
