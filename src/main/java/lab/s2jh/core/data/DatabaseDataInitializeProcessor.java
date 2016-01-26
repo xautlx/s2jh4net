@@ -21,11 +21,11 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.util.Assert;
 
 /**
- * 数据库基础数据初始化处理器
+ * 数据库数据初始化处理基类
  */
-public abstract class BaseDatabaseDataInitialize {
+public abstract class DatabaseDataInitializeProcessor {
 
-    private final static Logger logger = LoggerFactory.getLogger(BaseDatabaseDataInitialize.class);
+    private final static Logger logger = LoggerFactory.getLogger(DatabaseDataInitializeProcessor.class);
 
     private EntityManager entityManager;
 

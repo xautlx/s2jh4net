@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
-import lab.s2jh.core.data.BaseDatabaseDataInitialize;
+import lab.s2jh.core.data.DatabaseDataInitializeProcessor;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.MockEntityUtils;
 import lab.s2jh.module.auth.entity.User;
@@ -33,9 +33,9 @@ import com.google.common.collect.Lists;
  * 业务数据初始化处理器
  */
 @Component
-public class BizDatabaseDataInitialize extends BaseDatabaseDataInitialize {
+public class BizDatabaseDataInitializeProcessor extends DatabaseDataInitializeProcessor {
 
-    private final static Logger logger = LoggerFactory.getLogger(BizDatabaseDataInitialize.class);
+    private final static Logger logger = LoggerFactory.getLogger(BizDatabaseDataInitializeProcessor.class);
 
     @Autowired
     private UserService userService;
@@ -73,7 +73,7 @@ public class BizDatabaseDataInitialize extends BaseDatabaseDataInitialize {
 
             //获取一些随机图片集合数据
             List<String> randomImages = Lists.newArrayList();
-            URL url = BizDatabaseDataInitialize.class.getResource("images");
+            URL url = this.getClass().getResource("images");
             String fileName = url.getFile();
             Collection<File> files = FileUtils.listFiles(new File(fileName), null, false);
             for (File file : files) {

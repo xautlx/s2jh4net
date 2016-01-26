@@ -55,8 +55,11 @@ public class DatabaseDataInitializeExecutor {
     @Value("hibernate_hbm2ddl_auto:")
     private String hbm2ddl;
 
+    @Autowired
+    private List<DatabaseDataInitializeProcessor> initializeProcessors;
+
     @Transactional
-    public void initialize(List<BaseDatabaseDataInitialize> initializeProcessors) {
+    public void initialize() {
         CountThread countThread = new CountThread();
         countThread.start();
 
@@ -90,7 +93,7 @@ public class DatabaseDataInitializeExecutor {
             }
         }
 
-        for (BaseDatabaseDataInitialize initializeProcessor : initializeProcessors) {
+        for (DatabaseDataInitializeProcessor initializeProcessor : initializeProcessors) {
             logger.debug("Invoking data initialize for {}", initializeProcessor);
             countThread.update(initializeProcessor.getClass());
             initializeProcessor.initialize(entityManager);

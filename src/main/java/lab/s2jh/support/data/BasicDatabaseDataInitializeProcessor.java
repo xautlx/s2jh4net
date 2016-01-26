@@ -11,7 +11,7 @@ import javassist.CtMethod;
 import lab.s2jh.core.annotation.MenuData;
 import lab.s2jh.core.cons.GlobalConstant;
 import lab.s2jh.core.context.ExtPropertyPlaceholderConfigurer;
-import lab.s2jh.core.data.BaseDatabaseDataInitialize;
+import lab.s2jh.core.data.DatabaseDataInitializeProcessor;
 import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.util.DateUtils;
 import lab.s2jh.core.util.Exceptions;
@@ -59,9 +59,9 @@ import com.google.common.collect.Sets;
  * 数据库基础数据初始化处理器
  */
 @Component
-public class BasicDatabaseDataInitialize extends BaseDatabaseDataInitialize {
+public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitializeProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitialize.class);
+    private static final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitializeProcessor.class);
 
     @Autowired
     private RoleService roleService;
