@@ -10,6 +10,8 @@ UI组件部分的设计主要基于JQuery/Bootstrap及相关插件，在尽量�
 
 **WEB_ROOT**: 当前Web应用ContextPath的JS变量，一般用于JS代码中组装URL
 
+**注意以下示例或文档链接，需要在在线演示或本地部署运行时访问才有效!**
+
 ### <a href="../../../../admin/#/docs/ui-feature/items|UI组件用法示例" target="_blank">UI组件用法示例</a>
 
 针对典型的UI组件，提供一个基本的用法示意参考，结合对应的JSDoc文档了解相关UI组件的用法和支持的功能属性。

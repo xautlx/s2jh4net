@@ -1,16 +1,24 @@
-# 开发框架介绍与开发指南
+## 项目简介
 
 集结最新主流时尚开源技术的面向互联网Web应用的整合前端门户站点、HTMl5移动站点及后端管理系统一体的的基础开发框架，提供一个J2EE相关主流开源技术架构整合及一些企业应用基础通用功能和组件的设计实现的最佳实践和原型参考。
+
+### 项目托管同步更新站点列表：
+
+**https://github.com/xautlx/s2jh4net**
+
+**http://git.oschina.net/xautlx/s2jh4net**
+
+### 个人空间： http://my.oschina.net/s2jh
 
 > **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
 
 ## 框架特色
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
-* 主体基于主流的（Spring MVC + Spring3 + Hibernate4）架构
+* 主体基于主流的（Spring MVC + Spring3 + Hibernate4/MyBatis3）架构
 * 引入JPA、Spring-Data-JPA提升持久层架构规范性和开发效率
 * 基于流行JQuery/Bootstrap等UI框架和插件整合，良好的浏览器兼容性和移动设备访问支持
-* 提供一个基础的代码生成框架，简化实现基本的CRUD功能开发
+* 提供一个基础的代码生成框架，简化实现快速基本的CRUD功能开发
 * 基于Maven的项目和组件依赖管理模式，便捷高效的与持续集成开发集成
 
 ## 技术架构
@@ -30,9 +38,39 @@
 * [表格组件](表格组件.md) - 功能强大的Grid表格组件扩展增强
 * [表单控制](表单控制.md) - 介绍Web开发过程最主要的表单处理设计
 
+> 由于项目采用了Lombok等插件，如果你想把git获取工程代码导入开发环境，请一定提前浏览文档 [开发配置](开发配置.md) 为IDE进行Lombok等插件配置，否则会出一大堆编译错误。
+
 ## 核心模块
 
 * [基础数据](基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
 * [数据审计](数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
 * [计划任务](计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
+* [爬虫数据采集](爬虫数据采集.md) - 参考Nutch实现一个Web管理的轻量级爬虫数据采集解析模块
 
+### 许可说明
+
+* 免费许可
+
+本项目代码除src/main/webapp/assets目录下admin/app和w/app两个目录下少量相关Javascript代码以混淆方式提供外，其余开源，在保留标识本项目来源信息以及保证不对本项目进行非授权的销售行为的前提下，可以以任意方式自由免费使用：开源、非开源、商业及非商业。
+
+若对项目有任何技术问题或Issue反馈，可加QQ群讨论组：303438676 或提交到项目站点提问或Git平台的Issue：
+http://www.oschina.net/p/s2jh4net , http://git.oschina.net/xautlx/s2jh4net/issues , https://github.com/xautlx/s2jh4net/issues
+
+* 收费服务
+
+如果你还有兴趣在现有开放资源基础上进一步获取完整源码/提供定制的扩展实现/技术咨询服务/毕业设计指导/二次开发项目指导等方面的合作意向，可联系 E-Mail: s2jh-dev@hotmail.com 或 QQ: 2414521719 (加Q请注明：s2jh4net) 洽谈。[上述个人联系方式为收费服务渠道，恕不提供免费咨询]
+
+
+### 参考引用
+
+欢迎关注作者其他项目：
+
+* [Nutch 2.X AJAX Plugins (Active)](https://github.com/xautlx/nutch-ajax) -  基于Apache Nutch 2.3和Htmlunit, Selenium WebDriver等组件扩展，实现对于AJAX加载类型页面的完整页面内容抓取，以及特定数据项的解析和索引
+
+* [S2JH4Net (Active)](https://github.com/xautlx/s2jh4net) -  基于Spring MVC+Spring+JPA+Hibernate的面向互联网及企业Web应用开发框架
+
+* [S2JH (Deprecated)](https://github.com/xautlx/s2jh) -  基于Struts2+Spring+JPA+Hibernate的面向企业Web应用开发框架
+ 
+* [Nutch 1.X AJAX Plugins (Deprecated)](https://github.com/xautlx/nutch-htmlunit) -  基于Apache Nutch 1.X和Htmlunit的扩展实现AJAX页面爬虫抓取解析插件
+ 
+* [12306 Hunter (Deprecated)](https://github.com/xautlx/12306-hunter) - （功能已失效不可用，不过还可以当作Swing开发样列参考只用）Java Swing C/S版本12306订票助手，用处你懂的
