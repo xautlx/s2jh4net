@@ -5,7 +5,7 @@ import java.util.List;
 import ${root_package}.entity.${entity_name};
 import ${root_package}.service.${entity_name}Service;
 import lab.s2jh.core.test.SpringTransactionalTestCase;
-import lab.s2jh.core.test.TestObjectUtils;
+import lab.s2jh.core.util.MockEntityUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class ${entity_name}ServiceTest extends SpringTransactionalTestCase {
     @Test
     public void findByPage() {
         //Insert mock entity
-        ${entity_name} entity = TestObjectUtils.buildMockObject(${entity_name}.class);
+        ${entity_name} entity = MockEntityUtils.buildMockObject(${entity_name}.class);
         ${entity_name_uncapitalize}Service.save(entity);
         Assert.assertTrue(entity.getId() != null);
 
