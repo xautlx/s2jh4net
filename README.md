@@ -51,11 +51,11 @@
 
 ## 在线演示
 
-**http://101.200.31.248:8080/s2jh4net/admin**
+**http://www.tunnel.irabbit.net.cn/s2jh4net/admin**
 
 前端门户和HTML5移动站点目前内容较少，主要演示集中在管理端。账号：admin，密码：admin123，或直接点击右下方的“超级管理员”登录链接即可。
 
-在线演示站点为单点低配阿里云服务器，可能存在访问缓慢情况或更新时中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
+在线演示站点为国外vultr低配虚拟机+Ngrok穿透访问家用台式机，可能存在访问缓慢情况或更新时中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
 
 建议可参考 [开发配置](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE.md) 在本地运行完整体验。
 
