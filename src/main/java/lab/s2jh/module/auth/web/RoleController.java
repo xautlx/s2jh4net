@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import lab.s2jh.core.annotation.MenuData;
+import lab.s2jh.core.security.AuthUserDetails;
 import lab.s2jh.core.service.BaseService;
 import lab.s2jh.core.web.BaseController;
 import lab.s2jh.core.web.view.OperationResult;
@@ -96,6 +97,9 @@ public class RoleController extends BaseController<Role, Long> {
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/privileges", method = RequestMethod.GET)
     public String privilegeR2sShow(@ModelAttribute("entity") Role entity, Model model) {
+        if (AuthUserDetails.ROLE_SUPER_USER.equals(entity.getCode())) {
+            model.addAttribute("readonly", true);
+        }
         Set<Long> r2PrivilegeIds = Sets.newHashSet();
         List<RoleR2Privilege> r2s = entity.getRoleR2Privileges();
         if (CollectionUtils.isNotEmpty(r2s)) {
@@ -111,7 +115,7 @@ public class RoleController extends BaseController<Role, Long> {
     @RequestMapping(value = "/privileges", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult privilegeR2sSave(@ModelAttribute("entity") Role entity,
-            @RequestParam(value = "privilegeIds", required = false) Long[] privilegeIds) {
+                                            @RequestParam(value = "privilegeIds", required = false) Long[] privilegeIds) {
         roleService.updateRelatedPrivilegeR2s(entity, privilegeIds);
         return OperationResult.buildSuccessResult();
     }
