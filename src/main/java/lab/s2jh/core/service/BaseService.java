@@ -990,8 +990,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
 
     /**
      * 子类额外追加过滤限制条件的入口方法，一般基于当前登录用户强制追加过滤条件
-     * 
-     * @param filters
+     *
      */
     protected List<Predicate> appendPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         return null;
@@ -1246,7 +1245,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     /**
      * 供子类调用的关联对象关联关系操作辅助方法
      * 
-     * @param id
+     * @param entity
      *            当前关联主对象主键，如User对象主键
      * @param r2EntityIds
      *            关联目标对象的主键集合，如用户关联角色的Role对象集合的主键
