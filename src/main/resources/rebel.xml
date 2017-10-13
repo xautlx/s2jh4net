@@ -3,13 +3,21 @@
 	xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
 	<classpath>
-		<dir name="D:/projects/opensource/s2jh/s2jh4net/target/classes">
+		<dir name="/data/projects/opensource/iframeworks/s2jh4net/target/classes">
 		</dir>
 	</classpath>
 
 	<web>
+		<link target="/assets/admin/app">
+			<dir name="/data/projects/opensource/iframeworks/s2jh4net/internal/assets/admin/app">
+			</dir>
+		</link>
+		<link target="/assets/w">
+			<dir name="/data/projects/opensource/iframeworks/s2jh4net/internal/assets/w">
+			</dir>
+		</link>
 		<link target="/">
-			<dir name="D:/projects/opensource/s2jh/s2jh4net/src/main/webapp">
+			<dir name="/data/projects/opensource/iframeworks/s2jh4net/src/main/webapp">
 			</dir>
 		</link>
 	</web>

@@ -14,5 +14,5 @@ bin/
 *.log
 
 /delivery/
-/delivery.zip
+/internal/
 rebel.xml
