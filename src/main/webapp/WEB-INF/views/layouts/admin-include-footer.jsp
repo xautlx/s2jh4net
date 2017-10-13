@@ -98,16 +98,13 @@
 <script src="${ctx}/assets/admin/scripts/tasks.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
-
-
-<link rel="stylesheet" href="${ctx}/assets/plugins/free-jqgrid/css/ui.jqgrid.min.css">
-<script src="${ctx}/assets/plugins/free-jqgrid/i18n/grid.locale-cn.js"></script>
-<script src="${ctx}/assets/plugins/free-jqgrid/jquery.jqgrid.src.js"></script>
-<script src="${ctx}/assets/plugins/free-jqgrid/plugins/min/jquery.jqgrid.showhidecolumnmenu.js"></script>
-<script src="${ctx}/assets/plugins/free-jqgrid/plugins/min/jquery.contextmenu-ui.js"></script>
-<script src="${ctx}/assets/plugins/free-jqgrid/plugins/min/jquery.createcontexmenufromnavigatorbuttons.js"></script>
-<script src="${ctx}/assets/plugins/free-jqgrid/plugins/min/ui.multiselect.js"></script>
-<link rel="stylesheet" href="${ctx}/assets/plugins/free-jqgrid/plugins/css/ui.multiselect.min.css">
+<script src="${ctx}/assets/plugins/jquery-jqgrid/plugins/ui.multiselect.js"></script>
+<script src="${ctx}/assets/plugins/jquery-jqgrid/js/i18n/grid.locale-cn.js"></script>
+<script src="${ctx}/assets/plugins/jquery-jqgrid/js/jquery.jqGrid.src.js"></script>
+<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-multi-select/css/multi-select.css" />
+<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-jqgrid/plugins/ui.multiselect.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-jqgrid/css/ui.jqgrid.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/assets/admin/app/bootstrap-jqgrid.css" />
 
 <script type="text/javascript" src="${ctx}/assets/plugins/select2/select2.js"></script>
 <script type="text/javascript" src="${ctx}/assets/plugins/select2/select2_locale_zh-CN.js"></script>
@@ -119,7 +116,6 @@
 <script src="${ctx}/assets/plugins/kindeditor/kindeditor-ext.js"></script>
 <link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/kindeditor/themes/default/default.css">
 
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-multi-select/css/multi-select.css" />
 <script type="text/javascript" src="${ctx}/assets/plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="${ctx}/assets/plugins/jquery-multi-select/js/jquery.quicksearch.js"></script>
 
