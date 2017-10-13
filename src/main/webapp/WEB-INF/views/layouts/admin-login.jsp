@@ -51,12 +51,12 @@
     <!-- BEGIN LOGIN -->
     <div class="row hidden-xs hidden-sm" style="margin: 0px">
         <div class="col-md-12" style="margin: 0px">
-            <div style="padding: 80px"></div>
+            <div style="padding: 30px"></div>
         </div>
     </div>
     <div class="form-group" style="margin: 0px">
-        <div class="col-md-3"></div>
-        <div class="col-md-6" style="padding: 0px">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="padding: 0px">
             <div class="content" style="width: 100%;">
                 <div class="row">
                     <div class="col-md-12">
@@ -90,7 +90,7 @@
                 <!-- END COPYRIGHT -->
             </div>
         </div>
-        <div class="col-md-3"></div>
+        <div class="col-md-2"></div>
     </div>
 
     <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
