@@ -1,0 +1,1 @@
+var Biz=function(){return{init:function(){}}}();
