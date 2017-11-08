@@ -11,38 +11,9 @@
 <head>
 <meta charset="utf-8" />
 <title><sitemesh:write property='title' /> : ${applicationScope.cfg.cfg_system_title}</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-<meta content="" name="description" />
-<meta content="" name="author" />
-<meta name="MobileOptimized" content="320">
-<!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link href="${ctx}/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
-<!-- END GLOBAL MANDATORY STYLES -->
-<!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/select2/select2_metro.css" />
-<link href="${ctx}/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/jquery-ui/redmond/jquery-ui-1.10.3.custom.min.css">
-<link href="${ctx}/assets/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/plugins/bootstrap-toastr/toastr.min.css" />
-<!-- END PAGE LEVEL SCRIPTS -->
-<!-- BEGIN THEME STYLES -->
-
-<link href="${ctx}/assets/fonts/font.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/style-metronic.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/style.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/style-responsive.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/plugins.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color" />
-<link href="${ctx}/assets/admin/css/pages/login.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/assets/admin/app/custom.css" rel="stylesheet" type="text/css" />
-<!-- END THEME STYLES -->
-
-<script src="${ctx}/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
-
-<link rel="shortcut icon" href="${ctx}/assets/img/favicon.ico" />
+<%@include file="/WEB-INF/views/layouts/include-header.jsp"%>
+<link href="${ctx}/assets/apps/css/login.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="${ctx}/assets/apps/img/favicon.ico" />
 <sitemesh:write property='head' />
 </head>
 <!-- END HEAD -->
@@ -62,7 +33,7 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-2">
-                                <img src="${ctx}/assets/img/logo.png" width="100px" />
+                                <img src="${ctx}/assets/apps/img/logo.png" width="100px" />
                             </div>
                             <div class="col-md-8">
                                 <h2 style="color: #555555">${applicationScope.cfg.cfg_system_title}-管理平台</h2>
@@ -93,45 +64,14 @@
         <div class="col-md-2"></div>
     </div>
 
-    <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-    <script type="text/javascript">
-        var WEB_ROOT = "${ctx}";
-    </script>
-    <!-- BEGIN CORE PLUGINS -->
-    <!--[if lt IE 9]>
-    <script src="${ctx}/assets/plugins/respond.min.js"></script>
-    <script src="${ctx}/assets/plugins/excanvas.min.js"></script> 
-    <![endif]-->
-    <script src="${ctx}/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-    <script src="${ctx}/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="${ctx}/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-    <script src="${ctx}/assets/plugins/jquery.cookie.min.js" type="text/javascript"></script>
-    <!-- END CORE PLUGINS -->
-    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <%@include file="/WEB-INF/views/layouts/include-footer.jsp"%>
 
-    <script src="${ctx}/assets/admin/scripts/app.js" type="text/javascript"></script>
-
-    <script src="${ctx}/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="${ctx}/assets/plugins/jquery-validation/localization/messages_zh.js"></script>
-    <script src="${ctx}/assets/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
-    <script src="${ctx}/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
-    <script src="${ctx}/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="${ctx}/assets/plugins/jquery.pulsate.min.js"></script>
-    <script src="${ctx}/assets/plugins/bootstrap-toastr/toastr.min.js"></script>
-    <!-- The basic File Upload plugin -->
-    <script src="${ctx}/assets/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
-
-    <script src="${ctx}/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
-    <script src="${ctx}/assets/plugins/jquery.form.js"></script>
-    <!-- END PAGE LEVEL PLUGINS -->
 
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
-    <script src="${ctx}/assets/admin/app/util.js"></script>
-    <script src="${ctx}/assets/w/scripts/global.js"></script>
-    <script src="${ctx}/assets/admin/app/global.js"></script>
-    <script src="${ctx}/assets/w/scripts/form-validation.js"></script>
-    <script src="${ctx}/assets/w/scripts/page.js"></script>
-    <script src="${ctx}/assets/admin/app/page.js"></script>
+    <script src="${ctx}/assets/apps/scripts/admin-global.js?_=${build_version}"></script>
+    <script src="${ctx}/assets/apps/scripts/form-validation.js?_=${build_version}"></script>
+    <script src="${ctx}/assets/apps/scripts/page.js?_=${build_version}"></script>
+    <script src="${ctx}/assets/apps/scripts/admin-page.js?_=${build_version}"></script>
 
     <script>
         $(function() {
@@ -151,7 +91,7 @@
         });
     </script>
 
-    <script src="${ctx}/assets/admin/app/login.js"></script>
+    <script src="${ctx}/assets/apps/scripts/login.js"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
 </body>
 <!-- END BODY -->

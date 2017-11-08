@@ -26,7 +26,8 @@ target
 *.java~
 *.properties~
 *.xml~
-#rebel.xml
+rebel.xml
+temp.jsp
 
 # system ignore
 .DS_Store

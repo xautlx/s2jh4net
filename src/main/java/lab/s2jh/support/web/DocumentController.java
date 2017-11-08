@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -140,20 +136,38 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         }
         model.addAttribute("clazzMapping", clazzMapping);
 
-        Map<Long, String> multiSelectItems = Maps.newLinkedHashMap();
-        multiSelectItems.put(1L, "选项AAA");
-        multiSelectItems.put(2L, "中文BBB");
-        multiSelectItems.put(3L, "选项CCC");
-        multiSelectItems.put(4L, "元素DDD");
-        model.addAttribute("multiSelectItems", multiSelectItems);
+        //典型的select下拉option数据项
+        Map<Long, String> multiSelectOptions = Maps.newLinkedHashMap();
+        multiSelectOptions.put(1L, "选项AAA");
+        multiSelectOptions.put(2L, "中文BBB");
+        multiSelectOptions.put(3L, "选项CCC");
+        multiSelectOptions.put(4L, "元素DDD");
+        model.addAttribute("multiSelectOptions", multiSelectOptions);
+
+        //Tag类型的select下拉option数据项
+        String[] multiSelectTags = new String[]{"选项AAA", "中文BBB", "选项CCC", "元素DDD"};
+        model.addAttribute("multiSelectTags", multiSelectTags);
 
         MockEntity entity = new MockEntity();
-        entity.setSelectedIds(new Long[] { 2L });
+        entity.setSelectedId(2L);
+        entity.setSelectedIds(new Long[]{2L, 3L});
+        entity.setTextContent("选项CCC");
+        entity.setSplitText("中文BBB,选项CCC");
+        Department department = new Department();
+        department.setId(100L);
+        department.setCode("MOCK100");
+        department.setName("模拟部门100");
+        entity.setDepartment(department);
         model.addAttribute("entity", entity);
-        
+
+        //构造用于remote类型select元素的初始化显示option数据项
+        Map<Long, String> initSelectOption = Maps.newLinkedHashMap();
+        initSelectOption.put(entity.getId(), entity.getTextContent());
+        model.addAttribute("initSelectOption", initSelectOption);
+
         //上下文完整路径
         model.addAttribute("webContextFullUrl", WebAppContextInitFilter.getInitedWebContextFullUrl());
-        
+
         return "admin/docs/ui-feature-items";
     }
 
@@ -301,6 +315,14 @@ public class DocumentController extends BaseController<MockEntity, Long> {
         private Boolean expired;
 
         private List<MockItemEntity> mockItemEntites;
+
+        public String[] getSplitTexts() {
+            return StringUtils.split(splitText, ",");
+        }
+
+        public void setSplitTexts(String[] splitTexts) {
+            this.splitText = StringUtils.join(splitTexts, ",");
+        }
 
         @Override
         public String toString() {
