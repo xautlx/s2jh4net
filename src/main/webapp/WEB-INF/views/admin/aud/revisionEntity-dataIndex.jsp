@@ -115,11 +115,11 @@
                     hidden : true,
                     align : 'center'
                 } ],
-                operations : function(itemArray) {
-                    var $revisionsComparet = $('<li data-position="multi" data-toolbar="show"><a href="javascript:;"><i class="fa fa-indent"></i> 数据查看/对比</a></li>');
-                    $revisionsComparet.children("a").bind("click", function(e) {
-                        e.preventDefault();
-                        var $grid = $(this).closest(".ui-jqgrid").find(".ui-jqgrid-btable:first");
+                navButtons: [{
+                    caption: "数据查看/对比",
+                    buttonicon: "fa-indent",
+                    onClickButton: function (rowids) {
+                        var $grid = $(this);
                         var selectRows = $grid.getAtLeastOneSelectedItem();
                         if (selectRows) {
                             var rowdatas = $grid.getSelectedRowdatas();
@@ -152,9 +152,11 @@
                                 Global.notify("error", "选取行项数据类型不一致");
                             }
                         }
-                    });
-                    itemArray.push($revisionsComparet);
-                }
+                    },
+                    operationRows: 'multiple',
+                    showOnToolbar: true,
+                    showOnToolbarText: true
+                }]
             });
         });
     </script>

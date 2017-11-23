@@ -23,6 +23,7 @@ import lab.s2jh.module.auth.service.UserService;
 import lab.s2jh.module.sys.service.SmsVerifyCodeService;
 import lab.s2jh.support.service.DynamicConfigService;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -77,7 +78,7 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
     @RequestMapping(value = "/password/reset", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult passwordResetSmsValidate(HttpServletRequest request, SiteUser entity, Model model, @RequestParam("mobile") String mobile,
-            @RequestParam("smsCode") String smsCode, @RequestParam(value = "newpasswd", required = false) String newpasswd) {
+                                                    @RequestParam("smsCode") String smsCode, @RequestParam(value = "newpasswd", required = false) String newpasswd) {
         if (smsVerifyCodeService.verifySmsCode(request, mobile, smsCode)) {
             User user = userService.findByAuthTypeAndAuthUid(AuthTypeEnum.SYS, mobile);
             if (user == null) {
@@ -138,9 +139,9 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
     @RequestMapping(value = "/image/crop", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult imageCrop(HttpServletRequest request, @RequestParam("bigImage") String bigImage,
-            @RequestParam(value = "x", required = false) Integer x, @RequestParam(value = "y", required = false) Integer y,
-            @RequestParam(value = "w", required = false) Integer w, @RequestParam(value = "h", required = false) Integer h,
-            @RequestParam(value = "size", required = false) Integer size) throws IOException {
+                                     @RequestParam(value = "x", required = false) Integer x, @RequestParam(value = "y", required = false) Integer y,
+                                     @RequestParam(value = "w", required = false) Integer w, @RequestParam(value = "h", required = false) Integer h,
+                                     @RequestParam(value = "size", required = false) Integer size) throws IOException {
         try {
             String rootDir = WebAppContextInitFilter.getInitedWebContextRealPath();
             String bigImagePath = rootDir + bigImage;
@@ -172,10 +173,14 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
             if (fileUpload != null && !fileUpload.isEmpty()) {
                 String path = ServletUtils.writeUploadFile(fileUpload.getInputStream(), fileUpload.getOriginalFilename(), fileUpload.getSize());
                 if (StringUtils.isNotBlank(path)) {
-                    String imgViewUrlPrefix = ServletUtils.getReadFileUrlPrefix();
                     retMap.put("error", 0);
-                    retMap.put("url", imgViewUrlPrefix + path);
-                    retMap.put("path", path);
+                    String contextPath = request.getContextPath();
+                    if ("/".equals(contextPath)) {
+                        retMap.put("url", path);
+                    } else {
+                        retMap.put("url", contextPath + path);
+                    }
+
                     return retMap;
                 }
             }

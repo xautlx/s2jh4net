@@ -10,14 +10,14 @@
 <title>通知消息列表</title>
 </head>
 <body>
-	<div class="row">
+	<div class="row dataTables_wrapper">
 		<div class="col-md-12">
-			<table class="table table-striped table-hover table-bordered">
+			<table class="table table-striped table-hover table-bordered dataTable table-sorting">
 				<thead>
 					<tr>
 						<th>消息标题</th>
 						<th>消息摘要</th>
-						<th>发布时间</th>
+						<th data-sorting-name="createdDate">发布时间</th>
 					</tr>
 				</thead>
 				<tbody>

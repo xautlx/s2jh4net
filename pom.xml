@@ -15,12 +15,6 @@
 			<email>xautlx@hotmail.com</email>
 		</developer>
 	</developers>
-	<licenses>
-		<license>
-			<name>Apache License</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
 
 	<scm>
 		<connection>https://github.com/xautlx/s2jh.git</connection>
@@ -912,12 +906,8 @@
 				</excludes>
 			</resource>
 			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
 				<filtering>true</filtering>
-				<directory>src/main/filter</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 			<resource>
 				<filtering>false</filtering>

@@ -26,9 +26,11 @@ target
 *.java~
 *.properties~
 *.xml~
-#rebel.xml
+temp.jsp
+rebel.xml
+rebel-remote.xml
 
 # system ignore
 .DS_Store
 Thumbs.db
-
+.com.apple.timemachine.supported

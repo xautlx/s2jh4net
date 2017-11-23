@@ -27,7 +27,7 @@
 							placeholder="验证码...看不清可点击图片可刷新" name="captcha" required="true" />
 					</div>
 					<span class="input-group-btn" style="cursor: pointer;"> <img alt="验证码" height="34px" class="captcha-img"
-						src="${ctx}/assets/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
+						src="${ctx}/assets/apps/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
 					</span>
 				</div>
 			</div>

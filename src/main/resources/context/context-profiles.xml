@@ -137,7 +137,6 @@
 				<list>
 					<value>classpath*:/application.properties</value>
 					<value>classpath*:/application.prd.properties</value>
-					<value>classpath*:/build.filter.properties</value>
 					<value>file:/j2ee/showcase/config/s2jh4net.properties</value>
 				</list>
 			</property>

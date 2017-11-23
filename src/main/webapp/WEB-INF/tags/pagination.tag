@@ -29,7 +29,8 @@
 <div class="row">
 	<div class="col-md-6">
 		<div class="dataTables_info">
-			每页： <select size="1" class="form-control input-xsmall select2-offscreen" tabindex="-1" data-allowClear="false">
+			每页：
+			<select size="1" class="form-control input-sm input-xsmall input-inline select2-ignore " onchange="alert('TODO')">
 				<option value="5" ${page.size==5?'selected':''}>5</option>
 				<option value="10" ${page.size==10?'selected':''}>10</option>
 				<option value="20" ${page.size==20?'selected':''}>20</option>
@@ -38,7 +39,7 @@
 		</div>
 	</div>
 	<div class="col-md-6">
-		<div class="dataTables_paginate paging_bootstrap" target="${target}">
+		<div class="dataTables_paginate paging_bootstrap_number" target="${target}">
 			<ul class="pagination" style="visibility: visible;">
 				<li class="first"><a title="首页" href="javascript:void(0)" page="${1}"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="prev"><a title="上一页" href="javascript:void(0)" page="${prev}"><i class="fa fa-angle-left"></i></a></li>

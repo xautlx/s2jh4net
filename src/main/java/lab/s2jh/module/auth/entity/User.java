@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "auth_User", uniqueConstraints = @UniqueConstraint(columnNames = { "authUid", "authType" }))
+@Table(name = "auth_User", uniqueConstraints = @UniqueConstraint(columnNames = {"authUid", "authType"}))
 @MetaData(value = "登录认证账号信息")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Audited
@@ -158,7 +158,11 @@ public class User extends BaseNativeEntity {
     @Override
     @Transient
     public String getDisplay() {
-        return authType + "_" + authUid;
+        if (AuthTypeEnum.SYS.equals(authType)) {
+            return authUid;
+        } else {
+            return authType + "_" + authUid;
+        }
     }
 
     @MetaData(value = "用户标识别名", comments = "用户在多个终端登录，需要一个标识同一个身份以便多终端推送消息")

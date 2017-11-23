@@ -38,7 +38,7 @@
 									placeholder="验证码...看不清可点击图片可刷新" name="captcha" required="true" data-msg-required="请填写验证码" />
 							</div>
 							<span class="input-group-btn" style="cursor: pointer;"> <img alt="验证码" class="captcha-img"
-								src="${ctx}/assets/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
+								src="${ctx}/assets/apps/img/captcha_placeholder.jpg" title="看不清？点击刷新" />
 							</span>
 						</div>
 					</div>
@@ -55,14 +55,14 @@
 				</div>
 				<div class="forget-password">
 					<div class="row">
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<c:if test="${casSupport}">
 								<p>
 									<a href='<s:property value="casRedirectUrl"/>'>单点登录</a>
 								</p>
 							</c:if>
 						</div>
-						<div class="col-md-9">
+						<div class="col-md-10">
 							<p class="pull-right">
 								忘记密码? <a href="${ctx}/admin/password/forget" data-toggle="modal-ajaxify" title="找回密码" data-modal-size="550px">找回密码</a>
 								<c:if test="${mgmtSignupEnabled}">
@@ -108,7 +108,5 @@
 			</div>
 		</div>
 	</div>
-
-	<script src="${ctx}/assets/admin/app/login.js"></script>
 </body>
 </html>

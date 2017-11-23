@@ -1,0 +1,1 @@
+var CookieConsent=function(){var a=function(){$(".mt-cookie-consent-bar").cookieBar({closeButton:".mt-cookie-consent-btn"})};return{init:function(){a()}}}();if(App.isAngularJsApp()===false){jQuery(document).ready(function(){CookieConsent.init()})};

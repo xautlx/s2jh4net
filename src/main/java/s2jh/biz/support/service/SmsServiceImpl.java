@@ -59,6 +59,6 @@ public class SmsServiceImpl implements SmsService {
         logger.debug("Sending SMS to {} ： {}", mobileNum, smsContent);
 
         //TODO 实际短信通道接口调用发送
-        throw new UnsupportedOperationException("SMS API NOT Implements");
+        return null;
     }
 }

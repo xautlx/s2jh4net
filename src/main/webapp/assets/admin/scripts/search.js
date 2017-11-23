@@ -1,1 +1,0 @@
-var Search=function(){return{init:function(){if(jQuery().datepicker){$(".date-picker").datepicker()}App.initFancybox()}}}();

@@ -462,7 +462,7 @@ public class ServletUtils {
         Assert.notNull(id, "id is required to buildInstance");
         sb.append("/" + id);
 
-        String path = "/upload/" + sb + "/" + name;
+        String path = "/upload" + sb + "/" + name;
         String fullPath = staticFileUploadDir + path;
         logger.debug("Saving upload file: {}", fullPath);
         try {

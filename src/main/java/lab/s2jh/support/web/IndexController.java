@@ -101,27 +101,26 @@ public class IndexController {
         return source + "/login";
     }
 
-    /** 
+    /**
      * <h3>APP接口: 登录。</h3>
-     * 
+     * <p>
      * <p>
      * 业务输入参数列表：
-     * <ul> 
+     * <ul>
      * <li><b>username</b> 账号</li>
      * <li><b>password</b> 密码</li>
      * <li><b>uuid</b> 设备或应用唯一标识</li>
-     * </ul> 
+     * </ul>
      * </p>
-     * 
+     * <p>
      * <p>
      * 业务输出参数列表：
      * <ul>
      * <li><b>token</b> 本次登录的随机令牌Token，目前设定半年有效期。APP取到此token值后存储在本应用持久化，在后续访问或下次重开应用时把此token以HTTP Header形式附在Request信息中：ACCESS-TOKEN={token}</li>
      * </ul>
      * </p>
-     * 
-     * @return  {@link OperationResult} 通用标准结构
-     * 
+     *
+     * @return {@link OperationResult} 通用标准结构
      */
     @RequestMapping(value = "/app/login", method = RequestMethod.POST)
     @ResponseBody
@@ -145,7 +144,8 @@ public class IndexController {
 
     /**
      * PC站点方式登录失败，转向登录界面。表单的/login POST请求首先会被Shiro拦截处理，在认证失败之后才会触发调用此方法
-     * @param source 登录来源,  @see SourceUsernamePasswordToken.AuthSourceEnum
+     *
+     * @param source  登录来源,  @see SourceUsernamePasswordToken.AuthSourceEnum
      * @param request
      * @param model
      * @return
@@ -168,32 +168,28 @@ public class IndexController {
 
     }
 
-    /** 
+    /**
      * <h3>APP接口: 发送短信验证码。</h3>
      * <p>从接口会向所有手机号发送短信验证码，但是可能在极端情况通过全局系统参数关闭向开放手机发送短信功能。</p>
      * <p>此接口主要适用于开放式的注册验证码发送功能，如果调用端功能能明确是向已注册用户发送短信，如找回密码功能，则请用/user-sms-code接口</p>
-     * 
-     * 
+     * <p>
+     * <p>
      * <p>
      * 业务输入参数列表：
-     * <ul> 
+     * <ul>
      * <li><b>mobile</b> 手机号</li>
-     * </ul> 
+     * </ul>
      * </p>
-     * 
-     * @return  {@link OperationResult} 通用标准结构
-     * 
+     *
+     * @return {@link OperationResult} 通用标准结构
      */
     @RequestMapping(value = "/send-sms-code/{mobile}", method = RequestMethod.GET)
     @ResponseBody
     public OperationResult sendSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
-
         String captcha = request.getParameter("code");
-        if (StringUtils.isNotBlank(captcha)) {
-            boolean result = ImageCaptchaServlet.validateResponse(request, captcha);
-            if (!result) {
-                return OperationResult.buildFailureResult("图片验证码不正确");
-            }
+        boolean result = ImageCaptchaServlet.validateResponse(request, captcha);
+        if (!result) {
+            return OperationResult.buildFailureResult("图片验证码不正确");
         }
 
         String code = smsVerifyCodeService.generateSmsCode(request, mobile, false);
@@ -206,22 +202,27 @@ public class IndexController {
         }
     }
 
-    /** 
+    /**
      * <h3>APP接口: 只会向平台已验证过的手机号发送短信验证码。</h3>
      * <p>此接口主要适用于向已通过短信验证成功注册用户发送短信，如找回密码功能，其他开放注册功能请用/send-sms-code接口</p>
      * <p>
      * 业务输入参数列表：
-     * <ul> 
+     * <ul>
      * <li><b>mobile</b> 手机号</li>
-     * </ul> 
+     * </ul>
      * </p>
-     * 
-     * @return  {@link OperationResult} 通用标准结构
-     * 
+     *
+     * @return {@link OperationResult} 通用标准结构
      */
     @RequestMapping(value = "/user-sms-code/{mobile}", method = RequestMethod.GET)
     @ResponseBody
     public OperationResult userSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
+        String captcha = request.getParameter("code");
+        boolean result = ImageCaptchaServlet.validateResponse(request, captcha);
+        if (!result) {
+            return OperationResult.buildFailureResult("图片验证码不正确");
+        }
+
         String code = smsVerifyCodeService.generateSmsCode(request, mobile, true);
         String msg = "您的操作验证码为：" + code + "。请勿向任何人提供您收到的短信验证码。如非本人操作，请忽略本信息。";
         String errorMessage = smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode);
@@ -233,7 +234,6 @@ public class IndexController {
     }
 
     /**
-     * 
      * @param platform 平台
      * @return
      */
