@@ -505,8 +505,6 @@
         Biz.init();
 
         App.unblockUI();
-
-        alert(1)
         //console.profileEnd();
     });
 </script>
