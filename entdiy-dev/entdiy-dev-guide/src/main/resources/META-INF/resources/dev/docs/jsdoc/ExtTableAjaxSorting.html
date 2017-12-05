@@ -86,12 +86,64 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>支持表头AJAX请求排序的Table：table.table-sorting<br>表头设置：table.table-sorting th添加sorting样式，添加属性data-sorting-name='指定排序的java属性名称'<br>示例：<br> <table class="table table-sorting"><br> <thead><br> <tr><br> <th>消息标题</th><br> <th>消息摘要</th><br> <th class="sorting" data-sorting-name="publishTime">发布时间</th><br> <th class="sorting" data-sorting-name="expireTime">过期时间</th><br> </tr><br> </thead><br> <tbody></p>
-<p> </tbody><br> </table></p></div>
+            <div class="description"><p>支持表头AJAX请求排序的Table：table.table-sorting</p></div>
         
 
         
 <dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data-sorting-name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>为需要排序的th标题指定排序的java属性名称</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
     
 
 	
@@ -128,6 +180,24 @@
 
 	
 </dl>
+
+
+        
+            <h3>Example</h3>
+            
+    <pre class="sunlight-highlight-javascript">&lt;table class=&quot;table table-sorting&quot;&gt;
+   &lt;thead&gt;
+     &lt;tr&gt;
+       &lt;th&gt;消息标题&lt;/th&gt;
+       &lt;th&gt;消息摘要&lt;/th&gt;
+       &lt;th data-sorting-name=&quot;publishTime&quot;&gt;发布时间&lt;/th&gt;
+       &lt;th data-sorting-name=&quot;expireTime&quot;&gt;过期时间&lt;/th&gt;
+     &lt;/tr&gt;
+   &lt;/thead&gt;
+   &lt;tbody&gt;
+
+   &lt;/tbody&gt;
+ &lt;/table&gt;</pre>
 
 
         
