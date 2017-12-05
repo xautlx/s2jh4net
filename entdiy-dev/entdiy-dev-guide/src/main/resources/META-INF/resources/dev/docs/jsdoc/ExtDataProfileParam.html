@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Namespace: ExtDataProfileParam</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Namespace: ExtDataProfileParam</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        ExtDataProfileParam
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">个人收藏支持功能的表单输入组件：input[data-profile-param],select[data-profile-param]
+
+<p>
+对于一些诸如销售单创建界面，不同登录用户可能对于一些表单选项希望能设置自己常用的选项以便在下次登录或刷新页面时能“记住”自己的个性配置，可以有效的提升用户友好体验。
+为此，框架提供一个基础通用的表单数据收藏记忆功能，只需要在开发时为需要支持“记忆”功能的表单元素添加data-profile-param属性，设定一个唯一标识当前记忆收藏选项的字符串，
+然后登录用户在表单界面，鼠标滑过时会出现一个收藏的心形图标，用户点击即可把对应表单元素当前值收藏记录到后端数据库，刷新页面或下次登录访问，系统会自动基于之前设定值初始化表单选项值。
+</p>
+<p>
+注意规则：只有当前form表单id没有值即新增数据表单， 且当前元素没有默认值，才处理收藏设定参数
+</p></div>
+        
+
+        
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data-profile-param</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">个性配置参数唯一标识名称</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="function_data-profile-param.js.html">function/data-profile-param.js</a>, <a href="function_data-profile-param.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>&lt;input type="text" name="orderType" data-profile-param="default_order_type"/></code></pre>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Config.html">Config</a></li><li><a href="ExtAjaxBootstrapModal.html">ExtAjaxBootstrapModal</a></li><li><a href="ExtAjaxBootstrapTabs.html">ExtAjaxBootstrapTabs</a></li><li><a href="ExtBarcodeScanInput.html">ExtBarcodeScanInput</a></li><li><a href="ExtChartEcharts.html">ExtChartEcharts</a></li><li><a href="ExtCheckboxRadioGroup.html">ExtCheckboxRadioGroup</a></li><li><a href="ExtDataProfileParam.html">ExtDataProfileParam</a></li><li><a href="ExtDatePicker.html">ExtDatePicker</a></li><li><a href="ExtDateRangePicker.html">ExtDateRangePicker</a></li><li><a href="ExtDateTimePicker.html">ExtDateTimePicker</a></li><li><a href="ExtDoubleMultiSelect.html">ExtDoubleMultiSelect</a></li><li><a href="ExtDropdownSelect.html">ExtDropdownSelect</a></li><li><a href="ExtDynamicTable.html">ExtDynamicTable</a></li><li><a href="ExtFileUploader.html">ExtFileUploader</a></li><li><a href="ExtFormMisc.html">ExtFormMisc</a></li><li><a href="ExtFormValidation.html">ExtFormValidation</a></li><li><a href="ExtGmapsBaidu.html">ExtGmapsBaidu</a></li><li><a href="ExtGrid.html">ExtGrid</a></li><li><a href="ExtImageCaptchaCode.html">ExtImageCaptchaCode</a></li><li><a href="ExtImageUploader.html">ExtImageUploader</a></li><li><a href="ExtMisc.html">ExtMisc</a></li><li><a href="ExtMobileSmsCode.html">ExtMobileSmsCode</a></li><li><a href="ExtPluginTemplate.html">ExtPluginTemplate</a></li><li><a href="ExtPopupCaptchaCode.html">ExtPopupCaptchaCode</a></li><li><a href="ExtQrcode.html">ExtQrcode</a></li><li><a href="ExtSelect.html">ExtSelect</a></li><li><a href="ExtSlimscrollPanel.html">ExtSlimscrollPanel</a></li><li><a href="ExtTableAjaxSorting.html">ExtTableAjaxSorting</a></li><li><a href="ExtTableInfiniteScroll.html">ExtTableInfiniteScroll</a></li><li><a href="ExtTextareaHtmleditor.html">ExtTextareaHtmleditor</a></li><li><a href="Global_.html">Global</a></li><li><a href="Util.html">Util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addOrReplaceUrlParameter">addOrReplaceUrlParameter</a></li><li><a href="global.html#AdminTheme">AdminTheme</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#bindBtnPostUrl">bindBtnPostUrl</a></li><li><a href="global.html#BooleanUtil">BooleanUtil</a></li><li><a href="global.html#cutContextPath">cutContextPath</a></li><li><a href="global.html#dataStartWith">dataStartWith</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#endWith">endWith</a></li><li><a href="global.html#findClosestFormInputByName">findClosestFormInputByName</a></li><li><a href="global.html#getParameterFromUrl">getParameterFromUrl</a></li><li><a href="global.html#getTextWithoutChildren">getTextWithoutChildren</a></li><li><a href="global.html#hashCode">hashCode</a></li><li><a href="global.html#isArrayContainElement">isArrayContainElement</a></li><li><a href="global.html#jqgrid-getAtLeastOneSelectedItem">jqgrid-getAtLeastOneSelectedItem</a></li><li><a href="global.html#jqgrid-getOnlyOneSelectedItem">jqgrid-getOnlyOneSelectedItem</a></li><li><a href="global.html#jqgrid-getSelectedRowdata">jqgrid-getSelectedRowdata</a></li><li><a href="global.html#jqgrid-getSelectedRowdatas">jqgrid-getSelectedRowdatas</a></li><li><a href="global.html#jqgrid-refresh">jqgrid-refresh</a></li><li><a href="global.html#jqgrid-setEditingRowdata">jqgrid-setEditingRowdata</a></li><li><a href="global.html#MathUtil">MathUtil</a></li><li><a href="global.html#notSmallViewport">notSmallViewport</a></li><li><a href="global.html#parseFloatValDefaultZero">parseFloatValDefaultZero</a></li><li><a href="global.html#setInputValIfBlank">setInputValIfBlank</a></li><li><a href="global.html#smartParseURL">smartParseURL</a></li><li><a href="global.html#startWith">startWith</a></li><li><a href="global.html#subStringBetween">subStringBetween</a></li><li><a href="global.html#unEditable">unEditable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Tue Dec 05 2017 14:44:30 GMT+0800 (CST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

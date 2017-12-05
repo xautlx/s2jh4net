@@ -27,8 +27,6 @@ target
 *.properties~
 *.xml~
 temp.jsp
-rebel.xml
-rebel-remote.xml
 
 # system ignore
 .DS_Store

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property resource="jdbc.properties"/>
+    <property file="/etc/entdiy/application.properties"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{MM-dd HH:mm:ss.SSS} %-5level %19logger{19}[%line]- %msg %mdc %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <!-- 建议优化调整为连接池方式 -->
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>${jdbc_driverClassName}</driverClass>
+            <url>${jdbc_url}</url>
+            <user>${jdbc_username}</user>
+            <password>${jdbc_password}</password>
+        </connectionSource>
+    </appender>
+    
+    <logger name="com.entdiy" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="DB"/>
+    </logger>
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="DB"/>
+    </root>
+</configuration> 

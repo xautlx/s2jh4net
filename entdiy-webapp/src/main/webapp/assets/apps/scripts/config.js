@@ -1,0 +1,1 @@
+var Config=function(){var a="";return{getContextPath:function(){return a},setContextPath:function(b){a=b}}}();

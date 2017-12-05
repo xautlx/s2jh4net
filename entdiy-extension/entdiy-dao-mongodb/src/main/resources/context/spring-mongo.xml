@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="mongodbDao" class="com.entdiy.core.dao.mongo.MongoGenerialDaoImpl" init-method="init" destroy-method="destroy">
+		<property name="mongoHost" value="${mongo_host}" />
+		<property name="mongoPort" value="${mongo_port}" />
+		<property name="mongoDB" value="${mongo_dbname}" />
+	</bean>
+
+</beans>
