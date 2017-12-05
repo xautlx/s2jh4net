@@ -122,6 +122,10 @@
             <id>debop-releases-bintray</id>
             <url>http://dl.bintray.com/debop/maven</url>
         </repository>
+        <repository>
+            <id>my-local-libs</id>
+            <url>file://${basedir}/lib</url>
+        </repository>
     </repositories>
 
     <dependencies>

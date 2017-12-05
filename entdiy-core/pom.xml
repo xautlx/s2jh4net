@@ -11,13 +11,6 @@
     <name>${project.artifactId}</name>
     <description>The ${project.artifactId} module of entdiy project</description>
 
-    <repositories>
-        <repository>
-            <id>my-local-libs</id>
-            <url>file://${basedir}/lib</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <!-- database driver -->
         <dependency>
