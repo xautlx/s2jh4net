@@ -1,10 +1,5 @@
 package com.entdiy.sys.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
@@ -17,7 +12,8 @@ import com.entdiy.security.AuthUserDetails;
 import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.MenuService;
 import com.entdiy.sys.vo.NavMenuVO;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -26,14 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/admin/sys/menu")
@@ -50,6 +43,13 @@ public class MenuController extends BaseController<Menu, Long> {
     @Override
     protected Menu buildDetachedBindingEntity(Long id) {
         return menuService.findDetachedOne(id, "parent");
+    }
+
+    @RequiresUser
+    @ModelAttribute
+    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        Validation.notDemoMode(request);
+        super.initPrepareModel(request, model, id);
     }
 
     @MenuData("配置管理:系统管理:菜单配置")
@@ -78,10 +78,10 @@ public class MenuController extends BaseController<Menu, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") Menu entity, Model model) {
-        Validation.notDemoMode();
         return super.editSave(entity);
     }
 
+    @Override
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
@@ -106,11 +106,5 @@ public class MenuController extends BaseController<Menu, Long> {
             items.add(item);
         }
         return items;
-    }
-
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
     }
 }

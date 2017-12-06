@@ -132,10 +132,10 @@ public class UtilController {
     @RequiresRoles(AuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/admin/util/logger-update", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult loggerLevelUpdate(@RequestParam(value = "loggerName", required = false) String loggerName,
+    public OperationResult loggerLevelUpdate(HttpServletRequest request, @RequestParam(value = "loggerName", required = false) String loggerName,
                                              @RequestParam("loggerLevel") String loggerLevel) {
+        Validation.notDemoMode(request);
         if (StringUtils.isBlank(loggerName)) {
-            Validation.notDemoMode();
             loggerName = Logger.ROOT_LOGGER_NAME;
         }
         Logger logger = LoggerFactory.getLogger(loggerName);

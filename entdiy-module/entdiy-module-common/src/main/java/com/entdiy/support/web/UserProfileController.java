@@ -1,14 +1,9 @@
 package com.entdiy.support.web;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.service.Validation;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.AuthContextHolder;
 import com.entdiy.security.AuthUserDetails;
@@ -19,18 +14,16 @@ import com.entdiy.sys.entity.UserProfileData;
 import com.entdiy.sys.service.NotifyMessageService;
 import com.entdiy.sys.service.UserMessageService;
 import com.entdiy.sys.service.UserProfileDataService;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Controller
 public class UserProfileController {
@@ -105,7 +98,6 @@ public class UserProfileController {
         if (!encodedPasswd.equals(user.getPassword())) {
             return OperationResult.buildFailureResult("原密码不正确,请重新输入");
         } else {
-            Validation.notDemoMode();
             //更新密码失效日期为6个月后
             user.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
             userService.save(user, newpasswd);
@@ -126,18 +118,12 @@ public class UserProfileController {
     @ResponseBody
     public OperationResult profileCredentialsExpireSave(@RequestParam("newpasswd") String newpasswd) {
         User user = AuthContextHolder.findAuthUser();
-        Validation.notDemoMode();
         //更新密码失效日期为6个月后
         user.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
         userService.save(user, newpasswd);
         return OperationResult.buildSuccessResult("密码修改成功,请在下次登录使用新密码").setRedirect("/admin");
     }
-    
-    /**
-     * 
-     * @param platform 平台
-     * @return
-     */
+
     @MetaData("用户未读公告数目")
     @RequestMapping(value = "/notify-message/count", method = RequestMethod.GET)
     @ResponseBody

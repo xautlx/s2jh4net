@@ -1,16 +1,10 @@
 package com.entdiy.auth.web;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.auth.entity.Privilege;
 import com.entdiy.auth.entity.RoleR2Privilege;
 import com.entdiy.auth.entity.User;
-import com.entdiy.auth.entity.UserR2Role;
 import com.entdiy.auth.entity.User.AuthTypeEnum;
+import com.entdiy.auth.entity.UserR2Role;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.auth.service.UserService;
@@ -27,7 +21,9 @@ import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.AuthUserDetails;
 import com.entdiy.sys.service.MenuService;
 import com.entdiy.sys.vo.NavMenuVO;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -36,15 +32,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/admin/auth/user")
@@ -70,6 +63,7 @@ public class UserController extends BaseController<User, Long> {
     @RequiresUser
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+
         super.initPrepareModel(request, model, id);
     }
 
@@ -109,7 +103,6 @@ public class UserController extends BaseController<User, Long> {
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") User entity, Model model,
             @RequestParam(value = "rawPassword", required = false) String rawPassword) {
-        Validation.notDemoMode();
         if (entity.isNew()) {
             Validation.isTrue(StringUtils.isNotBlank(rawPassword), "创建用户必须设置初始密码");
         }
@@ -121,7 +114,6 @@ public class UserController extends BaseController<User, Long> {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        Validation.notDemoMode();
         return super.delete(ids);
     }
 
@@ -166,7 +158,7 @@ public class UserController extends BaseController<User, Long> {
     @RequiresPermissions("配置管理:权限管理:用户账号")
     @RequestMapping(value = "/menus/data", method = RequestMethod.GET)
     @ResponseBody
-    public Object menusData(Model model, @ModelAttribute("entity") User entity) {
+    public Object menusData(@ModelAttribute("entity") User entity) {
         List<Map<String, Object>> items = Lists.newArrayList();
         List<NavMenuVO> navMenuVOs = menuService.processUserMenu(entity);
         for (NavMenuVO navMenuVO : navMenuVOs) {
@@ -184,7 +176,7 @@ public class UserController extends BaseController<User, Long> {
 
     @RequestMapping(value = "/tags", method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String, Object>> tagsData(Model model, @RequestParam("q") String q) {
+    public List<Map<String, Object>> tagsData(@RequestParam("q") String q) {
         GroupPropertyFilter groupFilter = GroupPropertyFilter.buildDefaultOrGroupFilter();
         groupFilter.append(new PropertyFilter(MatchType.CN, "authUid", q));
         groupFilter.append(new PropertyFilter(MatchType.CN, "nickName", q));

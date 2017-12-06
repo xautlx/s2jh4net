@@ -1,19 +1,15 @@
 package com.entdiy.auth.web;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.auth.entity.Role;
 import com.entdiy.auth.entity.RoleR2Privilege;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.service.BaseService;
+import com.entdiy.core.service.Validation;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.view.OperationResult;
-
+import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -22,13 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.google.common.collect.Sets;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/admin/auth/role")
@@ -48,6 +42,7 @@ public class RoleController extends BaseController<Role, Long> {
     @RequiresUser
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        Validation.notDemoMode(request);
         Role role = super.initPrepareModel(request, model, id);
         if (role.isNew()) {
             role.setCode("ROLE_");

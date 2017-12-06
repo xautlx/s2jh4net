@@ -1,7 +1,5 @@
 package com.entdiy.auth.web;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.auth.entity.SignupUser;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.RoleService;
@@ -14,7 +12,6 @@ import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.EntityProcessCallbackHandler;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.support.service.DynamicConfigService;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.joda.time.DateTime;
@@ -22,11 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "/admin/auth/signup-user")
@@ -52,6 +47,7 @@ public class SignupUserController extends BaseController<SignupUser, Long> {
     @RequiresUser
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
+        Validation.notDemoMode(request);
         super.initPrepareModel(request, model, id);
     }
 
@@ -85,7 +81,7 @@ public class SignupUserController extends BaseController<SignupUser, Long> {
     @RequestMapping(value = "/audit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult auditSave(@ModelAttribute("entity") SignupUser entity, Model model) {
-        Validation.notDemoMode();
+
         signupUserService.auditNewUser(entity);
         return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }
@@ -94,7 +90,6 @@ public class SignupUserController extends BaseController<SignupUser, Long> {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        Validation.notDemoMode();
         return super.delete(ids, new EntityProcessCallbackHandler<SignupUser>() {
             @Override
             public void processEntity(SignupUser entity) throws EntityProcessCallbackException {
