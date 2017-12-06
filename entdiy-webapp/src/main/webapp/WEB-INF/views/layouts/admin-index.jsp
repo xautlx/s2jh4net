@@ -308,7 +308,7 @@
     <!-- BEGIN FOOTER -->
     <div class="page-footer">
         <div class="page-footer-inner">
-            &copy; S2JH4Net 2014 - 2017
+            &copy; EntDIY.com 2017
             <c:if test="${devMode}">
                 <span>V${buildVersion}</span>
             </c:if>
@@ -318,70 +318,6 @@
         </div>
     </div>
     <!-- END FOOTER -->
-
-    <!-- BEGIN MISC -->
-    <div class="hide">
-        <form class="form-horizontal" id="singleFileUploadForm" enctype="multipart/form-data" method="post">
-            <input type="file" name="fileUpload"/>
-            <button type="submit" class="btn">提交</button>
-        </form>
-    </div>
-
-    <!-- BEGIN FileUpload FORM -->
-    <div class="modal fade" id="fileupload-dialog" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog modal-wide">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">文件上传</h4>
-                </div>
-                <div class="modal-body form">
-                    <form id="fileupload" enctype="multipart/form-data" method="POST">
-                        <input type="hidden" name="attachmentName" value="attachments"/>
-                        <div class="row fileupload-buttonbar">
-                            <div class="col-lg-7">
-                                <!-- The fileinput-button span is used to style the file input field as button -->
-                                <span class="btn green fileinput-button"> <i
-                                        class="fa fa-plus"></i> <span>添加文件...</span> <input
-                                        type="file" multiple="" name="files">
-									</span>
-                                <button class="btn blue start" type="submit">
-                                    <i class="fa fa-upload"></i> <span>开始上传</span>
-                                </button>
-                                <button class="btn yellow cancel" type="reset">
-                                    <i class="fa fa-ban"></i> <span>取消上传</span>
-                                </button>
-                                <!-- The loading indicator is shown during file processing -->
-                                <span class="fileupload-loading"></span>
-                            </div>
-                            <!-- The global progress information -->
-                            <div class="col-lg-5 fileupload-progress fade">
-                                <!-- The global progress bar -->
-                                <div aria-valuemax="100" aria-valuemin="0" role="progressbar"
-                                     class="progress progress-striped active">
-                                    <div style="width: 0%;" class="progress-bar progress-bar-success"></div>
-                                </div>
-                                <!-- The extended global progress information -->
-                                <div class="progress-extended">&nbsp;</div>
-                            </div>
-                        </div>
-                        <table class="table table-striped clearfix" role="presentation">
-                            <tbody class="files"></tbody>
-                        </table>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn blue btn-add">添加</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- END FileUpload FORM -->
-
-    <!-- END MISC -->
 </div>
 <!-- END FOOTER -->
 

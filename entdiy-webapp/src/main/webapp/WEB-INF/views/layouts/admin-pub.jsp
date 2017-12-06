@@ -50,7 +50,7 @@
                     <div class="copyright pull-right">
                             <span title="${buildVersion}|<%= request.getLocalAddr()  %>:<%=request.getLocalPort()%>]"
                                   style="display: inline-block;">
-                                &copy; 2015 - 2017
+                                &copy; EntDIY.com 2017
                                 <%=request.getServerName()%></span>
                         <c:if test="${devMode}">
                             <span>V${buildVersion}</span>
