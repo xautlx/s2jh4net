@@ -134,25 +134,6 @@ public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitialize
             siteUserRole.setName("前端登录用户默认角色");
             siteUserRole.setDescription("系统预置，请勿随意修改。注意：所有前端登录用户默认关联此角色，无需额外写入用户和角色关联数据。");
             roleService.save(siteUserRole);
-
-            if (GlobalConfigService.isDemoMode()) {
-                Department department = new Department();
-                department.setCode("SC00");
-                department.setName("市场部");
-                departmentService.save(department);
-
-                Department department1 = new Department();
-                department1.setCode("SC01");
-                department1.setName("市场一部");
-                department1.setParent(department);
-                departmentService.save(department1);
-
-                Department department2 = new Department();
-                department2.setCode("SC02");
-                department2.setName("市场二部");
-                department2.setParent(department);
-                departmentService.save(department2);
-            }
         }
 
         //权限数据初始化
@@ -202,56 +183,92 @@ public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitialize
             dataDictService.save(entity);
 
             DataDict item = new DataDict();
-            item.setPrimaryKey("notify");
-            item.setPrimaryValue("通知");
+            item.setPrimaryKey("normal");
+            item.setPrimaryValue("一般通知");
             item.setSecondaryValue("#32CFC4");
             item.setParent(entity);
             dataDictService.save(item);
 
             item = new DataDict();
-            item.setPrimaryKey("bulletin");
-            item.setPrimaryValue("喜报");
+            item.setPrimaryKey("important");
+            item.setPrimaryValue("重要通知");
             item.setSecondaryValue("#FF645D");
             item.setParent(entity);
             dataDictService.save(item);
 
             item = new DataDict();
-            item.setPrimaryKey("remind");
-            item.setPrimaryValue("提醒");
-            item.setSecondaryValue("#FF8524");
+            item.setPrimaryKey("urgent");
+            item.setPrimaryValue("紧急通知");
+            item.setSecondaryValue("#FF0000");
             item.setParent(entity);
             dataDictService.save(item);
         }
 
-        //初始化演示通知消息
-        if (isEmptyTable(NotifyMessage.class)) {
-            NotifyMessage entity = new NotifyMessage();
-            entity.setType("notify");
-            entity.setTitle("欢迎访问" + systemTitle);
-            entity.setPublishTime(now);
-            entity.setMessage("<p>系统初始化时间：" + DateUtils.formatTime(now) + "</p>");
-            notifyMessageService.save(entity);
-        }
+        if (GlobalConfigService.isDemoMode() || GlobalConfigService.isDevMode()) {
+            //初始化演示部门数据
+            if (isEmptyTable(Department.class)) {
+                Department department = new Department();
+                department.setCode("SC00");
+                department.setName("市场部");
+                departmentService.save(department);
 
-        //初始化演示通知消息
-        if (isEmptyTable(UserMessage.class)) {
-            User admin = userService.findByAuthUid("admin");
+                Department department1 = new Department();
+                department1.setCode("SC01");
+                department1.setName("市场一部");
+                department1.setParent(department);
+                departmentService.save(department1);
 
-            UserMessage entity = new UserMessage();
-            entity.setType("notify");
-            entity.setPublishTime(DateUtils.currentDate());
-            entity.setTitle("演示个人消息1");
-            entity.setTargetUser(admin);
-            entity.setMessage("<p>演示定向发送个人消息1内容</p>");
-            userMessageService.save(entity);
+                Department department2 = new Department();
+                department2.setCode("SC02");
+                department2.setName("市场二部");
+                department2.setParent(department);
+                departmentService.save(department2);
+            }
 
-            entity = new UserMessage();
-            entity.setType("bulletin");
-            entity.setPublishTime(DateUtils.currentDate());
-            entity.setTitle("演示个人消息2");
-            entity.setTargetUser(admin);
-            entity.setMessage("<p>演示定向发送个人消息2内容</p>");
-            userMessageService.save(entity);
+            //初始化演示通知消息
+            if (isEmptyTable(NotifyMessage.class)) {
+                NotifyMessage entity = new NotifyMessage();
+                entity.setType("normal");
+                entity.setTitle("欢迎访问" + systemTitle);
+                entity.setPublishTime(now);
+                entity.setMessage("<p>系统初始化时间：" + DateUtils.formatTime(now) + "</p>");
+                notifyMessageService.save(entity);
+
+                entity = new NotifyMessage();
+                entity.setType("important");
+                entity.setTitle("版本更新通知");
+                entity.setPublishTime(now);
+                entity.setMessage("<p>整体重构项目Maven结构，模块化拆分，使定制开发能按需所取</p><p>UI基础框架版本从 Metronic 1.4.5 升级到 4.7.5</p>");
+                notifyMessageService.save(entity);
+
+                entity = new NotifyMessage();
+                entity.setType("urgent");
+                entity.setTitle("系统更新维护通知");
+                entity.setPublishTime(now);
+                entity.setMessage("<p>计划在XX进行系统迁移升级，届时本系统不可用，预计一小时迁移完成恢复使用</p>");
+                notifyMessageService.save(entity);
+            }
+
+            //初始化演示通知消息
+            if (isEmptyTable(UserMessage.class)) {
+                User admin = userService.findByAuthUid("admin");
+
+                UserMessage entity = new UserMessage();
+                entity.setType("normal");
+                entity.setPublishTime(DateUtils.currentDate());
+                entity.setTitle("演示个人消息1");
+                entity.setTargetUser(admin);
+                entity.setMessage("<p>演示定向发送个人消息1内容</p>");
+                userMessageService.save(entity);
+
+                entity = new UserMessage();
+                entity.setType("important");
+                entity.setPublishTime(DateUtils.currentDate());
+                entity.setTitle("演示个人消息2");
+                entity.setTargetUser(admin);
+                entity.setMessage("<p>演示定向发送个人消息2内容</p>");
+                userMessageService.save(entity);
+            }
         }
     }
 
