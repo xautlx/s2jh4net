@@ -14,7 +14,7 @@
         <!-- BEGIN LOGIN FORM -->
         <form id="login-form" class="login-form" action="${ctx}/admin/login" method="post">
             <%-- 管理端登录标识 --%>
-            <input type="hidden" name="source" value="A"/>
+            <input type="hidden" name="source" value="ADMIN"/>
             <h3 class="form-title" style="color: #666666">系统登录</h3>
             <div class="form-group">
                 <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->

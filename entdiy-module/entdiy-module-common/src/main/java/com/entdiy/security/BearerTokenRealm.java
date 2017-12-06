@@ -36,7 +36,7 @@ public class BearerTokenRealm extends AuthorizingRealm {
 
         //构造权限框架认证用户信息对象
         AuthUserDetails authUserDetails = ShiroJdbcRealm.buildAuthUserDetails(authAccount);
-        authUserDetails.setSource(AuthSourceEnum.P);
+        authUserDetails.setSource(AuthSourceEnum.APP);
         authUserDetails.setAccessToken(authAccount.getAccessToken());
 
         return new SimpleAuthenticationInfo(authUserDetails, accessToken, "Bearer Token Realm");

@@ -151,6 +151,7 @@
 				/admin/logout = logoutAdmin
 				/admin = authcAdmin,anyRoles[ROLE_MGMT_USER]
 				/admin/** = authcAdmin,anyRoles[ROLE_MGMT_USER]
+				/dev/** = authcAdmin,anyRoles[ROLE_SUPER_USER]
 				/druid/** = authcAdmin,anyRoles[ROLE_SUPER_USER]
 
 				/app/pub/** = anon

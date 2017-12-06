@@ -20,6 +20,7 @@ import org.apache.shiro.web.util.WebUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
@@ -77,7 +78,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
             token.setSource(Enum.valueOf(AuthSourceEnum.class, source));
         } else {
             if (isMobileAppAccess(request)) {
-                token.setSource(AuthSourceEnum.P);
+                token.setSource(AuthSourceEnum.APP);
             }
         }
         return token;
@@ -104,14 +105,26 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
                         + getLoginUrl() + "]");
             }
 
-            if (isMobileAppAccess(request)) {
+            if (request instanceof HttpServletRequest) {
+                HttpServletRequest httpServletRequest = (HttpServletRequest) request;
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-                httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-                return true;
-            } else {
-                saveRequestAndRedirectToLogin(request, response);
-                return false;
+
+                //如果是APP接口访问或AJAX请求，直接返回401状态码替代302便于客户端处理
+                if (isMobileAppAccess(request) || "XMLHttpRequest".equalsIgnoreCase(httpServletRequest.getHeader("X-Requested-With"))) {
+                    httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    //追加loginUrl到响应头，方便AJAX转向登录界面
+                    String loginUrl = getLoginUrl();
+                    if (loginUrl.startsWith("/")) {
+                        loginUrl = httpServletRequest.getContextPath() + loginUrl;
+                    }
+                    httpServletResponse.addHeader(HttpHeaders.LOCATION, loginUrl);
+                    //return false 不在继续调用过滤链，直接返回响应
+                    return false;
+                }
             }
+
+            saveRequestAndRedirectToLogin(request, response);
+            return false;
         }
     }
 

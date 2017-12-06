@@ -44,7 +44,7 @@ public class AuthUserDetails implements Serializable {
     private String nickName;
 
     @MetaData(value = "记录登录来源")
-    private AuthSourceEnum source = AuthSourceEnum.W;
+    private AuthSourceEnum source = AuthSourceEnum.DEFAULT;
 
     @MetaData(value = "访问TOKEN")
     private String accessToken;
@@ -94,9 +94,9 @@ public class AuthUserDetails implements Serializable {
     }
 
     public String getUrlPrefixBySource() {
-        if (AuthSourceEnum.A.equals(source)) {
+        if (AuthSourceEnum.ADMIN.equals(source)) {
             return "/admin";
-        } else if (AuthSourceEnum.M.equals(source)) {
+        } else if (AuthSourceEnum.H5.equals(source)) {
             return "/m";
         } else {
             return "/w";

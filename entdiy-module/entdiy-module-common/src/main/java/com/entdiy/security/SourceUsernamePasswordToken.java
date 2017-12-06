@@ -18,19 +18,19 @@ public class SourceUsernamePasswordToken extends UsernamePasswordToken {
     @MetaData(value = "来源唯一标识", comments = "标识来源设备或应用等唯一标识")
     private String uuid;
 
-    public static enum AuthSourceEnum {
+    public enum AuthSourceEnum {
 
         @MetaData(value = "APP手机应用")
-        P,
+        APP,
 
         @MetaData(value = "HTML5 Mobile站点")
-        M,
+        H5,
 
         @MetaData(value = "WWW主站", comments = "source来源为空也表示此类型")
-        W,
+        DEFAULT,
 
         @MetaData(value = "Admin管理端")
-        A;
+        ADMIN
     }
 
     public AuthSourceEnum getSource() {

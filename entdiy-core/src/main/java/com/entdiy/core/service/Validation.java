@@ -2,6 +2,7 @@ package com.entdiy.core.service;
 
 import com.entdiy.core.exception.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,11 +40,12 @@ public class Validation {
 
     /**
      * 如果是演示模式并且是POST请求，则拒绝以避免用户随意修改数据导致演示不完整
+     *
      * @param request
      */
     public static void notDemoMode(HttpServletRequest request) {
         if (GlobalConfigService.isDemoMode()) {
-            if("POST".equalsIgnoreCase(request.getMethod())){
+            if (HttpMethod.POST.toString().equalsIgnoreCase(request.getMethod())) {
                 throw new ValidationException("抱歉，此功能在演示模式被禁用，请参考文档在本地部署运行体验。");
             }
         }

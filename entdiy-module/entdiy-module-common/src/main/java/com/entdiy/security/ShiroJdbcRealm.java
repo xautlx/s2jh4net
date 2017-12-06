@@ -1,31 +1,22 @@
 package com.entdiy.security;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import com.entdiy.auth.entity.Privilege;
 import com.entdiy.auth.entity.Role;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.security.SourceUsernamePasswordToken.AuthSourceEnum;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authc.AccountException;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+
+import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.List;
 
 public class ShiroJdbcRealm extends AuthorizingRealm {
 
@@ -45,7 +36,7 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
         SourceUsernamePasswordToken token = (SourceUsernamePasswordToken) authcToken;
 
-        if (AuthSourceEnum.P.equals(token.getSource())) {
+        if (AuthSourceEnum.APP.equals(token.getSource())) {
             if (StringUtils.isBlank(token.getUuid())) {
                 throw new AuthenticationException("uuid标识参数不能为空");
             }
@@ -58,7 +49,7 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
         }
 
         //判断用户管理权限
-        if (AuthSourceEnum.A.equals(token.getSource())) {
+        if (AuthSourceEnum.ADMIN.equals(token.getSource())) {
             if (!Boolean.TRUE.equals(authAccount.getMgmtGranted())) {
                 throw new AccountException("当前登录账号未授权管理访问权限");
             }
@@ -102,7 +93,7 @@ public class ShiroJdbcRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         AuthUserDetails authUserDetails = (AuthUserDetails) principals.getPrimaryPrincipal();
         //APP用户固定角色
-        if (AuthSourceEnum.P.equals(authUserDetails.getSource())) {
+        if (AuthSourceEnum.APP.equals(authUserDetails.getSource())) {
             return null;
         }
         User user = userService.findByAuthTypeAndAuthUid(authUserDetails.getAuthType(), authUserDetails.getAuthUid());
