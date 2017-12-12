@@ -38,7 +38,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-sys-config-property-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/sys/config-property/list',
+                url : '/admin/sys/config-property/list',
                 colModel : [ {
                     label : '代码',
                     name : 'propKey',
@@ -63,10 +63,10 @@
                     width : 200,
                     edittype : 'textarea'
                 } ],
-                editurl : WEB_ROOT + '/admin/sys/config-property/edit',
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                fullediturl : WEB_ROOT + "/admin/sys/config-property/edit-tabs",
-                delurl : WEB_ROOT + '/admin/sys/config-property/delete'
+                editurl : '/admin/sys/config-property/edit',
+                editrulesurl : '/admin/util/validate?clazz=${clazz}',
+                fullediturl : "/admin/sys/config-property/edit-tabs",
+                delurl : '/admin/sys/config-property/delete'
             });
         });
     </script>

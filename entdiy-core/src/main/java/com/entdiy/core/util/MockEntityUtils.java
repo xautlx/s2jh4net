@@ -1,23 +1,22 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.core.util;
 
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.persistence.Column;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.validation.constraints.Size;
-
 import com.entdiy.core.aud.DefaultAuditable;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -29,8 +28,16 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.persistence.Column;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.validation.constraints.Size;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 模拟实体对象实例构造帮助类
@@ -39,11 +46,11 @@ public class MockEntityUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(MockEntityUtils.class);
 
-    private final static RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
+    private static RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
 
-    private final static Random random = new Random();
+    private static Random random = new Random();
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <X> X buildMockObject(Class<X> clazz) {
         X x = null;
         try {
@@ -55,7 +62,7 @@ public class MockEntityUtils {
                     if (parameters.length == 1) {
                         Method getMethod = MethodUtils.getAccessibleMethod(clazz, "get" + mn.substring(3), null);
                         if (getMethod != null) {
-                            if (getMethod.getName().equals("getId")) {
+                            if ("getId".equals(getMethod.getName())) {
                                 continue;
                             }
                             //有默认值，则直接返回

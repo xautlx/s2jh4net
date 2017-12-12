@@ -14,7 +14,7 @@
 	<div id="admin-auth-privilege-list"></div>
 	<script type="text/javascript">
         jQuery(document).ready(function() {
-            $("#admin-auth-privilege-list").ajaxJsonUrl(WEB_ROOT + "/admin/auth/privilege/list", function(data) {
+            $("#admin-auth-privilege-list").ajaxJsonUrl("/admin/auth/privilege/list", function(data) {
                 var $list = $(this);
                 var index = 0;
                 $.each(data, function(i, item) {

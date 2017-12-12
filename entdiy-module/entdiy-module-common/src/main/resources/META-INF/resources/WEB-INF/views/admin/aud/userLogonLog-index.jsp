@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-aud-user-logon-log-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/aud/user-logon-log/list',
+                url : '/admin/aud/user-logon-log/list',
                 colModel : [ {
                     label : '登录账号',
                     name : 'authUid',
@@ -119,7 +119,7 @@
                 sortorder : "desc",
                 sortname : "logonTime",
                 addable : false,
-                fullediturl : WEB_ROOT + '/admin/aud/user-logon-log/edit-tabs'
+                fullediturl : '/admin/aud/user-logon-log/edit-tabs'
             });
         });
     </script>

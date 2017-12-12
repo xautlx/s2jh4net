@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.auth.service;
 
 import com.entdiy.aud.dao.UserLogonLogDao;
@@ -104,6 +118,7 @@ public class UserService extends BaseService<User, Long> {
         return passwordService.entryptPassword(rawPassword, user.getAuthGuid());
     }
 
+    @Override
     public User save(User entity) {
         return super.save(entity);
     }
@@ -119,7 +134,7 @@ public class UserService extends BaseService<User, Long> {
                 //默认6个月后密码失效，到时用户登录强制要求重新设置密码
                 entity.setCredentialsExpireTime(new DateTime().plusMonths(6).toDate());
             }
-            entity.setAuthGuid(UidUtils.UID());
+            entity.setAuthGuid(UidUtils.buildUID());
 
             if (StringUtils.isBlank(entity.getNickName())) {
                 entity.setNickName(entity.getAuthUid());
@@ -173,7 +188,7 @@ public class UserService extends BaseService<User, Long> {
         Assert.isTrue(StringUtils.isNotBlank(email), "User email required");
         String suject = dynamicConfigService.getString("cfg.user.reset.pwd.notify.email.title", "申请重置密码邮件");
         UserExt userExt = user.getUserExt();
-        userExt.setRandomCode(UidUtils.UID());
+        userExt.setRandomCode(UidUtils.buildUID());
         userExtDao.save(userExt);
 
         webContextUrl += ("/admin/pub/password/reset?email=" + email + "&code=" + userExt.getRandomCode());

@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-auth-role-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/auth/role/list',
+                url : '/admin/auth/role/list',
                 colModel : [ {
                     label : '代码',
                     name : 'code',
@@ -66,10 +66,10 @@
                     edittype : 'textarea',
                     align : 'left'
                 } ],
-                editurl : WEB_ROOT + '/admin/auth/role/edit',
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                fullediturl : WEB_ROOT + '/admin/auth/role/edit-tabs',
-                delurl : WEB_ROOT + '/admin/auth/role/delete'
+                editurl : '/admin/auth/role/edit',
+                editrulesurl : '/admin/util/validate?clazz=${clazz}',
+                fullediturl : '/admin/auth/role/edit-tabs',
+                delurl : '/admin/auth/role/delete'
             });
         });
     </script>

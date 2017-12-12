@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.aud.envers;
 
 import java.util.Map;
@@ -11,12 +25,15 @@ import com.google.common.collect.Maps;
 
 /**
  * 扩展默认的RevisionListener，额外追加记录登录用户信息
+ *
  * @see http://docs.jboss.org/hibernate/orm/4.2/devguide/en-US/html/ch15.html
  */
 public class ExtRevisionListener implements RevisionListener {
 
-    /** 以ThreadLocal机制把Web层相关审计属性值带入Envers监听器 */
-    private static final ThreadLocal<Map<String, String>> operationDataContainer = new ThreadLocal<Map<String, String>>();
+    /**
+     * 以ThreadLocal机制把Web层相关审计属性值带入Envers监听器
+     */
+    private static final ThreadLocal<Map<String, String>> operationDataContainer = new ThreadLocal();
 
     public final static String entityClassName = "entityClassName";
     public final static String controllerClassName = "controllerClassName";
@@ -45,6 +62,8 @@ public class ExtRevisionListener implements RevisionListener {
             revEntity.setAuthType(authUserDetails.getAuthType());
         }
         Map<String, String> operationData = operationDataContainer.get();
+        //获取后立即清空线程容器，避免多线程环境干扰
+        operationDataContainer.remove();
         if (operationData != null) {
             revEntity.setControllerClassName(operationData.get(controllerClassName));
             revEntity.setControllerClassLabel(operationData.get(controllerClassLabel));

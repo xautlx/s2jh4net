@@ -1,18 +1,24 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.support.service;
-
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
 
 import com.entdiy.core.context.SpringContextHolder;
 import com.entdiy.core.exception.ServiceException;
-
 import org.apache.shiro.util.ClassUtils;
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.id.IdentifierGeneratorHelper;
@@ -23,9 +29,16 @@ import org.hibernate.id.enhanced.PooledLoOptimizer;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+import javax.sql.DataSource;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * 参考Hibernate的TableGenerator原理实现一个定制的业务流水号生成器
- * 
+ *
  * TableSeqGenerator seqGenerator = new TableSeqGenerator("ORDER_ID", 1000, 100);
  * Long nextVal = seqGenerator.generate(dataSource);
  */
@@ -40,7 +53,7 @@ public class TableSeqGenerator {
     private TableStructure tableStructure;
 
     /**
-     * 
+     *
      * @param key 流水号类型唯一标识,如ORDER_ID
      * @param dialect 数据库方言
      * @param initialValue
@@ -72,6 +85,7 @@ public class TableSeqGenerator {
             }
 
             Serializable nextVal = optimizer.generate(new AccessCallback() {
+                @Override
                 public IntegralDataTypeHolder getNextValue() {
                     return tableStructure.execute(con, key);
                 }
@@ -112,7 +126,7 @@ public class TableSeqGenerator {
             HibernateJpaVendorAdapter jpaVendorAdapter = SpringContextHolder.getBean(HibernateJpaVendorAdapter.class);
             Dialect dialect = (Dialect) ClassUtils.newInstance((String) jpaVendorAdapter.getJpaPropertyMap().get(Environment.DIALECT));
 
-            selectQuery = "select " + valueColumnName + " as id_val" + " from " + dialect.appendLockHint(LockMode.PESSIMISTIC_WRITE, tableName)
+            selectQuery = "select " + valueColumnName + " as id_val" + " from " + dialect.appendLockHint(new LockOptions(LockMode.PESSIMISTIC_WRITE), tableName)
                     + " where id=? " + dialect.getForUpdateString();
 
             insertQuery = "insert into " + tableName + "(id," + valueColumnName + ",initial_value,increment_size) values (?,?,?,?)";

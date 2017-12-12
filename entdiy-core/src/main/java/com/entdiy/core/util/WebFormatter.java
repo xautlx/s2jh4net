@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.core.util;
 
 import java.util.HashMap;
@@ -29,38 +43,38 @@ public class WebFormatter {
         char c = data[start];
         if (c == '<') {
             // this is a tag or comment or script:
-            int end_index = indexOf(data, start + 1, '>');
-            if (end_index == (-1)) {
+            int endIndex = indexOf(data, start + 1, '>');
+            if (endIndex == (-1)) {
                 // the left is all text!
                 return new Token(Token.TOKEN_TEXT, data, start, data.length, previousIsPre);
             }
-            String s = new String(data, start, end_index - start + 1);
+            String s = new String(data, start, endIndex - start + 1);
             // now we got s="<...>":
             if (s.startsWith("<!--")) { // this is a comment!
-                int end_comment_index = indexOf(data, start + 1, "-->");
-                if (end_comment_index == (-1)) {
+                int endCommentIndex = indexOf(data, start + 1, "-->");
+                if (endCommentIndex == (-1)) {
                     // illegal end, but treat as comment:
                     return new Token(Token.TOKEN_COMMENT, data, start, data.length, previousIsPre);
                 } else
-                    return new Token(Token.TOKEN_COMMENT, data, start, end_comment_index + 3, previousIsPre);
+                    return new Token(Token.TOKEN_COMMENT, data, start, endCommentIndex + 3, previousIsPre);
             }
-            String s_lowerCase = s.toLowerCase();
-            if (s_lowerCase.startsWith("<script")) { // this is a script:
-                int end_script_index = indexOf(data, start + 1, "</script>");
-                if (end_script_index == (-1))
+            String sLowerCase = s.toLowerCase();
+            if (sLowerCase.startsWith("<script")) { // this is a script:
+                int endScriptIndex = indexOf(data, start + 1, "</script>");
+                if (endScriptIndex == (-1))
                     // illegal end, but treat as script:
                     return new Token(Token.TOKEN_SCRIPT, data, start, data.length, previousIsPre);
                 else
-                    return new Token(Token.TOKEN_SCRIPT, data, start, end_script_index + 9, previousIsPre);
+                    return new Token(Token.TOKEN_SCRIPT, data, start, endScriptIndex + 9, previousIsPre);
             } else { // this is a tag:
                 return new Token(Token.TOKEN_TAG, data, start, start + s.length(), previousIsPre);
             }
         }
         // this is a text:
-        int next_tag_index = indexOf(data, start + 1, '<');
-        if (next_tag_index == (-1))
+        int nextTagIndex = indexOf(data, start + 1, '<');
+        if (nextTagIndex == (-1))
             return new Token(Token.TOKEN_TEXT, data, start, data.length, previousIsPre);
-        return new Token(Token.TOKEN_TEXT, data, start, next_tag_index, previousIsPre);
+        return new Token(Token.TOKEN_TEXT, data, start, nextTagIndex, previousIsPre);
     }
 
     private static int indexOf(char[] data, int start, String s) {
@@ -276,16 +290,16 @@ class Token {
     }
 
     // compare standard tag "<input" with tag "<INPUT value=aa>"
-    private boolean compareTag(final char[] ori_tag, char[] tag) {
-        if (ori_tag.length >= tag.length)
+    private boolean compareTag(final char[] oriTag, char[] tag) {
+        if (oriTag.length >= tag.length)
             return false;
-        for (int i = 0; i < ori_tag.length; i++) {
-            if (Character.toLowerCase(tag[i]) != ori_tag[i])
+        for (int i = 0; i < oriTag.length; i++) {
+            if (Character.toLowerCase(tag[i]) != oriTag[i])
                 return false;
         }
         // the following char should not be a-z:
-        if (tag.length > ori_tag.length) {
-            char c = Character.toLowerCase(tag[ori_tag.length]);
+        if (tag.length > oriTag.length) {
+            char c = Character.toLowerCase(tag[oriTag.length]);
             if (c < 'a' || c > 'z')
                 return true;
             return false;
@@ -303,6 +317,7 @@ class Token {
         return true;
     }
 
+    @Override
     public String toString() {
         return html;
     }

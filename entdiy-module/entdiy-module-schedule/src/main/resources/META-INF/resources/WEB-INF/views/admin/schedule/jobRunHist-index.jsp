@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-schedule-job-run-hist-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/schedule/job-run-hist/list',
+                url : '/admin/schedule/job-run-hist/list',
                 colNames : [ '流水号', '主机节点', '任务名称', '触发时间', '下次触发时间', '触发次数', '异常标识', '执行结果', '创建时间', '版本号' ],
                 colModel : [ {
                     name : 'id',
@@ -88,7 +88,7 @@
                     hidedlg : true
                 } ],
                 multiselect : false,
-                viewurl : WEB_ROOT + '/admin/schedule/job-run-hist/view',
+                viewurl : '/admin/schedule/job-run-hist/view',
                 addable : false
             });
         });

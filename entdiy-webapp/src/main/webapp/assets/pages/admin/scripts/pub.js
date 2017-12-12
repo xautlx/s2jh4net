@@ -1,1 +1,1 @@
-jQuery(document).ready(function(){var a="h";if($(window).height()>$(window).width()){a="v"}$.backstretch([WEB_ROOT+"/assets/apps/img/bg01_"+a+".jpg",WEB_ROOT+"/assets/apps/img/bg02_"+a+".jpg"],{fade:1000,duration:8000})});
+jQuery(document).ready(function(){var a="h";if($(window).height()>$(window).width()){a="v"}$.backstretch([Util.smartParseURL("/assets/apps/img/bg01_"+a+".jpg"),Util.smartParseURL("/assets/apps/img/bg02_"+a+".jpg")],{fade:1000,duration:8000})});

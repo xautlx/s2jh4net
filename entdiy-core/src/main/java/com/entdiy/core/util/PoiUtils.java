@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.core.util;
 
 import java.io.IOException;
@@ -31,7 +45,7 @@ public class PoiUtils {
      * <pre>
      *    指定获取某列所有数据
      * </pre>
-     * 
+     *
      * @return
      */
     public static List<Map<String, String>> readExcelSpecifyColNum(InputStream is, Integer readFromRowNum, Integer specifyColNum) {
@@ -40,7 +54,7 @@ public class PoiUtils {
     }
 
     public static List<Map<String, String>> readExcelContent(MultipartFile excelFile, Integer sheetIndex, Integer readFromRowNum,
-            Integer readFromColNum) {
+                                                             Integer readFromColNum) {
         return readExcelContent(excelFile, sheetIndex, null, readFromRowNum, readFromColNum);
     }
 
@@ -54,6 +68,7 @@ public class PoiUtils {
      * 约定格式要求：第一行为标题行，之后为数据行
      * 返回结构为Map结构的List集合：每行的key=第一行的标题，value=单元格值，统一为字符串，根据需要自行转换数据类型
      * </pre>
+     *
      * @param InputStream
      * @return Map 包含单元格数据内容的Map对象
      */
@@ -67,6 +82,7 @@ public class PoiUtils {
      * 约定格式要求：第readFromRowNum行为标题行，之后为数据行
      * 返回结构为Map结构的List集合：每行的key=第一行的标题，value=单元格值，统一为字符串，根据需要自行转换数据类型
      * </pre>
+     *
      * @param InputStream
      * @return Map 包含单元格数据内容的Map对象
      */
@@ -80,6 +96,7 @@ public class PoiUtils {
      * 约定格式要求：第readFromRowNum行为标题行，之后为数据行
      * 返回结构为Map结构的List集合：每行的key=第一行的标题，value=单元格值，统一为字符串，根据需要自行转换数据类型
      * </pre>
+     *
      * @param InputStream
      * @return Map 包含单元格数据内容的Map对象
      */
@@ -94,15 +111,15 @@ public class PoiUtils {
      * 返回结构为Map结构的List集合：每行的key=第(titleStartRowNum+1)行的标题，
      * value=单元格值，统一为字符串，根据需要自行转换数据类型
      * </pre>
-     * 
-     * @param excelName                  表格名称
-     * @param sheetName                  读取工作标签项名称
-     * @param readFromRowNum             以readFromRowNum作为标题开始读取
-     * @param readFromColNum             从readFromColNum列开始读取
+     *
+     * @param excelName      表格名称
+     * @param sheetName      读取工作标签项名称
+     * @param readFromRowNum 以readFromRowNum作为标题开始读取
+     * @param readFromColNum 从readFromColNum列开始读取
      * @return Map                       包含单元格数据内容的Map对象
      */
     public static List<Map<String, String>> readExcelContent(MultipartFile excelFile, Integer sheetIndex, String sheetName, Integer readFromRowNum,
-            Integer readFromColNum) {
+                                                             Integer readFromColNum) {
         List<Map<String, String>> rows = Lists.newArrayList();
         if (excelFile.isEmpty()) {
             return rows;
@@ -197,7 +214,7 @@ public class PoiUtils {
      * 读取Excel数据内容
      * 约定格式要求：第一行为标题行，之后为数据行
      * 返回结构为Map结构的List集合：每行的key=第一行的标题，value=单元格值，统一为字符串，根据需要自行转换数据类型
-     * 
+     *
      * @param InputStream
      * @return Map 包含单元格数据内容的Map对象
      */
@@ -268,7 +285,7 @@ public class PoiUtils {
 
     /**
      * 根据HSSFCell类型设置数据
-     * 
+     *
      * @param cell
      * @return
      */
@@ -277,35 +294,36 @@ public class PoiUtils {
         if (cell != null) {
             // 判断当前Cell的Type
             switch (cell.getCellType()) {
-            // 如果当前Cell的Type为NUMERIC
-            case Cell.CELL_TYPE_NUMERIC:
-            case Cell.CELL_TYPE_FORMULA: {
-                // 判断当前的cell是否为Date
-                if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                    // 如果是Date类型则，转化为Data格式
+                // 如果当前Cell的Type为NUMERIC
+                case Cell.CELL_TYPE_NUMERIC:
+                case Cell.CELL_TYPE_FORMULA: {
+                    // 判断当前的cell是否为Date
+                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                        // 如果是Date类型则，转化为Data格式
 
-                    //方法1：这样子的data格式是带时分秒的：2011-10-12 0:00:00
-                    //cellvalue = cell.getDateCellValue().toLocaleString();
+                        //方法1：这样子的data格式是带时分秒的：2011-10-12 0:00:00
+                        //cellvalue = cell.getDateCellValue().toLocaleString();
 
-                    //方法2：这样子的data格式是不带带时分秒的：2011-10-12
-                    Date date = cell.getDateCellValue();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    cellvalue = sdf.format(date);
+                        //方法2：这样子的data格式是不带带时分秒的：2011-10-12
+                        Date date = cell.getDateCellValue();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        cellvalue = sdf.format(date);
 
+                    }
+                    // 如果是纯数字
+                    else {
+                        // 取得当前Cell的数值
+                        DecimalFormat df = new DecimalFormat("#.####");
+                        cellvalue = df.format(cell.getNumericCellValue());
+                    }
+                    break;
                 }
-                // 如果是纯数字
-                else {
-                    // 取得当前Cell的数值
-                    DecimalFormat df = new DecimalFormat("#.####");
-                    cellvalue = df.format(cell.getNumericCellValue());
-                }
-                break;
-            }
-            // 如果当前Cell的Type为STRIN
-            case Cell.CELL_TYPE_STRING:
-                // 取得当前的Cell字符串
-                cellvalue = cell.getRichStringCellValue().getString();
-                break;
+                // 如果当前Cell的Type为STRIN
+                case Cell.CELL_TYPE_STRING:
+                    // 取得当前的Cell字符串
+                    cellvalue = cell.getRichStringCellValue().getString();
+                    break;
+                default:
             }
         }
         if (cellvalue == null) {
@@ -320,11 +338,11 @@ public class PoiUtils {
      * <pre>
      *   读取Excel指定列内容
      * </pre>
-     * 
-     * @param excelName                  表格名称
-     * @param sheetName                  读取工作标签项名称
-     * @param readFromRowNum             以readFromRowNum作为标题开始读取
-     * @param readFromColNum             从readFromColNum列开始读取
+     *
+     * @param excelName      表格名称
+     * @param sheetName      读取工作标签项名称
+     * @param readFromRowNum 以readFromRowNum作为标题开始读取
+     * @param readFromColNum 从readFromColNum列开始读取
      * @return Map                       包含单元格数据内容的Map对象
      */
     public static List<Map<String, String>> readExcelSpecifyColNum(InputStream is, Integer sheetIndex, Integer readFromRowNum, Integer specifyColNum) {

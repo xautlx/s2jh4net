@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @MappedSuperclass
 @EntityListeners({ SaveUpdateAuditListener.class })
 @AuditOverrides({ @AuditOverride(forClass = BaseEntity.class) })
-public abstract class BaseEntity<ID extends Serializable> extends PersistableEntity<ID> implements DefaultAuditable<String, ID> {
+public abstract class BaseEntity<ID extends Serializable> extends AbstractPersistableEntity<ID> implements DefaultAuditable<String, ID> {
 
     private static final long serialVersionUID = 2476761516236455260L;
 

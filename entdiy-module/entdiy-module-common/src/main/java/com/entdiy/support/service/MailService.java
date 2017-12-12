@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.support.service;
 
 import com.entdiy.aud.entity.SendMessageLog;
@@ -6,7 +20,7 @@ import com.entdiy.aud.service.SendMessageLogService;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.util.DateUtils;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +34,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.util.Assert;
 
 import javax.mail.internet.MimeMessage;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class MailService {
@@ -36,7 +50,7 @@ public class MailService {
     @Autowired(required = false)
     private JavaMailSender javaMailSender;
 
-    private static final ThreadLocal<Set<MailMessage>> mimeMessages = new NamedThreadLocal<Set<MailMessage>>("Transaction Mail MimeMessages");
+    private ThreadLocal<List<MailMessage>> mimeMessages = new NamedThreadLocal("Transaction Mail MimeMessages");
 
     public boolean isEnabled() {
         return javaMailSender != null;
@@ -49,15 +63,19 @@ public class MailService {
         }
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             logger.debug("Register mails with database Transaction Synchronization...");
-            Set<MailMessage> mails = mimeMessages.get();
+            List<MailMessage> mails = mimeMessages.get();
             if (mails == null) {
-                mails = Sets.newHashSet();
+                //如果为空，则初始化容器集合
+                mails = Lists.newArrayList();
                 mimeMessages.set(mails);
+                //注册事务事件，事务提交后发送邮件
                 TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
                     @Override
                     public void afterCommit() {
                         logger.debug("Processing afterCommit of TransactionSynchronizationManager...");
-                        Set<MailMessage> transactionMails = mimeMessages.get();
+                        List<MailMessage> transactionMails = mimeMessages.get();
+                        //获取后立即清空线程容器，避免多线程环境干扰
+                        mimeMessages.remove();
                         for (MailMessage mail : transactionMails) {
                             sendMail(mail.getSubject(), mail.getText(), mail.getSingleMode(), true, mail.getToAddrs());
                         }

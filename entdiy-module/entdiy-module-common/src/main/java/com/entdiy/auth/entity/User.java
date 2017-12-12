@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.auth.entity;
 
 import com.entdiy.core.annotation.MetaData;
@@ -28,13 +42,18 @@ import java.util.List;
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "auth_User", uniqueConstraints = @UniqueConstraint(columnNames = { "authUid", "authType" }))
+@Table(name = "auth_User", uniqueConstraints = @UniqueConstraint(columnNames = {"authUid", "authType"}))
 @MetaData(value = "登录认证账号信息")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Audited
 public class User extends BaseNativeEntity {
 
     private static final long serialVersionUID = 8728775138491827366L;
+
+    @MetaData(value = "所属部门")
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "department_id", nullable = true)
+    private Department department;
 
     @MetaData(value = "账号全局唯一标识", comments = "同时作为SYS类型用户登录密码的SALT")
     @Column(length = 64, nullable = false, unique = true)

@@ -38,7 +38,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-aud-send-message-log-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/aud/send-message-log/list',
+                url : '/admin/aud/send-message-log/list',
                 colModel : [ {
                     label : '流水号',
                     name : 'id',
@@ -81,7 +81,7 @@
                 } ],
                 multiselect : false,
                 addable : false,
-                fullediturl : WEB_ROOT + '/admin/aud/send-message-log/edit-tabs'
+                fullediturl : '/admin/aud/send-message-log/edit-tabs'
             });
         });
     </script>

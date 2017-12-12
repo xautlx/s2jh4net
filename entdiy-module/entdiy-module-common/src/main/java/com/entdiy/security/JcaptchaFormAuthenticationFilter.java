@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.security;
 
 import com.entdiy.aud.entity.UserLogonLog;
@@ -8,6 +22,7 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.IPAddrFetcher;
 import com.entdiy.core.util.UidUtils;
 import com.entdiy.core.web.captcha.CaptchaUtils;
+import com.entdiy.core.web.captcha.CaptchaValidationException;
 import com.entdiy.security.SourceUsernamePasswordToken.AuthSourceEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -66,6 +81,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         return StringUtils.isNotBlank(uuid);
     }
 
+    @Override
     protected AuthenticationToken createToken(String username, String password, ServletRequest request, ServletResponse response) {
         boolean rememberMe = isRememberMe(request);
         String host = getHost(request);
@@ -141,9 +157,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
                 //失败LOGON_FAILURE_LIMIT次，强制要求验证码验证
                 if (authAccount.getLogonFailureTimes() > LOGON_FAILURE_LIMIT) {
-                    if (CaptchaUtils.validateCaptchaCode((HttpServletRequest) request, captchaParam) != null) {
-                        throw new CaptchaValidationException("验证码不正确");
-                    }
+                    CaptchaUtils.assetValidateCaptchaCode(request, captchaParam);
                 }
 
                 Subject subject = getSubject(request, response);
@@ -204,7 +218,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         authAccount.setLogonFailureTimes(0);
         //更新Access Token，并设置半年后过期
         if (StringUtils.isBlank(authAccount.getAccessToken()) || authAccount.getAccessTokenExpireTime().before(now)) {
-            authAccount.setAccessToken(UidUtils.UID());
+            authAccount.setAccessToken(UidUtils.buildUID());
             authAccount.setAccessTokenExpireTime(new DateTime(DateUtils.currentDate()).plusMonths(6).toDate());
         }
         userService.save(authAccount);
@@ -252,6 +266,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         }
     }
 
+    @Override
     protected void setFailureAttribute(ServletRequest request, AuthenticationException ae) {
         //写入认证异常对象用于错误显示
         request.setAttribute(getFailureKeyAttribute(), ae);
@@ -263,15 +278,6 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    public static class CaptchaValidationException extends AuthenticationException {
-
-        private static final long serialVersionUID = -7285314964501172092L;
-
-        public CaptchaValidationException(String message) {
-            super(message);
-        }
     }
 
     public void setForceSuccessUrl(boolean forceSuccessUrl) {

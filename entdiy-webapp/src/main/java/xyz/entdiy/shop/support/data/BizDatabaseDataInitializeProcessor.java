@@ -3,7 +3,7 @@ package xyz.entdiy.shop.support.data;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.auth.service.UserService;
-import com.entdiy.core.data.DatabaseDataInitializeProcessor;
+import com.entdiy.core.data.AbstractDatabaseDataInitializeProcessor;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.MockEntityUtils;
 import com.entdiy.schedule.service.JobBeanCfgService;
@@ -34,7 +34,7 @@ import java.util.List;
  * 业务数据初始化处理器
  */
 @Component
-public class BizDatabaseDataInitializeProcessor extends DatabaseDataInitializeProcessor {
+public class BizDatabaseDataInitializeProcessor extends AbstractDatabaseDataInitializeProcessor {
 
     private final static Logger logger = LoggerFactory.getLogger(BizDatabaseDataInitializeProcessor.class);
 

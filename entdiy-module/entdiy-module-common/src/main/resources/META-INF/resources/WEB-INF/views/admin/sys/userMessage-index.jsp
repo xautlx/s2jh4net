@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-sys-user-message-index").data("gridOptions", {
-                url : WEB_ROOT + "/admin/sys/user-message/list?search['EQ_targetUser']=${param.siteUserId}",
+                url : "/admin/sys/user-message/list?search['EQ_targetUser']=${param.siteUserId}",
                 colModel : [ {
                     label : '目标用户',
                     name : 'targetUser.display',
@@ -97,7 +97,7 @@
                 } ],
                 multiselect : false,
                 addable : false,
-                fullediturl : WEB_ROOT + "/admin/sys/user-message/edit",
+                fullediturl : "/admin/sys/user-message/edit",
             });
         });
     </script>

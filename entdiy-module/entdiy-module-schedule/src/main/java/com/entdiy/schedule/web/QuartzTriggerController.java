@@ -1,9 +1,18 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.schedule.web;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.service.Validation;
@@ -11,7 +20,8 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.schedule.ExtSchedulerFactoryBean;
 import com.entdiy.schedule.service.JobBeanCfgService;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
@@ -28,8 +38,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/admin/schedule/quartz-trigger")
@@ -70,7 +81,7 @@ public class QuartzTriggerController {
             triggerMap.put("runWithinCluster", schedulerFactoryBean.isRunWithinCluster());
             triggerDatas.add(triggerMap);
         }
-        return new PageImpl<Map<String, Object>>(triggerDatas);
+        return new PageImpl(triggerDatas);
     }
 
     @RequiresPermissions("配置管理:计划任务管理:任务实时控制")
@@ -85,9 +96,9 @@ public class QuartzTriggerController {
                 Trigger trigger = me.getKey();
                 if (trigger.getJobKey().getName().equals(id)) {
                     exist = true;
-                    if (state.equals("pause")) {
+                    if ("pause".equals(state)) {
                         me.getValue().getScheduler().pauseTrigger(trigger.getKey());
-                    } else if (state.equals("resume")) {
+                    } else if ("resume".equals(state)) {
                         me.getValue().getScheduler().resumeTrigger(trigger.getKey());
                     } else {
                         throw new UnsupportedOperationException("state parameter [" + state + "] not in [pause, resume]");

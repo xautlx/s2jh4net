@@ -60,7 +60,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-aud-data-revision-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/aud/revision-entity/data/list',
+                url : '/admin/aud/revision-entity/data/list',
                 colModel : [ {
                     label : '版本号',
                     name : 'revisionEntity.rev',
@@ -123,7 +123,7 @@
                         var selectRows = $grid.getAtLeastOneSelectedItem();
                         if (selectRows) {
                             var rowdatas = $grid.getSelectedRowdatas();
-                            var url = WEB_ROOT + '/admin/aud/revision-entity/compare';
+                            var url = '/admin/aud/revision-entity/compare';
 
                             var entityClassName = null;
                             var revs = [];

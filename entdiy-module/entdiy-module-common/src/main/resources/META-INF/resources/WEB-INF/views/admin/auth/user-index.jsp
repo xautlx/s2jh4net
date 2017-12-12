@@ -38,7 +38,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-auth-user-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/auth/user/list',
+                url : '/admin/auth/user/list',
                 colModel : [ {
                     label : '账号标识',
                     name : 'authUid',
@@ -113,7 +113,7 @@
                     editoptions : {
                         dataInit : function(elem, opt) {
                             $(elem).treeSelect({
-                                url : WEB_ROOT + "/admin/auth/department/select"
+                                url : "/admin/auth/department/select"
                             });
                         }
                     }
@@ -145,10 +145,10 @@
                     hidden : true,
                     width : 80
                 } ],
-                editurl : WEB_ROOT + '/admin/auth/user/edit',
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                fullediturl : WEB_ROOT + '/admin/auth/user/edit-tabs',
-                delurl : WEB_ROOT + '/admin/auth/user/delete'
+                editurl : '/admin/auth/user/edit',
+                editrulesurl : '/admin/util/validate?clazz=${clazz}',
+                fullediturl : '/admin/auth/user/edit-tabs',
+                delurl : '/admin/auth/user/delete'
             });
         });
     </script>

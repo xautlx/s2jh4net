@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.core.aud;
 
 import com.entdiy.core.entity.BaseEntity;
@@ -46,7 +60,7 @@ public class SaveUpdateAuditListener {
     /**
      * Sets modification and creation date and auditor on the target object in
      * case it implements {@link DefaultAuditable} on persist events.
-     * 
+     *
      * @param target
      */
     @PrePersist
@@ -57,7 +71,7 @@ public class SaveUpdateAuditListener {
     /**
      * Sets modification and creation date and auditor on the target object in
      * case it implements {@link DefaultAuditable} on update events.
-     * 
+     *
      * @param target
      */
     @PreUpdate
@@ -83,13 +97,13 @@ public class SaveUpdateAuditListener {
         Object defaultedNow = now == null ? "not set" : now;
         Object defaultedAuditor = auditor == null ? "unknown" : auditor;
 
-        logger.trace("Touched {} - Last modification at {} by {}", new Object[] { auditable, defaultedNow, defaultedAuditor });
+        logger.trace("Touched {} - Last modification at {} by {}", new Object[]{auditable, defaultedNow, defaultedAuditor});
     }
 
     /**
      * Sets modifying and creating auditioner. Creating auditioner is only set
      * on new auditables.
-     * 
+     *
      * @param auditable
      * @return
      */
@@ -114,13 +128,17 @@ public class SaveUpdateAuditListener {
         auditable.setLastModifiedBy(auditor);
         auditable.setDataGroup(DATA_GROUP.get());
 
+        //回收自定义的ThreadLocal变量，尤其在线程池场景下，线程经常会被复用，
+        // 如果不清理自定义的 ThreadLocal变量，可能会影响后续业务逻辑和造成内存泄露等问题
+        DATA_GROUP.remove();
+
         return auditor;
     }
 
     /**
      * Touches the auditable regarding modification and creation date. Creation
      * date is only set on new auditables.
-     * 
+     *
      * @param auditable
      * @return
      */

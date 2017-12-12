@@ -3,22 +3,19 @@
  */
 package com.entdiy.core.pagination;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 用于jqGrid自定义高级查询条件封装条件组合
@@ -149,7 +146,7 @@ public class GroupPropertyFilter {
     }
 
     private static void convertJqGridToFilter(Class<?> entityClass, GroupPropertyFilter jqGroupPropertyFilter, JqGridSearchFilter jqFilter) {
-        jqGroupPropertyFilter.setGroupType(jqFilter.getGroupOp().equalsIgnoreCase("OR") ? GROUP_OPERATION_OR : GROUP_OPERATION_AND);
+        jqGroupPropertyFilter.setGroupType("OR".equalsIgnoreCase(jqFilter.getGroupOp()) ? GROUP_OPERATION_OR : GROUP_OPERATION_AND);
 
         List<JqGridSearchRule> rules = jqFilter.getRules();
         List<PropertyFilter> filters = Lists.newArrayList();

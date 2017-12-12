@@ -35,7 +35,7 @@
 		<script type="text/javascript">
             jQuery(document).ready(function() {
                 var r2s = "${r2PrivilegeIds}".split(",");
-                $("#admin-auth-role-privilege-list").ajaxJsonUrl(WEB_ROOT + "/admin/auth/privilege/list", function(data) {
+                $("#admin-auth-role-privilege-list").ajaxJsonUrl("/admin/auth/privilege/list", function(data) {
                     var $list = $(this);
                     var index = 0;
                     $.each(data, function(i, item) {

@@ -36,7 +36,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-auth-department-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/auth/department/list',
+                url : '/admin/auth/department/list',
                 colModel : [ {
                     label : '名称',
                     name : 'name',
@@ -63,9 +63,9 @@
                 subGridRowExpanded : function(subgrid_id, row_id) {
                     Grid.initRecursiveSubGrid(subgrid_id, row_id, "parent.id");
                 },
-                editurl : WEB_ROOT + '/admin/auth/department/edit',
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                delurl : WEB_ROOT + '/admin/auth/department/delete'
+                editurl : '/admin/auth/department/edit',
+                editrulesurl : '/admin/util/validate?clazz=${clazz}',
+                delurl : '/admin/auth/department/delete'
             });
         });
     </script>

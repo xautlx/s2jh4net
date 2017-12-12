@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--验证码服务-->
-    <bean id="captchaService" class="com.octo.captcha.service.multitype.GenericManageableCaptchaService">
+    <bean id="captchaService" class="com.entdiy.core.web.captcha.DoubleCheckableCaptchaService">
         <constructor-arg name="captchaEngine" ref="captchaEngine"/>
         <!--Captcha session过期时间，单位秒-->
         <constructor-arg name="minGuarantedStorageDelayInSeconds"

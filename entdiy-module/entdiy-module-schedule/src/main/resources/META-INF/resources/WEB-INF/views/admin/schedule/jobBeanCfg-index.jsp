@@ -38,7 +38,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-schedule-job-bean-cfg-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/schedule/job-bean-cfg/list',
+                url : '/admin/schedule/job-bean-cfg/list',
                 colModel : [ {
                     label : '任务类全名',
                     name : 'jobClass',
@@ -85,8 +85,8 @@
                     width : 100,
                     align : 'left'
                 } ],
-                editurl : WEB_ROOT + "/admin/schedule/job-bean-cfg/edit",
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}'
+                editurl : "/admin/schedule/job-bean-cfg/edit",
+                editrulesurl : '/admin/util/validate?clazz=${clazz}'
             });
         });
     </script>

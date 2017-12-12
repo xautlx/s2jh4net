@@ -46,7 +46,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-auth-signup-user-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/auth/signup-user/list',
+                url : '/admin/auth/signup-user/list',
                 colModel : [ {
                     label : '登录账号',
                     name : 'authUid',
@@ -89,8 +89,8 @@
                     name : 'auditTime',
                     formatter : 'timestamp'
                 } ],
-                fullediturl : WEB_ROOT + '/admin/auth/signup-user/audit',
-                delurl : WEB_ROOT + '/admin/auth/signup-user/delete'
+                fullediturl : '/admin/auth/signup-user/audit',
+                delurl : '/admin/auth/signup-user/delete'
             });
         });
     </script>

@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-sys-menu-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/sys/menu/list',
+                url : '/admin/sys/menu/list',
                 colModel : [ {
                     label : '名称',
                     name : 'name',
@@ -101,9 +101,9 @@
                 subGridRowExpanded : function(subgrid_id, row_id) {
                     Grid.initRecursiveSubGrid(subgrid_id, row_id, "parent.id");
                 },
-                editurl : WEB_ROOT + '/admin/sys/menu/edit',
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                delurl : WEB_ROOT + '/admin/sys/menu/delete'
+                editurl : '/admin/sys/menu/edit',
+                editrulesurl : '/admin/util/validate?clazz=${clazz}',
+                delurl : '/admin/sys/menu/delete'
             });
         });
     </script>

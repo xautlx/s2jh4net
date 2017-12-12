@@ -774,6 +774,11 @@
                 <artifactId>nekohtml</artifactId>
                 <version>1.9.19</version>
             </dependency>
+            <dependency>
+                <groupId>net.sourceforge.htmlcleaner</groupId>
+                <artifactId>htmlcleaner</artifactId>
+                <version>2.21</version>
+            </dependency>
             <!-- <dependency> <groupId>net.sourceforge.htmlunit</groupId> <artifactId>htmlunit</artifactId>
                 <version>2.15</version> </dependency> -->
 

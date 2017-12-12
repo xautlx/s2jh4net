@@ -1,10 +1,25 @@
-package com.entdiy.dev.guide.web;
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.entdiy.dev.demo.web.action;
 
 import com.entdiy.auth.entity.Department;
 import com.entdiy.auth.entity.Privilege;
 import com.entdiy.auth.service.DepartmentService;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.UserService;
+import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.pagination.GroupPropertyFilter;
@@ -18,18 +33,10 @@ import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.AuthUserDetails;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.vladsch.flexmark.ast.Node;
-import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
-import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.options.MutableDataSet;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.util.ClassUtils;
@@ -53,19 +60,16 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.net.JarURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.jar.JarEntry;
 
 @Controller
-@RequestMapping(value = "/dev/docs")
-public class DocumentController extends BaseController<DocumentController.MockEntity, Long> {
+@RequestMapping(value = "/dev/demo/all-in-one")
+public class AllInOneController extends BaseController<AllInOneController.MockEntity, Long> {
 
-    private final static Logger logger = LoggerFactory.getLogger(DocumentController.class);
+    private final static Logger logger = LoggerFactory.getLogger(AllInOneController.class);
 
     @Autowired
     private UserService userService;
@@ -76,65 +80,6 @@ public class DocumentController extends BaseController<DocumentController.MockEn
     @Autowired
     private PrivilegeService privilegeService;
 
-    @RequestMapping(value = "/markdown/{name}", method = RequestMethod.GET)
-    public String markdown(HttpServletRequest request, @PathVariable("name") String name, Model model) throws Exception {
-        List<String> fileNames = Lists.newArrayList();
-        String text;
-        String dir = "/dev/docs/markdown";
-
-        String mdDirPath = WebAppContextInitFilter.getInitedWebContextRealPath() + dir;
-        File mdDir = new File(mdDirPath);
-        if (mdDir.exists()) { //直接web目录方式部署资源
-            String mdFilePath = mdDirPath + "/" + name + ".md";
-            text = FileUtils.readFileToString(new File(mdFilePath), "UTF-8");
-
-            String[] files = mdDir.list();
-            for (int i = 0; i < files.length; i++) {
-                fileNames.add(StringUtils.substringBeforeLast(files[i], ".md"));
-            }
-        } else {//如果目录不存在，兼容Servlet3协议从classpath或jar的META-INFO/resources读取
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            dir = "META-INF/resources" + dir;
-            text = IOUtils.toString(loader.getResourceAsStream(dir + "/" + name + ".md"), "UTF-8");
-
-            URL url = loader.getResource(dir);
-            if ("file".equalsIgnoreCase(url.getProtocol())) {//兼容处理JRebel直接以classpath形式加载
-                File mdFilesDir = new File(url.toURI());
-                String[] files = mdFilesDir.list();
-                for (int i = 0; i < files.length; i++) {
-                    fileNames.add(StringUtils.substringBeforeLast(files[i], ".md"));
-                }
-            } else { //基于jar文件提取特定目录下文件列表
-                JarURLConnection connection = (JarURLConnection) url.openConnection();
-                Enumeration<JarEntry> jarEntries = connection.getJarFile().entries();
-                while (jarEntries.hasMoreElements()) {
-                    JarEntry jarEntry = jarEntries.nextElement();
-                    if (!jarEntry.isDirectory()) {
-                        String path = jarEntry.getName();
-                        if (path.startsWith(dir) && path.endsWith(".md")) {
-                            fileNames.add(StringUtils.substringBeforeLast(StringUtils.substringAfterLast(path, "/"), ".md"));
-                        }
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("files", fileNames);
-
-        MutableDataSet options = new MutableDataSet();
-        // uncomment to set optional extensions
-        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
-        // uncomment to convert soft-breaks to hard breaks
-        //options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
-        // You can re-use parser and renderer instances
-        Node document = parser.parse(text);
-        String html = renderer.render(document);
-        model.addAttribute("mdHtml", html);
-
-        return "dev/layouts/markdown";
-    }
 
     @Override
     protected BaseService<MockEntity, Long> getEntityService() {
@@ -148,15 +93,23 @@ public class DocumentController extends BaseController<DocumentController.MockEn
         super.initPrepareModel(request, model, id);
     }
 
+    @Override
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, "publishTime", new CustomDateEditor(new SimpleDateFormat(DateUtils.SHORT_TIME_FORMAT), true));
         super.initBinder(binder);
     }
 
+    @MenuData("演示样例:UI组件集合")
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
-    @RequestMapping(value = "/ui-feature/items", method = RequestMethod.GET)
-    public String uiFeatureItems(Model model) {
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(Model model) {
+        return "dev/demo/allInOne-index";
+    }
+
+    @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public String detail(Model model) {
         Map<String, String> clazzMapping = Maps.newHashMap();
         //搜索所有entity对象，并自动进行自增初始化值设置
         ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
@@ -208,7 +161,7 @@ public class DocumentController extends BaseController<DocumentController.MockEn
         //上下文完整路径
         model.addAttribute("webContextFullUrl", WebAppContextInitFilter.getInitedWebContextFullUrl());
 
-        return "dev/docs/ui-feature-items";
+        return "dev/demo/allInOne-detail";
     }
 
     @RequestMapping(value = "/mock/show-form-data", method = RequestMethod.POST)
@@ -303,12 +256,12 @@ public class DocumentController extends BaseController<DocumentController.MockEn
         return OperationResult.buildSuccessResult("数据处理成功");
     }
 
-    @RequestMapping(value = "/mock/infinite-scroll", method = RequestMethod.GET)
+    @RequestMapping(value = "/infinite-scroll-items", method = RequestMethod.GET)
     public Object repayLogData(HttpServletRequest request, Model model) {
         GroupPropertyFilter groupPropertyFilter = GroupPropertyFilter.buildFromHttpRequest(Privilege.class, request);
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
         model.addAttribute("pageData", privilegeService.findByPage(groupPropertyFilter, pageable));
-        return "dev/docs/infinite-scroll-items";
+        return "dev/demo/allInOne-infiniteScrollItems";
     }
 
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
@@ -388,6 +341,16 @@ public class DocumentController extends BaseController<DocumentController.MockEn
             this.splitText = StringUtils.join(splitTexts, ",");
         }
 
+        public List<MockItemEntity> getMockItemEntitesForDynamicTable() {
+            if (CollectionUtils.isEmpty(mockItemEntites)) {
+                List<MockItemEntity> items = Lists.newArrayList();
+                items.add(new MockItemEntity());
+                return items;
+            } else {
+                return mockItemEntites;
+            }
+        }
+
         @Override
         public String toString() {
             return "MockEntity [department=" + department + ", filePath=" + filePath + ", selectedId=" + selectedId + ", selectedIds="
@@ -415,6 +378,9 @@ public class DocumentController extends BaseController<DocumentController.MockEn
         private String textContent;
 
         private String imagePath;
+
+        @NotNull
+        private BigDecimal quantity;
 
         @Override
         public String toString() {

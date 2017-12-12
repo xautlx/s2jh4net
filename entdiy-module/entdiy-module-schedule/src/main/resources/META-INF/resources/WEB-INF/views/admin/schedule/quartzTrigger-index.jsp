@@ -16,7 +16,7 @@
 <script type="text/javascript">
     $(function () {
         $("#grid-schedule-triggers").data("gridOptions", {
-            url: WEB_ROOT + '/admin/schedule/quartz-trigger/list',
+            url: '/admin/schedule/quartz-trigger/list',
             colNames: ['任务名称', 'CRON表达式', '当前状态', '上次触发时间', '下次触发时间', '集群运行模式'],
             colModel: [{
                 name: 'jobName',
@@ -52,7 +52,7 @@
                 onClickButton: function (rowids) {
                     var $grid = $(this);
                     $grid.ajaxPostURL({
-                        url: WEB_ROOT + '/admin/schedule/quartz-trigger/state',
+                        url: '/admin/schedule/quartz-trigger/state',
                         success: function () {
                             $grid.refresh();
                         },
@@ -72,7 +72,7 @@
                 onClickButton: function (rowids) {
                     var $grid = $(this);
                     $grid.ajaxPostURL({
-                        url: WEB_ROOT + '/admin/schedule/quartz-trigger/state',
+                        url: '/admin/schedule/quartz-trigger/state',
                         success: function () {
                             $grid.refresh();
                         },
@@ -92,7 +92,7 @@
                 onClickButton: function (rowids) {
                     var $grid = $(this);
                     $grid.ajaxPostURL({
-                        url: WEB_ROOT + '/admin/schedule/quartz-trigger/run',
+                        url: '/admin/schedule/quartz-trigger/run',
                         success: function () {
                             $grid.refresh();
                         },

@@ -77,200 +77,6 @@ public class ExtStringUtils {
     }
 
     /**
-     * replace b in a to c, concern uppercase?d=true:d=false
-     */
-    public static String replace(String source, String findWhat, String replaceWith, boolean caseSence) {
-        return replace(new StringBuffer(source), findWhat, replaceWith, caseSence).toString();
-    }
-
-    public static String replace(String source, String findWhat, String replaceWith) {
-        return replace(new StringBuffer(source), findWhat, replaceWith, true).toString();
-        // return source.replaceAll(findWhat, replaceWith);
-    }
-
-    public static StringBuffer replace(StringBuffer source, String findWhat, String replaceWith) {
-        return replace(source, findWhat, replaceWith, true);
-    }
-
-    public static StringBuffer replace(StringBuffer source, String findWhat, String replaceWith, boolean caseSence) {
-        if (source == null || findWhat == null || replaceWith == null) {
-            return source;
-        }
-        if (findWhat.length() == 0) {
-            return source;
-        }
-        int fromIndex = 0;
-        int occIndex = -1;
-        if (caseSence) {
-            occIndex = source.toString().indexOf(findWhat, fromIndex);
-        } else {
-            occIndex = source.toString().toUpperCase().indexOf(findWhat.toUpperCase(), fromIndex);
-        }
-
-        while (occIndex >= 0) {
-            source.delete(occIndex, occIndex + findWhat.length());
-            source.insert(occIndex, replaceWith);
-            fromIndex = occIndex + replaceWith.length();
-            if (caseSence) {
-                occIndex = source.toString().indexOf(findWhat, fromIndex);
-            } else {
-                occIndex = source.toString().toUpperCase().indexOf(findWhat.toUpperCase(), fromIndex);
-            }
-        }
-        return source;
-    }
-
-    public static String htmlEncode(String str) {
-        if (str == null) {
-            return "";
-        }
-        String tmp = str;
-        tmp = replace(tmp, "&", "&amp;", false);
-        tmp = replace(tmp, "<", "&lt;", false);
-        tmp = replace(tmp, "\"", "&quot;", false);
-        tmp = replace(tmp, ">", "&gt;", false);
-
-        tmp = replace(tmp, " ", " &nbsp;", false);
-        tmp = replace(tmp, "\n", "<br>", false);
-        /*
-         * if (tmp.indexOf("\n") >= 0 ){ tmp = replace(tmp, "\n", " <br> ",
-         * false); tmp = replace(tmp, " ", "&nbsp;", false); }
-         */
-        return tmp;
-    }
-
-    // public static String urlEncode(String str) {
-    // return java.net.URLEncoder.encode(str);
-    // }
-
-    public static String jsValueEncode(String str) {
-        return jsValueEncode(str, "\"");
-    }
-
-    public static String jsValueEncode(String str, String pack) {
-        if (str == null) {
-            return null;
-        }
-        String tmp = str;
-        tmp = replace(tmp, "\\", "\\\\", true);
-        tmp = replace(tmp, "\n", "\\n", true);
-        tmp = replace(tmp, "\"", "\\\"", true);
-        tmp = replace(tmp, "'", "\\'", true);
-        return pack + tmp + pack;
-    }
-
-    public static String formFieldValueEncode(String str) {
-        return formFieldValueEncode(str, "\"");
-    }
-
-    public static String formFieldValueEncode(String str, String pack) {
-        if (str == null) {
-            return pack + pack;
-        }
-        String tmp = str;
-        tmp = replace(tmp, "\"", "&quot;", false);
-        tmp = pack + tmp + pack;
-        return tmp;
-    }
-
-    public static String recode(String source, String decodeCharset, String encodeCharset)
-            throws UnsupportedEncodingException {
-        if (decodeCharset.equalsIgnoreCase(encodeCharset)) {
-            return source;
-        } else {
-            return new String(source.getBytes(decodeCharset), encodeCharset);
-        }
-    }
-
-    /**
-     * return the parameter list.
-     * findParam("Ther versionId is {versionId}, created by {userId}.",'{','}')
-     * will return ["{versionId}","{userId}"]
-     * 
-     * @param src
-     * @param patternFrom
-     * @param patternTo
-     * @return
-     */
-    public static String[] findParam(String src, char patternFrom, char patternTo) {
-        ArrayList list = new ArrayList();
-        int i, j = 0, c = 0;
-        while (c < src.length()) {
-            i = src.indexOf(patternFrom, c);
-            if (i != -1) {
-                j = src.indexOf(patternTo, i + 1);
-                if (j != -1) {
-                    list.add(src.substring(i, j + 1));
-                    c = j + 1;
-                } else {
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-        String[] result = new String[list.size()];
-        for (i = 0; i < list.size(); i++) {
-            result[i] = (String) list.get(i);
-        }
-        return result;
-    }
-
-    public static String setParam(String src, HashMap values, char patternFrom, char patternTo) {
-        if (values == null) {
-            return src;
-        }
-        String reStr = src;
-        String name = null;
-        Object value = null;
-        String[] params = findParam(src, patternFrom, patternTo);
-        for (int k = 0; k < params.length; k++) {
-            name = params[k];
-            value = values.get(name.substring(1, name.length() - 1));
-            if (values.containsKey(name.substring(1, name.length() - 1)) && (value != null)) {
-                reStr = replace(reStr, name, value.toString(), false);
-            }
-        }
-        return reStr;
-    }
-
-    public static ArrayList split(String str, String id) {
-        ArrayList vt = new ArrayList();
-        if ((str != null) && (id != null) && (!str.equals("")) && (!id.equals(""))) {
-            int beginindex = 0 - id.length();
-            int endindex = 0;
-            int end = str.lastIndexOf(id);
-            if (end == -1) {
-                vt.add(str);
-            } else {
-                while (endindex < end) {
-                    endindex = str.indexOf(id, beginindex + id.length());
-                    vt.add(str.substring(beginindex + id.length(), endindex));
-                    beginindex = endindex;
-                }
-                vt.add(str.substring(endindex + id.length(), str.length()));
-            }
-        }
-        return vt;
-        /*
-         * ArrayList tmp = new ArrayList(); if ((str == null) || (id == null) ||
-         * (str.equals("")) || (id.equals(""))){ return tmp; } String[] t =
-         * str.split(id); for (int i = 0; i < t.length; i++){ tmp.add(tmp); }
-         * return tmp;
-         */
-    }
-
-    public static String setInitial(String source) {
-        if (source == null) {
-            return null;
-        }
-        if (source.length() == 0) {
-            return source;
-        }
-        return source.substring(0, 1).toUpperCase() + source.substring(1, source.length());
-    }
-
-    /**
      * @author zyb
      * @date 2004/6/8
      * 
@@ -412,13 +218,13 @@ public class ExtStringUtils {
     }
 
     public static String getExcelColumn(int index) {
-        char A = 'A';
+        char charA = 'A';
         int i = index / 26;
         int j = index % 26;
         if (i == 0) {
-            return "" + (char) (A + j);
+            return "" + (char) (charA + j);
         } else {
-            return "" + (char) (A + i - 1) + (char) (A + j);
+            return "" + (char) (charA + i - 1) + (char) (charA + j);
         }
     }
 
@@ -766,35 +572,6 @@ public class ExtStringUtils {
         return str;
     }
 
-    public static boolean isBlank(String str) {
-        return str == null || str.trim().equals("");
-    }
-
-    /**
-     * 拼装适合SQL IN的字符串语句
-     * 
-     * @param str
-     * @return
-     * @author niez
-     * @since May 26, 2010
-     */
-    public static String toSqlInString(String str) {
-        if (str == null || str.equals("")) {
-            return str;
-        }
-        String[] splitStrs = str.split(",");
-        String targetStr = "";
-        for (int i = 0; i < splitStrs.length; i++) {
-            if (i == splitStrs.length - 1) {
-                targetStr += "'" + splitStrs[i] + "'";
-            } else {
-                targetStr += "'" + splitStrs[i] + "',";
-            }
-
-        }
-        return targetStr;
-    }
-
     /**
      * 防止中文乱码.
      * 
@@ -849,31 +626,6 @@ public class ExtStringUtils {
         return sb.toString().toUpperCase();
     }
 
-    /**  
-     * 字段转换成对象属性 例如：user_name to userName  
-     * @param field  
-     * @return  
-     */
-    public static String fieldToProperty(String field) {
-        if (null == field) {
-            return "";
-        }
-        char[] chars = field.toCharArray();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if (c == '_') {
-                int j = i + 1;
-                if (j < chars.length) {
-                    sb.append(StringUtils.upperCase(CharUtils.toString(chars[j])));
-                    i++;
-                }
-            } else {
-                sb.append(c);
-            }
-        }
-        return sb.toString();
-    }
  
     public static String parseExceptionStackString(Throwable e){
         //处理异常堆栈字符串

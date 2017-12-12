@@ -1,14 +1,28 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.core.web.captcha;
 
-import com.entdiy.core.web.util.ServletUtils;
+import com.entdiy.core.annotation.MetaData;
 import com.octo.captcha.service.multitype.GenericManageableCaptchaService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -28,7 +42,7 @@ public class CaptchaController {
     @Autowired(required = false)
     private GenericManageableCaptchaService captchaService;
 
-    // 生成验证码
+    @MetaData(value = "生成验证码")
     @RequestMapping(value = "/pub/captcha", method = RequestMethod.GET)
     public void genCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (captchaService == null) {
@@ -47,11 +61,7 @@ public class CaptchaController {
         // return a jpeg
         response.setContentType("image/jpeg");
 
-        //兼容APP请求，基于AccessToken作为验证码标识，否则就按照标准的Session标识
-        String captchaId = ServletUtils.getOAuthAccessToken(request);
-        if (StringUtils.isBlank(captchaId)) {
-            captchaId = request.getSession().getId();
-        }
+        String captchaId=CaptchaUtils.getCaptchaID(request);
         logger.trace("Generatin captch image for: {}", captchaId);
 
         // create the image with the text
@@ -62,5 +72,15 @@ public class CaptchaController {
         ImageIO.write(bi, "jpg", out);
         out.flush();
         out.close();
+    }
+
+    /**
+     * @see DoubleCheckableCaptchaService#touchValidateResponseForID(String, Object)
+     */
+    @MetaData(value = "预校验验证码")
+    @RequestMapping(value = "/pub/captcha/touch-validate", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean touchValidateCaptcha(HttpServletRequest request, HttpServletResponse response) {
+        return CaptchaUtils.touchValidateCaptchaCode(request, "captcha");
     }
 }

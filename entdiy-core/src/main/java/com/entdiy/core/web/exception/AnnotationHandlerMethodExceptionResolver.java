@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.core.web.exception;
 
 import java.lang.reflect.Method;
@@ -45,6 +59,7 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
 
     private ContentNegotiationManager contentNegotiationManager;
 
+    @Override
     public int getOrder() {
         //优先执行
         return Integer.MIN_VALUE;
@@ -55,6 +70,7 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
      * <p>根据不同异常类型，做一定的错误消息友好转义处理，区分控制不同异常是否需要进行logger日志记录<p>
      * <p>logger记录时把相关请求数据基于MDC方式记录下来，以便问题排查<p>
      */
+    @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object aHandler, Exception e) {
 
         String errorMessage = null;

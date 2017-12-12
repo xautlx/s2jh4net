@@ -1,1 +1,1 @@
-var Config=function(){var a="";return{getContextPath:function(){return a},setContextPath:function(b){a=b}}}();
+var Config=function(){var b="";var a="";return{getContextPath:function(){return b},setContextPath:function(c){b=c},getFileUploadUrl:function(){Util.assertNotBlank(a,"文件上传URL地址未设定");return a},setFileUploadUrl:function(c){a=c}}}();

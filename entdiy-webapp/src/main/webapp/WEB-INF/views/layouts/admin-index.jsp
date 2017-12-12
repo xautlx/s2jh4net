@@ -16,22 +16,30 @@
     <%@include file="/WEB-INF/views/layouts/include-header.jsp" %>
     <link href="${ctx}/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet"
           type="text/css"/>
-
+    <link href="${ctx}/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="${ctx}/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet"
+          type="text/css"/>
     <link rel="stylesheet" type="text/css" href="${ctx}/assets/global/plugins/select2/css/select2.min.css"/>
     <link rel="stylesheet" type="text/css" href="${ctx}/assets/global/plugins/select2/css/select2-bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${ctx}/assets/apps/plugins/kindeditor/themes/default/default.css">
+    <link rel="stylesheet" type="text/css"
+          href="${ctx}/assets/global/plugins/jquery-multi-select/css/multi-select.css"/>
+    <link rel="stylesheet" href="${ctx}/assets/apps/plugins/free-jqgrid/css/ui.jqgrid.min.css">
+    <link rel="stylesheet" href="${ctx}/assets/apps/plugins/free-jqgrid/plugins/css/ui.multiselect.min.css">
 
-    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link rel="stylesheet" type="text/css" href="${ctx}/assets/apps/plugins/tooltipster/css/tooltipster.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="${ctx}/assets/apps/plugins/tooltipster/css/themes/tooltipster-punk.css"/>
+    <link rel="stylesheet" type="text/css" href="${ctx}/assets/global/plugins/bootstrap-toastr/toastr.min.css"/>
+    <link href="${ctx}/assets/global/plugins/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet"/>
+
+
     <link href="${ctx}/assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css"/>
     <link href="${ctx}/assets/layouts/layout/css/themes/light.min.css" rel="stylesheet" type="text/css"
           id="style_color"/>
-    <!-- END THEME LAYOUT STYLES -->
 
     <link href="${ctx}/assets/apps/css/admin.css?_=${buildVersion}" rel="stylesheet" type="text/css"/>
-
-    <script type="text/javascript">
-        var READ_FILE_URL_PREFIX = "${readFileUrlPrefix}";
-        var DASHBOARD_URI = "/admin/dashboard";
-    </script>
 
     <sitemesh:write property='head'/>
 </head>
@@ -113,7 +121,8 @@
                                     class="fa fa-key"></i> 修改密码</a></li>
                             <li class="divider"></li>
                             <li>
-                                <a id="a-logout" class="mt-sweetalert" href="javascript:;"><i class="fa fa-sign-out"></i> 注销登录</a>
+                                <a id="a-logout" class="mt-sweetalert" href="javascript:;"><i
+                                        class="fa fa-sign-out"></i> 注销登录</a>
                             </li>
                         </ul>
                     </li>
@@ -276,7 +285,7 @@
                 <!-- BEGIN PAGE BAR -->
                 <div class="page-bar" id="layout-nav">
                     <ul class="page-breadcrumb">
-                        <li><a class="btn-dashboard" href="#/dashboard"><i class="fa fa-home"></i> 首页 </a></li>
+                        <li><a class="btn-dashboard" href="#/admin/dashboard"><i class="fa fa-home"></i> 首页</a></li>
                     </ul>
                     <div class="page-toolbar">
                         <div class="btn-group pull-right">
@@ -325,18 +334,11 @@
 
 <script src="${ctx}/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"
         type="text/javascript"></script>
-
 <script src="${ctx}/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
-<link href="${ctx}/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet"
-      type="text/css"/>
-
 <script src="${ctx}/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"
         type="text/javascript"></script>
 <script src="${ctx}/assets/global/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"
         type="text/javascript"></script>
-<link href="${ctx}/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet"
-      type="text/css"/>
-
 <script src="${ctx}/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"
         type="text/javascript"></script>
 <script src="${ctx}/assets/global/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
@@ -356,11 +358,6 @@
 <script type="text/javascript"
         src="${ctx}/assets/global/plugins/bootstrap-contextmenu/bootstrap-contextmenu.js"></script>
 
-<script type="text/javascript"
-        src="${ctx}/assets/global/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-<link rel="stylesheet" type="text/css"
-      href="${ctx}/assets/global/plugins/bootstrap-editable/bootstrap-editable/css/bootstrap-editable.css"/>
-
 <!-- The basic File Upload plugin -->
 <script src="${ctx}/assets/apps/plugins/uploadify/jquery.uploadify.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${ctx}/assets/apps/plugins/uploadify/uploadify.css"/>
@@ -372,29 +369,22 @@
 <!-- END:File Upload Plugin JS files-->
 
 <script type="text/javascript" src="${ctx}/assets/apps/plugins/tooltipster/js/jquery.tooltipster.min.js"></script>
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/apps/plugins/tooltipster/css/tooltipster.css"/>
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/apps/plugins/tooltipster/css/themes/tooltipster-punk.css"/>
 
 <script src="${ctx}/assets/apps/plugins/JSPinyin.js"></script>
 
 <script src="${ctx}/assets/apps/plugins/echarts/dist/echarts-all.js"></script>
 
-<link rel="stylesheet" href="${ctx}/assets/apps/plugins/free-jqgrid/css/ui.jqgrid.min.css">
 <script src="${ctx}/assets/apps/plugins/free-jqgrid/i18n/grid.locale-cn.js"></script>
 <script src="${ctx}/assets/apps/plugins/free-jqgrid/jquery.jqgrid.src.js"></script>
 <script src="${ctx}/assets/apps/plugins/free-jqgrid/plugins/min/jquery.jqgrid.showhidecolumnmenu.js"></script>
 <script src="${ctx}/assets/apps/plugins/free-jqgrid/plugins/min/jquery.contextmenu-ui.js"></script>
 <script src="${ctx}/assets/apps/plugins/free-jqgrid/plugins/min/jquery.createcontexmenufromnavigatorbuttons.js"></script>
 <script src="${ctx}/assets/apps/plugins/free-jqgrid/plugins/min/ui.multiselect.js"></script>
-<link rel="stylesheet" href="${ctx}/assets/apps/plugins/free-jqgrid/plugins/css/ui.multiselect.min.css">
 
 <script src="${ctx}/assets/apps/plugins/jquery-ztree/js/jquery.ztree.all-3.5.js"></script>
 <link rel="stylesheet" type="text/css" href="${ctx}/assets/apps/plugins/jquery-ztree/css/zTreeStyle/zTreeStyle.css">
 
 <script src="${ctx}/assets/apps/plugins/kindeditor/kindeditor-all.js"></script>
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/apps/plugins/kindeditor/themes/default/default.css">
-
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/global/plugins/jquery-multi-select/css/multi-select.css"/>
 <script type="text/javascript"
         src="${ctx}/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="${ctx}/assets/apps/plugins/jquery.quicksearch.js"></script>
@@ -402,13 +392,12 @@
 <script src="${ctx}/assets/apps/plugins/jquery.address/jquery.address-1.5.min.js"></script>
 
 <script src="${ctx}/assets/global/plugins/jcrop/js/jquery.Jcrop.min.js"></script>
-<link href="${ctx}/assets/global/plugins/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet"/>
 
 <script src="${ctx}/assets/apps/plugins/jquery.qrcode.min.js" type="text/javascript"></script>
 <script src="${ctx}/assets/apps/plugins/html2canvas/html2canvas.min.js" type="text/javascript"></script>
 <script src="${ctx}/assets/apps/plugins/canvas2image.js" type="text/javascript"></script>
 
-<link rel="stylesheet" type="text/css" href="${ctx}/assets/global/plugins/bootstrap-toastr/toastr.min.css"/>
+
 <script src="${ctx}/assets/global/plugins/bootstrap-toastr/toastr.min.js"></script>
 
 <script src="//api.map.baidu.com/api?v=2.0&ak=${baiduMapAppkey}" type="text/javascript"></script>
@@ -417,7 +406,7 @@
 <script src="${ctx}/assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
 
-<script src="${ctx}/assets/apps/scripts/component/dynamic-table.js?_=${buildVersion}"></script>
+<script src="${ctx}/assets/apps/scripts/component/dynamic-edit-table.js?_=${buildVersion}"></script>
 <script src="${ctx}/assets/apps/scripts/component/double-multi-select.js?_=${buildVersion}"></script>
 
 <script src="${ctx}/assets/apps/scripts/component/image-uploader.js?_=${buildVersion}"></script>
@@ -425,6 +414,7 @@
 
 <script src="${ctx}/assets/apps/scripts/component/grid.js" ?_=${buildVersion}></script>
 <script src="${ctx}/assets/apps/scripts/component/gmaps-baidu.js" ?_=${buildVersion}></script>
+<script src="${ctx}/assets/apps/scripts/component/textarea-htmleditor.js" ?_=${buildVersion}></script>
 
 <script src="${ctx}/assets/apps/scripts/function/data-profile-param.js?_=${buildVersion}"></script>
 
@@ -436,10 +426,6 @@
     $(function () {
 
         // console.profile('Profile Sttart');
-
-
-        //KindEditor文件操作涉及到Flash集成，因此需要在upload URL追加JSESSIONID参数以进行登录用户标识传递
-        KindEditor.options.uploadJson = '${ctx}/w/image/upload/kind-editor.json;JSESSIONID=${pageContext.session.id}'
 
         //App.init();
         Util.init();

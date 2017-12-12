@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.support.web;
 
 import com.entdiy.auth.entity.SignupUser;
@@ -40,8 +54,8 @@ public class AdminPubController {
     private DynamicConfigService dynamicConfigService;
 
     @RequestMapping(value = "/password/forget", method = RequestMethod.GET)
-    public String forgetPasswordShow(Model model) {
-        RequestUtil.appendGlobalProperties(model);
+    public String forgetPasswordShow(HttpServletRequest request, Model model) {
+        RequestUtil.appendGlobalProperties(request, model);
         model.addAttribute("mailServiceEnabled", mailService.isEnabled());
         return "admin/pub/password-forget";
     }
@@ -49,10 +63,8 @@ public class AdminPubController {
     @RequestMapping(value = "/password/forget", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult forgetPasswordSave(HttpServletRequest request, @RequestParam("uid") String uid) {
-        OperationResult captchaInvalid = CaptchaUtils.validateCaptchaCode(request, "captcha");
-        if (captchaInvalid != null) {
-            return captchaInvalid;
-        }
+        //二次校验验证码避免绕过表单校验的恶意请求
+        CaptchaUtils.assetValidateCaptchaCode(request, "captcha");
 
         User user = userService.findByAuthTypeAndAuthUid(AuthTypeEnum.SYS, uid);
         if (user == null) {
@@ -71,8 +83,8 @@ public class AdminPubController {
     }
 
     @RequestMapping(value = "/password/reset", method = RequestMethod.GET)
-    public String restPasswordShow(Model model) {
-        RequestUtil.appendGlobalProperties(model);
+    public String restPasswordShow(HttpServletRequest request, Model model) {
+        RequestUtil.appendGlobalProperties(request, model);
         return "admin/pub/password-reset";
     }
 
@@ -99,8 +111,8 @@ public class AdminPubController {
     }
 
     @RequestMapping(value = "/admin/signup", method = RequestMethod.GET)
-    public String signupShow(Model model) {
-        RequestUtil.appendGlobalProperties(model);
+    public String signupShow(HttpServletRequest request, Model model) {
+        RequestUtil.appendGlobalProperties(request, model);
         model.addAttribute("mailServiceEnabled", mailService.isEnabled());
         return "admin/pub/signup";
     }
@@ -108,10 +120,8 @@ public class AdminPubController {
     @RequestMapping(value = "/admin/signup", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult signupSave(HttpServletRequest request, @ModelAttribute("entity") SignupUser entity) {
-        OperationResult captchaInvalid = CaptchaUtils.validateCaptchaCode(request, "captcha");
-        if (captchaInvalid != null) {
-            return captchaInvalid;
-        }
+        //二次校验验证码避免绕过表单校验的恶意请求
+        CaptchaUtils.assetValidateCaptchaCode(request, "captcha");
 
         if (dynamicConfigService.getBoolean(GlobalConstant.cfg_mgmt_signup_disabled, false)) {
             return OperationResult.buildFailureResult("系统暂未开发账号注册功能，如有疑问请联系管理员");

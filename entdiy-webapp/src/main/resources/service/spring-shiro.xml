@@ -137,9 +137,9 @@
 			<value>
 				/assets/** = anon
 
-				/w/login = authcWww
-				/w/logout = logoutWww
-				/w* = anon
+				/login = authcWww
+				/logout = logoutWww
+				/** = anon
 
 				/m/pub/** = anon
 				/m/login = authcMobile

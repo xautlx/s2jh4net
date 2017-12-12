@@ -1,14 +1,22 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.aud.envers;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Transient;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.envers.RevisionType;
@@ -16,9 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Persistable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import javax.persistence.Transient;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 public class EntityRevision {
 
@@ -30,14 +42,14 @@ public class EntityRevision {
     private Object entity;
 
     /**
-     * The second will be an entity containing revision data 
+     * The second will be an entity containing revision data
      * (if no custom entity is used, this will be an instance of DefaultRevisionEntity)
      */
     private ExtDefaultRevisionEntity revisionEntity;
 
     /**
-     * The third will be the type of the revision 
-     * (one of the values of the RevisionType enumeration: ADD, MOD, DEL). 
+     * The third will be the type of the revision
+     * (one of the values of the RevisionType enumeration: ADD, MOD, DEL).
      */
     private RevisionType revisionType;
 
@@ -73,8 +85,9 @@ public class EntityRevision {
         Method[] methods = entity.getClass().getMethods();
         Set<String> excludeBaseProperties = Sets.newHashSet();
         for (Method method : methods) {
-            if (!method.getName().startsWith("get") || method.getName().equals("getClass") || method.getName().equals("getVersion")
-                    || method.getName().equals("getOptlock")) {
+            String methodName = method.getName();
+            if (!methodName.startsWith("get") || "getClass".equals(methodName) || "getVersion".equals(methodName)
+                    || "getOptlock".equals(methodName)) {
                 continue;
             }
 
@@ -86,7 +99,7 @@ public class EntityRevision {
             //排除基类方法
             boolean skipMethod = false;
             for (String excludeProperty : excludeBaseProperties) {
-                if (method.getName().equals("get" + StringUtils.capitalize(excludeProperty))) {
+                if (("get" + StringUtils.capitalize(excludeProperty)).equals("getOptlock")) {
                     skipMethod = true;
                     break;
                 }

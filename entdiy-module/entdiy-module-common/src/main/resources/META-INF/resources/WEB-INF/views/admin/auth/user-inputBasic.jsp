@@ -93,14 +93,13 @@
 
             </div>
             <div class="col-md-7">
+                <h3 class="form-section">关联角色</h3>
                 <div class="form-group">
-                    <label class="control-label">关联角色</label>
-                    <div class="controls">
-                        <form:select path="selectedRoleIds" items="${roles}" itemValue="id" itemLabel="name"
-                                     class="form-control"
-                                     data-toggle="double-multi-select" data-height="450px"
-                                     data-selectable-header="可选角色列表" data-selection-header="已选角色列表"/>
-                    </div>
+                    <form:select path="selectedRoleIds" items="${roles}" itemValue="id" itemLabel="name"
+                                 class="form-control"
+                                 data-toggle="double-multi-select" data-height="450px"
+                                 data-selectable-header="可选角色列表" data-selection-header="已选角色列表"/>
+
                 </div>
                 <c:if test="${notNew}">
                     <div class="form-group">

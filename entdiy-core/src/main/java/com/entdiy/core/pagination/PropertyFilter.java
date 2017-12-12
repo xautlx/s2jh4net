@@ -7,15 +7,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -61,36 +53,58 @@ public class PropertyFilter {
 
     private static final int DEFAULT_PAGE_ROWS = 20;
 
-    /** 多个属性间OR关系的分隔符. */
+    /**
+     * 多个属性间OR关系的分隔符.
+     */
     public static final String OR_SEPARATOR = "_OR_";
 
-    /** 属性匹配比较类型. */
+    /**
+     * 属性匹配比较类型.
+     */
     public enum MatchType {
-        /** "name": "bk", "description": "is blank", "operator":"IS NULL OR ==''" */
+        /**
+         * "name": "bk", "description": "is blank", "operator":"IS NULL OR ==''"
+         */
         BK,
 
-        /** "name": "nb", "description": "is not blank", "operator":"IS NOT NULL AND !=''" */
+        /**
+         * "name": "nb", "description": "is not blank", "operator":"IS NOT NULL AND !=''"
+         */
         NB,
 
-        /** "name": "nu", "description": "is null", "operator":"IS NULL" */
+        /**
+         * "name": "nu", "description": "is null", "operator":"IS NULL"
+         */
         NU,
 
-        /** "name": "nn", "description": "is not null", "operator":"IS NOT NULL" */
+        /**
+         * "name": "nn", "description": "is not null", "operator":"IS NOT NULL"
+         */
         NN,
 
-        /** "name": "in", "description": "in", "operator":"IN" */
+        /**
+         * "name": "in", "description": "in", "operator":"IN"
+         */
         IN,
 
-        /** "name": "ni", "description": "not in", "operator":"NOT IN" */
+        /**
+         * "name": "ni", "description": "not in", "operator":"NOT IN"
+         */
         NI,
 
-        /** "name": "ne", "description": "not equal", "operator":"<>" */
+        /**
+         * "name": "ne", "description": "not equal", "operator":"<>"
+         */
         NE,
 
-        /** "name": "eq", "description": "equal", "operator":"=" */
+        /**
+         * "name": "eq", "description": "equal", "operator":"="
+         */
         EQ,
 
-        /** "name": "cn", "description": "contains", "operator":"LIKE %abc%" */
+        /**
+         * "name": "cn", "description": "contains", "operator":"LIKE %abc%"
+         */
         CN,
 
         /**
@@ -99,7 +113,9 @@ public class PropertyFilter {
          */
         NC,
 
-        /** "name": "bw", "description": "begins with", "operator":"LIKE abc%" */
+        /**
+         * "name": "bw", "description": "begins with", "operator":"LIKE abc%"
+         */
         BW,
 
         /**
@@ -108,7 +124,9 @@ public class PropertyFilter {
          */
         BN,
 
-        /** "name": "ew", "description": "ends with", "operator":"LIKE %abc" */
+        /**
+         * "name": "ew", "description": "ends with", "operator":"LIKE %abc"
+         */
         EW,
 
         /**
@@ -117,64 +135,105 @@ public class PropertyFilter {
          */
         EN,
 
-        /** "name": "bt", "description": "between", "operator":"BETWEEN 1 AND 2" */
+        /**
+         * "name": "bt", "description": "between", "operator":"BETWEEN 1 AND 2"
+         */
         BT,
 
-        /** "name": "lt", "description": "less", "operator":"小于" */
+        /**
+         * "name": "lt", "description": "less", "operator":"小于"
+         */
         LT,
 
-        /** "name": "gt", "description": "greater", "operator":"大于" */
+        /**
+         * "name": "gt", "description": "greater", "operator":"大于"
+         */
         GT,
 
-        /** "name": "le", "description": "less or equal","operator":"<=" */
+        /**
+         * "name": "le", "description": "less or equal","operator":"<="
+         */
         LE,
 
-        /** "name": "ge", "description": "greater or equal", "operator":">=" */
+        /**
+         * "name": "ge", "description": "greater or equal", "operator":">="
+         */
         GE,
 
-        /** @see javax.persistence.criteria.Fetch */
+        /**
+         * @see javax.persistence.criteria.Fetch
+         */
         FETCH,
 
-        /** Property Less Equal: <= */
+        /**
+         * Property Less Equal: <=
+         */
         PLE,
 
-        /** Property Less Than: < */
+        /**
+         * Property Less Than: <
+         */
         PLT,
 
         ACLPREFIXS
     }
 
-    /** 匹配类型 */
+    /**
+     * 原始过滤字符串表达式
+     */
+    private String filterName;
+
+    /**
+     * 匹配类型
+     */
     private MatchType matchType = null;
 
-    /** 匹配值 */
+    /**
+     * 匹配值
+     */
     private Object matchValue = null;
 
     /**
      * 匹配属性类型
      * 限制说明：如果是多个属性则取第一个,因此需要确保_OR_定义多个属性属于同一类型
      */
+
     private Class propertyClass = null;
 
-    /** 属性名称数组, 一般是单个属性,如果有_OR_则为多个 */
+    /**
+     * 属性名称数组, 一般是单个属性,如果有_OR_则为多个
+     */
     private String[] propertyNames = null;
     /**
-     * 集合类型子查询,如查询包含某个商品的所有订单列表,如order上面有个List集合products对象，则可以类似这样:search['EQ_products.code'] 
+     * 集合类型子查询,如查询包含某个商品的所有订单列表,如order上面有个List集合products对象，则可以类似这样:search['EQ_products.code']
      * 限制说明：框架只支持当前主对象直接定义的集合对象集合查询，不支持再多层嵌套
      */
     private Class subQueryCollectionPropetyType;
 
-    public PropertyFilter() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PropertyFilter that = (PropertyFilter) o;
+
+        if (!filterName.equals(that.filterName)) return false;
+        return propertyClass.equals(that.propertyClass);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = filterName.hashCode();
+        result = 31 * result + propertyClass.hashCode();
+        return result;
     }
 
     /**
-     * @param filterName
-     *            比较属性字符串,含待比较的比较类型、属性值类型及属性列表.
-     * @param values
-     *            待比较的值.
+     * @param filterName 比较属性字符串,含待比较的比较类型、属性值类型及属性列表.
+     * @param values     待比较的值.
      */
     public PropertyFilter(Class<?> entityClass, String filterName, String... values) {
-
+        this.filterName = filterName;
         String matchTypeCode = StringUtils.substringBefore(filterName, "_");
         if (matchTypeCode.indexOf("@") > -1) {
             String[] matchTypeCodes = matchTypeCode.split("@");
@@ -264,7 +323,7 @@ public class PropertyFilter {
                             values[1] = DateUtils.formatDate(dateTo.plusDays(1).toDate());
                         }
                     } else {
-                        values = new String[] { values[0].trim() };
+                        values = new String[]{values[0].trim()};
                     }
                 }
             }
@@ -305,7 +364,7 @@ public class PropertyFilter {
     /**
      * Java程序层直接构造过滤器对象, 如filters.add(new PropertyFilter(MatchType.EQ, "code",
      * code));
-     * 
+     *
      * @param matchType
      * @param propertyName
      * @param matchValue
@@ -319,7 +378,7 @@ public class PropertyFilter {
     /**
      * Java程序层直接构造过滤器对象, 如filters.add(new PropertyFilter(MatchType.LIKE, new
      * String[]{"code","name"}, value));
-     * 
+     *
      * @param matchType
      * @param propertyName
      * @param matchValue
@@ -390,9 +449,10 @@ public class PropertyFilter {
      * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
      * sidx 排序属性名称
      * sord 排序规则，asc=升序，desc=降序，默认asc
-     * @param request  HttpServletRequest对象
-     * @param defaultRows  如果request中未提供rows参数时默认记录数
-     * @return 
+     *
+     * @param request     HttpServletRequest对象
+     * @param defaultRows 如果request中未提供rows参数时默认记录数
+     * @return
      */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, int defaultRows) {
         return buildPageableFromHttpRequest(request, null, defaultRows);
@@ -405,8 +465,9 @@ public class PropertyFilter {
      * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
      * sidx 排序属性名称
      * sord 排序规则，asc=升序，desc=降序，默认asc
-     * @param request  HttpServletRequest对象
-     * @return 
+     *
+     * @param request HttpServletRequest对象
+     * @return
      */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request) {
         return buildPageableFromHttpRequest(request, null, DEFAULT_PAGE_ROWS);
@@ -419,9 +480,10 @@ public class PropertyFilter {
      * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
      * sidx 排序属性名称
      * sord 排序规则，asc=升序，desc=降序，默认asc
-     * @param request 
-     * @param sort 如果传入参数为null，则从request构建，否则直接取输入sort参数
-     * @param defaultRows  如果request中未提供rows参数时默认记录数
+     *
+     * @param request
+     * @param sort        如果传入参数为null，则从request构建，否则直接取输入sort参数
+     * @param defaultRows 如果request中未提供rows参数时默认记录数
      * @return
      */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort, int defaultRows) {
@@ -464,9 +526,10 @@ public class PropertyFilter {
      * start 起始记录顺序号，从1开始，用于一些需要精确控制从start到start+size的场景；可选参数，未提供则取值等于page*size
      * sidx 排序属性名称
      * sord 排序规则，asc=升序，desc=降序，默认asc
-     * @param request 
-     * @param sort 如果传入参数为null，则从request构建，否则直接取输入sort参数
-     * @param defaultRows  如果request中未提供rows参数时默认记录数
+     *
+     * @param request
+     * @param sort        如果传入参数为null，则从request构建，否则直接取输入sort参数
+     * @param defaultRows 如果request中未提供rows参数时默认记录数
      * @return
      */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort) {
@@ -477,6 +540,7 @@ public class PropertyFilter {
      * 从request对象中提取组装排序对象，参数列表：
      * sidx 排序属性名称
      * sord 排序规则，asc=升序，desc=降序，默认asc
+     *
      * @param request
      * @return
      */
@@ -601,7 +665,7 @@ public class PropertyFilter {
                 } else if (values.length > 1) {
                     params.put(unprefixed, values);
                 } else {
-                    params.put(unprefixed, new String[] { values[0] });
+                    params.put(unprefixed, new String[]{values[0]});
                 }
             }
         }

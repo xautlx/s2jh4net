@@ -20,6 +20,7 @@
 <script type="text/javascript">
     var WEB_ROOT = "${ctx}";
     Config.setContextPath("${ctx}");
+    Config.setFileUploadUrl("${fileUploadUrl}");
 </script>
 
 <!-- BEGIN PAGE LEVEL STYLES -->

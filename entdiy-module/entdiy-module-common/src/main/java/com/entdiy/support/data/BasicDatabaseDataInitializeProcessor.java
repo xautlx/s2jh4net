@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.support.data;
 
 import com.entdiy.auth.entity.*;
@@ -9,11 +23,10 @@ import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.context.ExtPropertyPlaceholderConfigurer;
-import com.entdiy.core.data.DatabaseDataInitializeProcessor;
+import com.entdiy.core.data.AbstractDatabaseDataInitializeProcessor;
 import com.entdiy.core.service.GlobalConfigService;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.Exceptions;
-import com.entdiy.core.util.UidUtils;
 import com.entdiy.security.AuthUserDetails;
 import com.entdiy.sys.entity.*;
 import com.entdiy.sys.service.*;
@@ -45,9 +58,9 @@ import java.util.Set;
  * 数据库基础数据初始化处理器
  */
 @Component
-public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitializeProcessor {
+public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataInitializeProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger(BasicDatabaseDataInitializeProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractDatabaseDataInitializeProcessor.class);
 
     @Autowired
     private RoleService roleService;
@@ -85,6 +98,51 @@ public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitialize
         logger.info("Running " + this.getClass().getName());
         Date now = DateUtils.currentDate();
 
+        //初始化演示部门数据
+        if (isEmptyTable(Department.class)) {
+
+            Department rootDepartment = new Department();
+            rootDepartment.setCode("ROOT");
+            rootDepartment.setName("总部");
+            departmentService.save(rootDepartment);
+
+            if (GlobalConfigService.isDemoMode() || GlobalConfigService.isDevMode()) {
+                Department department10 = new Department();
+                department10.setCode("SC00");
+                department10.setName("市场部");
+                departmentService.save(department10);
+
+                Department department11 = new Department();
+                department11.setCode("SC01");
+                department11.setName("市场一部");
+                department11.setParent(department10);
+                departmentService.save(department11);
+
+                Department department12 = new Department();
+                department12.setCode("SC02");
+                department12.setName("市场二部");
+                department12.setParent(department10);
+                departmentService.save(department12);
+
+                Department department20 = new Department();
+                department20.setCode("YF00");
+                department20.setName("研发部");
+                departmentService.save(department20);
+
+                Department department21 = new Department();
+                department21.setCode("YF01");
+                department21.setName("研发一部");
+                department21.setParent(department20);
+                departmentService.save(department21);
+
+                Department department22 = new Department();
+                department22.setCode("YF02");
+                department22.setName("研发二部");
+                department22.setParent(department20);
+                departmentService.save(department22);
+            }
+        }
+
         //角色、用户等数据初始化,默认密码为:账号+123
         if (isEmptyTable(User.class)) {
             //后端预置超级管理员，无需配置相关权限，默认自动赋予所有权限
@@ -98,6 +156,7 @@ public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitialize
             User entity = new User();
             entity.setAuthUid("admin");
             entity.setAuthType(AuthTypeEnum.SYS);
+            entity.setDepartment(departmentService.findByProperty("code", "ROOT"));
             entity.setMgmtGranted(true);
             entity.setEmail("xautlx@hotmail.com");
             entity.setNickName("后端预置超级管理员");
@@ -115,17 +174,6 @@ public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitialize
             mgmtRole.setName("后端登录用户默认角色");
             mgmtRole.setDescription("系统预置，请勿随意修改。注意：所有后端登录用户默认关联此角色，无需额外写入用户和角色关联数据。");
             roleService.save(mgmtRole);
-
-            //后台默认普通管理员账号
-            entity = new User();
-            entity.setAuthGuid(UidUtils.UID());
-            entity.setAuthUid("mgmt");
-            entity.setAuthType(AuthTypeEnum.SYS);
-            entity.setMgmtGranted(true);
-            entity.setNickName("后台默认普通管理员");
-            //默认密码失效，用户初始密码登录后则强制修改密码
-            entity.setCredentialsExpireTime(now);
-            userService.save(entity, entity.getAuthUid() + "123");
 
             //前端登录用户默认角色，，具体权限可通过管理界面配置
             //所有前端登录用户默认关联此角色，无需额外写入用户和角色关联数据
@@ -205,26 +253,6 @@ public class BasicDatabaseDataInitializeProcessor extends DatabaseDataInitialize
         }
 
         if (GlobalConfigService.isDemoMode() || GlobalConfigService.isDevMode()) {
-            //初始化演示部门数据
-            if (isEmptyTable(Department.class)) {
-                Department department = new Department();
-                department.setCode("SC00");
-                department.setName("市场部");
-                departmentService.save(department);
-
-                Department department1 = new Department();
-                department1.setCode("SC01");
-                department1.setName("市场一部");
-                department1.setParent(department);
-                departmentService.save(department1);
-
-                Department department2 = new Department();
-                department2.setCode("SC02");
-                department2.setName("市场二部");
-                department2.setParent(department);
-                departmentService.save(department2);
-            }
-
             //初始化演示通知消息
             if (isEmptyTable(NotifyMessage.class)) {
                 NotifyMessage entity = new NotifyMessage();

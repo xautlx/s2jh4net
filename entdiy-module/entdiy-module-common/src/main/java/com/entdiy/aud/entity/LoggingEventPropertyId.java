@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.aud.entity;
 
 import javax.persistence.Access;
@@ -36,27 +50,21 @@ public class LoggingEventPropertyId implements java.io.Serializable {
         this.mappedKey = mappedKey;
     }
 
-    public boolean equals(Object other) {
-        if ((this == other))
-            return true;
-        if ((other == null))
-            return false;
-        if (!(other instanceof LoggingEventPropertyId))
-            return false;
-        LoggingEventPropertyId castOther = (LoggingEventPropertyId) other;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        return ((this.getEventId() == castOther.getEventId()) || (this.getEventId() != null && castOther.getEventId() != null && this.getEventId()
-                .equals(castOther.getEventId())))
-                && ((this.getMappedKey() == castOther.getMappedKey()) || (this.getMappedKey() != null && castOther.getMappedKey() != null && this
-                        .getMappedKey().equals(castOther.getMappedKey())));
+        LoggingEventPropertyId that = (LoggingEventPropertyId) o;
+
+        if (!eventId.equals(that.eventId)) return false;
+        return mappedKey.equals(that.mappedKey);
     }
 
+    @Override
     public int hashCode() {
-        int result = 17;
-
-        result = 37 * result + (getEventId() == null ? 0 : this.getEventId().hashCode());
-        result = 37 * result + (getMappedKey() == null ? 0 : this.getMappedKey().hashCode());
+        int result = eventId.hashCode();
+        result = 31 * result + mappedKey.hashCode();
         return result;
     }
-
 }

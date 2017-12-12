@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-sys-data-dict-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/sys/data-dict/list',
+                url : '/admin/sys/data-dict/list',
                 colModel : [ {
                     label : '主要数据',
                     name : 'primaryValue',
@@ -92,10 +92,10 @@
                 subGridRowExpanded : function(subgrid_id, row_id) {
                     Grid.initRecursiveSubGrid(subgrid_id, row_id, "parent.id");
                 },
-                editurl : WEB_ROOT + '/admin/sys/data-dict/edit',
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                fullediturl : WEB_ROOT + "/admin/sys/data-dict/edit",
-                delurl : WEB_ROOT + '/admin/sys/data-dict/delete'
+                editurl : '/admin/sys/data-dict/edit',
+                editrulesurl : '/admin/util/validate?clazz=${clazz}',
+                fullediturl : "/admin/sys/data-dict/edit",
+                delurl : '/admin/sys/data-dict/delete'
             });
         });
     </script>

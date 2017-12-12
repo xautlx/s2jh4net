@@ -1,3 +1,17 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.security;
 
 import java.io.IOException;
@@ -120,6 +134,7 @@ public class SharedEhCacheManager implements CacheManager, Initializable, Destro
      *
      * @param name the name of the cache to load/create.
      */
+    @Override
     public final <K, V> Cache<K, V> getCache(String name) throws CacheException {
 
         if (log.isTraceEnabled()) {
@@ -169,6 +184,7 @@ public class SharedEhCacheManager implements CacheManager, Initializable, Destro
      *          if there are any CacheExceptions thrown by EhCache.
      * @see net.sf.ehcache.CacheManager#create
      */
+    @Override
     public final void init() throws CacheException {
         ensureCacheManager();
     }
@@ -211,6 +227,7 @@ public class SharedEhCacheManager implements CacheManager, Initializable, Destro
      * a non-null CacheManager into this instace before calling {@link #init() init}, this instance expects that same
      * component to also destroy the CacheManager instance, and it will not attempt to do so.
      */
+    @Override
     public void destroy() {
         if (cacheManagerImplicitlyCreated) {
             try {

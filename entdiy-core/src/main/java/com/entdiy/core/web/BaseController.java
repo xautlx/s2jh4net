@@ -1,17 +1,20 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.core.web;
 
-import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.entdiy.core.entity.PersistableEntity;
+import com.entdiy.core.entity.AbstractPersistableEntity;
 import com.entdiy.core.exception.WebException;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
@@ -19,7 +22,8 @@ import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.EntityProcessCallbackHandler.EntityProcessCallbackException;
 import com.entdiy.core.web.view.OperationResult;
-
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,15 +32,19 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-public abstract class BaseController<T extends PersistableEntity<ID>, ID extends Serializable> {
+public abstract class BaseController<T extends AbstractPersistableEntity<ID>, ID extends Serializable> {
 
     private final static Logger logger = LoggerFactory.getLogger(BaseController.class);
 
@@ -190,7 +198,7 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
         T entity = null;
         if (id != null && StringUtils.isNotBlank(id.toString())) {
             //如果是以POST方式请求数据，则获取Detach状态的对象，其他则保留Session方式以便获取Lazy属性
-            if (request.getMethod().equalsIgnoreCase("POST")) {
+            if (HttpMethod.POST.name().equalsIgnoreCase(request.getMethod())) {
                 entity = buildDetachedBindingEntity(id);
             }
             //如果子类没有给出detach的对象，则依然采用非detach模式查询返回对象
@@ -208,9 +216,13 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
         }
         model.addAttribute("clazz", entityClass.getName());
         model.addAttribute("entity", entity);
-        model.addAttribute("_pid_", new Date().getTime());
+        model.addAttribute("_pid_", System.currentTimeMillis());
         model.addAttribute("ctx", request.getContextPath());
         return entity;
+    }
+
+    protected T fetchEntityFromModel(Model model) {
+        return (T) model.asMap().get("entity");
     }
 
     /**
@@ -242,7 +254,7 @@ public abstract class BaseController<T extends PersistableEntity<ID>, ID extends
      * 注意：凡是基于当前登录用户进行的控制参数，一定不要通过页面请求参数方式传递，存在用户篡改请求数据访问非法数据的风险
      * 因此一定要在Controller层面通过覆写此回调函数或自己的业务方法中强制追加过滤条件
      *
-     * @param filters 已基于Request组装好查询条件的集合对象
+     * @param groupPropertyFilter 已基于Request组装好查询条件的集合对象
      */
     protected void appendFilterProperty(GroupPropertyFilter groupPropertyFilter) {
 

@@ -1,9 +1,24 @@
+/**
+ * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.entdiy.support.web;
 
 import ch.qos.logback.classic.Level;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.exception.WebException;
+import com.entdiy.core.service.GlobalConfigService;
 import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.Exceptions;
@@ -16,6 +31,7 @@ import com.entdiy.security.AuthUserDetails;
 import com.entdiy.support.service.SmsService;
 import com.entdiy.support.service.SmsService.SmsMessageTypeEnum;
 import com.entdiy.sys.service.SmsVerifyCodeService;
+import com.google.common.collect.Maps;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import org.apache.commons.io.IOUtils;
@@ -33,6 +49,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -83,16 +100,19 @@ public class UtilController {
     @RequestMapping(value = "/pub/send-sms-code/{mobile}", method = RequestMethod.GET)
     @ResponseBody
     public OperationResult sendSmsCode(@PathVariable("mobile") String mobile, HttpServletRequest request) {
-        OperationResult captchaInvalid = CaptchaUtils.validateCaptchaCode(request, "captcha");
-        if (captchaInvalid != null) {
-            return captchaInvalid;
-        }
+        //二次校验验证码避免绕过表单校验的恶意请求
+        CaptchaUtils.assetValidateCaptchaCode(request, "captcha");
 
         String code = smsVerifyCodeService.generateSmsCode(request, mobile, false);
         String msg = "您的操作验证码为：" + code + "。请勿向任何人提供您收到的短信验证码。如非本人操作，请忽略本信息。";
         String errorMessage = smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode);
         if (StringUtils.isBlank(errorMessage)) {
-            return OperationResult.buildSuccessResult();
+            OperationResult result = OperationResult.buildSuccessResult();
+            //如果是开发模式直接把短信内容返回给页面显示方便开发调试
+            if (GlobalConfigService.isDevMode()) {
+                result.setMessage("开发模式信息：" + msg);
+            }
+            return result;
         } else {
             return OperationResult.buildFailureResult(errorMessage);
         }
@@ -265,6 +285,7 @@ public class UtilController {
 
         // 为了避免遗忘执行手工恢复操作，在“临时调整系统时间”操作后，默认在N分钟后强制恢复为当前系统时间。
         Runnable runnable = new Runnable() {
+            @Override
             public void run() {
                 DateUtils.setCurrentDate(null);
                 logger.info("Processed DateUtils.currentDate() reset to new Date()");
@@ -283,5 +304,31 @@ public class UtilController {
     public OperationResult systimeReset() {
         DateUtils.setCurrentDate(null);
         return OperationResult.buildSuccessResult("系统时间临时调整已恢复为当前系统时间：" + DateUtils.formatTime(DateUtils.currentDate()));
+    }
+
+    @RequestMapping(value = "/pub/file-upload/kind-editor", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> imageUpload(HttpServletRequest request, @RequestParam("imgFile") CommonsMultipartFile fileUpload) {
+        Map<String, Object> retMap = Maps.newHashMap();
+        try {
+            if (fileUpload != null && !fileUpload.isEmpty()) {
+                String path = ServletUtils.writeUploadFile(fileUpload.getInputStream(), fileUpload.getOriginalFilename(), fileUpload.getSize());
+                if (StringUtils.isNotBlank(path)) {
+                    retMap.put("error", 0);
+                    String contextPath = request.getContextPath();
+                    if ("/".equals(contextPath)) {
+                        retMap.put("url", path);
+                    } else {
+                        retMap.put("url", contextPath + path);
+                    }
+                    return retMap;
+                }
+            }
+        } catch (IOException e) {
+            throw new WebException("Upload file error", e);
+        }
+        retMap.put("error", 1);
+        retMap.put("message", "图片处理失败");
+        return retMap;
     }
 }

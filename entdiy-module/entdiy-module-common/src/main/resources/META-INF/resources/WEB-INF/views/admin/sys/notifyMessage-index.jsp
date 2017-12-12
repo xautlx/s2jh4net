@@ -38,7 +38,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-sys-notify-message-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/sys/notify-message/list',
+                url : '/admin/sys/notify-message/list',
                 colModel : [ {
                     label : '阅读人数',
                     name : 'readUserCount',
@@ -114,18 +114,18 @@
                     width : 40,
                     align : 'center'
                 } ],
-                editurl : WEB_ROOT + '/admin/sys/notify-message/edit',
+                editurl : '/admin/sys/notify-message/edit',
                 inlineNav : {
                     add : false
                 },
                 multiselect : false,
-                editrulesurl : WEB_ROOT + '/admin/util/validate?clazz=${clazz}',
-                fullediturl : WEB_ROOT + "/admin/sys/notify-message/edit",
-                delurl : WEB_ROOT + '/admin/sys/notify-message/delete',
+                editrulesurl : '/admin/util/validate?clazz=${clazz}',
+                fullediturl : "/admin/sys/notify-message/edit",
+                delurl : '/admin/sys/notify-message/delete',
                 subGrid : true,
                 subGridRowExpanded : function(subgrid_id, row_id) {
                     Grid.initSubGrid(subgrid_id, row_id, {
-                        url : WEB_ROOT + "/admin/sys/notify-message/read-list?search['EQ_notifyMessage.id']=" + row_id,
+                        url : "/admin/sys/notify-message/read-list?search['EQ_notifyMessage.id']=" + row_id,
                         colNames : [ '阅读用户', '首次阅读时间', '最后阅读时间', '总计阅读次数' ],
                         colModel : [ {
                             name : 'readUserLabel',

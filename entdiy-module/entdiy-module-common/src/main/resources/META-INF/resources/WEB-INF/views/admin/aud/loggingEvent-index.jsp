@@ -37,7 +37,7 @@
 	<script type="text/javascript">
         $(function() {
             $("#grid-aud-logging-event-index").data("gridOptions", {
-                url : WEB_ROOT + '/admin/aud/logging-event/list',
+                url : '/admin/aud/logging-event/list',
                 colModel : [ {
                     label : '流水号',
                     name : 'id',
@@ -96,7 +96,7 @@
                     editable : true
                 } ],
                 addable : false,
-                fullediturl : WEB_ROOT + '/admin/aud/logging-event/edit'
+                fullediturl : '/admin/aud/logging-event/edit'
             });
         });
     </script>
