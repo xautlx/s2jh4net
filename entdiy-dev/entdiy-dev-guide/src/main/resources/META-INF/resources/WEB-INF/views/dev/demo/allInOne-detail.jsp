@@ -14,7 +14,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation"
-                   action="${ctx}/dev/docs/mock/show-form-data"
+                   action="/dev/demo/all-in-one/show-form-data"
                    method="post" modelAttribute="entity">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
@@ -123,7 +123,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation"
-                   action="${ctx}/dev/docs/mock/show-form-data"
+                   action="/dev/demo/all-in-one/show-form-data"
                    method="post" modelAttribute="entity">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
@@ -233,7 +233,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation"
-                   action="${ctx}/dev/docs/mock/validation-confirm" method="post" data-editrulesurl="false"
+                   action="/dev/demo/all-in-one/validation-confirm" method="post" data-editrulesurl="false"
                    modelAttribute="entity">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
@@ -439,7 +439,7 @@
                             <label class="control-label">按钮发起POST请求</label>
                             <div class="controls">
                                 <button class="btn blue btn-post-url" type="button"
-                                        data-url="${ctx}/dev/docs/mock/btn-post" data-confirm="确认提交请求？">模拟按钮POST请求
+                                        data-url="/dev/demo/all-in-one/btn-post" data-confirm="确认提交请求？">模拟按钮POST请求
                                 </button>
                             </div>
                         </div>
@@ -485,7 +485,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
-                   action="${ctx}/dev/docs/mock/show-form-data" method="post" modelAttribute="entity">
+                   action="/dev/demo/all-in-one/show-form-data" method="post" modelAttribute="entity">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
             <div class="form-body">
@@ -762,7 +762,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-lg"
-                   action="${ctx}/dev/docs/mock/show-form-data" method="post" data-editrulesurl="false"
+                   action="/dev/demo/all-in-one/show-form-data" method="post" data-editrulesurl="false"
                    modelAttribute="entity">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
@@ -838,7 +838,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
-                   action="${ctx}/dev/docs/mock/show-form-data" method="post" data-editrulesurl="false"
+                   action="/dev/demo/all-in-one/show-form-data" method="post" data-editrulesurl="false"
                    modelAttribute="entity">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
@@ -924,7 +924,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
-                   action="${ctx}/dev/docs/mock/show-form-data" method="post" data-editrulesurl="false"
+                   action="/dev/demo/all-in-one/show-form-data" method="post" data-editrulesurl="false"
                    modelAttribute="entity">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
@@ -1060,11 +1060,11 @@
             </div>
             <div class="col-md-1">
                 <span class="help-block">
-								<a href="${ctx}/dev/docs/jsdoc/ExtDynamicEditTable.html" target="_blank"
-                                   class="btn btn-icon-only green btn-dev-demo-info">
-                            <i class="fa fa-info"></i>
-                        </a>
-							</span>
+					<a href="${ctx}/dev/docs/jsdoc/ExtDynamicEditTable.html" target="_blank"
+                       class="btn btn-icon-only green btn-dev-demo-info">
+                       <i class="fa fa-info"></i>
+                    </a>
+				</span>
             </div>
         </div>
 
@@ -1312,7 +1312,7 @@
     </div>
     <div class="portlet-body">
         <form:form class="form-horizontal form-bordered form-label-stripped form-validation control-label-xl"
-                   action="${ctx}/dev/docs/mock/show-form-data" method="post" data-editrulesurl="false"
+                   action="/dev/demo/all-in-one/show-form-data" method="post" data-editrulesurl="false"
                    modelAttribute="entity">
             <div class="form-body">
                 <div class="row">
@@ -1403,7 +1403,7 @@
                     <div class="col-md-12">
                         <form method="get" class="form-inline form-validation form-search-init"
                               data-div-search="#table-infinite-scroll-doc-demo > tbody"
-                              action="${ctx}/dev/docs/mock/infinite-scroll?rows=3">
+                              action="/dev/demo/all-in-one/infinite-scroll-items?rows=3">
                             <div class="form-group">
                                 <div class="controls controls-clearfix">
                                     <input type="text" name="search['CN_code']" class="form-control input-large"

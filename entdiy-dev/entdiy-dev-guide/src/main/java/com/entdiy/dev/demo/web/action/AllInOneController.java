@@ -164,7 +164,7 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
         return "dev/demo/allInOne-detail";
     }
 
-    @RequestMapping(value = "/mock/show-form-data", method = RequestMethod.POST)
+    @RequestMapping(value = "/show-form-data", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult showFormData(HttpServletRequest request) {
         Enumeration<String> names = request.getParameterNames();
