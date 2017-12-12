@@ -139,7 +139,6 @@
 
 				/login = authcWww
 				/logout = logoutWww
-				/** = anon
 
 				/m/pub/** = anon
 				/m/login = authcMobile
@@ -160,6 +159,8 @@
 				/app/** = authcAppSecret,authcBearerToken
 
 				/api/** = authcAppSecret
+
+				/** = anon
 			</value>
 		</property>
 	</bean>
