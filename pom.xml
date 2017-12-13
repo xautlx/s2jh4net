@@ -12,7 +12,7 @@
         <module>entdiy-core</module>
         <module>entdiy-extension</module>
         <module>entdiy-module</module>
-        <module>entdiy-dev</module>
+        <module>entdiy-devops</module>
         <module>entdiy-webapp</module>
     </modules>
 

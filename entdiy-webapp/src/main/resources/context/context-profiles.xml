@@ -140,7 +140,7 @@
 					<value>classpath:/application.properties</value>
 					<value>classpath:/captcha.properties</value>
 					<value>classpath:/application.prd.properties</value>
-					<value>file:/etc/com/entdiy/application.properties</value>
+					<value>file:/etc/entdiy/config/application.properties</value>
 				</list>
 			</property>
 			<property name="ignoreResourceNotFound" value="true" />

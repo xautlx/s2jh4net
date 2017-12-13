@@ -41,6 +41,7 @@
 
     <link href="${ctx}/assets/apps/css/admin.css?_=${buildVersion}" rel="stylesheet" type="text/css"/>
 
+    <link rel="shortcut icon" href="${ctx}/assets/apps/img/favicon.ico"/>
     <sitemesh:write property='head'/>
 </head>
 <!-- END HEAD -->

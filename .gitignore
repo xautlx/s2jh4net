@@ -21,6 +21,7 @@ target
 *.java~
 *.properties~
 *.xml~
+*.xml.bak
 temp.jsp
 
 # system ignore
