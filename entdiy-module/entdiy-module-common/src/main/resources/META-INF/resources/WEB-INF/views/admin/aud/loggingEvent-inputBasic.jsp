@@ -23,7 +23,7 @@
 				<div class="col-md-12">
 					<div class="form-group">
 						<label class="control-label">处理状态</label>
-						<div class="controls controls-radiobuttons">
+						<div class="controls">
 							<form:radiobuttons path="state" items="${stateMap}" class="form-control" />
 						</div>
 					</div>

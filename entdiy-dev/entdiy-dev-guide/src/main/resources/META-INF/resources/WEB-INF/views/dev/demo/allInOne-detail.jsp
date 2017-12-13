@@ -62,10 +62,8 @@
                         <div class="form-group">
                             <label class="control-label">单选按钮组</label>
                             <div class="controls">
-                                <div class="input-group input-group-radiobuttons">
-                                    <form:radiobuttons path="expired" class="form-control"
-                                                       items="${applicationScope.cons.booleanLabelMap}"/>
-                                </div>
+                                <form:radiobuttons path="expired" class="form-control"
+                                                   items="${applicationScope.cons.booleanLabelMap}"/>
                             </div>
                         </div>
                     </div>
@@ -73,20 +71,18 @@
                         <div class="form-group">
                             <label class="control-label">复选按钮组</label>
                             <div class="controls">
-                                <div class="input-group input-group-checkboxes">
-                                    <form:checkboxes path="splitTexts" class="form-control"
-                                                     items="${multiSelectTags}"/>
-                                </div>
+                                <form:checkboxes path="splitTexts" class="form-control"
+                                                 items="${multiSelectTags}"/>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-1">
-							<span class="help-block">
-								<a href="${ctx}/dev/docs/jsdoc/ExtCheckboxRadioGroup.html" target="_blank"
-                                   class="btn btn-icon-only green btn-dev-demo-info">
-                                    <i class="fa fa-info"></i>
-                                </a>
-							</span>
+                        <span class="help-block">
+                            <a href="${ctx}/dev/docs/jsdoc/ExtCheckboxRadioGroup.html" target="_blank"
+                               class="btn btn-icon-only green btn-dev-demo-info">
+                                <i class="fa fa-info"></i>
+                            </a>
+                        </span>
                     </div>
                 </div>
                 <div class="row">
@@ -142,11 +138,9 @@
                         <div class="form-group">
                             <label class="control-label">单选组</label>
                             <div class="controls">
-                                <div class="input-group input-group-radiobuttons">
-                                    <form:radiobuttons path="expired" class="form-control"
-                                                       items="${applicationScope.cons.booleanLabelMap}"
-                                                       data-profile-param="mock-profile2"/>
-                                </div>
+                                <form:radiobuttons path="expired" class="form-control"
+                                                   items="${applicationScope.cons.booleanLabelMap}"
+                                                   data-profile-param="mock-profile2"/>
                             </div>
                         </div>
                     </div>
@@ -164,10 +158,8 @@
                         <div class="form-group">
                             <label class="control-label">复选按钮组</label>
                             <div class="controls">
-                                <div class="input-group input-group-checkboxes">
-                                    <form:checkboxes path="emptyTexts" class="form-control"
-                                                     items="${multiSelectTags}" data-profile-param="mock-profile3"/>
-                                </div>
+                                <form:checkboxes path="emptyTexts" class="form-control"
+                                                 items="${multiSelectTags}" data-profile-param="mock-profile3"/>
                             </div>
                         </div>
                     </div>

@@ -226,10 +226,9 @@ public abstract class BaseController<T extends AbstractPersistableEntity<ID>, ID
     }
 
     /**
-     * 如果子类需要一对多关联对象批量处理，则在子类返回定制的detach对象
-     *
-     * @param id
-     * @return
+     * 如果编辑提交数据涉及到一对一或一对多关联对象更新处理，则需要返回Detached的对象实例，否则会遇到关联对象主键修改异常
+     * @param id 实体主键
+     * @return Detached的对象实例
      */
     protected T buildDetachedBindingEntity(ID id) {
         return null;

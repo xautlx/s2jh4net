@@ -73,7 +73,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label">显示平台设置</label>
-				<div class="controls controls-checkboxes">
+				<div class="controls">
 					<form:checkboxes items="${platformMap}" path="platformSplit" />
 					<span class="help-block">未勾选表示默认全部</span>
 				</div>

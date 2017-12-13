@@ -68,13 +68,13 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">管理授权</label>
-                    <div class="controls controls-radiobuttons">
+                    <div class="controls">
                         <form:radiobuttons path="mgmtGranted" items="${applicationScope.cons.booleanLabelMap}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label">启用状态</label>
-                    <div class="controls controls-radiobuttons">
+                    <div class="controls">
                         <form:radiobuttons path="accountNonLocked" items="${applicationScope.cons.booleanLabelMap}"/>
                     </div>
                 </div>

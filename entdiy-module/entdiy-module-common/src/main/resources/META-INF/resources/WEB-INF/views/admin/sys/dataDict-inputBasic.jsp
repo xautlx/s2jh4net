@@ -93,7 +93,7 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label">禁用标识</label>
-						<div class="controls controls-radiobuttons">
+						<div class="controls">
 							<form:radiobuttons path="disabled" items="${applicationScope.cons.booleanLabelMap}" />
 						</div>
 					</div>

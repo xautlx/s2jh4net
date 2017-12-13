@@ -41,14 +41,14 @@
 		            name : 'id',
 		            hidden : true
 		        }, {
-		            label : '登录账号对象',
-		            name : 'user',
+		            label : '申请用户',
+		            name : 'user.display',
 		            width : 200,
 		            align : 'center',
-		            editable: true
+		            editable: false
 		        }, {
 		            label : '挂账部门',
-		            name : 'department',
+		            name : 'department.display',
 		            width : 200,
 		            align : 'center',
 		            editable: true
@@ -57,7 +57,7 @@
 		            name : 'submitTime',
 		            width : 150,
 		            align : 'center',
-		            editable: true
+		            editable: false
 		        } ],
 		        postData: {
 		           "search['FETCH_user']" : "INNER",

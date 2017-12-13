@@ -42,6 +42,16 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
         super.initPrepareModel(request, model, id);
     }
 
+    /**
+     * 如果编辑提交数据涉及到一对一或一对多关联对象更新处理，则需要返回Detached的对象实例，否则会遇到关联对象主键修改异常
+     * @param id 实体主键
+     * @return Detached的对象实例
+     */
+    @Override
+    protected ReimbursementRequest buildDetachedBindingEntity(Long id) {
+        return reimbursementRequestService.findDetachedOne(id, "reimbursementRequestItems");
+    }
+
     @MenuData("演示样例:报销申请")
     @RequiresPermissions("演示样例:报销申请")
     @RequestMapping(value = "", method = RequestMethod.GET)

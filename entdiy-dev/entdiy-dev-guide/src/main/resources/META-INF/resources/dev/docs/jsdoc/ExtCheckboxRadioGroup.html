@@ -86,7 +86,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>基于iCheck扩展checkbox和radio美化: ['div.input-group-radiobuttons', 'div.input-group-checkboxes']<br>在form:radiobuttons外部包裹div.input-group-radiobuttons或form:checkboxes外部包裹div.input-group-checkboxes</p></div>
+            <div class="description"><p>基于iCheck扩展checkbox和radio美化: ':checkbox:not(.icheck-ignore),:radio:not(.icheck-ignore)'</p>
+<p>默认对所有checkbox和radio自动添加iCheck组件调用，可通过添加 icheck-ignore class定义取消自动组件化处理</p></div>
         
 
         
@@ -241,13 +242,9 @@
         
             <h3>Examples</h3>
             
-    <pre class="sunlight-highlight-javascript">&lt;div class=&quot;input-group input-group-radiobuttons&quot;&gt;
-   &lt;form:radiobuttons path=&quot;expired&quot; class=&quot;form-control&quot; items=&quot;${applicationScope.cons.booleanLabelMap}&quot;/&gt;
- &lt;/div&gt;</pre>
+    <pre class="sunlight-highlight-javascript">&lt;form:radiobuttons path=&quot;expired&quot; class=&quot;form-control&quot; items=&quot;${applicationScope.cons.booleanLabelMap}&quot;/&gt;</pre>
 
-    <pre class="sunlight-highlight-javascript">&lt;div class=&quot;input-group input-group-checkboxes&quot;&gt;
-   &lt;form:checkboxes path=&quot;splitTexts&quot; class=&quot;form-control&quot; items=&quot;${multiSelectTags}&quot;/&gt;
- &lt;/div&gt;</pre>
+    <pre class="sunlight-highlight-javascript">&lt;form:checkboxes path=&quot;splitTexts&quot; class=&quot;form-control&quot; items=&quot;${multiSelectTags}&quot;/&gt;</pre>
 
 
         

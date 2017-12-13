@@ -26,7 +26,7 @@
 						<div class="col-md-5">
 							<div class="form-group">
 								<label class="control-label">管理授权</label>
-								<div class="controls controls-radiobuttons">
+								<div class="controls">
 									<form:radiobuttons path="user.mgmtGranted" class="form-control"
 										items="${applicationScope.cons.booleanLabelMap}" />
 									<span class="help-block">标识是否有权限登录访问管理端后台</span>
