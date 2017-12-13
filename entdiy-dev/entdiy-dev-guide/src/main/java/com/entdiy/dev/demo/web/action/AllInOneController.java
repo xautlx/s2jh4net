@@ -235,27 +235,6 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
         return data;
     }
 
-    @RequestMapping(value = "/mock/dynamic-table", method = RequestMethod.POST)
-    @ResponseBody
-    public OperationResult saveDynamicTable(@ModelAttribute("entity") MockEntity entity, Model model) {
-        logger.debug("MockEntity: {}", entity);
-
-        //处理关联对象删除
-        List<MockItemEntity> items = entity.getMockItemEntites();
-        if (CollectionUtils.isNotEmpty(items)) {
-            List<MockItemEntity> toRemoves = Lists.newArrayList();
-            for (MockItemEntity item : items) {
-                logger.debug("MockItemEntity: {}", item);
-                if (item.isMarkedRemove()) {
-                    toRemoves.add(item);
-                }
-            }
-            items.removeAll(toRemoves);
-        }
-
-        return OperationResult.buildSuccessResult("数据处理成功");
-    }
-
     @RequestMapping(value = "/infinite-scroll-items", method = RequestMethod.GET)
     public Object repayLogData(HttpServletRequest request, Model model) {
         GroupPropertyFilter groupPropertyFilter = GroupPropertyFilter.buildFromHttpRequest(Privilege.class, request);
@@ -265,14 +244,14 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
     }
 
     @RequiresRoles(AuthUserDetails.ROLE_MGMT_USER)
-    @RequestMapping(value = "/mock/btn-post", method = RequestMethod.POST)
+    @RequestMapping(value = "/btn-post", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult btnPost(Model model) {
         return OperationResult.buildSuccessResult("模拟POST数据处理成功");
     }
 
     @MetaData("模拟表单校验Confirm")
-    @RequestMapping(value = "/mock/validation-confirm", method = RequestMethod.POST)
+    @RequestMapping(value = "/validation-confirm", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult validationConfirm(HttpServletRequest request, Model model, @RequestParam("quantity") Integer quantity) {
         //先进行常规的must数据校验
