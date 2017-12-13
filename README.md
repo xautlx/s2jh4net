@@ -39,6 +39,7 @@
 
 ## 开发指南
 
+* [演示运行](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/演示运行.md) - 一键运行脚本全自动完成基于Maven构建并Docker部署运行应用
 * [开发配置](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/开发配置.md) - 开发基础环境配置说明
 * [工程结构](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/工程结构.md) - 对整个项目工程代码结构进行概要性介绍
 * [代码生成](https://github.com/xautlx/s2jh4net/blob/master/src/main/webapp/docs/markdown/代码生成.md) - 用于基本CURD框架代码生成的工具
