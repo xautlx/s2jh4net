@@ -47,6 +47,8 @@
 * [UI组件](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/UI组件.md)    - 框架UI组件设计思路和用法演示
 * [表格组件](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/表格组件.md) - 功能强大的Grid表格组件扩展增强
 * [表单控制](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/表单控制.md) - 介绍Web开发过程最主要的表单处理设计
+* [常见问题](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/FAQ.md) - 对框架相关常见问题FAQ说明
+
 
 > 由于项目采用了Lombok等插件，如果你想把git获取工程代码导入开发环境，请一定提前浏览文档 [开发配置](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发配置.md) 为IDE进行Lombok等插件配置，否则会出一大堆编译错误。
 
@@ -55,7 +57,6 @@
 * [基础数据](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
 * [数据审计](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
 * [计划任务](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
-* [TODO:爬虫数据采集](https://github.com/xautlx/s2jh4net/tree/snapshot/entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/爬虫数据采集.md) - 参考Nutch实现一个Web管理的轻量级爬虫数据采集解析模块
 
 > 为了便于开发过程参考，项目直接把开发相关的参考样例和指南文档嵌入到运行部署应用中，具体内容可在线浏览，如下图Snapshot部分截图示意。
 
