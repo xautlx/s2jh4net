@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>EntDIY Javascript Document Namespace: ExtCheckboxRadioGroup</title>
+	<title>EntDIY Javascript Document Namespace: ExtFormValidationMethod</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -69,13 +69,13 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: ExtCheckboxRadioGroup</h1>
+	<h1 class="page-title">Namespace: ExtFormValidationMethod</h1>
 <section>
 
 <header>
     
         <h2>
-        ExtCheckboxRadioGroup
+        ExtFormValidationMethod
         </h2>
         
     
@@ -86,121 +86,12 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>基于iCheck扩展checkbox和radio美化: ':checkbox:not(.icheck-ignore),:radio:not(.icheck-ignore)'</p>
-<p>默认对所有checkbox和radio自动添加iCheck组件调用，可通过添加 icheck-ignore class定义取消自动组件化处理</p></div>
+            <div class="description"><p>扩展jquery validator的定制校验方法</p>
+<p>unique：属性唯一性校验，只需在实体属性上面定义@Unique注解即可，注意：默认实现只支持单一属性唯一性校验，不支持组合属性唯一性校验<br>timestamp：ISO时分秒时间格式输入校验，如 2011-08-15 13:40:00<br>shortTimestamp：ISO时分时间格式输入校验，如 2011-08-15 13:40</p></div>
         
 
         
 <dl class="details">
-    
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    <dl>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data-checkbox-class</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    'icheckbox_minimal-grey'
-                
-                </td>
-            
-
-            <td class="description last"><p>基于iCheck的checkbox样式定义</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>data-radio-class</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    'radio_minimal-grey'
-                
-                </td>
-            
-
-            <td class="description last"><p>基于iCheck的radio样式定义</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-</dl>
-
     
 
 	
@@ -251,14 +142,6 @@
 
 	
 </dl>
-
-
-        
-            <h3>Examples</h3>
-            
-    <pre class="sunlight-highlight-javascript">&lt;form:radiobuttons path=&quot;expired&quot; class=&quot;form-control&quot; items=&quot;${applicationScope.cons.booleanLabelMap}&quot;/&gt;</pre>
-
-    <pre class="sunlight-highlight-javascript">&lt;form:checkboxes path=&quot;splitTexts&quot; class=&quot;form-control&quot; items=&quot;${multiSelectTags}&quot;/&gt;</pre>
 
 
         

@@ -3,10 +3,10 @@
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 BASE_DIR=${SHELL_DIR}/..
 
-app_name="entdiy"
-port="8080"
+app_name="redis"
+port="6379"
 
-while getopts p: opt
+while getopts p:c: opt
 do
   case $opt in
     p)
@@ -16,9 +16,7 @@ do
 done
 shift $((OPTIND-1))
 
-app_dir=${BASE_DIR}/nodes/${port}/webapp
-war_dir=${BASE_DIR}/war
-data_dir=${BASE_DIR}/data
+data_dir=${BASE_DIR}/nodes/${port}/data
 config_dir=${BASE_DIR}/config
 log_dir=${BASE_DIR}/nodes/${port}/logs
 docker_name=${app_name}-${port}
@@ -26,18 +24,11 @@ docker_name=${app_name}-${port}
 case "$1" in
     start)
     echo docker run ${docker_name}...
-    mkdir -p ${app_dir} ; mkdir -p ${data_dir}; mkdir -p ${config_dir}; mkdir -p ${log_dir}
-    deploy_dir="/usr/local/tomcat/webapps"
-    docker run --name ${docker_name} -p $port:8080 --restart=always \
-               --link redis-6379:docker-redis-link \
-                -v $app_dir:$deploy_dir \
-                -v $log_dir:/usr/local/tomcat/logs \
-                -v $config_dir:/etc/entdiy/config \
-                -v $data_dir:/etc/entdiy/data \
+    mkdir -p ${data_dir}; mkdir -p ${config_dir}; mkdir -p ${log_dir}
+    docker run --name ${docker_name} -p $port:6379 --restart=always \
+                -v $data_dir:/data \
                 -e TZ="Asia/Shanghai" \
-                -e JAVA_OPTS="-Dspring.profiles.active=production" \
-                -e CATALINA_OPTS="-Xms256m -Xmx4096m -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=utf-8" \
-                -d openweb/oracle-tomcat:8-jre8
+                -d redis:3.2.11
 
     echo docker started for $docker_name.
     ;;
@@ -53,13 +44,6 @@ case "$1" in
     ;;
     restart)
     $0 -p $port stop
-    $0 -p $port start
-    ;;
-    deploy)
-    $0 -p $port stop
-    rm -fr ${app_dir}
-    mkdir -p ${app_dir}
-    cp -v ${war_dir}/* ${app_dir}/.
     $0 -p $port start
     ;;
     status)
