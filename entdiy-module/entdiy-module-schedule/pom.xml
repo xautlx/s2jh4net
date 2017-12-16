@@ -48,6 +48,12 @@
             <scope>test</scope>
         </dependency>
 
+		<!-- http://projectlombok.org/ -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
 
 </project>

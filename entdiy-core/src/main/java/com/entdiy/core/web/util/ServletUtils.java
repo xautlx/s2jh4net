@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +17,9 @@ package com.entdiy.core.web.util;
 import ch.qos.logback.classic.ClassicConstants;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
-import com.entdiy.core.context.ExtPropertyPlaceholderConfigurer;
-import com.entdiy.core.context.SpringContextHolder;
 import com.entdiy.core.service.GlobalConfigService;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.Encodes;
-import com.entdiy.core.util.UidUtils;
 import com.entdiy.core.web.filter.WebAppContextInitFilter;
 import com.entdiy.core.web.json.DateJsonSerializer;
 import com.entdiy.core.web.json.DateTimeJsonSerializer;
@@ -135,7 +132,6 @@ public class ServletUtils {
     /**
      * 基于构建的哈希标识计算获取校验规则
      *
-     * @param id
      * @return
      */
     public static Map<String, Object> buildValidateRules(String entityClazz) {
@@ -381,31 +377,11 @@ public class ServletUtils {
      */
     public static String getReadFileUrlPrefix() {
         if (readFileUrlPrefix == null) {
-            ExtPropertyPlaceholderConfigurer cfg = SpringContextHolder.getBean(ExtPropertyPlaceholderConfigurer.class);
-            readFileUrlPrefix = cfg.getProperty("read_file_url_prefix");
             if (StringUtils.isBlank(readFileUrlPrefix)) {
                 readFileUrlPrefix = WebAppContextInitFilter.getInitedWebContextFullUrl();
             }
         }
         return readFileUrlPrefix;
-    }
-
-    private static String staticsFileUrlPrefix;
-
-    /**
-     * 文件显示URL前缀
-     *
-     * @return
-     */
-    public static String getStaticsFileUrlPrefix() {
-        if (staticsFileUrlPrefix == null) {
-            ExtPropertyPlaceholderConfigurer cfg = SpringContextHolder.getBean(ExtPropertyPlaceholderConfigurer.class);
-            staticsFileUrlPrefix = cfg.getProperty("statics_url_prefix");
-            if (StringUtils.isBlank(staticsFileUrlPrefix)) {
-                staticsFileUrlPrefix = WebAppContextInitFilter.getInitedWebContextFullUrl();
-            }
-        }
-        return staticsFileUrlPrefix;
     }
 
     /**
@@ -457,8 +433,6 @@ public class ServletUtils {
      */
     public static String writeUploadFile(InputStream fis, String name, long length) {
         if (staticFileUploadDir == null) {
-            ExtPropertyPlaceholderConfigurer cfg = SpringContextHolder.getBean(ExtPropertyPlaceholderConfigurer.class);
-            staticFileUploadDir = cfg.getProperty("write_upload_file_dir");
             if (StringUtils.isBlank(staticFileUploadDir)) {
                 staticFileUploadDir = WebAppContextInitFilter.getInitedWebContextRealPath();
             }

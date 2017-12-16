@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,25 +14,10 @@
  */
 package com.entdiy.core.data;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
-import javax.transaction.Transactional;
-
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.context.ExtPropertyPlaceholderConfigurer;
 import com.entdiy.core.service.GlobalConfigService;
 import com.entdiy.core.util.DateUtils;
-
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.ClassUtils;
 import org.hibernate.Session;
@@ -43,13 +28,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.google.common.collect.Sets;
+import javax.persistence.*;
+import javax.transaction.Transactional;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 数据库数据初始化处理器触发器
@@ -66,7 +57,10 @@ public class DatabaseDataInitializeExecutor {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    @Value("hibernate_hbm2ddl_auto:")
+    @Value("${base_packages}")
+    private String basePackages;
+
+    @Value("${hibernate_hbm2ddl_auto:}")
     private String hbm2ddl;
 
     @Autowired
@@ -92,9 +86,7 @@ public class DatabaseDataInitializeExecutor {
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
             scan.addIncludeFilter(new AnnotationTypeFilter(MetaData.class));
-            String[] packages = StringUtils.split(ExtPropertyPlaceholderConfigurer.getBasePackages(),
-                    ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-            for (String pkg : packages) {
+            for (String pkg : basePackages.split(",")) {
                 beanDefinitions.addAll(scan.findCandidateComponents(pkg));
             }
 

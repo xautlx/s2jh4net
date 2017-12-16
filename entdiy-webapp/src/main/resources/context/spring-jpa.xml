@@ -1,81 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:repository="http://www.springframework.org/schema/data/repository"
-	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
-		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:repository="http://www.springframework.org/schema/data/repository"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
-	default-lazy-init="false">
-	
-	<!-- JPA Entity Manager 配置, 设置depends-on="cacheManager"，确保共享模式下优先加载Spring CacheManager -->
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		depends-on="cacheManager">
-		<property name="dataSource" ref="dataSource" />
-		<property name="persistenceUnitName" value="entityManager" />
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="databasePlatform" value="${jpa_database_platform}" />
-			</bean>
-		</property>
-		<property name="packagesToScan">
-			<list>
-				<value>com.entdiy.aud.envers</value>
-				<value>com.entdiy.**.entity</value>
-				<value>xyz.entdiy.**.entity</value>
-			</list>
-		</property>
-		<property name="jpaProperties">
-			<props>
-				<prop key="hibernate.connection.autocommit">false</prop>
-				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.DefaultNamingStrategy</prop>
-				<prop key="hibernate.hbm2ddl.auto">${hibernate_hbm2ddl_auto}</prop>
+        http://www.springframework.org/schema/data/repository
+        http://www.springframework.org/schema/data/repository/spring-repository.xsd"
+       default-lazy-init="false">
 
-				<prop key="hibernate.cache.use_query_cache">true</prop>
-				<prop key="hibernate.cache.use_second_level_cache">true</prop>
-				<prop key="hibernate.cache.use_structured_entries">true</prop>
-				<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>  
-				
-				<!-- EhCache -->
-				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
-				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</prop>
-				<prop key="hibernate.cache.provider_configuration_file_resource_path">classpath:ehcache-config.xml</prop>
+    <!-- JPA Entity Manager 配置, 设置depends-on="cacheManager"，确保共享模式下优先加载Spring CacheManager -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          depends-on="cacheManager">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="persistenceUnitName" value="entityManager"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="${jpa_database_platform}"/>
+            </bean>
+        </property>
+        <property name="packagesToScan">
+            <list>
+                <value>com.entdiy.aud.envers</value>
+                <value>com.entdiy.**.entity</value>
+                <value>xyz.entdiy.**.entity</value>
+            </list>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.connection.autocommit">false</prop>
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.DefaultNamingStrategy</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate_hbm2ddl_auto}</prop>
 
-				<!-- Redis Cache 
-				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.redis.SingletonRedisRegionFactory</prop>
-				<prop key="hibernate.cache.provider_configuration_file_resource_path">redis-config.properties</prop>
-                -->
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.region_prefix">hibernate</prop>
+                <prop key="hibernate.cache.use_structured_entries">true</prop>
+                <prop key="hibernate.generate_statistics">false</prop>
+                <prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>
+                <!-- Redis Cache -->
+                <prop key="hibernate.cache.region.factory_class">
+                    org.hibernate.cache.redis.hibernate4.SingletonRedisRegionFactory
+                </prop>
+                <prop key="hibernate.cache.provider_configuration_file_resource_path">hibernate-redis.properties</prop>
 
-				<prop key="org.hibernate.envers.default_schema">${hibernate_envers_default_schema}</prop>
-				<prop key="org.hibernate.envers.audit_table_prefix">aud_</prop>
-				<prop key="org.hibernate.envers.audit_table_suffix"></prop>
-				<prop key="org.hibernate.envers.do_not_audit_optimistic_locking_field">false</prop>
-				<prop key="org.hibernate.envers.global_with_modified_flag">true</prop>
-			</props>
-		</property>
-	</bean>
+                <prop key="org.hibernate.envers.default_schema">${hibernate_envers_default_schema}</prop>
+                <prop key="org.hibernate.envers.audit_table_prefix">aud_</prop>
+                <prop key="org.hibernate.envers.audit_table_suffix"></prop>
+                <prop key="org.hibernate.envers.do_not_audit_optimistic_locking_field">false</prop>
+                <prop key="org.hibernate.envers.global_with_modified_flag">true</prop>
+            </props>
+        </property>
+    </bean>
 
-	<!-- JPA 事务配置 -->
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean>
+    <!-- JPA 事务配置 -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
 
-	<!-- 使用annotation定义事务 -->
-	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+    <!-- 使用annotation定义事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
-	<!-- Spring Data JPA配置 -->
-	<jpa:repositories base-package="com.entdiy.**.dao,xyz.entdiy.**.dao" transaction-manager-ref="transactionManager"
-		entity-manager-factory-ref="entityManagerFactory">
-		<repository:exclude-filter type="regex" expression="com.entdiy.core.*" />
-	</jpa:repositories>
+    <!-- Spring Data JPA配置 -->
+    <jpa:repositories base-package="com.entdiy.**.dao,xyz.entdiy.**.dao" transaction-manager-ref="transactionManager"
+                      entity-manager-factory-ref="entityManagerFactory">
+        <repository:exclude-filter type="regex" expression="com.entdiy.core.*"/>
+    </jpa:repositories>
 </beans>

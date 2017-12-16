@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 BASE_DIR=${SHELL_DIR}/..
@@ -32,8 +32,9 @@ case "$1" in
                --link redis-6379:docker-redis-link \
                 -v $app_dir:$deploy_dir \
                 -v $log_dir:/usr/local/tomcat/logs \
-                -v $config_dir:/etc/entdiy/config \
+                -v $config_dir/application.properties:/etc/entdiy/config/application.properties \
                 -v $data_dir:/etc/entdiy/data \
+                -v $config_dir/tomcat/server.xml:/usr/local/tomcat/conf/server.xml \
                 -e TZ="Asia/Shanghai" \
                 -e JAVA_OPTS="-Dspring.profiles.active=production" \
                 -e CATALINA_OPTS="-Xms256m -Xmx4096m -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=utf-8" \

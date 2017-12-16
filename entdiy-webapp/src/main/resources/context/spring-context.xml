@@ -27,18 +27,11 @@
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
-    <!-- 与JPA Hibernate共享一个cacheManager -->
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="ehcache"/>
-    </bean>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:ehcache-config.xml"/>
-        <property name="shared" value="true"/>
-        <property name="cacheManagerName" value="entdiy_cache_v_${build_version}"/>
-    </bean>
-
     <!-- Spring Cache配置 -->
-    <cache:annotation-driven/>
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg ref="redisTemplate"/>
+    </bean>
+    <cache:annotation-driven cache-manager="cacheManager"/>
 
     <task:scheduler id="springScheduler" pool-size="10"/>
     <!-- 用于增强Spring @Async 注解在异步模式能捕捉到异常日志 -->

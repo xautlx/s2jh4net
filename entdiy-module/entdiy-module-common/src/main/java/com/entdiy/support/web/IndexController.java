@@ -66,7 +66,6 @@ public class IndexController {
         User user = AuthContextHolder.findAuthUser();
         model.addAttribute("layoutAttributes", userProfileDataService.findMapDataByUser(user));
         model.addAttribute("readFileUrlPrefix", ServletUtils.getReadFileUrlPrefix());
-        model.addAttribute("globalProperties", dynamicConfigService.getAllPrperties());
         return "admin/index";
     }
 

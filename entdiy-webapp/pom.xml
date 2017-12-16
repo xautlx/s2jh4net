@@ -15,11 +15,6 @@
         <!-- 必选：核心组件和通用基础功能组件 -->
         <dependency>
             <groupId>com.entdiy</groupId>
-            <artifactId>entdiy-core</artifactId>
-            <version>${entdiy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.entdiy</groupId>
             <artifactId>entdiy-module-common</artifactId>
             <version>${entdiy.version}</version>
         </dependency>
@@ -81,6 +76,13 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
+        
+        	<!-- http://projectlombok.org/ -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
 
     <build>

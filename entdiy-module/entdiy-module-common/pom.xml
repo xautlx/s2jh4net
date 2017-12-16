@@ -37,7 +37,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-        <!-- TEST begin -->
+		<!-- TEST begin -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -49,6 +49,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- http://projectlombok.org/ -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
-	
+
 </project>

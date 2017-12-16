@@ -9,23 +9,41 @@
         <property name="maxIdle" value="10"/>
     </bean>
 
+    <!-- Cluster Redis
+    <bean id="propertySource" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject">
+            <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+                <property name="targetObject" ref="propertyPlaceholderConfigurer"/>
+                <property name="targetMethod" value="getAppliedPropertySources"/>
+            </bean>
+        </property>
+        <property name="targetMethod" value="get"/>
+        <property name="arguments" value="localProperties"/>
+    </bean>
+    <bean id="redisClusterConfiguration"
+          class="org.springframework.data.redis.connection.RedisClusterConfiguration"
+          depends-on="propertyPlaceholderConfigurer">
+        <constructor-arg index="0" ref="propertySource" type="org.springframework.core.env.PropertySource"/>
+    </bean>
+    -->
+
+    <bean id="stringRedisSerializer"
+          class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+
+    <bean id="jdkSerializer"
+          class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+
     <bean id="jedisConnectionFactory"
           class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
-        <property name="hostName" value="${redis_hostname}"/>
+        <property name="hostName" value="${redis_host}"/>
         <property name="port" value="${redis_port}"/>
         <property name="password" value="${redis_password}"/>
-        <property name="database" value="${redis_database_for_spring_session}"/>
+        <property name="database" value="${redis_database_index}"/>
 
         <property name="timeout" value="3000"/>
         <property name="usePool" value="true"/>
         <property name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
-
-    <bean id="stringRedisSerializer"
-          class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
-    
-    <bean id="jdkSerializer"
-          class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
 
     <!-- redis template definition -->
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">

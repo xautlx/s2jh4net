@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,14 +14,10 @@
  */
 package com.entdiy.support.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.entdiy.core.context.ExtPropertyPlaceholderConfigurer;
+import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.service.GlobalConfigService;
 import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.service.ConfigPropertyService;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +31,9 @@ import org.springframework.stereotype.Component;
  * 为了避免意外的数据库配置导致系统崩溃，约定以cfg打头标识的参数表示可以被数据库参数覆写，其余的则不会覆盖文件定义的属性值
  */
 @Component
-public class DynamicConfigService extends GlobalConfigService{
+public class DynamicConfigService extends GlobalConfigService {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicConfigService.class);
-
-    @Autowired(required = false)
-    private ExtPropertyPlaceholderConfigurer extPropertyPlaceholderConfigurer;
 
     @Autowired
     private ConfigPropertyService configPropertyService;
@@ -72,11 +65,7 @@ public class DynamicConfigService extends GlobalConfigService{
 
         //未取到则继续从Spring属性文件定义取
         if (val == null) {
-            if (extPropertyPlaceholderConfigurer != null) {
-                val = extPropertyPlaceholderConfigurer.getProperty(key);
-            } else {
-                logger.warn("当前不是以ExtPropertyPlaceholderConfigurer扩展模式定义，因此无法加载获取Spring属性配置");
-            }
+            val = SpringPropertiesHolder.getProperty(key);
         }
         if (val == null) {
             logger.warn("Undefined config property for: {}", key);
@@ -88,14 +77,5 @@ public class DynamicConfigService extends GlobalConfigService{
 
     public boolean getBoolean(String key, boolean defaultValue) {
         return BooleanUtils.toBoolean(getString(key, String.valueOf(defaultValue)));
-    }
-
-    public Map<String, String> getAllPrperties() {
-        Map<String, String> properties = extPropertyPlaceholderConfigurer.getPropertiesMap();
-        List<ConfigProperty> configProperties = configPropertyService.findAllCached();
-        for (ConfigProperty configProperty : configProperties) {
-            properties.put(configProperty.getPropKey(), configProperty.getSimpleValue());
-        }
-        return properties;
     }
 }

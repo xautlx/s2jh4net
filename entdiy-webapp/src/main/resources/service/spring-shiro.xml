@@ -1,167 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
-	default-lazy-init="true">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+       default-lazy-init="true">
 
-	<description>Shiro安全配置</description>
+    <description>Shiro安全配置</description>
 
-	<!-- shiro cache using Redis 
-	<bean id="shiroRedisManager" class="org.crazycake.shiro.RedisManager">
-		<property name="host" value="${redis.host}" />
-		<property name="port" value="${redis.port}" />
-		<property name="expire" value="1800" />
-	</bean>
+    <!-- Shiro cache using Redis -->
+    <bean id="shiroRedisCacheManager" class="com.entdiy.security.cache.RedisCacheManager">
+        <property name="redisTemplate" ref="redisTemplate"/>
+        <property name="expireInSeconds" value="${spring_session_expire_seconds}"/>
+    </bean>
 
-	<bean id="shiroCacheManager" class="org.crazycake.shiro.RedisCacheManager">
-		<property name="redisManager" ref="shiroRedisManager" />
-	</bean>
-	-->
-	
-    <!-- shiro cache using EhCache 设置depends-on="cacheManager"，确保共享模式下优先加载Spring CacheManager -->
-	<bean id="shiroCacheManager" class="com.entdiy.security.SharedEhCacheManager" depends-on="cacheManager">
-		<property name="cacheManagerConfigFile" value="classpath:ehcache-config.xml" />
-		<property name="shared" value="true" />
-	</bean>
+    <!-- JDBC Realm -->
+    <bean id="shiroJdbcRealm" class="com.entdiy.security.ShiroJdbcRealm">
+        <property name="passwordService" ref="passwordService"/>
+        <property name="userService" ref="userService"/>
+    </bean>
 
-	<bean id="shiroJdbcRealm" class="com.entdiy.security.ShiroJdbcRealm">
-		<property name="passwordService" ref="passwordService" />
-		<property name="userService" ref="userService" />
-	</bean>
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy">
+            <bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>
+        </property>
+    </bean>
 
-	<bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
-		<property name="authenticationStrategy">
-			<bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy" />
-		</property>
-	</bean>
+    <!-- Shiro's main business-tier object for web-enabled applications -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="authenticator" ref="authenticator"/>
+        <property name="realms">
+            <list>
+                <ref bean="shiroJdbcRealm"/>
+            </list>
+        </property>
+        <!-- 由于使用了Spring Session Redis，因此直接使用默认session管理即可。
+             如果没有使用Spring Session，则可以按照此属性使用Shiro Session Redis实现。
+        <property name="sessionManager" ref="shiroSessionManager" />
+        -->
+        <property name="cacheManager" ref="shiroRedisCacheManager"/>
+    </bean>
 
-	<!-- Shiro's main business-tier object for web-enabled applications -->
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="authenticator" ref="authenticator" />
-		<property name="realms">
-			<list>
-				<ref bean="shiroJdbcRealm" />
-			</list>
-		</property>
-		<property name="cacheManager" ref="shiroCacheManager" />
-	</bean>
+    <bean id="anyRolesAuthorizationFilter" class="com.entdiy.security.AnyRolesAuthorizationFilter"/>
 
-	<bean id="anyRolesAuthorizationFilter" class="com.entdiy.security.AnyRolesAuthorizationFilter" />
+    <bean id="wwwJcaptchaFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
+        <property name="loginUrl" value="/w/login"/>
+        <property name="successUrl" value="/w"/>
+        <property name="userService" ref="userService"/>
+    </bean>
 
-	<bean id="wwwJcaptchaFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
-		<property name="loginUrl" value="/w/login" />
-		<property name="successUrl" value="/w" />
-		<property name="userService" ref="userService" />
-	</bean>
+    <bean id="mobileJcaptchaFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
+        <property name="loginUrl" value="/m/login"/>
+        <property name="successUrl" value="/m"/>
+        <property name="userService" ref="userService"/>
+    </bean>
 
-	<bean id="mobileJcaptchaFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
-		<property name="loginUrl" value="/m/login" />
-		<property name="successUrl" value="/m" />
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="adminJcaptchaFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
-		<property name="loginUrl" value="/admin/login" />
-		<property name="successUrl" value="/admin" />
-		<property name="userService" ref="userService" />
-	</bean>
+    <bean id="adminJcaptchaFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
+        <property name="loginUrl" value="/admin/login"/>
+        <property name="successUrl" value="/admin"/>
+        <property name="userService" ref="userService"/>
+    </bean>
 
 
-	<bean id="appFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
-		<property name="loginUrl" value="/app/login" />
-		<property name="userService" ref="userService" />
-	</bean>
+    <bean id="appFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
+        <property name="loginUrl" value="/app/login"/>
+        <property name="userService" ref="userService"/>
+    </bean>
 
-	<bean id="appBasicAuthenticationFilter" class="com.entdiy.security.AppBasicAuthenticationFilter">
-		<property name="appKeySecrets">
-			<props>
-				<prop key="auth_app_android">${auth_app_android}</prop>
-				<prop key="auth_app_ios">${auth_app_ios}</prop>
-				<prop key="auth_app_weixin">${auth_app_weixin}</prop>
-				<prop key="auth_api_jenkins">${auth_api_jenkins}</prop>
-			</props>
-		</property>
-	</bean>
+    <bean id="appBasicAuthenticationFilter" class="com.entdiy.security.AppBasicAuthenticationFilter">
+        <property name="appKeySecrets">
+            <props>
+                <prop key="auth_app_android">${auth_app_android}</prop>
+                <prop key="auth_app_ios">${auth_app_ios}</prop>
+                <prop key="auth_app_weixin">${auth_app_weixin}</prop>
+                <prop key="auth_api_jenkins">${auth_api_jenkins}</prop>
+            </props>
+        </property>
+    </bean>
 
-	<bean id="bearerTokenAuthenticatingFilter" class="com.entdiy.security.BearerTokenAuthenticatingFilter">
+    <bean id="bearerTokenAuthenticatingFilter" class="com.entdiy.security.BearerTokenAuthenticatingFilter">
 
-	</bean>
+    </bean>
 
-	<bean id="wwwLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
-		<property name="redirectUrl" value="/w" />
-	</bean>
+    <bean id="wwwLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/w"/>
+    </bean>
 
-	<bean id="mobileLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
-		<property name="redirectUrl" value="/m" />
-	</bean>
+    <bean id="mobileLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/m"/>
+    </bean>
 
-	<bean id="adminLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
-		<property name="redirectUrl" value="/admin" />
-	</bean>
+    <bean id="adminLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/admin"/>
+    </bean>
 
-	<bean id="appLogoutFilter" class="com.entdiy.security.AppLogoutFilter">
-		<property name="userService" ref="userService" />
-	</bean>
-	
-	<!-- Shiro Filter -->
-	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-		<property name="filters">
-			<map>
-				<entry key="anyRoles" value-ref="anyRolesAuthorizationFilter" />
-				<entry key="authcWww" value-ref="wwwJcaptchaFormAuthenticationFilter" />
-				<entry key="authcMobile" value-ref="mobileJcaptchaFormAuthenticationFilter" />
-				<entry key="authcAdmin" value-ref="adminJcaptchaFormAuthenticationFilter" />
-				<entry key="authcBearerToken" value-ref="bearerTokenAuthenticatingFilter" />
-				<entry key="authcAppSecret" value-ref="appBasicAuthenticationFilter" />
-				<entry key="authcAppForm" value-ref="appFormAuthenticationFilter" />
-				<entry key="logoutWww" value-ref="wwwLogoutFilter" />
-				<entry key="logoutMobile" value-ref="mobileLogoutFilter" />
-				<entry key="logoutAdmin" value-ref="adminLogoutFilter" />
-				<entry key="logoutApp" value-ref="appLogoutFilter" />
-			</map>
-		</property>
-		<property name="securityManager" ref="securityManager" />
-		<!--  
-		anon	org.apache.shiro.web.filter.authc.AnonymousFilter
-		authc	org.apache.shiro.web.filter.authc.FormAuthenticationFilter
-		authcBasic	org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
-		logout	org.apache.shiro.web.filter.authc.LogoutFilter
-		noSessionCreation	org.apache.shiro.web.filter.session.NoSessionCreationFilter
-		perms	org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter
-		port	org.apache.shiro.web.filter.authz.PortFilter
-		rest	org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter
-		roles	org.apache.shiro.web.filter.authz.RolesAuthorizationFilter
-		ssl	org.apache.shiro.web.filter.authz.SslFilter
-		user	org.apache.shiro.web.filter.authc.UserFilter
-		-->
-		<property name="filterChainDefinitions">
-			<value>
-				/assets/** = anon
+    <bean id="appLogoutFilter" class="com.entdiy.security.AppLogoutFilter">
+        <property name="userService" ref="userService"/>
+    </bean>
 
-				/login = authcWww
-				/logout = logoutWww
+    <!-- Shiro Filter -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="filters">
+            <map>
+                <entry key="anyRoles" value-ref="anyRolesAuthorizationFilter"/>
+                <entry key="authcWww" value-ref="wwwJcaptchaFormAuthenticationFilter"/>
+                <entry key="authcMobile" value-ref="mobileJcaptchaFormAuthenticationFilter"/>
+                <entry key="authcAdmin" value-ref="adminJcaptchaFormAuthenticationFilter"/>
+                <entry key="authcBearerToken" value-ref="bearerTokenAuthenticatingFilter"/>
+                <entry key="authcAppSecret" value-ref="appBasicAuthenticationFilter"/>
+                <entry key="authcAppForm" value-ref="appFormAuthenticationFilter"/>
+                <entry key="logoutWww" value-ref="wwwLogoutFilter"/>
+                <entry key="logoutMobile" value-ref="mobileLogoutFilter"/>
+                <entry key="logoutAdmin" value-ref="adminLogoutFilter"/>
+                <entry key="logoutApp" value-ref="appLogoutFilter"/>
+            </map>
+        </property>
+        <property name="securityManager" ref="securityManager"/>
+        <!--
+        anon	org.apache.shiro.web.filter.authc.AnonymousFilter
+        authc	org.apache.shiro.web.filter.authc.FormAuthenticationFilter
+        authcBasic	org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
+        logout	org.apache.shiro.web.filter.authc.LogoutFilter
+        noSessionCreation	org.apache.shiro.web.filter.session.NoSessionCreationFilter
+        perms	org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter
+        port	org.apache.shiro.web.filter.authz.PortFilter
+        rest	org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter
+        roles	org.apache.shiro.web.filter.authz.RolesAuthorizationFilter
+        ssl	org.apache.shiro.web.filter.authz.SslFilter
+        user	org.apache.shiro.web.filter.authc.UserFilter
+        -->
+        <property name="filterChainDefinitions">
+            <value>
+                /assets/** = anon
 
-				/m/pub/** = anon
-				/m/login = authcMobile
-				/m/logout = logoutMobile
-				/m/** = authcBearerToken,anon
+                /login = authcWww
+                /logout = logoutWww
 
-				/admin/pub/** = anon
-				/admin/login = authcAdmin
-				/admin/logout = logoutAdmin
-				/admin = authcAdmin,anyRoles[ROLE_MGMT_USER]
-				/admin/** = authcAdmin,anyRoles[ROLE_MGMT_USER]
-				/dev/** = authcAdmin,anyRoles[ROLE_SUPER_USER]
-				/druid/** = authcAdmin,anyRoles[ROLE_SUPER_USER]
+                /m/pub/** = anon
+                /m/login = authcMobile
+                /m/logout = logoutMobile
+                /m/** = authcBearerToken,anon
 
-				/app/pub/** = anon
-				/app/login = authcAppForm
-				/app/logout = logoutApp
-				/app/** = authcAppSecret,authcBearerToken
+                /admin/pub/** = anon
+                /admin/login = authcAdmin
+                /admin/logout = logoutAdmin
+                /admin = authcAdmin,anyRoles[ROLE_MGMT_USER]
+                /admin/** = authcAdmin,anyRoles[ROLE_MGMT_USER]
+                /dev/** = authcAdmin,anyRoles[ROLE_SUPER_USER]
+                /druid/** = authcAdmin,anyRoles[ROLE_SUPER_USER]
 
-				/api/** = authcAppSecret
+                /app/pub/** = anon
+                /app/login = authcAppForm
+                /app/logout = logoutApp
+                /app/** = authcAppSecret,authcBearerToken
 
-				/** = anon
-			</value>
-		</property>
-	</bean>
+                /api/** = authcAppSecret
+
+                /** = anon
+            </value>
+        </property>
+    </bean>
 </beans>

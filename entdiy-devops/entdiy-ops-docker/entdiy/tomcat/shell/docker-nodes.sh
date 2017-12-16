@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 echo Start node 8084 at `date`

@@ -12,7 +12,7 @@
     <!-- Spring Session + Redis -->
     <bean id="redisHttpSessionConfiguration"
           class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
-        <property name="maxInactiveIntervalInSeconds" value="3600"/>
+        <property name="maxInactiveIntervalInSeconds" value="${spring_session_expire_seconds}"/>
     </bean>
     <!-- 让Spring Session不再执行config命令: 解决Redis云服务Unable to configure Redis to keyspace notifications异常
     <util:constant static-field="org.springframework.session.data.redis.config.ConfigureRedisAction.NO_OP"/>

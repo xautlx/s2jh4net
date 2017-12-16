@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 BASE_DIR=${SHELL_DIR}/..

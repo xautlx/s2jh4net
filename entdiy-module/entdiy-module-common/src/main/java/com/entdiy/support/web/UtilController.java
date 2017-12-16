@@ -32,8 +32,6 @@ import com.entdiy.support.service.SmsService;
 import com.entdiy.support.service.SmsService.SmsMessageTypeEnum;
 import com.entdiy.sys.service.SmsVerifyCodeService;
 import com.google.common.collect.Maps;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Ehcache;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -69,9 +67,6 @@ import java.util.concurrent.TimeUnit;
 public class UtilController {
 
     private final static Logger logger = LoggerFactory.getLogger(UtilController.class);
-
-    @Autowired
-    private CacheManager cacheManager;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -131,20 +126,20 @@ public class UtilController {
     @ResponseBody
     public OperationResult dataEvictCache() {
         WebAppContextInitFilter.reset();
-        if (cacheManager != null) {
-            logger.info("Clearing EhCache cacheManager: {}", cacheManager.getName());
-            String[] cacheNames = cacheManager.getCacheNames();
-            for (String cacheName : cacheNames) {
-                // 对于Apache Shiro缓存忽略
-                if (cacheName.indexOf(".authorizationCache") > -1) {
-                    continue;
-                }
-                logger.debug(" - clearing cache： {}", cacheName);
-                Ehcache cache = cacheManager.getEhcache(cacheName);
-                cache.removeAll();
-            }
-            return OperationResult.buildSuccessResult("EhCache数据缓存刷新操作成功");
-        }
+//        if (cacheManager != null) {
+//            logger.info("Clearing EhCache cacheManager: {}", cacheManager.getName());
+//            String[] cacheNames = cacheManager.getCacheNames();
+//            for (String cacheName : cacheNames) {
+//                // 对于Apache Shiro缓存忽略
+//                if (cacheName.indexOf(".authorizationCache") > -1) {
+//                    continue;
+//                }
+//                logger.debug(" - clearing cache： {}", cacheName);
+//                Ehcache cache = cacheManager.getEhcache(cacheName);
+//                cache.removeAll();
+//            }
+//            return OperationResult.buildSuccessResult("EhCache数据缓存刷新操作成功");
+//        }
         return OperationResult.buildFailureResult("未知缓存管理器");
     }
 

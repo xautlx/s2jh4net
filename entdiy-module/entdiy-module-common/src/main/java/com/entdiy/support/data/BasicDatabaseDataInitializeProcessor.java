@@ -22,7 +22,7 @@ import com.entdiy.auth.service.RoleService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.cons.GlobalConstant;
-import com.entdiy.core.context.ExtPropertyPlaceholderConfigurer;
+import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.data.AbstractDatabaseDataInitializeProcessor;
 import com.entdiy.core.service.GlobalConfigService;
 import com.entdiy.core.util.DateUtils;
@@ -41,8 +41,8 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
@@ -89,8 +89,8 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
     @Autowired
     private NotifyMessageService notifyMessageService;
 
-    @Autowired
-    private ExtPropertyPlaceholderConfigurer extPropertyPlaceholderConfigurer;
+    @Value("${base_packages}")
+    private String basePackages;
 
     @Override
     public void initializeInternal() {
@@ -193,10 +193,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
         commitAndResumeTransaction();
 
         //属性文件中配置的系统名称
-        String systemTitle = "未定义";
-        if (extPropertyPlaceholderConfigurer != null) {
-            systemTitle = extPropertyPlaceholderConfigurer.getProperty("cfg_system_title");
-        }
+        String systemTitle = SpringPropertiesHolder.getProperty("cfg_system_title");
 
         //系统配置参数初始化
         if (configPropertyService.findByPropKey(GlobalConstant.cfg_system_title) == null) {
@@ -311,9 +308,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Controller.class));
-            String[] packages = StringUtils.split(ExtPropertyPlaceholderConfigurer.getBasePackages(),
-                    ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-            for (String pkg : packages) {
+            for (String pkg : basePackages.split(",")) {
                 beanDefinitions.addAll(scan.findCandidateComponents(pkg));
             }
 
@@ -396,9 +391,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
             ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
             scan.addIncludeFilter(new AnnotationTypeFilter(Controller.class));
-            String[] packages = StringUtils.split(ExtPropertyPlaceholderConfigurer.getBasePackages(),
-                    ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-            for (String pkg : packages) {
+            for (String pkg : basePackages.split(",")) {
                 beanDefinitions.addAll(scan.findCandidateComponents(pkg));
             }
 

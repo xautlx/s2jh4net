@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 echo "Using SHELL_DIR: ${SHELL_DIR}"
@@ -38,7 +38,7 @@ ${SHELL_DIR}/entdiy/redis/shell/docker-one.sh restart
 
 echo Deploy webapp to docker...
 chmod +x ${SHELL_DIR}/entdiy/tomcat/shell/*.sh
-if [ cluster -eq 1 ] ; then
+if [ ${cluster} -eq 1 ] ; then
   ${SHELL_DIR}/entdiy/tomcat/shell/docker-nodes.sh deploy
 else
   echo "Using PORT: ${port}"
