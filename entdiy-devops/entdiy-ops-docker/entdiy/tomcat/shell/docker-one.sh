@@ -29,7 +29,7 @@ case "$1" in
     mkdir -p ${app_dir} ; mkdir -p ${data_dir}; mkdir -p ${config_dir}; mkdir -p ${log_dir}
     deploy_dir="/usr/local/tomcat/webapps"
     docker run --name ${docker_name} -p $port:8080 --restart=always \
-               --link redis-6379:docker-redis-link \
+               --link redis-6379:redis-server \
                 -v $app_dir:$deploy_dir \
                 -v $log_dir:/usr/local/tomcat/logs \
                 -v $config_dir/application.properties:/etc/entdiy/config/application.properties \
