@@ -68,9 +68,9 @@
                                             class="form-control"
                                             data-picker="date"
                                             data-rule-dateGT="reimbursementRequestItems[${status.index}].startDate"/></td>
-                            <td><form:input path="reimbursementRequestItems[${status.index}].useType"
-                                            class="form-control"
-                                            required="true"/></td>
+                            <td><form:select path="reimbursementRequestItems[${status.index}].useType"
+                                             items="${useTypeMap}" class="form-control"
+                                             required="true"/></td>
                             <td><form:input path="reimbursementRequestItems[${status.index}].invoiceCount"
                                             class="form-control"
                                             required="true" data-rule-digits="true"/></td>

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,8 +77,12 @@ public class UserController extends BaseController<User, Long> {
     @RequiresUser
     @ModelAttribute
     public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-
         super.initPrepareModel(request, model, id);
+    }
+
+    @Override
+    protected User buildDetachedBindingEntity(Long id) {
+        return getEntityService().findDetachedOne(id, "userR2Roles");
     }
 
     @MenuData("配置管理:权限管理:用户账号")
@@ -89,7 +93,7 @@ public class UserController extends BaseController<User, Long> {
         return "admin/auth/user-index";
     }
 
-    @RequiresPermissions(value={ "配置管理:权限管理:用户账号", "账户管理:新增推广账户" },logical=Logical.OR)
+    @RequiresPermissions(value = {"配置管理:权限管理:用户账号", "账户管理:新增推广账户"}, logical = Logical.OR)
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<User> findByPage(HttpServletRequest request) {
@@ -116,10 +120,18 @@ public class UserController extends BaseController<User, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelAttribute("entity") User entity, Model model,
-            @RequestParam(value = "rawPassword", required = false) String rawPassword) {
+                                    @RequestParam(value = "rawPassword", required = false) String rawPassword) {
         if (entity.isNew()) {
             Validation.isTrue(StringUtils.isNotBlank(rawPassword), "创建用户必须设置初始密码");
+        } else {
+            //如果当前编辑模式，并且关联对象id为空，则把整个关联对象置为null，解决Hibernate异常：
+            //org.hibernate.TransientPropertyValueException:
+            //  object references an unsaved transient instance - save the transient instance before flushing
+            if (entity.getDepartment() != null && entity.getDepartment().getId() == null) {
+                entity.setDepartment(null);
+            }
         }
+
         userService.saveCascadeR2Roles(entity, rawPassword);
         return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }

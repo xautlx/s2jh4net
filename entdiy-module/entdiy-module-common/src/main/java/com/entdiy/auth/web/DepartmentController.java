@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,11 +13,6 @@
  * limitations under the License.
  */
 package com.entdiy.auth.web;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.entdiy.auth.entity.Department;
 import com.entdiy.auth.service.DepartmentService;
@@ -29,7 +24,8 @@ import com.entdiy.core.service.BaseService;
 import com.entdiy.core.service.Validation;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.view.OperationResult;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
@@ -37,14 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/admin/auth/department")
@@ -89,6 +82,13 @@ public class DepartmentController extends BaseController<Department, Long> {
             Validation.isTrue(entity.getCode().startsWith(parent.getCode()), "下级节点代码必须以父节点代码作为前缀");
         }
         return super.editSave(entity);
+    }
+    
+    @RequiresPermissions("配置管理:权限管理:部门配置")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult delete(@RequestParam("id") Long id) {
+        return super.delete(id);
     }
 
     @RequestMapping(value = "/select", method = RequestMethod.GET)

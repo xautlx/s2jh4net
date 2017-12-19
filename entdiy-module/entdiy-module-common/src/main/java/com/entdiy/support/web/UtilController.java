@@ -126,6 +126,7 @@ public class UtilController {
     @ResponseBody
     public OperationResult dataEvictCache() {
         WebAppContextInitFilter.reset();
+        //TODO
 //        if (cacheManager != null) {
 //            logger.info("Clearing EhCache cacheManager: {}", cacheManager.getName());
 //            String[] cacheNames = cacheManager.getCacheNames();

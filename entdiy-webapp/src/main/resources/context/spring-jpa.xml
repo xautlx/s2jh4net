@@ -43,9 +43,9 @@
                 <prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>
                 <!-- Redis Cache -->
                 <prop key="hibernate.cache.region.factory_class">
-                    org.hibernate.cache.redis.hibernate4.SingletonRedisRegionFactory
+                    com.entdiy.core.cache.ReloadableSingletonRedisRegionFactory
                 </prop>
-                <prop key="hibernate.cache.provider_configuration_file_resource_path">hibernate-redis.properties</prop>
+                <prop key="hibernate.cache.provider_configuration_file_resource_path">${hibernate.redis.config}</prop>
 
                 <prop key="org.hibernate.envers.default_schema">${hibernate_envers_default_schema}</prop>
                 <prop key="org.hibernate.envers.audit_table_prefix">aud_</prop>

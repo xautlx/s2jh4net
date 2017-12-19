@@ -9,7 +9,9 @@ import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.dev.demo.entity.ReimbursementRequest;
 import com.entdiy.dev.demo.entity.ReimbursementRequestItem;
 import com.entdiy.dev.demo.service.ReimbursementRequestService;
+import com.entdiy.dev.demo.support.DemoConstant;
 import com.entdiy.security.AuthContextHolder;
+import com.entdiy.sys.service.DataDictService;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,6 +34,9 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
     @Autowired
     private ReimbursementRequestService reimbursementRequestService;
 
+    @Autowired
+    private DataDictService dataDictService;
+
     @Override
     protected BaseService<ReimbursementRequest, Long> getEntityService() {
         return reimbursementRequestService;
@@ -44,6 +49,7 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
 
     /**
      * 如果编辑提交数据涉及到一对一或一对多关联对象更新处理，则需要返回Detached的对象实例，否则会遇到关联对象主键修改异常
+     *
      * @param id 实体主键
      * @return Detached的对象实例
      */
@@ -91,6 +97,9 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
             entity.setReimbursementRequestItems(reimbursementRequestItems);
         }
         reimbursementRequestItems.add(newItemTemplate);
+
+        model.addAttribute("useTypeMap",
+                dataDictService.findMapDataByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType));
 
         return "dev/demo/reimbursementRequest-inputBasic";
     }

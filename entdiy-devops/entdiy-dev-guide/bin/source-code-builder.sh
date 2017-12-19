@@ -2,7 +2,7 @@
 
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 echo "Using SHELL_DIR: ${SHELL_DIR}"
-RUN_DIR=`PWD`
+RUN_DIR=`pwd`
 echo "Using RUN_DIR: ${RUN_DIR}"
 
 cd ${SHELL_DIR}/..

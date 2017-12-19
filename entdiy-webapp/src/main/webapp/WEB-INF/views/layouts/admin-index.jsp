@@ -318,7 +318,7 @@
     <!-- BEGIN FOOTER -->
     <div class="page-footer">
         <div class="page-footer-inner">
-            &copy; EntDIY.com 2017
+            &copy; EntDIY.com 2017 All Rights Reserved.
             <c:if test="${devMode}">
                 <span>V${buildVersion}</span>
             </c:if>
@@ -416,12 +416,12 @@
 <script src="${ctx}/assets/apps/scripts/component/grid.js" ?_=${buildVersion}></script>
 <script src="${ctx}/assets/apps/scripts/component/gmaps-baidu.js" ?_=${buildVersion}></script>
 <script src="${ctx}/assets/apps/scripts/component/textarea-htmleditor.js" ?_=${buildVersion}></script>
+<script src="${ctx}/assets/apps/scripts/component/dropdown-tree.js" ?_=${buildVersion}></script>
 
 <script src="${ctx}/assets/apps/scripts/function/data-profile-param.js?_=${buildVersion}"></script>
 
 <script src="${ctx}/assets/pages/admin/scripts/index.js?_=${buildVersion}"></script>
 <script src="${ctx}/assets/apps/scripts/admin-theme.js?_=${buildVersion}"></script>
-
 
 <script>
     $(function () {

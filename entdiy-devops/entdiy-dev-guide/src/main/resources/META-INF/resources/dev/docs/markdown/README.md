@@ -52,7 +52,7 @@
 
 * 免费许可
 
-本项目代码除src/main/webapp/assets目录下admin/app和w/app两个目录下少量相关Javascript代码以混淆方式提供外，其余开源，在保留标识本项目来源信息以及保证不对本项目进行非授权的销售行为的前提下，可以以任意方式自由免费使用：开源、非开源、商业及非商业。
+本项目代码除src/main/webapp/assets/apps/scripts目录下相关Javascript组件代码以混淆方式提供外，其余开源，在保留标识本项目来源信息以及保证不对本项目进行非授权的销售行为的前提下，可以以任意方式自由免费使用：开源、非开源、商业及非商业。
 
 若对项目有任何技术问题或Issue反馈，可加QQ群讨论组：303438676 或提交到项目站点提问或Git平台的Issue：
 http://www.oschina.net/p/s2jh4net , http://git.oschina.net/xautlx/s2jh4net/issues , https://github.com/xautlx/s2jh4net/issues

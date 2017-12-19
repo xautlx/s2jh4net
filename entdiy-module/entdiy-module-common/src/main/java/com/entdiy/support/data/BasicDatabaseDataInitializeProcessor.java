@@ -110,7 +110,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
                 Department department10 = new Department();
                 department10.setCode("SC00");
                 department10.setName("市场部");
-                departmentService.save(department10);
+                departmentService.save(rootDepartment);
 
                 Department department11 = new Department();
                 department11.setCode("SC01");
@@ -127,7 +127,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
                 Department department20 = new Department();
                 department20.setCode("YF00");
                 department20.setName("研发部");
-                departmentService.save(department20);
+                departmentService.save(rootDepartment);
 
                 Department department21 = new Department();
                 department21.setCode("YF01");

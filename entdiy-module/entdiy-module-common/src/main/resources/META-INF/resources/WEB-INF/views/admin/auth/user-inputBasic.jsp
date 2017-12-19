@@ -42,6 +42,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label">所属部门</label>
+                    <div class="controls">
+                        <form:input path="department.id" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label">设置密码</label>
                     <div class="controls">
                         <input type="password" class="form-control" name="rawPassword" data-rule-minlength="3"/>

@@ -14,7 +14,7 @@
         <ul>
             <c:forEach var="item" items="${files}">
                 <c:if test="${item!='images'}">
-                    <li><a href="${ctx}/dev/docs/markdown/${item}">${item}</a></li>
+                    <li><a href="${ctx}/dev/markdown/${item}">${item}</a></li>
                 </c:if>
             </c:forEach>
         </ul>
