@@ -19,7 +19,7 @@ shift $((OPTIND-1))
 data_dir=${BASE_DIR}/data
 config_dir=${BASE_DIR}/config
 log_dir=${BASE_DIR}/logs
-docker_name=${app_name}-${port}
+docker_name=${app_name}
 
 case "$1" in
     start)
