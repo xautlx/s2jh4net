@@ -51,7 +51,7 @@
 
 ## 在线演示
 
-**https://www.tunnel.irabbit.net.cn/s2jh4net/admin**
+**https://demo.entdiy.com/s2jh4net/admin**
 
 前端门户和HTML5移动站点目前内容较少，主要演示集中在管理端。账号：admin，密码：admin123，或直接点击右下方的“超级管理员”登录链接即可。
 
