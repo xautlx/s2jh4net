@@ -10,15 +10,17 @@
 
 **最近版本更新说明**
 
-2.0.0 / 2017-12-05
+2.1.0 / 2018-01-24
 ==================
   * 启用全新项目标识：EntDIY， https://www.entdiy.com
   * 整体重构项目Maven结构，模块化拆分，使定制开发能按需所取
+  * 全面使用Date/Time API、lambda等特性，因此要求JDK8+
+  * 核心组件版本升级到最新：SpringMVC/Spring 5.0.X, Hibernate 5.2.X, Spring Data 2.0.X, 及其他关联组件版本
   * UI基础框架版本从 Metronic 1.4.5 升级到 4.7.5
   * 基于Bootstrap Plugin模式全面重构所有UI扩展组件 
     - <a href="entdiy-webapp/src/main/webapp/assets/apps/scripts">UI组件代码目录</a>
     - <a href="entdiy-dev/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/jsdoc">JSDoc文档目录</a>
-
+    
 > **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
 
 ## 框架特色
@@ -77,20 +79,6 @@
 ![ui-signin](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/img-0065.jpg)
 
 ![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg)
-
-## S2JH4Net vs S2JH
-
-**重要提示：** 由于个人精力有限，目前主要重心都已放在S2JH4Net版本更新维护，原有S2JH版本已基本暂停更新！
-
-此项目为 S2JH （ https://github.com/xautlx/s2jh 或 http://git.oschina.net/xautlx/s2jh ） 项目的兄弟项目，主要差异简介：
-
-* s2jh基于Struts2，s2jh4net基于Spring MVC
-* s2jh4net在原有s2jh只面向企业应用系统开发的基础上，重新组织模块和结构来支持典型的互联网站点以及HTML5移动站点开发的支持；
-* 为了简化开发和构建的复杂度，还原采用单一all-in-one的动态Web工程模式，不再进行复杂的Maven模块化布局（但是Maven进行依赖管理和构建还是保留）；
-* 实体对象属性定义采用了Lombok来简化繁琐的getter和setter定义；
-* JPA Hibernate和MyBatis整合应用；
-* 权限框架改用Apache Shiro；
-* 自动基于注解定义的菜单、权限等数据生成数据库基础配置，采用Java编码方式定义基础数据，抛弃之前的SQL脚本方式；一边开发编码，一边项目实施；
 
 ### 许可说明
 
