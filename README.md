@@ -76,8 +76,6 @@
 
 ## 截图展示
 
-![ui-signin](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/img-0065.jpg)
-
 ![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg)
 
 ### 许可说明
