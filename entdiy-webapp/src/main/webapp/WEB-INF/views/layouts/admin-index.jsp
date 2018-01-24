@@ -304,6 +304,16 @@
     };
 </script>
 
+<script>
+    //百度统计代码，做一个基础的框架演示站点访问数据统计，实际项目开发可以移除
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?5f64653382c3bd79af3c297bbafa5a6a";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
 </body>
 <!-- END BODY -->
 </html>
