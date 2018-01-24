@@ -43,10 +43,10 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+<body class="page-sidebar-closed-hide-logo page-content-white">
 <div class="page-wrapper">
     <!-- BEGIN HEADER -->
-    <div class="page-header navbar navbar-fixed-top">
+    <div class="page-header navbar navbar-static-top">
         <!-- BEGIN TOP NAVIGATION BAR -->
         <div class="page-header-inner ">
             <!-- BEGIN LOGO -->
