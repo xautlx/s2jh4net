@@ -1,0 +1,88 @@
+<!--
+  ~ JCaptcha, the open source java framework for captcha definition and integration
+  ~ Copyright (c)  2007 jcaptcha.net. All Rights Reserved.
+  ~ See the LICENSE.txt file distributed with this package.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">         
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>jcaptcha-home</artifactId>
+        <groupId>com.octo.captcha</groupId>
+        <version>1.0</version>
+    </parent>
+    <artifactId>jcaptcha</artifactId>
+    <version>1.0</version>
+    <name>JCaptcha</name>
+    <packaging>jar</packaging>
+
+    <description><![CDATA[<b>JCAPTCHA</b>, for <b>J</b>ava <b>C</b>ompletely <b>A</b>utomated <b>P</b>ublic <b>T</b>est to tell <b>C</b>omputers and <b>H</b>umans <b>A</b>part
+<br/>The open source java framework for captcha definition and integration
+<br/>
+
+ A captcha is a simple captcha container that contains a question, a challenge, and a response validation routine.<BR/>
+ A captcha can only be built by a captcha factory that provides methods to build localized captchas.<br/>
+ This jar aims to provide interfaces and implementation of generic and typed captcha and captcha factories.<BR/>
+ It uses the word generator, types sub packages (image and sound) components (word to image, word to sound)
+ to build typed captchas captchas.]]></description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/uber-jar.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+  <issueManagement>
+    <system>Jira</system>
+    <url>http://forge.octo.com/jcaptcha/jira/browse/FWK</url>
+  </issueManagement>  
+
+    <dependencies>
+    
+        <dependency>
+          <groupId>com.octo.captcha</groupId>
+          <artifactId>jcaptcha-api</artifactId>
+          <version>1.0</version>
+        </dependency>    
+    
+        <dependency>
+          <groupId>com.octo.captcha</groupId>
+          <artifactId>jcaptcha-common-test</artifactId>
+          <version>1.0</version>
+          <scope>test</scope>
+        </dependency>    
+
+        <dependency>
+            <groupId>com.jhlabs</groupId>
+            <artifactId>imaging</artifactId>
+            <version>01012005</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.3</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

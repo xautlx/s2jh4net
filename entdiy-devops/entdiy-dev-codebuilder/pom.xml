@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.entdiy</groupId>
+		<artifactId>entdiy-devops</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>entdiy-dev-codebuilder</artifactId>
+	<packaging>jar</packaging>
+	<name>${project.artifactId}</name>
+	<description>The ${project.artifactId} module of entdiy project</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.entdiy</groupId>
+			<artifactId>entdiy-core</artifactId>
+			<version>${entdiy.version}</version>
+		</dependency>
+	</dependencies>
+</project>

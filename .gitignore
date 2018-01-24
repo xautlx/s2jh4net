@@ -1,10 +1,5 @@
 # maven ignore
 target
-*.jar
-*.war
-*.zip
-*.tar
-*.tar.gz
 
 # eclipse ignore
 .settings/
@@ -26,10 +21,10 @@ target
 *.java~
 *.properties~
 *.xml~
-rebel.xml
-temp.jsp
+*.xml.bak
+*temp.jsp
 
 # system ignore
 .DS_Store
 Thumbs.db
-
+.com.apple.timemachine.supported

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:/application.properties</value>
+                <value>classpath*:/application.prd.properties</value>
+                <value>file:/etc/entdiy/config/application.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
+
+    <!-- 自动扫描且只扫描@Controller -->
+    <context:component-scan base-package="com.entdiy,xyz.entdiy" use-default-filters="false">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.servlet.config.annotation.EnableWebMvc"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <bean id="controllerInvokeAuditor" class="com.entdiy.aud.aop.ControllerInvokeAuditor">
+    </bean>
+
+    <aop:config proxy-target-class="true">
+        <aop:aspect id="controllerInvokeAuditorAspect" ref="controllerInvokeAuditor">
+            <aop:pointcut id="requestMappingPoint"
+                          expression="within(@org.springframework.stereotype.Controller *) &amp;&amp; @annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
+            <aop:around pointcut-ref="requestMappingPoint" method="process"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!-- REST中根据URL后缀自动判定Content-Type及相应的View -->
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+                xml=application/xml
+            </value>
+        </property>
+    </bean>
+
+    <bean id="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+        <property name="failOnEmptyBeans" value="false"/>
+        <property name="defaultViewInclusion" value="true"/>
+        <property name="serializers">
+            <array>
+                <bean class="com.entdiy.core.web.json.LocalDateTimeSerializer"/>
+                <bean class="com.entdiy.core.web.json.LocalDateSerializer"/>
+            </array>
+        </property>
+        <!--
+        <property name="featuresToEnable">
+            <array>
+                <util:constant static-field="com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT" />
+            </array>
+        </property>
+        <property name="featuresToDisable">
+            <array>
+                <util:constant static-field="com.fasterxml.jackson.databind.MapperFeature.DEFAULT_VIEW_INCLUSION" />
+            </array>
+        </property>
+        -->
+    </bean>
+
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+        <mvc:message-converters register-defaults="true">
+            <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <constructor-arg ref="objectMapper"/>
+                <property name="prettyPrint" value="true"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean class="com.entdiy.core.web.exception.AnnotationHandlerMethodExceptionResolver">
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+    </bean>
+
+    <!-- 定义JSP文件的位置 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 定义无需Controller的url<->view直接映射 
+	<mvc:view-controller path="/" view-name="w/index" />
+    -->
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为10MB -->
+        <property name="maxUploadSize">
+            <value>10485760</value>
+        </property>
+    </bean>
+
+    <!-- 支持 Shiro对Controller的方法级AOP安全控制 begin -->
+
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    <!-- end -->
+</beans>

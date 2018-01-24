@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>EntDIY Javascript Document Namespace: ExtDataGrid</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">EntDIY Javascript Document</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="AdminIndex.html">AdminIndex</a></li><li><a href="Config.html">Config</a></li><li><a href="ExtAjaxBootstrapModal.html">ExtAjaxBootstrapModal</a></li><li><a href="ExtAjaxBootstrapTabs.html">ExtAjaxBootstrapTabs</a></li><li><a href="ExtBarcodeScanInput.html">ExtBarcodeScanInput</a></li><li><a href="ExtChartEcharts.html">ExtChartEcharts</a></li><li><a href="ExtCheckboxRadioGroup.html">ExtCheckboxRadioGroup</a></li><li><a href="ExtDataGrid.html">ExtDataGrid</a></li><li><a href="ExtDataProfileParam.html">ExtDataProfileParam</a></li><li><a href="ExtDatePicker.html">ExtDatePicker</a></li><li><a href="ExtDateRangePicker.html">ExtDateRangePicker</a></li><li><a href="ExtDateTimePicker.html">ExtDateTimePicker</a></li><li><a href="ExtDoubleMultiSelect.html">ExtDoubleMultiSelect</a></li><li><a href="ExtDropdownSelect.html">ExtDropdownSelect</a></li><li><a href="ExtDropdownTree.html">ExtDropdownTree</a></li><li><a href="ExtDynamicEditTable.html">ExtDynamicEditTable</a></li><li><a href="ExtFileUploader.html">ExtFileUploader</a></li><li><a href="ExtFormMisc.html">ExtFormMisc</a></li><li><a href="ExtFormValidationMethod.html">ExtFormValidationMethod</a></li><li><a href="ExtFormValidator.html">ExtFormValidator</a></li><li><a href="ExtGmapsBaidu.html">ExtGmapsBaidu</a></li><li><a href="ExtImageCaptchaCode.html">ExtImageCaptchaCode</a></li><li><a href="ExtImageUploader.html">ExtImageUploader</a></li><li><a href="ExtMisc.html">ExtMisc</a></li><li><a href="ExtMobileSmsCode.html">ExtMobileSmsCode</a></li><li><a href="ExtNavTree.html">ExtNavTree</a></li><li><a href="ExtPluginTemplate.html">ExtPluginTemplate</a></li><li><a href="ExtPopupCaptchaCode.html">ExtPopupCaptchaCode</a></li><li><a href="ExtQrcode.html">ExtQrcode</a></li><li><a href="ExtSelect.html">ExtSelect</a></li><li><a href="ExtSlimscrollPanel.html">ExtSlimscrollPanel</a></li><li><a href="ExtTableAjaxSorting.html">ExtTableAjaxSorting</a></li><li><a href="ExtTableInfiniteScroll.html">ExtTableInfiniteScroll</a></li><li><a href="ExtTextareaHtmleditor.html">ExtTextareaHtmleditor</a></li><li><a href="Global_.html">Global</a></li><li><a href="Util.html">Util</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#addOrReplaceUrlParameter">addOrReplaceUrlParameter</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#bindBtnPostUrl">bindBtnPostUrl</a></li><li><a href="global.html#BooleanUtil">BooleanUtil</a></li><li><a href="global.html#cutContextPath">cutContextPath</a></li><li><a href="global.html#dataStartWith">dataStartWith</a></li><li><a href="global.html#endWith">endWith</a></li><li><a href="global.html#findClosestFormInputByName">findClosestFormInputByName</a></li><li><a href="global.html#getParameterFromUrl">getParameterFromUrl</a></li><li><a href="global.html#getTextWithoutChildren">getTextWithoutChildren</a></li><li><a href="global.html#hashCode">hashCode</a></li><li><a href="global.html#isArrayContainElement">isArrayContainElement</a></li><li><a href="global.html#notSmallViewport">notSmallViewport</a></li><li><a href="global.html#parseFloatValDefaultZero">parseFloatValDefaultZero</a></li><li><a href="global.html#setInputValIfBlank">setInputValIfBlank</a></li><li><a href="global.html#smartParseURL">smartParseURL</a></li><li><a href="global.html#startWith">startWith</a></li><li><a href="global.html#subStringBetween">subStringBetween</a></li><li><a href="global.html#unEditable">unEditable</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Namespace: ExtDataGrid</h1>
+<section>
+
+<header>
+    
+        <h2>
+        ExtDataGrid
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>基于free-jqGrid扩展的数据表格组件，在table类型元素上面添加 data-grid-options 定义表格结构对象参数，主要属性列表如下：</p></div>
+        
+
+        
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>发起AJAX数据请求的URL</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>colModel</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>列属性参数对象，详见随后参数说明</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>postData</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>固定追加的查询参数JSON结构数据对象</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>editurl</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>inline编辑模式POST提交请求的处理url地址，没有此参数则工具条屏蔽相关编辑操作按钮</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delurl</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>inline删除操作请求url，没有此参数则工具条屏蔽相关删除操作按钮</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>multiselect</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>是否显示多选复选框列，默认true</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gridDnD</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>如果为true，开启鼠标拖放移动行项功能，一般用于类似菜单父子结构数据的管理操作</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subGrid</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>如果为true，行项左侧出现一个展开的加号图标点击触发执行subGridRowExpanded加载子表格</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subGridRowExpandedKey</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>如果提供值如parent.id，安装默认规则组装initRecursiveSubGrid调用</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>addable</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>是否允许添加操作，默认为true，如果为false则不会显示相关的添加操作按钮图标</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sortname</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>排序列名称，默认为id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sortorder</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>排序顺序，默认为desc</p>
+<p>colModel表格列属性参数：</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>列标题label</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>从JSON响应数据取值的属性名称</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>点击排序或查询回传服务器的属性名称，可选，默认值等于name值，可以传入复杂格式，如department.code_OR_department.name查询按照组合规则查询，排序取第一部分属性</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>列宽度，如果是自动百分比模式会取所有宽度按照百分比换算</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>editable</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>列单元格是否支持inline编辑，editurl有值才有意义</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>align</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>单元格数据对齐模式：left|right|center，基本原则是等长或简短内容center居中；金额类型一般right对齐；其余不等长文本一般left对齐</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>formatter</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>单元格类型，用于合理的控制显示格式和排序等特性，指定不同formatter格式一般会同步自动设定相关的width，align等属性，因此一般建议合理设置。<br><br>可选值说明：<br>    <pre><br>     currency=货币类型数据，逗号千分位分隔符，默认两位小数 ，自动设定width=80和align=right<br>     percentage=百分比类型数据，value为小数乘以100转换为%格式，自动设定width=50和align=right<br>     integer=整数类型，自动设定width=60和align=center<br>     number=数字类型，整数或浮点数 ，自动设定width=60和align=right<br>     date=ISO年月日格式，自动设定width=120和align=center<br>     timestamp=ISO年月日时分秒格式，自动设定width=150和align=center<br>     showlink=以AJAX对话框模式请求URL，需自行合理设置width属性，子参数示意：<br>         formatoptions.baseLinkUrl : '/admin/user/view',<br>         formatoptions.title : '/admin/user/view',<br>     checkbox=复选框，一般用于boolean类型 ，自动设定width=60和align=center,<br>     select=下拉选项框，一般用于枚举类型属性，子参数示意：<br>         searchoptions.valueJson : &quot;JSON结构对象&quot;<br>     </pre></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
+	<dd class="tag-author">
+		<ul>
+			<li><a href="mailto:xautlx@hotmail.com">Li Xia</a></li>
+			</ul>
+	</dd>
+	
+
+	
+	<dt class="tag-copyright method-doc-label method-doc-details-label">Copyright:</dt>
+	<dd class="tag-copyright">
+		<ul class="dummy">
+			<li>2017 <a href="https://www.entdiy.com">EntDIY.com</a></li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
+	<dd class="tag-see">
+		<ul>
+			<li><a href="http://www.trirand.com/jqgridwiki/doku.php?id=wiki:jqgriddocs">http://www.trirand.com/jqgridwiki/doku.php?id=wiki:jqgriddocs</a></li>
+			
+			<li><a href="https://github.com/free-jqgrid">https://github.com/free-jqgrid</a></li>
+			
+			<li><a href="https://free-jqgrid.github.io%0A%0AGrid%E8%A1%A8%E6%A0%BC%E5%B1%9E%E6%80%A7%E5%8F%82%E6%95%B0%EF%BC%9A">https://free-jqgrid.github.io
+
+Grid表格属性参数：</a></li>
+			</ul>
+	</dd>
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="footerrow">
+    <h4><span class="type-signature"></span>footerrow<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Grid扩展参数：底部区域汇总显示</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>footerLocalDataColumn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>以字符串数组形式指定需要汇总显示的列名称列表</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>colModel.footerSum</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>在列参数定义上面指定当前列是否自动汇总显示</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="navButtons">
+    <h4><span class="type-signature"></span>navButtons<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>定制业务操作操作按钮，参考： http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_buttons<br>在表格参数中添加JSON对象数组 navButtons:[{navButtonOptions},{navButtonOptions}...]<br>按钮参数navButtonOptions对象属性列表如下：</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>caption</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>按钮标题文本</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>buttonicon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>按钮图标，fa-XXX</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>operationRows</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>操作行项类型，可选值：<br>                                               none=无需选取行项（排在下拉菜单顶部分组），<br>                                               tool=无需选取行项（排在下拉菜单底部分组），<br>                                               single=必须且最多选取单行，<br>                                               multiple=必须且至少选取一行或多行</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onClickButton</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>点击事件处理，输入参数为根据operationRows动态返回的选取行项rowid或rowids数组</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>showOnToolbar</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>默认所有操作按钮只显示在&quot;更多操作&quot;下拉列表不显示在表格工具条，对于一些常用操作按钮可以设置此参数为true直接显示在表格工具条</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>showOnToolbarText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>在工具条默认只显示图标，设置为true同时显示caption标题文本</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="recursiveSubGrid">
+    <h4><span class="type-signature"></span>recursiveSubGrid<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>对于默认的递归表格，可以通过在表格参数上面直接定义如下几个属性值默认实现，组件会自动组装initRecursiveSubGrid方法调用：</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gridDnD</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>如果为true，开启鼠标拖放移动行项功能，一般用于类似菜单父子结构数据的管理操作</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subGrid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>如果为true，行项左侧出现一个展开的加号图标点击触发执行subGridRowExpanded加载子表格</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subGridRowExpandedKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>如果提供值如parent.id，安装默认规则组装initRecursiveSubGrid调用</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="getAtLeastOneSelectedItem"><span class="type-signature"></span>getAtLeastOneSelectedItem(<span class="optional">includeSubGird</span>, <span class="optional">required</span>)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>获取Grid至少选择一项</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>includeSubGird</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>是否包含子表格数据项</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>required</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+|
+
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>必选提示，如果为true则会给出默认提示信息，如果为字符串则显示对应字符串，否则无任何提示信息</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>选取行项的ID数组</p>
+</div>
+
+
+
+
+        
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">that.getAtLeastOneSelectedItem()</pre>
+
+    <pre class="sunlight-highlight-javascript">that.getAtLeastOneSelectedItem(true)</pre>
+
+    <pre class="sunlight-highlight-javascript">that.getAtLeastOneSelectedItem(&quot;请至少选择一条订单行项&quot;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getOnlyOneSelectedItem"><span class="type-signature"></span>getOnlyOneSelectedItem(<span class="optional">required</span>)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>获取Grid唯一选择行项</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>required</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+|
+
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>必选提示，如果为true则会给出默认提示信息，如果为字符串则显示对应字符串，否则无任何提示信息</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>已选取行项的ID值</p>
+</div>
+
+
+
+
+        
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">that.getOnlyOneSelectedItem()</pre>
+
+    <pre class="sunlight-highlight-javascript">that.getOnlyOneSelectedItem(true)</pre>
+
+    <pre class="sunlight-highlight-javascript">that.getOnlyOneSelectedItem(&quot;请选择订单行项&quot;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSelectedRowdata"><span class="type-signature"></span>getSelectedRowdata()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>获取Grid已选择selrow单行项rowdata数据</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>已选行项rowdata</p>
+</div>
+
+
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">that.getSelectedRowdata()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSelectedRowdata"><span class="type-signature"></span>getSelectedRowdata()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>获取Grid已选择selarrrow多行项数组rowdata数据</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>已选行项rowdata数组</p>
+</div>
+
+
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">that.getSelectedRowdatas()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="initRecursiveSubGrid"><span class="type-signature"></span>initRecursiveSubGrid(subgridDivId, rowid, parent)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>对于其他需要定制的递归子表格处理，可以通过设定如下参数手工调用initRecursiveSubGrid方法：</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>subgridDivId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>直接传入subGridRowExpanded事件方法中对应参数</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rowid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>直接传入subGridRowExpanded事件方法中对应参数</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>将当期父行项的id作为参数传入parent指定的参数作为查询子集合的查询条件名称，例如parent.id，在当前主Grid的url参数基础上添加search['EQ_&quot; + parent + &quot;']=(行项id值)作为子表格查询url</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">this.initRecursiveSubGrid(subgridDivId, rowid, &quot;parent.id&quot;);</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="initSubGrid"><span class="type-signature"></span>initSubGrid(subgridDivId, rowid, options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>初始化普通子表格，一般在subGrid=true时，在 subGridRowExpanded 事件方法中调用</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>subgridDivId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>直接传入subGridRowExpanded事件方法中对应参数</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rowid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>直接传入subGridRowExpanded事件方法中对应参数</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>传入用于子表格初始化的jqGrid结构参数对象</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">subGridRowExpanded: function (subgridDivId, rowid) {
+       $(this).extDataGrid(&quot;initSubGrid&quot;, subgridDivId, rowid, {
+           url: &quot;/admin/sys/notify-message/read-list?search[EQ_notifyMessage.id]=&quot; + rowid,
+           colModel: [{
+               label: &quot;阅读用户&quot;,
+               name: &quot;readUser.display&quot;,
+               index: &quot;readUser.id&quot;,
+               width: 150
+           }, {
+               label: &quot;首次阅读时间&quot;,
+               name: &quot;firstReadTime&quot;,
+               formatter: &quot;timestamp&quot;
+           }, {
+               label: &quot;最后阅读时间&quot;,
+               name: &quot;lastReadTime&quot;,
+               formatter: &quot;timestamp&quot;
+           }, {
+               label: &quot;总计阅读次数&quot;,
+               name: &quot;readTotalCount&quot;,
+               formatter: &quot;integer&quot;,
+               align: &quot;center&quot;
+           }],
+           inlineNav: false
+       });
+     }</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="refresh"><span class="type-signature"></span>refresh()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>刷新Grid组件</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">$grid.extDataGrid(&quot;refresh&quot;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="search"><span class="type-signature"></span>search(params)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>按照提供参数查询刷新</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type">array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>查询参数JSON对象 或 $form.serializeArray()返回结构数组</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">$grid.extDataGrid(&quot;search&quot;,{aaa: &quot;value1&quot;, bbb: &quot;value2&quot;})</pre>
+
+    <pre class="sunlight-highlight-javascript">$grid.extDataGrid(&quot;search&quot;,[{name: &quot;aaa&quot;,value: &quot;value1&quot;},{name: &quot;bbb&quot;,value: &quot;value2&quot;}])</pre>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; EntDIY.com 2014 - 2017.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

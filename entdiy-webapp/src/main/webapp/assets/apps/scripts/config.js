@@ -1,0 +1,1 @@
+var Config=function(){var b="";var c=false;var a="";return{isDebugEnable:function(){return this.isDevMode()},isDevMode:function(){return c===true||c==="true"},setDevMode:function(d){c=d},getContextPath:function(){return b},setContextPath:function(d){b=d},getFileUploadUrl:function(){Util.assertNotBlank(a,"文件上传URL地址未设定");return a},setFileUploadUrl:function(d){a=d}}}();

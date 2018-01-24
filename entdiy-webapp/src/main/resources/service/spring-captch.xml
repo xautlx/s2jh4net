@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--验证码服务-->
+    <bean id="captchaService" class="com.entdiy.core.web.captcha.DoubleCheckableCaptchaService">
+        <constructor-arg name="captchaEngine" ref="captchaEngine"/>
+        <!--Captcha session过期时间，单位秒-->
+        <constructor-arg name="minGuarantedStorageDelayInSeconds"
+                         value="${captcha.service.minGuarantedStorageDelayInSeconds}"/>
+        <!--最大并发数-->
+        <constructor-arg name="maxCaptchaStoreSize" value="${captcha.service.maxCaptchaStoreSize}"/>
+        <constructor-arg name="captchaStoreLoadBeforeGarbageCollection"
+                         value="${captcha.service.captchaStoreLoadBeforeGarbageCollection}"/>
+    </bean>
+
+    <!--图片引擎-->
+    <bean id="captchaEngine" class="com.octo.captcha.engine.GenericCaptchaEngine">
+        <constructor-arg name="factories">
+            <list>
+                <ref bean="gimpyFactory"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--验证码工厂-->
+    <bean id="gimpyFactory" class="com.octo.captcha.image.gimpy.GimpyFactory">
+        <constructor-arg name="generator" ref="wordGenerator"/>
+        <constructor-arg name="word2image" ref="wordToImage"/>
+    </bean>
+
+    <!--文字产生器-->
+    <bean id="wordGenerator" class="com.octo.captcha.component.word.wordgenerator.RandomWordGenerator">
+        <constructor-arg name="acceptedChars" value="${captcha.word.acceptedChars}"/>
+    </bean>
+
+    <bean id="wordToImage" class="com.octo.captcha.component.image.wordtoimage.ComposedWordToImage">
+        <constructor-arg name="fontGenerator" ref="fontGenerator"/>
+        <constructor-arg name="background" ref="backgroundGenerator"/>
+        <constructor-arg name="textPaster" ref="textPaster"/>
+    </bean>
+
+    <!--字体生成器-->
+    <bean id="fontGenerator" class="com.octo.captcha.component.image.fontgenerator.RandomFontGenerator">
+        <constructor-arg name="minFontSize" value="${captcha.font.minSize}"/>
+        <constructor-arg name="maxFontSize" value="${captcha.font.maxSize}"/>
+        <constructor-arg name="fontsList">
+            <list>
+                <ref bean="fontVerdana"/>
+                <ref bean="fontTahoma"/>
+                <ref bean="fontLucida"/>
+                <ref bean="fontComic"/>
+                <ref bean="fontArial"/>
+                <ref bean="fontSTIX"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--颜色生成器-->
+    <bean id="colorGenerator" class="com.octo.captcha.component.image.color.RandomRangeColorGenerator">
+        <constructor-arg name="redComponentRange">
+            <list>
+                <value>${captcha.color.range.red.min}</value>
+                <value>${captcha.color.range.red.max}</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="greenComponentRange">
+            <list>
+                <value>${captcha.color.range.green.min}</value>
+                <value>${captcha.color.range.green.max}</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="blueComponentRange">
+            <list>
+                <value>${captcha.color.range.blue.min}</value>
+                <value>${captcha.color.range.blue.max}</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--line colors-->
+    <bean id="lineColorGenerator" class="com.octo.captcha.component.image.color.RandomRangeColorGenerator">
+        <constructor-arg name="redComponentRange">
+            <list>
+                <value>${captcha.line.color.range.red.min}</value>
+                <value>${captcha.line.color.range.red.max}</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="greenComponentRange">
+            <list>
+                <value>${captcha.line.color.range.green.min}</value>
+                <value>${captcha.line.color.range.green.max}</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="blueComponentRange">
+            <list>
+                <value>${captcha.line.color.range.blue.min}</value>
+                <value>${captcha.line.color.range.blue.max}</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--背景生成器-->
+    <bean id="backgroundGenerator"
+          class="com.octo.captcha.component.image.backgroundgenerator.UniColorBackgroundGenerator">
+        <constructor-arg name="width" value="${captcha.bg.width}"/>
+        <constructor-arg name="height" value="${captcha.bg.height}"/>
+        <constructor-arg name="color" value="${captcha.bg.color}"/>
+    </bean>
+
+    <!--字符贴片-->
+    <bean id="textPaster" class="com.octo.captcha.component.image.textpaster.DecoratedRandomTextPaster">
+        <constructor-arg name="minAcceptedWordLength" value="${captcha.word.minLength}"/>
+        <constructor-arg name="maxAcceptedWordLength" value="${captcha.word.maxLength}"/>
+        <constructor-arg name="colorGenerator" ref="colorGenerator"/>
+        <constructor-arg name="decorators">
+            <list>
+                <ref bean="lineTextDecorator"/>
+                <ref bean="baffleTextDecorator"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--干扰线-->
+    <bean id="lineTextDecorator" class="com.octo.captcha.component.image.textpaster.textdecorator.LineTextDecorator">
+        <constructor-arg name="numberOfLinesPerGlyph" value="${captcha.line.numberOfLinesPerGlyph}"/>
+        <constructor-arg name="linesColorGenerator" ref="lineColorGenerator"/>
+    </bean>
+
+    <bean id="baffleTextDecorator"
+          class="com.octo.captcha.component.image.textpaster.textdecorator.BaffleTextDecorator">
+        <constructor-arg name="numberOfHolesPerGlyph" value="${captcha.baffle.numberOfHolesPerGlyph}"/>
+        <constructor-arg name="holesColorGenerator" ref="lineColorGenerator"/>
+    </bean>
+
+    <!--Fonts-->
+    <bean id="fontArial" class="java.awt.Font">
+        <constructor-arg index="0" value="Arial"/>
+        <constructor-arg index="1" value="${captcha.font.style}"/>
+        <constructor-arg index="2" value="${captcha.font.size}"/>
+    </bean>
+    <bean id="fontTahoma" class="java.awt.Font">
+        <constructor-arg index="0" value="Tahoma"/>
+        <constructor-arg index="1" value="${captcha.font.style}"/>
+        <constructor-arg index="2" value="${captcha.font.size}"/>
+    </bean>
+    <bean id="fontVerdana" class="java.awt.Font">
+        <constructor-arg index="0" value="Verdana"/>
+        <constructor-arg index="1" value="${captcha.font.style}"/>
+        <constructor-arg index="2" value="${captcha.font.size}"/>
+    </bean>
+    <bean id="fontComic" class="java.awt.Font">
+        <constructor-arg index="0" value="Comic sans MS"/>
+        <constructor-arg index="1" value="${captcha.font.style}"/>
+        <constructor-arg index="2" value="${captcha.font.size}"/>
+    </bean>
+    <bean id="fontLucida" class="java.awt.Font">
+        <constructor-arg index="0" value="Lucida console"/>
+        <constructor-arg index="1" value="${captcha.font.style}"/>
+        <constructor-arg index="2" value="${captcha.font.size}"/>
+    </bean>
+    <!-- Tested for CentOS -->
+    <bean id="fontSTIX" class="java.awt.Font">
+        <constructor-arg index="0" value="STIX"/>
+        <constructor-arg index="1" value="${captcha.font.style}"/>
+        <constructor-arg index="2" value="${captcha.font.size}"/>
+    </bean>
+</beans>

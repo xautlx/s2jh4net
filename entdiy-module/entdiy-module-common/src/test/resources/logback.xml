@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %19logger{19}[%line] - %msg %mdc %n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="druid.sql" level="DEBUG" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="com.entdiy" level="DEBUG" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="xyz.entdiy" level="DEBUG" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration> 

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+       default-lazy-init="true">
+
+    <description>Shiro安全配置</description>
+
+    <!-- Shiro cache using Redis -->
+    <bean id="shiroRedisCacheManager" class="com.entdiy.security.cache.RedisCacheManager">
+        <property name="redisTemplate" ref="redisTemplate"/>
+        <property name="expireInSeconds" value="${spring.session.expire.seconds}"/>
+    </bean>
+
+    <!-- JDBC Realm -->
+    <bean id="authTypeShiroJdbcRealm" class="com.entdiy.security.AuthTypeShiroJdbcRealm">
+        <property name="passwordService" ref="passwordService"/>
+        <property name="userService" ref="userService"/>
+        <property name="accountService" ref="accountService"/>
+    </bean>
+
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy">
+            <bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>
+        </property>
+    </bean>
+
+    <!-- Shiro's main business-tier object for web-enabled applications -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="authenticator" ref="authenticator"/>
+        <property name="realms">
+            <list>
+                <ref bean="authTypeShiroJdbcRealm"/>
+            </list>
+        </property>
+        <!-- 由于使用了Spring Session Redis，因此直接使用默认session管理即可。
+             如果没有使用Spring Session，则可以按照此属性使用Shiro Session Redis实现。
+        <property name="sessionManager" ref="shiroSessionManager" />
+        -->
+        <property name="cacheManager" ref="shiroRedisCacheManager"/>
+    </bean>
+
+    <bean id="anyRolesAuthorizationFilter" class="com.entdiy.security.AnyRolesAuthorizationFilter"/>
+
+    <bean id="siteFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
+        <property name="loginUrl" value="/login"/>
+        <property name="successUrl" value="/"/>
+        <property name="passwordRefreshUrl" value="/profile/credentials-expire"/>
+        <property name="accountService" ref="accountService"/>
+        <property name="accountLogonLogService" ref="accountLogonLogService"/>
+        <property name="authType" value="site"/>
+    </bean>
+
+    <bean id="adminFormAuthenticationFilter" class="com.entdiy.security.admin.AdminFormAuthenticationFilter">
+        <property name="loginUrl" value="/admin/login"/>
+        <property name="successUrl" value="/admin"/>
+        <property name="passwordRefreshUrl" value="/admin/profile/credentials-expire"/>
+        <property name="accountService" ref="accountService"/>
+        <property name="accountLogonLogService" ref="accountLogonLogService"/>
+        <property name="authType" value="admin"/>
+    </bean>
+
+
+    <bean id="appFormAuthenticationFilter" class="com.entdiy.security.JcaptchaFormAuthenticationFilter">
+        <property name="loginUrl" value="/api/login"/>
+        <property name="accountService" ref="accountService"/>
+        <property name="accountLogonLogService" ref="accountLogonLogService"/>
+        <property name="authType" value="site"/>
+    </bean>
+
+    <bean id="apiClientAuthenticationFilter" class="com.entdiy.security.api.ClientValidationAuthenticationFilter">
+        <property name="appKeySecrets">
+            <props>
+                <prop key="default">${auth.api.default}</prop>
+                <prop key="jenkins">${auth.api.jenkins}</prop>
+                <!-- 可以在后面追加prop定义，允许新的Client访问控制。可考虑扩展为从数据库获取Api访问控制信息。 -->
+            </props>
+        </property>
+    </bean>
+
+    <bean id="bearerTokenAuthenticatingFilter" class="com.entdiy.security.api.BearerTokenAuthenticatingFilter">
+
+    </bean>
+
+    <bean id="wwwLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/w"/>
+    </bean>
+
+    <bean id="mobileLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/m"/>
+    </bean>
+
+    <bean id="adminLogoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/admin"/>
+    </bean>
+
+    <bean id="appLogoutFilter" class="com.entdiy.security.AppLogoutFilter">
+        <property name="userService" ref="userService"/>
+    </bean>
+
+    <!-- Shiro Filter -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="filters">
+            <map>
+                <entry key="anyRoles" value-ref="anyRolesAuthorizationFilter"/>
+                <entry key="authcSite" value-ref="siteFormAuthenticationFilter"/>
+                <entry key="authcAdmin" value-ref="adminFormAuthenticationFilter"/>
+                <entry key="authcAccessToken" value-ref="bearerTokenAuthenticatingFilter"/>
+                <entry key="authcApiClient" value-ref="apiClientAuthenticationFilter"/>
+                <entry key="authcAppForm" value-ref="appFormAuthenticationFilter"/>
+                <entry key="logoutSite" value-ref="wwwLogoutFilter"/>
+                <entry key="logoutMobile" value-ref="mobileLogoutFilter"/>
+                <entry key="logoutAdmin" value-ref="adminLogoutFilter"/>
+                <entry key="logoutApp" value-ref="appLogoutFilter"/>
+            </map>
+        </property>
+        <property name="securityManager" ref="securityManager"/>
+        <!--
+        anon	org.apache.shiro.web.filter.authc.AnonymousFilter
+        authc	org.apache.shiro.web.filter.authc.FormAuthenticationFilter
+        authcBasic	org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
+        logout	org.apache.shiro.web.filter.authc.LogoutFilter
+        noSessionCreation	org.apache.shiro.web.filter.session.NoSessionCreationFilter
+        perms	org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter
+        port	org.apache.shiro.web.filter.authz.PortFilter
+        rest	org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter
+        roles	org.apache.shiro.web.filter.authz.RolesAuthorizationFilter
+        ssl	org.apache.shiro.web.filter.authz.SslFilter
+        user	org.apache.shiro.web.filter.authc.UserFilter
+        -->
+        <property name="filterChainDefinitions">
+            <value>
+                /assets/** = anon
+
+                /login = authcSite
+                /logout = logoutSite
+
+                /admin/pub/** = anon
+                /admin/login = authcAdmin
+                /admin/logout = logoutAdmin
+                /admin = authcAdmin,anyRoles[ROLE_MGMT_USER]
+                /admin/** = authcAdmin,anyRoles[ROLE_MGMT_USER]
+                /dev/** = authcAdmin,anyRoles[ROLE_MGMT_USER]
+                /druid/** = authcAdmin,anyRoles[ROLE_SUPER_USER]
+
+                /api/pub/** = anon
+                /api/login = authcAppForm
+                /api/logout = logoutApp
+                /api/** = authcApiClient,authcAccessToken
+
+                /** = anon
+            </value>
+        </property>
+    </bean>
+</beans>
