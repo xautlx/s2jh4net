@@ -79,3 +79,10 @@ UI组件部分的设计主要基于JQuery/Bootstrap及相关插件，以Bootstra
         }
 ```
 
+## UI组件展示
+
+各UI组件用法可以直接参考各基础功能相关的JSP页面代码，以及 allInOne-detail.jsp 和 AllInOneController.java 基本涵盖了绝大部分框架所提供UI组件用法展示：
+
+![ui-example](images/ui-example.jpg)
+
+

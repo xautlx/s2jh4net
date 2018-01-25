@@ -269,7 +269,6 @@
 <script src="assets/apps/scripts/component/double-multi-select.js?_=${buildVersion}" type="text/javascript"></script>
 <script src="assets/apps/scripts/component/image-uploader.js?_=${buildVersion}" type="text/javascript"></script>
 <script src="assets/apps/scripts/component/file-uploader.js?_=${buildVersion}" type="text/javascript"></script>
-<script src="assets/apps/scripts/component/grid.js?_=${buildVersion}" type="text/javascript"></script>
 <script src="assets/apps/scripts/component/data-grid.js?_=${buildVersion}" type="text/javascript"></script>
 <script src="assets/apps/scripts/component/textarea-htmleditor.js?_=${buildVersion}" type="text/javascript"></script>
 <script src="assets/apps/scripts/component/dropdown-tree.js?_=${buildVersion}" type="text/javascript"></script>

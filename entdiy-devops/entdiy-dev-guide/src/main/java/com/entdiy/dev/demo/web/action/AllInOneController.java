@@ -14,13 +14,16 @@
  */
 package com.entdiy.dev.demo.web.action;
 
+import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.Department;
 import com.entdiy.auth.entity.Privilege;
+import com.entdiy.auth.service.AccountService;
 import com.entdiy.auth.service.DepartmentService;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
@@ -75,6 +78,8 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
     @Autowired
     private PrivilegeService privilegeService;
 
+    @Autowired
+    private AccountService accountService;
 
     @Override
     protected BaseService<MockEntity, Long> getEntityService() {
@@ -144,6 +149,8 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
 
         //二维码组件使用
         model.addAttribute("webContextFullUrl", ServletUtils.getRequestFullContextURL(request));
+
+        model.addAttribute("user", userService.findByAccount(accountService.findByUsername(Account.AuthTypeEnum.admin, GlobalConstant.ROOT_VALUE)));
 
         return "dev/demo/allInOne-detail";
     }

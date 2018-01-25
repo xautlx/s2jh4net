@@ -290,8 +290,9 @@
         </div>
     </div>
     <div class="portlet-body">
-        <form:form id="" class="form-horizontal form-bordered form-label-stripped form-validation" action="todo"
-                   method="post" data-editrulesurl="false" modelAttribute="entity">
+        <form:form id="" class="form-horizontal form-bordered form-label-stripped"
+                   method="post" modelAttribute="entity" data-validation='true'
+                   action="dev/demo/all-in-one/show-form-data">
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-11">
@@ -331,6 +332,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         <hr>
+                        <div class="note note-danger">
+                            <p>为了交互体验的友好，框架扩展实现输入4位验证码后立即触发AJAX异步校验验证码有效性，如果校验失败立即给出提示信息，同时在表单提交业务处理时再进行验证码销毁处理</p>
+                            <p>按照JCaptch组件的设计原则，一个用户会话只能对应一个有效的验证码，因此如下界面同时显示多个验证码只是为了不同类型组件展示，实际业务不应该出现同一个页面多个验证码输入</p>
+                            <p>因此在本页面如果同时显示了多个验证码，则需要分别点击刷新验证码后，在对应输入框输入验证码体验实时校验效果，否则会出现看到验证码即使输入正确也提示失败</p>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -430,26 +436,40 @@
                         </span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-11">
-                        <div class="form-group">
-                            <label class="control-label">扩展AJAX加载Tab组件</label>
-                            <div class="controls">
-                                <p class="form-control-static">扩展Bootstrap默认的Tab组件支持AJAX加载页面，详见各功能编辑tab界面</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-1 visible-md visible-lg">
-                        <span class="help-block">
-                            <a href="dev/docs/jsdoc/ExtAjaxBootstrapTabs.html" target="_blank"
-                               class="btn btn-icon-only green btn-dev-demo-info">
-                                <i class="fa fa-info"></i>
-                            </a>
-                        </span>
-                    </div>
-                </div>
             </div>
         </form:form>
+    </div>
+</div>
+
+<div class="portlet gren">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-reorder"></i> 扩展AJAX支持Tab组件
+        </div>
+        <div class="tools">
+            <a class="collapse" href="javascript:;"></a>
+            <a class="remove" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="note note-danger">
+                    <p>当前界面直接调用的"后台用户管理"编辑界面，实际操作可直接访问“配置管理”->"权限管理"->"后台用户管理"菜单功能体验。</p>
+                    <p>点击保存会直接调用"后台用户管理"数据存储逻辑，提交的数据可在对应功能界面查看。</p>
+                </div>
+            </div>
+            <div class="col-md-1 visible-md visible-lg">
+                <span class="help-block">
+                    <a href="dev/docs/jsdoc/ExtAjaxBootstrapTabs.html" target="_blank"
+                       class="btn btn-icon-only green btn-dev-demo-info">
+                        <i class="fa fa-info"></i>
+                    </a>
+                </span>
+            </div>
+        </div>
+
+        <div data-toggle="ajaxify" data-url="admin/auth/user/edit-tabs?id=${user.id}"></div>
     </div>
 </div>
 
@@ -464,7 +484,7 @@
         </div>
     </div>
     <div class="portlet-body">
-        <form:form id="" class="form-horizontal form-bordered form-label-stripped"
+        <form:form id="" class="form-horizontal form-bordered form-label-stripped control-label-lg"
                    method="post" modelAttribute="entity" data-validation='true'
                    action="dev/demo/all-in-one/show-form-data">
             <form:hidden id="" path="id"/>
@@ -721,7 +741,7 @@
         </div>
     </div>
     <div class="portlet-body">
-        <form:form id="" class="form-horizontal form-bordered form-label-stripped"
+        <form:form id="" class="form-horizontal form-bordered form-label-stripped control-label-lg"
                    method="post" modelAttribute="entity" data-validation='true'
                    action="dev/demo/all-in-one/show-form-data">
             <form:hidden id="" path="id"/>

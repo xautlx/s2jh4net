@@ -14,16 +14,14 @@
  */
 package com.entdiy.auth.web;
 
-import com.entdiy.auth.entity.Privilege;
-import com.entdiy.auth.entity.RoleR2Privilege;
-import com.entdiy.auth.entity.User;
-import com.entdiy.auth.entity.UserR2Role;
+import com.entdiy.auth.entity.*;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cache.EntityCacheService;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
@@ -142,7 +140,13 @@ public class UserController extends BaseController<User, Long> {
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/roles", method = RequestMethod.GET)
     public String roles(@ModelAttribute("entity") User entity, Model model) {
-        model.addAttribute("roles", roleService.findAllCached());
+        Account account = entity.getAccount();
+        if (Account.AuthTypeEnum.admin.equals(account.getAuthType()) && GlobalConstant.ROOT_VALUE.equals(account.getAuthUid())) {
+            model.addAttribute(GlobalConstant.ROOT_VALUE, true);
+        } else {
+            model.addAttribute(GlobalConstant.ROOT_VALUE, false);
+            model.addAttribute("roles", roleService.findAllCached());
+        }
         return "admin/auth/user-roles";
     }
 
