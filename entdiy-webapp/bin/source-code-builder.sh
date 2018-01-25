@@ -5,11 +5,10 @@ echo "Using SHELL_DIR: ${SHELL_DIR}"
 RUN_DIR=`pwd`
 echo "Using RUN_DIR: ${RUN_DIR}"
 
-echo Rebuild codebuilder...
-cd ${SHELL_DIR}/../../entdiy-devops/entdiy-dev-codebuilder
-mvn clean install
+# 修改当前项目模块包前缀
+basePackages=xyz.entdiy.shop
 
-echo Generate template files...
-cd ${SHELL_DIR}/..
-mvn clean compile exec:java -Psource-code-builder -DbasePackages="xyz.entdiy"
-cd ${RUN_DIR}
+# 注意根据实际目录层次结构做必要修改指向entdiy-dev-codebuilder项目目录
+cd ${SHELL_DIR}/../../entdiy-devops/entdiy-dev-codebuilder/bin
+
+./source-code-builder.sh ${SHELL_DIR}/.. ${basePackages}

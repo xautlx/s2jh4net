@@ -15,11 +15,10 @@
 ## 框架特色
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
-* 主体基于主流的（Spring MVC + Spring3 + Hibernate4/MyBatis3）架构
-* 引入JPA、Spring-Data-JPA提升持久层架构规范性和开发效率
-* 基于流行JQuery/Bootstrap等UI框架和插件整合，良好的浏览器兼容性和移动设备访问支持
+* 主体基于主流的（Java 8 + SpringMVC/Spring 5 + Hibernate 5.2/MyBatis 3/JPA 2.1/Spring Data 2）架构
+* 基于流行JQuery 1.12/Bootstrap 3.3等UI框架和插件扩展，良好的浏览器兼容性和移动设备访问支持
 * 提供一个基础的代码生成框架，简化实现快速基本的CRUD功能开发
-* 基于Maven的项目和组件依赖管理模式，便捷高效的与持续集成开发集成
+* 基于Maven的模块化项目和组件依赖管理模式，便捷高效的与持续集成开发集成
 
 ## 技术架构
 
