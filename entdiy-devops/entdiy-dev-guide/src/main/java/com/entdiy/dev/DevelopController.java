@@ -54,7 +54,7 @@ public class DevelopController {
     }
 
 
-    @RequestMapping(value = "/markdown/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/docs/markdown/{name}", method = RequestMethod.GET)
     public String markdown(HttpServletRequest request, @PathVariable("name") String name, Model model) throws Exception {
         List<String> fileNames = Lists.newArrayList();
         String text;

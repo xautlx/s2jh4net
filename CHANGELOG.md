@@ -5,6 +5,4 @@
   * 全面使用Date/Time API、lambda等特性，因此要求JDK8+
   * 核心组件版本升级到最新：SpringMVC/Spring 5.0.X, Hibernate 5.2.X, Spring Data 2.0.X, 及其他关联组件版本
   * UI基础框架版本从 Metronic 1.4.5 升级到 4.7.5
-  * 基于Bootstrap Plugin模式全面重构所有UI扩展组件 
-    - <a href="entdiy-webapp/src/main/webapp/assets/apps/scripts">UI组件代码目录</a>
-    - <a href="entdiy-dev/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/jsdoc">JSDoc文档目录</a>
+  * 基于Bootstrap Plugin模式全面重构所有UI扩展组件

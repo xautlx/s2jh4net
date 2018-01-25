@@ -4,8 +4,13 @@
 <html>
 <head>
     <title>${name}</title>
-    <base href="${applicationScope.ctx}/"/>
-    <link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <style>
+        img{
+            max-width: 100%;
+        }
+    </style>
+    <base href="${applicationScope.ctx}/dev/docs/markdown/"/>
+    <link href="${applicationScope.ctx}/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body style="margin: 20px">
 <div class="row">
@@ -14,7 +19,7 @@
         <ul>
             <c:forEach var="item" items="${files}">
                 <c:if test="${item!='images'}">
-                    <li><a href="dev/markdown/${item}">${item}</a></li>
+                    <li><a href="${item}">${item}</a></li>
                 </c:if>
             </c:forEach>
         </ul>

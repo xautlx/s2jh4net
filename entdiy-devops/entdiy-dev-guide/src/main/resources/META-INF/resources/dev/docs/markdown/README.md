@@ -6,11 +6,9 @@
 
 **https://github.com/xautlx/s2jh4net**
 
-**http://git.oschina.net/xautlx/s2jh4net**
+**https://gitee.com/xautlx/s2jh4net**
 
-### 个人空间： http://my.oschina.net/s2jh
-
-> **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](http://git.oschina.net/xautlx/s2jh4net/raw/master/src/main/webapp/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
+> **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
 
 ## 框架特色
 

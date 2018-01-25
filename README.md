@@ -6,7 +6,7 @@
 
 **https://github.com/xautlx/s2jh4net**
 
-**http://git.oschina.net/xautlx/s2jh4net**
+**https://gitee.com/xautlx/s2jh4net**
 
 **最近版本更新说明**
 
@@ -18,9 +18,7 @@
   * 核心组件版本升级到最新：SpringMVC/Spring 5.0.X, Hibernate 5.2.X, Spring Data 2.0.X, 及其他关联组件版本
   * UI基础框架版本从 Metronic 1.4.5 升级到 4.7.5
   * 基于Bootstrap Plugin模式全面重构所有UI扩展组件 
-    - <a href="entdiy-webapp/src/main/webapp/assets/apps/scripts">UI组件代码目录</a>
-    - <a href="entdiy-dev/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/jsdoc">JSDoc文档目录</a>
-    
+
 > **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
 
 ## 框架特色
@@ -69,13 +67,13 @@
 
 在线演示站点为Ngrok穿透访问家用台式机，可能存在访问缓慢情况或更新时中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
 
-建议可参考 [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE.md) 在本地运行完整体验。
+建议可参考 [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发配置.md) 在本地运行完整体验。
 
 > 项目最新自动化持续集成构建状态 Travis-CI Status: [![Build Status](https://travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://travis-ci.org/xautlx/s2jh4net)
 
 ## 截图展示
 
-![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg)
+![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg?_=20180125)
 
 ### 许可说明
 

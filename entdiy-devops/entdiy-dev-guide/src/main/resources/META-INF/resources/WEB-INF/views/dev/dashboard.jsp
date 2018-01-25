@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="list-group">
-                <a class="list-group-item" href="dev/markdown/README" target="_blank">
+                <a class="list-group-item" href="dev/docs/markdown/README" target="_blank">
                     <h4 class="list-group-item-heading">
                         <i class="fa fa-file-text-o"></i>
                         开发框架介绍与开发指南
