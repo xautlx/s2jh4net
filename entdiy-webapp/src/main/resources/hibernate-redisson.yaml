@@ -13,7 +13,7 @@ singleServerConfig:
   password: redisP@sswd123
   subscriptionsPerConnection: 5
   clientName: null
-  address: ["redis://redis-server:6379"]
+  address: ["redis://127.0.0.1:6379"]
   subscriptionConnectionMinimumIdleSize: 1
   subscriptionConnectionPoolSize: 25
   connectionMinimumIdleSize: 5

@@ -1,0 +1,48 @@
+## Docker服务
+
+结合现在流行的DevOps理念，Docker化部署运维模式确实能大幅提升开发测试运维的质量和效率，本框架应用的多个项目生产环境已全面采用Docker进行部署运维。
+
+entdiy-devops/entdiy-ops-docker/docker 提供了基于Docker模式的mysql、redis、tomcat等服务的单机部署运行脚本和配置文件，可参考学习基于docker的部署运维。
+当然这些脚本和配置主要用于演示的单机部署模式，实际生产环境部署需要考虑集群高可用等特性，需要相对更加复杂的规划部署。
+另外，这些脚本部署方式基本只适合小规模的几个节点部署，一旦部署节点量大了，还需要进一步考虑引入docker swarm 或 kubernetes等技术支持。
+
+### Docker运行环境安装
+
+对于Docker相关知识本文不做阐述请自行搜索查阅了解，虽然Docker有Windows版本支持，但是主流还是建议在Unix/Linux系统进行安装部署。
+
+请参考官方指南安装Docker运行环境：https://www.docker.com/community-edition
+
+Docker最新版本安装完成后，可简单执行如下命令验证：
+
+``` bash
+docker -v
+```
+
+出现类似信息："Docker version 17.06.2-ce, build cec0b72"
+
+
+### 框架演示Docker服务
+
+为了简化框架演示运行，实现简单的执行一个shell脚本就能完整整个框架应用的编译、打包、部署、运行等支持，提供相关服务的最小化docker展示。
+
+对 entdiy-devops/entdiy-ops-docker/docker 目录下几个docker服务简单介绍：
+
+**mysql:** 单机版本Docker MySQL 5.7.20，直接运行 mysql/bin/docker-one.sh start/restart/stop 即可启动/重启/关闭 localhost:3306 （root密码mysqlP@sswd123） 的mysq服务。
+
+**redis:** 单机版本Docker Redis 3.2.11，直接运行 redis/bin/docker-one.sh start/restart/stop 即可启动/重启/关闭 localhost:6379 （密码redisP@sswd123）的redis服务。
+
+**tomcat:** Docker Tomcat 8：
+
+* tomcat/war 用于存放需要部署的web应用war包
+* tomcat/config/app 中文件可定制修改相关属性参数
+* tomcat/config/tomcat 中存放tomcat定制配置参数，一般无需修改
+* 运行 tomcat/bin/docker-one.sh start/restart/stop 即可启动/重启/关闭 localhost:8080 的单节点tomcat服务。
+* 运行 tomcat/bin/docker-nodes.sh start/restart/stop 即可启动/重启/关闭 localhost:8084 和 localhost:8085 两个节点tomcat服务，然后通过Nginx proxy_pass反向代理实现最小化的集群部署。
+
+具体实现思路请详见相关脚本和配置文件。
+
+
+
+
+
+

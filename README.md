@@ -35,10 +35,12 @@
 * [技术特性](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/技术特性.md) - 主要技术选型和设计说明
 * [异常处理](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/异常处理.md) - 介绍框架的异常处理的策略设计
 * [移动支持](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/移动支持.md) - 以Android为例的Web App与Native App整合应用
+* [开发计划](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发计划.md) - 规划引入的新功能新特性
 
 ## 开发指南
 
 * [演示运行](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/演示运行.md) - 一键运行脚本全自动完成基于Maven构建并Docker部署运行应用
+* [Docker服务](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/Docker服务.md) - 介绍框架对Docker化服务部署在框架中的应用展示
 * [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发配置.md) - 开发基础环境配置说明
 * [工程结构](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/工程结构.md) - 对整个项目工程代码结构进行概要性介绍
 * [代码生成](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/代码生成.md) - 用于基本CURD框架代码生成的工具
