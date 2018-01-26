@@ -15,7 +15,7 @@
 package com.entdiy.dev;
 
 import com.entdiy.core.web.AppContextHolder;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
@@ -24,9 +24,11 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,12 +37,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.net.JarURLConnection;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/dev")
@@ -56,7 +54,7 @@ public class DevelopController {
 
     @RequestMapping(value = "/docs/markdown/{name}", method = RequestMethod.GET)
     public String markdown(HttpServletRequest request, @PathVariable("name") String name, Model model) throws Exception {
-        List<String> fileNames = Lists.newArrayList();
+        Set<String> fileNames = Sets.newTreeSet();
         String text;
         String dir = "/dev/docs/markdown";
 
@@ -81,26 +79,10 @@ public class DevelopController {
             dir = "META-INF/resources" + dir;
             text = IOUtils.toString(loader.getResourceAsStream(dir + "/" + name), "UTF-8");
 
-            URL url = loader.getResource(dir);
-            if ("file".equalsIgnoreCase(url.getProtocol())) {
-                //兼容处理JRebel直接以classpath形式加载
-                File mdFilesDir = new File(url.toURI());
-                String[] files = mdFilesDir.list();
-                for (int i = 0; i < files.length; i++) {
-                    fileNames.add(files[i]);
-                }
-            } else { //基于jar文件提取特定目录下文件列表
-                JarURLConnection connection = (JarURLConnection) url.openConnection();
-                Enumeration<JarEntry> jarEntries = connection.getJarFile().entries();
-                while (jarEntries.hasMoreElements()) {
-                    JarEntry jarEntry = jarEntries.nextElement();
-                    if (!jarEntry.isDirectory()) {
-                        String path = jarEntry.getName();
-                        if (path.startsWith(dir)) {
-                            fileNames.add(StringUtils.substringAfterLast(path, "/"));
-                        }
-                    }
-                }
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath*:" + dir + "/*.md");
+            for (Resource resource : resources) {
+                fileNames.add(resource.getFilename());
             }
         }
 

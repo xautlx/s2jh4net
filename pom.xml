@@ -13,6 +13,7 @@
         <module>entdiy-extension</module>
         <module>entdiy-module</module>
         <module>entdiy-devops</module>
+        
         <module>entdiy-webapp</module>
     </modules>
 
