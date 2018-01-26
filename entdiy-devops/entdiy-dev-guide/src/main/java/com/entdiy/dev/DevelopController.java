@@ -60,22 +60,26 @@ public class DevelopController {
         String text;
         String dir = "/dev/docs/markdown";
 
+        if (!name.endsWith(".md")) {
+            name = name + ".md";
+        }
+
         String mdDirPath = AppContextHolder.getWebContextRealPath() + dir;
         File mdDir = new File(mdDirPath);
         if (mdDir.exists()) {
             //直接web目录方式部署资源
-            String mdFilePath = mdDirPath + "/" + name + ".md";
+            String mdFilePath = mdDirPath + "/" + name;
             text = FileUtils.readFileToString(new File(mdFilePath), "UTF-8");
 
             String[] files = mdDir.list();
             for (int i = 0; i < files.length; i++) {
-                fileNames.add(StringUtils.substringBeforeLast(files[i], ".md"));
+                fileNames.add(files[i]);
             }
         } else {
             //如果目录不存在，兼容Servlet3协议从classpath或jar的META-INFO/resources读取
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             dir = "META-INF/resources" + dir;
-            text = IOUtils.toString(loader.getResourceAsStream(dir + "/" + name + ".md"), "UTF-8");
+            text = IOUtils.toString(loader.getResourceAsStream(dir + "/" + name), "UTF-8");
 
             URL url = loader.getResource(dir);
             if ("file".equalsIgnoreCase(url.getProtocol())) {
@@ -83,7 +87,7 @@ public class DevelopController {
                 File mdFilesDir = new File(url.toURI());
                 String[] files = mdFilesDir.list();
                 for (int i = 0; i < files.length; i++) {
-                    fileNames.add(StringUtils.substringBeforeLast(files[i], ".md"));
+                    fileNames.add(files[i]);
                 }
             } else { //基于jar文件提取特定目录下文件列表
                 JarURLConnection connection = (JarURLConnection) url.openConnection();
@@ -92,8 +96,8 @@ public class DevelopController {
                     JarEntry jarEntry = jarEntries.nextElement();
                     if (!jarEntry.isDirectory()) {
                         String path = jarEntry.getName();
-                        if (path.startsWith(dir) && path.endsWith(".md")) {
-                            fileNames.add(StringUtils.substringBeforeLast(StringUtils.substringAfterLast(path, "/"), ".md"));
+                        if (path.startsWith(dir)) {
+                            fileNames.add(StringUtils.substringAfterLast(path, "/"));
                         }
                     }
                 }

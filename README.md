@@ -24,40 +24,40 @@
 ## 框架特色
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
-* 主体基于主流的（Java 8 + SpringMVC/Spring 5 + Hibernate 5.2/MyBatis 3/JPA 2.1/Spring Data 2）架构，详见[技术列表清单](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/技术列表.md)
+* 主体基于主流的（Java 8 + SpringMVC/Spring 5 + Hibernate 5.2/MyBatis 3/JPA 2.1/Spring Data 2）架构，详见[技术列表清单](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/100.技术列表.md)
 * 基于流行JQuery 1.12/Bootstrap 3.3等UI框架和插件扩展，良好的浏览器兼容性和移动设备访问支持
 * 提供一个基础的代码生成框架，简化实现快速基本的CRUD功能开发
 * 基于Maven的模块化项目和组件依赖管理模式，便捷高效的与持续集成开发集成
 
 ## 技术架构
 
-* [技术列表](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/技术列表.md) - 框架主要技术(Java/Web/Tool)组件列表介绍
-* [技术特性](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/技术特性.md) - 主要技术选型和设计说明
-* [异常处理](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/异常处理.md) - 介绍框架的异常处理的策略设计
-* [移动支持](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/移动支持.md) - 以Android为例的Web App与Native App整合应用
-* [开发计划](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发计划.md) - 规划引入的新功能新特性
+* [技术列表](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/100.技术列表.md) - 框架主要技术(Java/Web/Tool)组件列表介绍
+* [技术特性](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/110.技术特性.md) - 主要技术选型和设计说明
+* [异常处理](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/120.异常处理.md) - 介绍框架的异常处理的策略设计
+* [移动支持](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/130.移动支持.md) - 以Android为例的Web App与Native App整合应用
+* [开发计划](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/140.开发计划.md) - 规划引入的新功能新特性
 
 ## 开发指南
 
-* [演示运行](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/演示运行.md) - 一键运行脚本全自动完成基于Maven构建并Docker部署运行应用
-* [Docker服务](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/Docker服务.md) - 介绍框架对Docker化服务部署在框架中的应用展示
-* [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发配置.md) - 开发基础环境配置说明
-* [工程结构](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/工程结构.md) - 对整个项目工程代码结构进行概要性介绍
-* [代码生成](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/代码生成.md) - 用于基本CURD框架代码生成的工具
-* [基础功能](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/基础功能.md) - 框架已经实现的基础功能介绍说明
-* [UI组件](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/UI组件.md)    - 框架UI组件设计思路和用法演示
-* [表格组件](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/表格组件.md) - 功能强大的Grid表格组件扩展增强
-* [表单控制](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/表单控制.md) - 介绍Web开发过程最主要的表单处理设计
-* [常见问题](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/FAQ.md) - 对框架相关常见问题FAQ说明
+* [演示运行](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/210.演示运行.md) - 一键运行脚本全自动完成基于Maven构建并Docker部署运行应用
+* [Docker服务](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/220.Docker服务.md) - 介绍框架对Docker化服务部署在框架中的应用展示
+* [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/230.开发配置.md) - 开发基础环境配置说明
+* [工程结构](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/240.工程结构.md) - 对整个项目工程代码结构进行概要性介绍
+* [代码生成](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/250.代码生成.md) - 用于基本CURD框架代码生成的工具
+* [基础功能](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/260.基础功能.md) - 框架已经实现的基础功能介绍说明
+* [UI组件](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/270.UI组件.md)    - 框架UI组件设计思路和用法演示
+* [表格组件](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/280.表格组件.md) - 功能强大的Grid表格组件扩展增强
+* [表单控制](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/290.表单控制.md) - 介绍Web开发过程最主要的表单处理设计
+* [常见问题](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/295.常见问题.md) - 对框架相关常见问题FAQ说明
 
 
-> 由于项目采用了Lombok等插件，如果你想把git获取工程代码导入开发环境，请一定提前浏览文档 [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发配置.md) 为IDE进行Lombok等插件配置，否则会出一大堆编译错误。
+> 由于项目采用了Lombok等插件，如果你想把git获取工程代码导入开发环境，请一定提前浏览文档 [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/230.开发配置.md) 为IDE进行Lombok等插件配置，否则会出一大堆编译错误。
 
 ## 核心模块
 
-* [基础数据](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
-* [数据审计](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
-* [计划任务](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
+* [基础数据](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/310.基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
+* [数据审计](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/320.数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
+* [计划任务](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/330.计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
 
 > 为了便于开发过程参考，项目直接把开发相关的参考样例和指南文档嵌入到运行部署应用中，具体内容可在线浏览，如下图Snapshot部分截图示意。
 
@@ -69,7 +69,7 @@
 
 在线演示站点为Ngrok穿透访问家用台式机，可能存在访问缓慢情况或更新时中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
 
-建议可参考 [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/开发配置.md) 在本地运行完整体验。
+建议可参考 [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/230.开发配置.md) 在本地运行完整体验。
 
 > 项目最新自动化持续集成构建状态 Travis-CI Status: [![Build Status](https://travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://travis-ci.org/xautlx/s2jh4net)
 
