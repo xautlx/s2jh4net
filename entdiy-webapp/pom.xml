@@ -138,8 +138,8 @@
                                     <nosuffix>true</nosuffix>
                                     <!-- 压缩js和css文件 -->
                                     <includes>
-                                        <include>assets/apps/**/*.js</include>
-                                        <include>assets/apps/**/*.css</include>
+                                        <include>assets/apps/scripts/**/*.js</include>
+                                        <include>assets/apps/css/**/*.css</include>
                                         <include>assets/pages/**/*.js</include>
                                         <include>assets/pages/**/*.css</include>
                                         <!-- 追加其他业务相关的js定义，注意：需要在后面的maven-war-plugin的warSourceExcludes同步配置追加 -->
