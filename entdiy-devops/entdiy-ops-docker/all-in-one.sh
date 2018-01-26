@@ -7,6 +7,8 @@ echo "Using RUN_DIR: ${RUN_DIR}"
 ROOT_DIR=${SHELL_DIR}/../..
 echo "Using ROOT_DIR: ${ROOT_DIR}"
 
+# JAVA_HOME=
+
 port="8080"
 cluster=0
 
@@ -23,10 +25,11 @@ do
 done
 shift $((OPTIND-1))
 
-if [ "${JAVA_HOME}" == "" ] ; then
-  echo JAVA_HOME environment variable is required.
-  exit 1
-fi
+# yum install -y java-1.8.0-openjdk  java-1.8.0-openjdk-devel
+#if [ "${JAVA_HOME}" == "" ] ; then
+#  echo JAVA_HOME environment variable is required.
+#  exit 1
+#fi
 
 echo Invoke maven to build all projects...
 chmod +x ${SHELL_DIR}/tools/maven/bin/mvn
@@ -35,13 +38,11 @@ ${SHELL_DIR}/tools/maven/bin/mvn clean install
 
 echo Copy build war to docker war dir...
 mkdir -p ${SHELL_DIR}/docker/tomcat/war
-\cp -fr ${ROOT_DIR}/docker-webapp/target/entdiy.war ${SHELL_DIR}/docker/tomcat/war/.
+\cp -fr ${ROOT_DIR}/entdiy-webapp/target/entdiy.war ${SHELL_DIR}/docker/tomcat/war/.
 
 echo Startup docker mysql...
 chmod +x ${SHELL_DIR}/docker/mysql/bin/*.sh
 ${SHELL_DIR}/docker/mysql/bin/docker-one.sh restart
-
-
 
 echo Startup docker redis...
 chmod +x ${SHELL_DIR}/docker/redis/bin/*.sh
