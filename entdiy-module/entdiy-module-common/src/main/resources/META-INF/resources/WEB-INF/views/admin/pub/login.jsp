@@ -39,7 +39,10 @@
                 <div align='center' class='alert alert-danger'>${error}</div>
             </c:if>
             <div class="form-actions">
-                <label> <input type="checkbox" name="rememberMe" checked="true" value="true"/> 记住我，下次自动登录
+                <label>
+                    <!--
+                   <input type="checkbox" name="rememberMe" checked="true" value="true"/> 记住我，下次自动登录
+                    -->
                 </label>
                 <button type="submit" class="btn blue pull-right">
                     登录 <i class="m-icon-swapright m-icon-white"></i>
