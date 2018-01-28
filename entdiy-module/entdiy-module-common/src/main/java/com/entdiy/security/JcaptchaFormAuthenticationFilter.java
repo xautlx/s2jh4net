@@ -149,7 +149,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         try {
             if (account != null) {
                 //失败LOGON_FAILURE_LIMIT次，强制要求验证码验证
-                if (account.getLogonFailureTimes() > LOGON_FAILURE_LIMIT) {
+                if (account.getLastFailureTimes() > LOGON_FAILURE_LIMIT) {
                     CaptchaUtils.assetValidateCaptchaCode(request, captchaParam);
                 }
 
@@ -190,7 +190,9 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
             //失败记录
             if (account != null) {
-                //连续失败次数累加
+                //最近连续失败次数累加，超过一定次数强制要求验证码
+                account.setLastFailureTimes(account.getLastFailureTimes() + 1);
+                //总计认证失败次数累加，用于异常账户判断
                 account.setLogonFailureTimes(account.getLogonFailureTimes() + 1);
                 //记录最后登录失败时间
                 account.setLastLogonFailureTime(DateUtils.currentDateTime());
