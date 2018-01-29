@@ -1,6 +1,6 @@
 ## 项目简介
 
-集结最新主流时尚开源技术的面向互联网Web应用的整合前端门户站点、HTMl5移动站点及后端管理系统一体的的基础开发框架，提供一个J2EE相关主流开源技术架构整合及一些企业应用基础通用功能和组件的设计实现的最佳实践和原型参考。
+集结最新主流时尚开源技术的面向互联网Web应用的整合前端门户站点、HTMl5移动站点及后端管理系统一体的的基础开发框架，提供一套Java EE相关主流开源技术架构整合及企业级Web应用的设计实现的最佳实践和原型参考。
 
 ### 项目托管同步更新站点列表：
 
@@ -59,8 +59,6 @@
 * [数据审计](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/320.数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
 * [计划任务](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/330.计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
 
-> 为了便于开发过程参考，项目直接把开发相关的参考样例和指南文档嵌入到运行部署应用中，具体内容可在线浏览，如下图Snapshot部分截图示意。
-
 ## 在线演示
 
 **https://demo.entdiy.com/entdiy**
@@ -79,17 +77,18 @@
 
 ### 许可说明
 
-* 免费许可
+按照流行的社区版(Community Edition)和专业版(Professional Edition)运作模式。
+详见 [许可说明](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md)
 
-本项目代码除src/main/webapp/assets/apps/scripts目录下相关Javascript组件代码以混淆方式提供外，其余开源，在保留标识本项目来源信息以及保证不对本项目进行非授权的销售行为的前提下，可以以任意方式自由免费使用：开源、非开源、商业及非商业。
+* 社区版技术交流渠道
 
-若对项目有任何技术问题或Issue反馈，可加QQ群讨论组：303438676 或提交到Git平台的Issue：
+QQ群讨论组：303438676 或提交到Git平台的Issue：
 
 https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/issues
 
-* 收费服务
+* 专业版咨询联系方式
 
-如果你还有兴趣在现有开放资源基础上进一步获取完整源码/提供定制的扩展实现/技术咨询服务/毕业设计指导/二次开发项目指导等方面的合作意向，可联系 E-Mail: s2jh-dev@hotmail.com 或 QQ: 2414521719 (加Q请注明：s2jh4net) 洽谈。[上述个人联系方式为收费服务渠道，恕不提供免费咨询]
+EMail: xautlx@hotmail.com 或 QQ: 2414521719
 
 ### 参考引用
 
