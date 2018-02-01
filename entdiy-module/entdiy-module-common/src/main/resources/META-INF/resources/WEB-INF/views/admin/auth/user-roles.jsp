@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
 <c:choose>
     <c:when test="${root}">
         <div class="row">
@@ -15,7 +14,7 @@
     <c:otherwise>
         <form:form class="form-horizontal form-bordered form-label-stripped" method="post"
                    modelAttribute="entity" data-validation='true' data-post-reload-grid="false"
-                   action="admin/auth/user/roles">
+                   action="admin/auth/user/edit">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
             <div class="form-actions">

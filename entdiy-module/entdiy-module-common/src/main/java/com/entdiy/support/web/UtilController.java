@@ -34,6 +34,8 @@ import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.support.service.SmsService;
 import com.entdiy.support.service.SmsService.SmsMessageTypeEnum;
+import com.entdiy.sys.entity.AttachmentFile;
+import com.entdiy.sys.service.AttachmentFileService;
 import com.entdiy.sys.service.SmsVerifyCodeService;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.IOUtils;
@@ -78,6 +80,9 @@ public class UtilController {
 
     @Autowired
     private SmsVerifyCodeService smsVerifyCodeService;
+
+    @Autowired
+    private AttachmentFileService attachmentFileService;
 
     @Autowired(required = false)
     private SmsService smsService;
@@ -303,8 +308,23 @@ public class UtilController {
         Map<String, Object> retMap = Maps.newHashMap();
         try {
             if (fileUpload != null && !fileUpload.isEmpty()) {
-                FileUtils.FileInfo fileInfo = FileUtils.writeFile(fileUpload.getInputStream(), FileUtils.SUB_DIR_FILES, fileUpload.getOriginalFilename(), fileUpload.getSize());
+                String fileName = fileUpload.getOriginalFilename();
+                long fileLength = fileUpload.getSize();
+
+                //写入磁盘文件
+                FileUtils.FileInfo fileInfo = FileUtils.writeFile(fileUpload.getInputStream(), FileUtils.SUB_DIR_FILES, fileName, fileLength);
+
+                //创建附件记录
+                AttachmentFile attachmentFile = new AttachmentFile();
+                attachmentFile.setFileRealName(fileName);
+                attachmentFile.setFileLength(fileLength);
+                attachmentFile.setFileContentType(fileUpload.getContentType());
+                attachmentFile.setRelativePath(fileInfo.getRelativePath());
+                attachmentFile.setAbsolutePath(fileInfo.getAbsolutePath());
+                attachmentFileService.save(attachmentFile);
+
                 retMap.put("error", 0);
+                retMap.put("id", attachmentFile.getId());
                 retMap.put("url", ServletUtils.getReadFileUrlPrefix(request) + fileInfo.getRelativePath());
                 return retMap;
             }

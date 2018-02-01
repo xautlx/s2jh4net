@@ -53,6 +53,15 @@ public class MockEntityUtils {
 
     private static Random random = new Random();
 
+    public static <X> List<X> buildMockObject(Class<X> clazz, int minSize, int maxSize) {
+        List<X> list = Lists.newArrayList();
+        int size = randomInt(minSize, maxSize);
+        for (int i = 0; i < size; i++) {
+            list.add(buildMockObject(clazz));
+        }
+        return list;
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <X> X buildMockObject(Class<X> clazz) {
         X x = null;
@@ -91,6 +100,8 @@ public class MockEntityUtils {
                                 value = new BigDecimal(10 + new Double(new Random().nextDouble() * 1000).intValue());
                             } else if (parameter.isAssignableFrom(Integer.class)) {
                                 value = 1 + new Double(new Random().nextDouble() * 100).intValue();
+                            } else if (parameter.isAssignableFrom(Long.class)) {
+                                value = 1 + new Double(new Random().nextDouble() * 100).longValue();
                             } else if (parameter.isAssignableFrom(Boolean.class)) {
                                 value = new Random().nextBoolean();
                             } else if (parameter.isEnum()) {

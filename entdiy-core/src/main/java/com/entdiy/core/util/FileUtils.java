@@ -32,9 +32,9 @@ public class FileUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-    public final static String SUB_DIR_FILES = File.pathSeparator + "upload" + File.pathSeparator + "files";
-    public final static String SUB_DIR_TEMP = File.pathSeparator + "upload" + File.pathSeparator + "temp";
-    public final static String SUB_DIR_IMAGES = File.pathSeparator + "upload" + File.pathSeparator + "images";
+    public final static String SUB_DIR_FILES = File.separator + "upload" + File.separator + "files";
+    public final static String SUB_DIR_TEMP = File.separator + "upload" + File.separator + "temp";
+    public final static String SUB_DIR_IMAGES = File.separator + "upload" + File.separator + "images";
 
     /**
      * 获取文件上传根目录：优先取 file.write.dir 参数值，如果没有定义则取webapp解包部署目录，然后追加 /upload
@@ -62,15 +62,15 @@ public class FileUtils {
         } else {
             day = "" + dayOfMonth;
         }
-        pathData.append(File.pathSeparator + year);
-        pathData.append(File.pathSeparator + month);
-        pathData.append(File.pathSeparator + day);
+        pathData.append(File.separator + year);
+        pathData.append(File.separator + month);
+        pathData.append(File.separator + day);
 
         // 简便的做法用UUID作为主键，每次上传都会创建文件对象和数据记录，便于管理，但是存在相同文件重复保存情况
         String id = UUID.randomUUID().toString();
-        pathData.append(File.pathSeparator + id);
+        pathData.append(File.separator + id);
 
-        String relativePath = pathData + File.pathSeparator + fileName;
+        String relativePath = pathData + File.separator + fileName;
         String absolutePath = AppContextHolder.getFileWriteRootDir() + relativePath;
         logger.debug("Saving upload file: {}, size: {}", absolutePath, fileLength);
         try {

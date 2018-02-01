@@ -42,8 +42,8 @@ public class Order extends BaseNativeEntity {
 
     @MetaData(value = "下单用户")
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shopUser_id")
-    private ShopUser shopUser;
+    @JoinColumn(name = "siteUser_id")
+    private SiteUser siteUser;
 
     @MetaData(value = "订单号")
     @Column(length = 20, nullable = false, unique = true)

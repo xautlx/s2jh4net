@@ -18,6 +18,13 @@
 			<version>${entdiy.version}</version>
 		</dependency>
         <dependency>
+            <groupId>com.entdiy</groupId>
+            <artifactId>entdiy-core</artifactId>
+            <version>${entdiy.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
 			<groupId>com.entdiy</groupId>
             <artifactId>entdiy-module-common</artifactId>
 			<version>${entdiy.version}</version>

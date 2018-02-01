@@ -15,6 +15,7 @@
             <div class="col-md-12">
                 <c:choose>
                     <c:when test="${entity.isNew()}">
+                        <form:hidden path="account.authType" value="admin"/>
                         <div class="form-group">
                             <label class="control-label">登录账号</label>
                             <div class="controls">

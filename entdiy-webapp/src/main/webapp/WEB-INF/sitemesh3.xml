@@ -6,6 +6,8 @@
     <mapping path="/admin" decorator="/WEB-INF/views/layouts/admin-index.jsp" />
     <mapping path="/admin/*" decorator="/WEB-INF/views/layouts/admin-index.jsp" />
 
+    <mapping path="/index" decorator="/WEB-INF/views/layouts/site-layout.jsp" />
+
 	<mapping path="*" exclue="true" />
 	<mapping path="/admin/util/load-balance-test" exclue="true" />
 </sitemesh>

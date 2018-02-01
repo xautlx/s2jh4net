@@ -121,7 +121,7 @@ public class UserController extends BaseController<User, Long> {
         if (entity.isNew()) {
             Validation.isTrue(StringUtils.isNotBlank(rawPassword), "创建用户必须设置初始密码");
         } else {
-            //如果当前编辑模式，并且关联对象id为空，则把整个关联对象置为null，解决Hibernate异常：
+            //如果关联对象nullable，则需要特殊处理：关联对象id为空，则把整个关联对象置为null，解决Hibernate异常：
             //org.hibernate.TransientPropertyValueException:
             //  object references an unsaved transient instance - save the transient instance before flushing
             if (entity.getDepartment() != null && entity.getDepartment().getId() == null) {
@@ -151,14 +151,6 @@ public class UserController extends BaseController<User, Long> {
             model.addAttribute("roles", roleService.findAllCached());
         }
         return "admin/auth/user-roles";
-    }
-
-    @RequiresPermissions("配置管理:权限管理:后台用户管理")
-    @RequestMapping(value = "/roles", method = RequestMethod.POST)
-    @ResponseBody
-    public OperationResult rolesSave(@ModelAttribute("entity") User entity, @RequestParam(value = "roleIds", required = false) Long[] roleIds) {
-        userService.updateRelatedRoleR2s(entity, roleIds);
-        return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }
 
     @MetaData(value = "汇总用户关联权限集合")

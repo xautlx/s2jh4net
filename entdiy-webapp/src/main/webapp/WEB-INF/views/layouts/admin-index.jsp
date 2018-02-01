@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <c:set var="systemName" value="<%=com.entdiy.core.web.AppContextHolder.getSystemName()%>"/>
 <c:set var="buildVersion" value="<%=com.entdiy.core.web.AppContextHolder.getBuildVersion()%>"/>
 <!DOCTYPE html>

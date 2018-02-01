@@ -44,7 +44,7 @@ import java.util.List;
 @MetaData(value = "报销申请")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Audited
-public class ReimbursementRequest extends BaseNativeEntity {
+public class DemoReimbursementRequest extends BaseNativeEntity {
     @MetaData(value = "登录账号对象")
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id", nullable = false)
@@ -74,5 +74,5 @@ public class ReimbursementRequest extends BaseNativeEntity {
     @OneToMany(mappedBy = "reimbursementRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @JsonIgnore
-    private List<ReimbursementRequestItem> reimbursementRequestItems;
+    private List<DemoReimbursementRequestItem> reimbursementRequestItems;
 }

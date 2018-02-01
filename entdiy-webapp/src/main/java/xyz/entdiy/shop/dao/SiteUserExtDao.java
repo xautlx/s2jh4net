@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.auth.dao;
+package xyz.entdiy.shop.dao;
 
-import com.entdiy.auth.entity.SiteUser;
 import com.entdiy.core.dao.jpa.BaseDao;
 import org.springframework.stereotype.Repository;
+import xyz.entdiy.shop.entity.SiteUserExt;
 
 @Repository
-public interface SiteUserDao extends BaseDao<SiteUser, Long> {
+public interface SiteUserExtDao extends BaseDao<SiteUserExt, Long> {
 
 }

@@ -15,17 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.auth.service;
+package xyz.entdiy.shop.service;
 
-import com.entdiy.auth.dao.SiteUserDao;
-import com.entdiy.auth.dao.SiteUserExtDao;
-import com.entdiy.auth.entity.SiteUser;
-import com.entdiy.auth.entity.SiteUserExt;
 import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.entdiy.shop.dao.SiteUserDao;
+import xyz.entdiy.shop.dao.SiteUserExtDao;
+import xyz.entdiy.shop.entity.SiteUser;
+import xyz.entdiy.shop.entity.SiteUserExt;
 
 @Service
 @Transactional

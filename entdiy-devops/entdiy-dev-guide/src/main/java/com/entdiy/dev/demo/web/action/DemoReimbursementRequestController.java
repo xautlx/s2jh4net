@@ -27,9 +27,9 @@ import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
-import com.entdiy.dev.demo.entity.ReimbursementRequest;
-import com.entdiy.dev.demo.entity.ReimbursementRequestItem;
-import com.entdiy.dev.demo.service.ReimbursementRequestService;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequestItem;
+import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
 import com.entdiy.dev.demo.support.DemoConstant;
 import com.entdiy.sys.service.DataDictService;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -44,23 +44,24 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @MetaData("报销申请管理")
 @Controller
 @RequestMapping(value = "/dev/demo/reimbursement-request")
-public class ReimbursementRequestController extends BaseController<ReimbursementRequest, Long> {
+public class DemoReimbursementRequestController extends BaseController<DemoReimbursementRequest, Long> {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private ReimbursementRequestService reimbursementRequestService;
+    private DemoReimbursementRequestService reimbursementRequestService;
 
     @Autowired
     private DataDictService dataDictService;
 
     @Override
-    protected BaseService<ReimbursementRequest, Long> getEntityService() {
+    protected BaseService<DemoReimbursementRequest, Long> getEntityService() {
         return reimbursementRequestService;
     }
 
@@ -76,7 +77,7 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
      * @return Detached的对象实例
      */
     @Override
-    protected ReimbursementRequest buildDetachedBindingEntity(Long id) {
+    protected DemoReimbursementRequest buildDetachedBindingEntity(Long id) {
         return reimbursementRequestService.findDetachedOne(id, "reimbursementRequestItems");
     }
 
@@ -93,8 +94,8 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<ReimbursementRequest> findByPage(HttpServletRequest request) {
-        return super.findByPage(ReimbursementRequest.class, request);
+    public Page<DemoReimbursementRequest> findByPage(HttpServletRequest request) {
+        return super.findByPage(DemoReimbursementRequest.class, request);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
@@ -105,18 +106,18 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
     @RequiresPermissions("演示样例:报销申请")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(Model model) {
-        model.addAttribute("subValidationRules", ServletUtils.buildValidateRules(ReimbursementRequestItem.class));
-        ReimbursementRequest entity = fetchEntityFromModel(model);
+        model.addAttribute("subValidationRules", ServletUtils.buildValidateRules(DemoReimbursementRequestItem.class));
+        DemoReimbursementRequest entity = fetchEntityFromModel(model);
         if (entity.isNew()) {
             //默认取当前登录用户所属部门，用户可编辑修改
             entity.setDepartment(userService.findCurrentAuthUser().getDepartment());
         }
 
         //模板记录初始化及属性设置
-        ReimbursementRequestItem newItemTemplate = new ReimbursementRequestItem();
+        DemoReimbursementRequestItem newItemTemplate = new DemoReimbursementRequestItem();
         newItemTemplate.setStartDate(DateUtils.currentDateTime().toLocalDate());
         //将追加模板记录添加到集合用于前端循环显示
-        List<ReimbursementRequestItem> reimbursementRequestItems = entity.getReimbursementRequestItems();
+        List<DemoReimbursementRequestItem> reimbursementRequestItems = entity.getReimbursementRequestItems();
         if (CollectionUtils.isEmpty(reimbursementRequestItems)) {
             reimbursementRequestItems = Lists.newArrayList();
             entity.setReimbursementRequestItems(reimbursementRequestItems);
@@ -132,13 +133,22 @@ public class ReimbursementRequestController extends BaseController<Reimbursement
     @RequiresPermissions("演示样例:报销申请")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") ReimbursementRequest entity, Model model) {
+    public OperationResult editSave(@ModelAttribute("entity") DemoReimbursementRequest entity, Model model) {
         if (entity.isNew()) {
             entity.setUser(userService.findCurrentAuthUser());
-            List<ReimbursementRequestItem> items = entity.getReimbursementRequestItems();
-            for (ReimbursementRequestItem item : items) {
-                item.setReimbursementRequest(entity);
-            }
+        } else {
+            Optional.ofNullable(entity.getReimbursementRequestItems()).ifPresent(items -> items.removeIf(item -> {
+                if (item.getId() == null) {
+                    //新增对象设置当前主对象关联
+                    item.setReimbursementRequest(entity);
+                } else if (item.getId() < 0) {
+                    //如果id为负值标识为待删除元素，并且重置id为正值，以便hibernate后续删除元素
+                    item.setId(-item.getId());
+                    return true;
+                }
+                //新增或更新则保留元素
+                return false;
+            }));
         }
         return super.editSave(entity);
     }

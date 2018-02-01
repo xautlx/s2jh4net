@@ -334,6 +334,7 @@ public abstract class BaseController<T extends AbstractPersistableEntity<ID>, ID
         // Converts empty strings into null when a form is submitted
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 
+
         //binder.setAllowedFields("nick", "gender", "name", "idCardNo", "studentExt.dormitory");
     }
 
@@ -355,5 +356,4 @@ public abstract class BaseController<T extends AbstractPersistableEntity<ID>, ID
     protected boolean postNotConfirmedByUser(HttpServletRequest request) {
         return !BooleanUtils.toBoolean(request.getParameter("_serverValidationConfirmed_"));
     }
-
 }

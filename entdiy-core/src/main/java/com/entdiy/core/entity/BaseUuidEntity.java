@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.AuditOverride;
@@ -35,14 +34,11 @@ import javax.persistence.*;
  * 各属性定义可先简单定义MetaData注解即可，具体细节的控制属性含义可查看具体代码注释说明
  */
 @Getter
-@Setter
 @Access(AccessType.FIELD)
 @JsonInclude(Include.NON_EMPTY)
 @MappedSuperclass
 @AuditOverrides({@AuditOverride(forClass = BaseUuidEntity.class)})
 public abstract class BaseUuidEntity extends BaseEntity<String> {
-
-    private String id;
 
     @Id
     @Column(length = 40)
@@ -50,10 +46,7 @@ public abstract class BaseUuidEntity extends BaseEntity<String> {
     //HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
     @GenericGenerator(name = "hibernate-uuid", strategy = "org.hibernate.id.UUIDGenerator")
     @JsonProperty
-    @Override
-    public String getId() {
-        return id;
-    }
+    private String id;
 
     public void setId(String id) {
         //容错处理id以空字符提交参数时修改为null避免hibernate主键无效修改

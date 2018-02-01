@@ -124,14 +124,4 @@ public class RoleController extends BaseController<Role, Long> {
         model.addAttribute("r2PrivilegeIds", StringUtils.join(r2PrivilegeIds, ","));
         return "admin/auth/role-privileges";
     }
-
-    @RequiresPermissions("配置管理:权限管理:角色配置")
-    @RequestMapping(value = "/privileges", method = RequestMethod.POST)
-    @ResponseBody
-    public OperationResult privilegeR2sSave(@ModelAttribute("entity") Role entity,
-                                            @RequestParam(value = "privilegeIds", required = false) Long[] privilegeIds) {
-        roleService.updateRelatedPrivilegeR2s(entity, privilegeIds);
-        return OperationResult.buildSuccessResult();
-    }
-
 }

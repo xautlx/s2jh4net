@@ -15,33 +15,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.entdiy.shop.entity;
+package com.entdiy.dev.demo.entity;
 
-import com.entdiy.auth.entity.SiteUser;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseNativeEntity;
+import com.entdiy.sys.entity.AttachmentFile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Where;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "shop_ShopUser")
-@MetaData(value = "微商城:客户信息")
+@Table(name = "demo_Product")
+@MetaData(value = "商品")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class ShopUser extends BaseNativeEntity {
+@Audited
+public class DemoProduct extends BaseNativeEntity {
 
-    private static final long serialVersionUID = 2686339300612095738L;
+    public static final String TYPE_ATTACHMENT_FILE = "DemoProduct";
 
-    @MetaData(value = "下单用户")
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "siteUser_id")
-    private SiteUser siteUser;
+    @MetaData(value = "商品左右滑动缩略图片集合")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "source_id", foreignKey = @ForeignKey(name = "none"))
+    @Where(clause = "source_type='" + TYPE_ATTACHMENT_FILE + "'")
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @JsonIgnore
+    private List<AttachmentFile> introImages;
+
+
 }

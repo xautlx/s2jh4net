@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.auth.entity;
+package xyz.entdiy.shop.entity;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseEntity;

@@ -39,12 +39,12 @@ import java.time.LocalDate;
 @MetaData(value = "报销申请")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Audited
-public class ReimbursementRequestItem extends BaseNativeEntity {
+public class DemoReimbursementRequestItem extends BaseNativeEntity {
 
     @MetaData(value = "报销申请主对象", validate = false)
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "reimbursementRequest_id", nullable = false)
-    private ReimbursementRequest reimbursementRequest;
+    private DemoReimbursementRequest reimbursementRequest;
 
     @MetaData(value = "费用发生起始日期")
     @Column(nullable = false)

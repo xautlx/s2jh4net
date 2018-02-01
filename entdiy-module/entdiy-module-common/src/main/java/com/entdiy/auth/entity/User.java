@@ -20,7 +20,7 @@ package com.entdiy.auth.entity;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -32,6 +32,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -66,21 +67,42 @@ public class User extends BaseNativeEntity {
     @JsonIgnore
     private List<UserR2Role> userR2Roles;
 
-    @MetaData(value = "已关联角色主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
-    @Transient
-    @Getter(AccessLevel.NONE)
-    @JsonIgnore
-    private Long[] selectedRoleIds;
 
-    public Long[] getRoleIds() {
+    @MetaData(value = "获取已关联角色主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
+    @Transient
+    @JsonIgnore
+    public List<Long> getRoleIds() {
         if (CollectionUtils.isEmpty(userR2Roles)) {
             return null;
         }
-        Long[] selectedRoleIds = new Long[userR2Roles.size()];
-        for (int i = 0; i < selectedRoleIds.length; i++) {
-            selectedRoleIds[i] = userR2Roles.get(i).getRole().getId();
+        return userR2Roles.stream().map(r2 -> r2.getRole().getId()).collect(Collectors.toList());
+    }
+
+    @MetaData(value = "设置已关联角色主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
+    @Transient
+    @JsonIgnore
+    public void setRoleIds(List<Long> roleIds) {
+        //没有关联对象集合，清空关联集合
+        if (CollectionUtils.isEmpty(roleIds) && CollectionUtils.isNotEmpty(userR2Roles)) {
+            userR2Roles.clear();
+        } else {
+            //有关联对象集合，如果原来没有则初始化创建，否则移除不存在关联
+            if (CollectionUtils.isEmpty(userR2Roles)) {
+                userR2Roles = Lists.newArrayList();
+            } else {
+                userR2Roles.removeIf(r2 -> !roleIds.stream().anyMatch(roleId -> roleId.equals(r2.getRole().getId())));
+            }
+            //先移除已经存在的关键对象主键，然后追加剩余新增关联
+            roleIds.removeIf(roleId -> userR2Roles.stream().anyMatch(r2 -> r2.getRole().getId().equals(roleId)));
+            roleIds.stream().forEach(roleId -> {
+                UserR2Role r2 = new UserR2Role();
+                r2.setUser(this);
+                Role role = new Role();
+                role.setId(roleId);
+                r2.setRole(role);
+                userR2Roles.add(r2);
+            });
         }
-        return selectedRoleIds;
     }
 
     @Override

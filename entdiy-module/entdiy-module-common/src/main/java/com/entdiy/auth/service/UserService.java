@@ -70,6 +70,7 @@ public class UserService extends BaseService<User, Long> {
 
     @Override
     public User save(User entity) {
+
         return super.save(entity);
     }
 
@@ -82,10 +83,6 @@ public class UserService extends BaseService<User, Long> {
             accountService.save(entity.getAccount(), rawPassword);
         }
         return save(entity);
-    }
-
-    public User updateRelatedRoleR2s(User entity, Long[] roleIds) {
-        return updateRelatedR2s(entity, roleIds, "userR2Roles", "role");
     }
 
     @Transactional(readOnly = true)

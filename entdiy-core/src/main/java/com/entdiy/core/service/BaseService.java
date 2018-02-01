@@ -28,7 +28,6 @@ import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -51,7 +50,6 @@ import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.Case;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1113,85 +1111,6 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
             parsed[i++] = path;
         }
         return parsed;
-    }
-
-    /**
-     * 供子类调用的关联对象关联关系操作辅助方法
-     *
-     * @param entity               当前关联主对象主键，如User对象主键
-     * @param r2EntityIds          关联目标对象的主键集合，如用户关联角色的Role对象集合的主键
-     * @param r2PropertyName       主对象中关联集合对象属性的名称，如User对象中定义的userR2Roles属性名
-     * @param r2EntityPropertyName 被关联对象在R2关联对象定义中的属性名称，如UserR2Role中定义的role属性名
-     */
-    protected T updateRelatedR2s(T entity, Serializable[] r2EntityIds, String r2PropertyName, String r2EntityPropertyName) {
-        try {
-            List oldR2s = (List) MethodUtils.invokeExactMethod(entity, "get" + StringUtils.capitalize(r2PropertyName), null);
-            if (oldR2s == null) {
-                oldR2s = Lists.newArrayList();
-                FieldUtils.writeDeclaredField(entity, r2PropertyName, oldR2s, true);
-            }
-            if ((r2EntityIds == null || r2EntityIds.length == 0)) {
-                if (!CollectionUtils.isEmpty(oldR2s)) {
-                    oldR2s.clear();
-                }
-            } else {
-                Field r2field = FieldUtils.getField(getEntityClass(), r2PropertyName, true);
-                Class r2Class = (Class) (((ParameterizedType) r2field.getGenericType()).getActualTypeArguments()[0]);
-                Field entityField = null;
-                Field[] fields = r2Class.getDeclaredFields();
-                for (Field field : fields) {
-                    if (field.getType().equals(getEntityClass())) {
-                        entityField = field;
-                        break;
-                    }
-                }
-
-                Field r2EntityField = FieldUtils.getField(r2Class, r2EntityPropertyName, true);
-                Class r2EntityClass = r2EntityField.getType();
-
-                // 双循环处理需要删除关联的项目
-                if (CollectionUtils.isNotEmpty(oldR2s)) {
-                    List tobeDleteList = Lists.newArrayList();
-                    for (Object r2 : oldR2s) {
-                        boolean tobeDlete = true;
-                        for (Serializable r2EntityId : r2EntityIds) {
-                            Object r2Entity = getEntityManager().find(r2EntityClass, r2EntityId);
-                            if (FieldUtils.readDeclaredField(r2, r2EntityPropertyName, true).equals(r2Entity)) {
-                                tobeDlete = false;
-                                break;
-                            }
-                        }
-                        if (tobeDlete) {
-                            tobeDleteList.add(r2);
-                        }
-                    }
-                    oldR2s.removeAll(tobeDleteList);
-                }
-
-                // 双循环处理需要新增关联的项目
-                for (Serializable r2EntityId : r2EntityIds) {
-                    Object r2Entity = getEntityManager().find(r2EntityClass, r2EntityId);
-                    boolean tobeAdd = true;
-                    if (CollectionUtils.isNotEmpty(oldR2s)) {
-                        for (Object r2 : oldR2s) {
-                            if (FieldUtils.readDeclaredField(r2, r2EntityPropertyName, true).equals(r2Entity)) {
-                                tobeAdd = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (tobeAdd) {
-                        Object newR2 = r2Class.newInstance();
-                        FieldUtils.writeDeclaredField(newR2, r2EntityField.getName(), r2Entity, true);
-                        FieldUtils.writeDeclaredField(newR2, entityField.getName(), entity, true);
-                        oldR2s.add(newR2);
-                    }
-                }
-            }
-            return save(entity);
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

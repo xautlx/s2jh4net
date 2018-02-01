@@ -15,16 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.dev.demo.dao;
-
+package com.entdiy.sys.service;
 
 import com.entdiy.core.dao.jpa.BaseDao;
+import com.entdiy.core.service.BaseService;
+import com.entdiy.sys.dao.AttachmentFileDao;
+import com.entdiy.sys.entity.AttachmentFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.stereotype.Repository;
+@Service
+@Transactional
+public class AttachmentFileService extends BaseService<AttachmentFile, String> {
 
-import com.entdiy.dev.demo.entity.ReimbursementRequest;
+    @Autowired
+    private AttachmentFileDao attachmentFileDao;
 
-@Repository
-public interface ReimbursementRequestDao extends BaseDao<ReimbursementRequest, Long> {
+    @Override
+    protected BaseDao<AttachmentFile, String> getEntityDao() {
+        return attachmentFileDao;
+    }
 
 }

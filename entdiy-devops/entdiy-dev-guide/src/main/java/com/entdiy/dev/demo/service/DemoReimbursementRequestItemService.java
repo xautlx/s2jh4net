@@ -15,46 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.auth.service;
+package com.entdiy.dev.demo.service;
 
-import com.entdiy.auth.dao.RoleDao;
-import com.entdiy.auth.entity.Role;
-import com.entdiy.auth.entity.User;
-import com.entdiy.auth.entity.UserR2Role;
 import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
-import com.google.common.collect.Lists;
+import com.entdiy.dev.demo.dao.DemoReimbursementRequestItemDao;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequestItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
-public class RoleService extends BaseService<Role, Long> {
-
+public class DemoReimbursementRequestItemService extends BaseService<DemoReimbursementRequestItem,Long>{
+    
     @Autowired
-    private RoleDao roleDao;
+    private DemoReimbursementRequestItemDao reimbursementRequestItemDao;
 
     @Override
-    protected BaseDao<Role, Long> getEntityDao() {
-        return roleDao;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Role> findAllCached() {
-        return roleDao.findAllCached();
-    }
-
-    @Transactional(readOnly = true)
-    public List<User> findUsersByRole(String roleCode) {
-        Role role = roleDao.findByCode(roleCode);
-        List<User> users = Lists.newArrayList();
-        List<UserR2Role> roleR2Users = role.getRoleR2Users();
-        for (UserR2Role userR2Role : roleR2Users) {
-            users.add(userR2Role.getUser());
-        }
-        return users;
+    protected BaseDao<DemoReimbursementRequestItem, Long> getEntityDao() {
+        return reimbursementRequestItemDao;
     }
 }

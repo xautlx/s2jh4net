@@ -15,25 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.entdiy.shop.service;
+package com.entdiy.sys.web;
 
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
+import com.entdiy.core.web.BaseController;
+import com.entdiy.sys.entity.AttachmentFile;
+import com.entdiy.sys.service.AttachmentFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import xyz.entdiy.shop.dao.ShopUserDao;
-import xyz.entdiy.shop.entity.ShopUser;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Service
-@Transactional
-public class ShopUserService extends BaseService<ShopUser, Long> {
+@Controller
+@RequestMapping(value = "/admin/sys/attachment-file")
+public class AttachmentFileController extends BaseController<AttachmentFile, String> {
 
     @Autowired
-    private ShopUserDao shopUserDao;
+    private AttachmentFileService attachmentFileService;
 
     @Override
-    protected BaseDao<ShopUser, Long> getEntityDao() {
-        return shopUserDao;
+    protected BaseService<AttachmentFile, String> getEntityService() {
+        return attachmentFileService;
     }
+
+
 }

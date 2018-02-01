@@ -15,23 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.core.service;
+package com.entdiy.dev.demo.dao;
 
-public enum R2OperationEnum {
 
-    add("添加关联"),
+import com.entdiy.core.dao.jpa.BaseDao;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
+import org.springframework.stereotype.Repository;
 
-    delete("删除关联"),
+@Repository
+public interface DemoReimbursementRequestDao extends BaseDao<DemoReimbursementRequest, Long> {
 
-    update("更新关联");
-
-    private String label;
-
-    R2OperationEnum(String label) {
-        this.label = label;
-    }
-
-    public String getLabel() {
-        return label;
-    }
 }

@@ -30,14 +30,18 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.MockEntityUtils;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.json.LocalDateTimeSerializer;
-import com.entdiy.dev.demo.entity.ReimbursementRequest;
-import com.entdiy.dev.demo.service.ReimbursementRequestService;
+import com.entdiy.dev.demo.entity.DemoProduct;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
+import com.entdiy.dev.demo.service.DemoProductService;
+import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
+import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.entity.NotifyMessage;
 import com.entdiy.sys.entity.UserMessage;
 import com.entdiy.sys.service.DataDictService;
 import com.entdiy.sys.service.NotifyMessageService;
 import com.entdiy.sys.service.UserMessageService;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +81,10 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
 
     @Autowired
-    private ReimbursementRequestService reimbursementRequestService;
+    private DemoReimbursementRequestService reimbursementRequestService;
+
+    @Autowired
+    private DemoProductService demoProductService;
 
     @Override
     public void initializeInternal() {
@@ -313,14 +320,28 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 item.setParent(entity);
                 dataDictService.save(item);
             }
-
             //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
             entityManager.flush();
 
-            if (isEmptyTable(ReimbursementRequest.class)) {
+
+            if (isEmptyTable(DemoProduct.class)) {
                 int random = MockEntityUtils.randomInt(20, 40);
                 for (int i = 0; i < random; i++) {
-                    ReimbursementRequest rr = MockEntityUtils.buildMockObject(ReimbursementRequest.class);
+                    DemoProduct product = new DemoProduct();
+                    product.setIntroImages(Lists.newArrayList(MockEntityUtils.buildMockObject(AttachmentFile.class, 3, 6)));
+                    demoProductService.save(product);
+
+                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
+                    entityManager.flush();
+                }
+            }
+            //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
+            entityManager.flush();
+
+            if (isEmptyTable(DemoReimbursementRequest.class)) {
+                int random = MockEntityUtils.randomInt(20, 40);
+                for (int i = 0; i < random; i++) {
+                    DemoReimbursementRequest rr = MockEntityUtils.buildMockObject(DemoReimbursementRequest.class);
                     User user = MockEntityUtils.randomCandidates(users);
                     rr.setUser(user);
                     rr.setDepartment(MockEntityUtils.randomCandidates(departments));

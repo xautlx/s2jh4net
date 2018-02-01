@@ -59,10 +59,8 @@
                     <tbody>
                     <c:forEach var="item" items="${entity.reimbursementRequestItems}" varStatus="status">
                         <tr>
-                            <form:hidden id="" class="dynamic-row-operation"
-                                         path="reimbursementRequestItems[${status.index}].extraAttributes['operation']"/>
                             <form:hidden id="" class="dynamic-row-id"
-                                         path="reimbursementRequestItems[${status.index}].reimbursementRequest.id"/>
+                                         path="reimbursementRequestItems[${status.index}].id"/>
                             <td><form:input id="" path="reimbursementRequestItems[${status.index}].startDate"
                                             class="form-control"
                                             data-rule-dateLT="reimbursementRequestItems[${status.index}].endDate"/></td>

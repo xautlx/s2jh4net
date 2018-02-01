@@ -17,8 +17,6 @@
  */
 package xyz.entdiy.shop.web.site;
 
-import com.entdiy.auth.entity.SiteUser;
-import com.entdiy.auth.service.SiteUserService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.FileUtils;
@@ -37,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import xyz.entdiy.shop.entity.SiteUser;
+import xyz.entdiy.shop.service.SiteUserService;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;

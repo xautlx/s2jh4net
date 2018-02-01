@@ -15,13 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.auth.dao;
+package com.entdiy.dev.demo.service;
 
-import com.entdiy.auth.entity.SiteUserExt;
 import com.entdiy.core.dao.jpa.BaseDao;
-import org.springframework.stereotype.Repository;
+import com.entdiy.core.service.BaseService;
+import com.entdiy.dev.demo.dao.DemoProductDao;
+import com.entdiy.dev.demo.entity.DemoProduct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-public interface SiteUserExtDao extends BaseDao<SiteUserExt, Long> {
+@Service
+@Transactional
+public class DemoProductService extends BaseService<DemoProduct, Long> {
 
+    @Autowired
+    private DemoProductDao demoProductDao;
+
+    @Override
+    protected BaseDao<DemoProduct, Long> getEntityDao() {
+        return demoProductDao;
+    }
 }

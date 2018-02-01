@@ -19,22 +19,21 @@ package com.entdiy.dev.demo.service;
 
 import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
-import com.entdiy.dev.demo.entity.ReimbursementRequest;
-import com.entdiy.dev.demo.dao.ReimbursementRequestDao;
-
+import com.entdiy.dev.demo.dao.DemoReimbursementRequestDao;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class ReimbursementRequestService extends BaseService<ReimbursementRequest,Long>{
-    
+public class DemoReimbursementRequestService extends BaseService<DemoReimbursementRequest, Long> {
+
     @Autowired
-    private ReimbursementRequestDao reimbursementRequestDao;
+    private DemoReimbursementRequestDao reimbursementRequestDao;
 
     @Override
-    protected BaseDao<ReimbursementRequest, Long> getEntityDao() {
+    protected BaseDao<DemoReimbursementRequest, Long> getEntityDao() {
         return reimbursementRequestDao;
     }
 }
