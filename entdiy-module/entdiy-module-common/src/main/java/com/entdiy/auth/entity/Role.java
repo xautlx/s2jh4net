@@ -98,7 +98,7 @@ public class Role extends BaseNativeEntity {
             }
             //先移除已经存在的关键对象主键，然后追加剩余新增关联
             privilegeIds.removeIf(privilegeId -> roleR2Privileges.stream().anyMatch(r2 -> r2.getPrivilege().getId().equals(privilegeId)));
-            privilegeIds.stream().forEach(privilegeId -> {
+            privilegeIds.forEach(privilegeId -> {
                 RoleR2Privilege r2 = new RoleR2Privilege();
                 r2.setRole(this);
                 Privilege privilege = new Privilege();

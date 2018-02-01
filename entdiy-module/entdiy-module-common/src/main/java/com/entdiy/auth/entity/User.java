@@ -94,7 +94,7 @@ public class User extends BaseNativeEntity {
             }
             //先移除已经存在的关键对象主键，然后追加剩余新增关联
             roleIds.removeIf(roleId -> userR2Roles.stream().anyMatch(r2 -> r2.getRole().getId().equals(roleId)));
-            roleIds.stream().forEach(roleId -> {
+            roleIds.forEach(roleId -> {
                 UserR2Role r2 = new UserR2Role();
                 r2.setUser(this);
                 Role role = new Role();
