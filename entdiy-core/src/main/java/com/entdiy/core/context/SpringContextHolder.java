@@ -39,7 +39,7 @@ public class SpringContextHolder {
      * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
      */
     public static <T> T getBean(Class<T> requiredType) {
-        Assert.notNull(applicationContext);
+        Assert.notNull(applicationContext, "applicationContext invalid");
         return applicationContext.getBean(requiredType);
     }
 }

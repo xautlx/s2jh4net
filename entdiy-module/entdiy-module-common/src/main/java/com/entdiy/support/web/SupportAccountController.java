@@ -23,7 +23,7 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
-import com.entdiy.security.AuthContextHolder;
+import com.entdiy.security.annotation.AuthAccount;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -90,9 +90,8 @@ public class SupportAccountController {
 
     @RequestMapping(value = "/account/profile/password", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult modifyPasswordSave(HttpServletRequest request, @RequestParam("oldpasswd") String oldpasswd,
+    public OperationResult modifyPasswordSave(@AuthAccount Account account, @RequestParam("oldpasswd") String oldpasswd,
                                               @RequestParam("newpasswd") String newpasswd) {
-        Account account = AuthContextHolder.findRequiredAuthAccount();
         String encodedPasswd = accountService.encodeUserPasswd(account, oldpasswd);
         if (!encodedPasswd.equals(account.getPassword())) {
             return OperationResult.buildFailureResult("原密码不正确,请重新输入");

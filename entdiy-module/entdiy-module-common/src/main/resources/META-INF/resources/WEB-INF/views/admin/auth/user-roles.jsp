@@ -14,7 +14,7 @@
     <c:otherwise>
         <form:form class="form-horizontal form-bordered form-label-stripped" method="post"
                    modelAttribute="entity" data-validation='true' data-post-reload-grid="false"
-                   action="admin/auth/user/edit">
+                   action="admin/auth/user/roles">
             <form:hidden path="id"/>
             <form:hidden path="version"/>
             <div class="form-actions">

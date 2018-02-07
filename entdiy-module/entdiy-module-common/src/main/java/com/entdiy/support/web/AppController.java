@@ -17,8 +17,8 @@
  */
 package com.entdiy.support.web;
 
+import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.web.view.OperationResult;
-import com.entdiy.security.AuthContextHolder;
 import com.entdiy.security.admin.AdminFormAuthenticationFilter;
 import com.google.common.collect.Maps;
 import org.apache.shiro.authc.AuthenticationException;
@@ -62,7 +62,7 @@ public class AppController {
         //获取认证异常的类名
         AuthenticationException ae = (AuthenticationException) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
         if (ae == null) {
-            return OperationResult.buildSuccessResult(AuthContextHolder.getDefaultAuthUserDetails());
+            return OperationResult.buildSuccessResult(AuthContextHolder.getAuthUserDetails());
         } else {
             OperationResult result = OperationResult.buildFailureResult(ae.getMessage());
             Boolean captchaRequired = (Boolean) request.getAttribute(AdminFormAuthenticationFilter.KEY_AUTH_CAPTCHA_REQUIRED);

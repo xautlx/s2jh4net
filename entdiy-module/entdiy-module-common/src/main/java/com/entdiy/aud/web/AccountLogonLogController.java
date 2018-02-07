@@ -23,6 +23,7 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -30,7 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,15 +50,10 @@ public class AccountLogonLogController extends BaseController<AccountLogonLog, L
         return accountLogonLogService;
     }
 
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
-
     @MenuData("配置管理:系统记录:账户登录记录")
     @RequiresPermissions("配置管理:系统记录:账户登录记录")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity AccountLogonLog entity, Model model) {
         return "admin/aud/accountLogonLog-index";
     }
 
@@ -69,7 +67,7 @@ public class AccountLogonLogController extends BaseController<AccountLogonLog, L
 
     @RequiresPermissions("配置管理:系统记录:账户登录记录")
     @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public String viewShow(@ModelAttribute("entity") AccountLogonLog entity, Model model) {
+    public String viewShow(@ModelEntity AccountLogonLog entity, Model model) {
         return "admin/aud/accountLogonLog-viewBasic";
     }
 }

@@ -18,6 +18,7 @@
 package com.entdiy.sys.entity;
 
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.entity.BaseUuidEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -39,12 +40,16 @@ import javax.persistence.*;
 public class AttachmentFile extends BaseUuidEntity {
 
     @MetaData(value = "所属对象Class")
-    @Column(name = "source_type", length = 512, nullable = true)
+    @Column(length = 512, nullable = true)
     private String sourceType;
 
     @MetaData(value = "所属对象ID")
-    @Column(name = "source_id", nullable = true)
-    private Long sourceId;
+    @Column(nullable = true)
+    private String sourceId;
+
+    @MetaData(value = "所属分类", comments = "同一个对象类型下面，附件分类，如产品图片，参考文档等")
+    @Column(nullable = true)
+    private String sourceCategory = GlobalConstant.DEFAULT_VALUE;
 
     @MetaData(value = "附件上传文件名称")
     @Column(length = 512, nullable = false)
@@ -72,6 +77,6 @@ public class AttachmentFile extends BaseUuidEntity {
     private String relativePath;
 
     @MetaData(value = "存储绝对路径", comments = "记录参考之用，一般业务功能不做使用")
-    @Column(length = 512, nullable = false)
+    @Column(length = 512, nullable = true)
     private String absolutePath;
 }

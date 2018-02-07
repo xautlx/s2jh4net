@@ -26,6 +26,7 @@ import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.view.OperationResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -34,7 +35,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,15 +55,10 @@ public class AccountController extends BaseController<Account, Long> {
         return accountService;
     }
 
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
-
     @MenuData("配置管理:权限管理:登录账户管理")
     @RequiresPermissions("配置管理:权限管理:登录账户管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity Account entity, Model model) {
         model.addAttribute("authTypeJson", JsonUtils.writeValueAsString(EnumUtils.getEnumDataMap(Account.AuthTypeEnum.class)));
         return "admin/auth/account-index";
     }
@@ -68,24 +67,24 @@ public class AccountController extends BaseController<Account, Long> {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<Account> findByPage(HttpServletRequest request) {
-        return super.findByPage(entityClass, request);
+        return super.findByPage(Account.class, request);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
-    public String editTabs(HttpServletRequest request) {
+    public String editTabs(@ModelEntity Account entity, HttpServletRequest request) {
         return "admin/auth/account-inputTabs";
     }
 
     @RequiresPermissions("配置管理:权限管理:登录账户管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow(Model model, @ModelAttribute("entity") Account entity) {
+    public String editShow(Model model, @ModelEntity Account entity) {
         return "admin/auth/account-inputBasic";
     }
 
     @RequiresPermissions("配置管理:权限管理:登录账户管理")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") Account entity, Model model,
+    public OperationResult editSave(@ModelEntity Account entity, Model model,
                                     @RequestParam(value = "rawPassword", required = false) String rawPassword) {
         if (entity.isNew()) {
             Validation.isTrue(StringUtils.isNotBlank(rawPassword), "创建用户必须设置初始密码");
@@ -96,7 +95,7 @@ public class AccountController extends BaseController<Account, Long> {
 
     @RequiresPermissions("配置管理:权限管理:登录账户管理")
     @RequestMapping(value = "/logon-data", method = RequestMethod.GET)
-    public String editShow(Model model) {
+    public String editShow(@ModelEntity Account entity, Model model) {
         return "admin/auth/account-logonData";
     }
 }

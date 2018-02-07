@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class DepartmentService extends BaseService<Department, Long> {
@@ -37,15 +39,7 @@ public class DepartmentService extends BaseService<Department, Long> {
         return departmentDao;
     }
 
-//    public List<Department.DepartmentTreeDataDto> findTreeDatas(String keyword) {
-//        String hql = "SELECT d.id as id, d.code as code, d.name as name, " +
-//                "(select count(*) from Department dd where dd.parent=d.id and dd.disabled=false) as childrenCount " +
-//                "FROM Department d where disabled=false ";
-//
-//        if (StringUtils.isBlank(keyword)) {
-//            return departmentDao.findTreeDataRoots();
-//        } else {
-//            return departmentDao.findTreeDataByKeyword(keyword);
-//        }
-//    }
+    public Optional<Department> findByCode(String code) {
+        return departmentDao.findByCode(code);
+    }
 }

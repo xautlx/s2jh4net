@@ -41,6 +41,25 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="control-label">报销凭证</label>
+                    <div class="controls">
+                        <ul class="list-group" data-fileuploader="receiptAttachmentFiles" data-multiple="true">
+                            <c:forEach var="item" items="${entity.receiptAttachmentFiles}" varStatus="status">
+                                <li class="list-group-item">
+                                    <form:hidden id="" path="receiptAttachmentFiles[${status.index}].id"/>
+                                    <form:hidden id="" path="receiptAttachmentFiles[${status.index}].relativePath"/>
+                                    <form:hidden id="" path="receiptAttachmentFiles[${status.index}].fileRealName"/>
+                                    <form:hidden id="" path="receiptAttachmentFiles[${status.index}].fileLength"/>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
         <h3 class="form-section">行项信息</h3>
         <div class="row">
             <div class="col-md-12">

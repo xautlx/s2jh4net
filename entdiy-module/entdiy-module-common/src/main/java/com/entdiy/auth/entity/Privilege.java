@@ -28,7 +28,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -49,9 +48,6 @@ public class Privilege extends BaseNativeEntity {
 
     @MetaData(value = "禁用标识", tooltips = "禁用不参与权限控制逻辑")
     private Boolean disabled = Boolean.FALSE;
-
-    @MetaData(value = "重建时间")
-    private LocalDateTime rebuildTime;
 
     @MetaData(value = "角色权限关联")
     @OneToMany(mappedBy = "privilege", cascade = CascadeType.ALL, orphanRemoval = true)

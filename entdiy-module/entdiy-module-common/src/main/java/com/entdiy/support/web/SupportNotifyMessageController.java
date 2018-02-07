@@ -17,11 +17,13 @@
  */
 package com.entdiy.support.web;
 
+import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.web.view.OperationResult;
+import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.sys.entity.NotifyMessage;
 import com.entdiy.sys.service.NotifyMessageService;
 import org.apache.commons.lang3.BooleanUtils;
@@ -49,8 +51,8 @@ public class SupportNotifyMessageController {
     @MetaData("用户未读公告数目")
     @RequestMapping(value = "/admin/notify-message/count", method = RequestMethod.GET)
     @ResponseBody
-    public OperationResult notifyMessageCount(HttpServletRequest request) {
-        User user = userService.findCurrentAuthUser();
+    public OperationResult notifyMessageCount(@AuthAccount Account account, HttpServletRequest request) {
+        User user = userService.findByAccount(account);
         String platform = request.getParameter("platform");
         if (StringUtils.isBlank(platform)) {
             platform = NotifyMessage.NotifyMessagePlatformEnum.web_admin.name();
@@ -66,8 +68,8 @@ public class SupportNotifyMessageController {
 
     @MetaData("公告消息列表")
     @RequestMapping(value = "/admin/profile/notify-message-list", method = RequestMethod.GET)
-    public String notifyMessageList(HttpServletRequest request, Model model) {
-        User user = userService.findCurrentAuthUser();
+    public String notifyMessageList(@AuthAccount Account account, HttpServletRequest request, Model model) {
+        User user = userService.findByAccount(account);
         List<NotifyMessage> notifyMessages = null;
         String readed = request.getParameter("readed");
         if (StringUtils.isBlank(readed)) {
@@ -82,11 +84,12 @@ public class SupportNotifyMessageController {
 
     @MetaData("公告消息读取")
     @RequestMapping(value = "/admin/profile/notify-message-view/{messageId}", method = RequestMethod.GET)
-    public String notifyMessageView(@PathVariable("messageId") Long messageId, Model model) {
-        User user = userService.findCurrentAuthUser();
-        NotifyMessage notifyMessage = notifyMessageService.findOne(messageId);
-        notifyMessageService.processUserRead(notifyMessage, user);
-        model.addAttribute("notifyMessage", notifyMessage);
+    public String notifyMessageView(@AuthAccount Account account, @PathVariable("messageId") Long messageId, Model model) {
+        User user = userService.findByAccount(account);
+        notifyMessageService.findOne(messageId).ifPresent(one -> {
+            notifyMessageService.processUserRead(one, user);
+            model.addAttribute("notifyMessage", one);
+        });
         return "admin/profile/notifyMessage-view";
     }
 }

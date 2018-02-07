@@ -17,14 +17,12 @@
  */
 package com.entdiy.auth.web;
 
-import java.util.List;
-
 import com.entdiy.auth.entity.Privilege;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
-
+import com.entdiy.core.web.annotation.ModelEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +30,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/admin/auth/privilege")
@@ -48,7 +48,7 @@ public class PrivilegeController extends BaseController<Privilege, Long> {
     @MenuData("配置管理:权限管理:权限配置")
     @RequiresPermissions("配置管理:权限管理:权限配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity Privilege entity, Model model) {
         List<Privilege> privileges = privilegeService.findAllCached();
         model.addAttribute("privileges", privileges);
         return "admin/auth/privilege-index";

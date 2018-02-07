@@ -1,8 +1,5 @@
 /**
  * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
- *
- * Site: https://www.entdiy.com, E-Mail: xautlx@hotmail.com
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,20 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.auth.dao;
+package com.entdiy.core.test;
 
-import com.entdiy.auth.entity.Department;
-import com.entdiy.core.dao.jpa.BaseDao;
-import org.springframework.data.jpa.repository.QueryHints;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.junit.Assert;
+import org.junit.Test;
 
-import javax.persistence.QueryHint;
 import java.util.Optional;
 
-@Repository
-public interface DepartmentDao extends BaseDao<Department, Long> {
+public class SimpleTest {
 
-    @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    Optional<Department> findByCode(@Param("code") String code);
+    @Test
+    public void optionalTest() {
+        Assert.assertFalse(Optional.empty().isPresent());
+    }
 }

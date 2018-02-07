@@ -19,10 +19,22 @@ package com.entdiy.sys.dao;
 
 import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.sys.entity.AttachmentFile;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.QueryHint;
+import java.util.List;
 
 @Repository
 public interface AttachmentFileDao extends BaseDao<AttachmentFile, String> {
 
+    @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
+    List<AttachmentFile> findBySourceTypeAndSourceIdAndSourceCategory(String sourceType, String sourceId, String sourceCategory);
 
+    @Modifying
+    @Query("update AttachmentFile set sourceType=:sourceType , sourceId=:sourceId, sourceCategory=:sourceCategory where id=:id")
+    void updateSource(@Param("sourceType") String sourceType, @Param("sourceId") String sourceId, @Param("sourceCategory") String sourceCategory, @Param("id") String id);
 }

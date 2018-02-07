@@ -25,6 +25,7 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
+import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.support.service.MailService;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,8 @@ public class UserProfileController {
 
     @RequiresUser
     @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model) {
-        User user = userService.findCurrentAuthUser();
+    public void prepareModel(@AuthAccount Account account, HttpServletRequest request, Model model) {
+        User user = userService.findByAccount(account);
         model.addAttribute("user", user);
         model.addAttribute("account", user.getAccount());
     }

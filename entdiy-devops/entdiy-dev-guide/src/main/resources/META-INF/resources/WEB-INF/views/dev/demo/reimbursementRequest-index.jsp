@@ -14,6 +14,19 @@
                                    placeholder="登录账号，部门名称...">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="controls controls-clearfix">
+                            <select name="search[IN_department.id]"
+                                    class="form-control input-medium"
+                                    data-toggle="dropdown-tree"
+                                    data-placeholder="选择部门..."
+                                    data-url="/admin/auth/department/tree"
+                                    data-fetch-all="true"
+                                    data-parent-name="search[EQ_parent.id]"
+                                    multiple="true">
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group search-group-btn">
                         <button class="btn green" type="submmit">
                             <i class="m-icon-swapright m-icon-white"></i>&nbsp; 查&nbsp;询
@@ -48,6 +61,7 @@
                        "index" : "department.id",
                        "width" : 100,
                        "align" : "center",
+                       "search" : false,
                        "editable": false
                    }, {
                        "label" : "提交时间",
@@ -69,6 +83,10 @@
                        "name" : "abstractExplain",
                        "width" : 200,
                        "editable": true
+                   }, {
+                       "label" : "报销总金额",
+                       "name" : "totalInvoiceAmount",
+                       "formatter": "number"
                    }, {
                        "label" : "审批完结",
                        "name" : "auditComplete",

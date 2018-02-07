@@ -17,6 +17,7 @@
  */
 package com.entdiy.dev.demo.web.action;
 
+import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
@@ -24,6 +25,7 @@ import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
@@ -31,6 +33,8 @@ import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequestItem;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
 import com.entdiy.dev.demo.support.DemoConstant;
+import com.entdiy.security.annotation.AuthAccount;
+import com.entdiy.sys.service.AttachmentFileService;
 import com.entdiy.sys.service.DataDictService;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
@@ -40,11 +44,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @MetaData("报销申请管理")
 @Controller
@@ -60,31 +67,18 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     @Autowired
     private DataDictService dataDictService;
 
+    @Autowired
+    private AttachmentFileService attachmentFileService;
+
     @Override
     protected BaseService<DemoReimbursementRequest, Long> getEntityService() {
         return reimbursementRequestService;
     }
 
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
-
-    /**
-     * 如果编辑提交数据涉及到一对一或一对多关联对象更新处理，则需要返回Detached的对象实例，否则会遇到关联对象主键修改异常
-     *
-     * @param id 实体主键
-     * @return Detached的对象实例
-     */
-    @Override
-    protected DemoReimbursementRequest buildDetachedBindingEntity(Long id) {
-        return reimbursementRequestService.findDetachedOne(id, "reimbursementRequestItems");
-    }
-
     @MenuData("演示样例:报销申请")
     @RequiresPermissions("演示样例:报销申请")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity DemoReimbursementRequest entity, Model model) {
         model.addAttribute("useTypeJson",
                 JsonUtils.writeValueAsString(dataDictService.findMapDataByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType)));
         return "dev/demo/reimbursementRequest-index";
@@ -99,18 +93,19 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
-    public String editTabs(HttpServletRequest request) {
+    public String editTabs(@ModelEntity DemoReimbursementRequest entity, HttpServletRequest request) {
         return "dev/demo/reimbursementRequest-inputTabs";
     }
 
     @RequiresPermissions("演示样例:报销申请")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow(Model model) {
+    public String editShow(@AuthAccount Account account, @ModelEntity(preFectchLazyFields = {"reimbursementRequestItems"}) DemoReimbursementRequest entity,
+                           Model model) {
         model.addAttribute("subValidationRules", ServletUtils.buildValidateRules(DemoReimbursementRequestItem.class));
-        DemoReimbursementRequest entity = fetchEntityFromModel(model);
+
         if (entity.isNew()) {
             //默认取当前登录用户所属部门，用户可编辑修改
-            entity.setDepartment(userService.findCurrentAuthUser().getDepartment());
+            entity.setDepartment(userService.findByAccount(account).getDepartment());
         }
 
         //模板记录初始化及属性设置
@@ -124,6 +119,8 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         }
         reimbursementRequestItems.add(newItemTemplate);
 
+        attachmentFileService.injectAttachmentFilesToEntity(entity, "receiptAttachmentFiles");
+
         model.addAttribute("useTypeMap",
                 dataDictService.findMapDataByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType));
 
@@ -133,11 +130,16 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     @RequiresPermissions("演示样例:报销申请")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") DemoReimbursementRequest entity, Model model) {
+    public OperationResult editSave(@AuthAccount Account account,
+                                    @ModelEntity(preFectchLazyFields = {"reimbursementRequestItems"}) DemoReimbursementRequest entity) {
+        //动态行项数据
+        List<DemoReimbursementRequestItem> items = entity.getReimbursementRequestItems();
+
         if (entity.isNew()) {
-            entity.setUser(userService.findCurrentAuthUser());
+            entity.setUser(userService.findByAccount(account));
         } else {
-            Optional.ofNullable(entity.getReimbursementRequestItems()).ifPresent(items -> items.removeIf(item -> {
+            //明细行项关联数据处理
+            items.removeIf(item -> {
                 if (item.getId() == null) {
                     //新增对象设置当前主对象关联
                     item.setReimbursementRequest(entity);
@@ -148,9 +150,18 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
                 }
                 //新增或更新则保留元素
                 return false;
-            }));
+            });
         }
-        return super.editSave(entity);
+        //汇总计算设置总金额
+        entity.setTotalInvoiceAmount(items.stream().map(DemoReimbursementRequestItem::getInvoiceAmount).reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        //先调用业务接口持久化主对象
+        OperationResult result = super.editSave(entity);
+
+        //附件处理（考虑到附件就是简单的字段更新基本不会出现业务失败，即便异常也不会对主业务逻辑带来严重问题，因此放在另外事务中调用）
+        attachmentFileService.saveBySource(entity, "receiptAttachmentFiles");
+
+        return result;
     }
 
     @RequiresPermissions("演示样例:报销申请")

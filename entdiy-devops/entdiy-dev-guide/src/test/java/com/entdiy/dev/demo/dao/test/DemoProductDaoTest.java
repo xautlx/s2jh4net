@@ -37,7 +37,7 @@ public class DemoProductDaoTest extends SpringTransactionalTestCase {
                     List<AttachmentFile> introImages = MockEntityUtils.buildMockObject(AttachmentFile.class, 5, 8);
                     introImages.stream().forEach(e -> {
                         e.setSourceId(null);
-                        e.setSourceType(DemoProduct.TYPE_ATTACHMENT_FILE);
+                        e.setSourceType(DemoProduct.class.getName());
                     });
                     p.setIntroImages(introImages);
                     demoProductDao.save(p);

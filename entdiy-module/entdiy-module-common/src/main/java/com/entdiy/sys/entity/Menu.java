@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.*;
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -57,7 +56,7 @@ public class Menu extends BaseNativeEntity {
     @Column(nullable = false, length = 255, unique = true)
     private String path;
 
-    @MetaData(value = "父节点")
+    @MetaData(value = "父节点", comments = "设置外键为none，便于批量重建数据")
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "parent_id")
     @JsonIgnore
@@ -96,9 +95,6 @@ public class Menu extends BaseNativeEntity {
     @MetaData(value = "对应Web Controller调用方法名")
     @Column(length = 128)
     private String controllerMethod;
-
-    @MetaData(value = "重建时间")
-    private LocalDateTime rebuildTime;
 
     @Override
     @Transient

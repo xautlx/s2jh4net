@@ -26,9 +26,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -44,13 +42,7 @@ import java.util.List;
 @Audited
 public class DemoProduct extends BaseNativeEntity {
 
-    public static final String TYPE_ATTACHMENT_FILE = "DemoProduct";
-
-    @MetaData(value = "商品左右滑动缩略图片集合")
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "source_id", foreignKey = @ForeignKey(name = "none"))
-    @Where(clause = "source_type='" + TYPE_ATTACHMENT_FILE + "'")
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Transient
     @JsonIgnore
     private List<AttachmentFile> introImages;
 

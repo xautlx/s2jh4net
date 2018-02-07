@@ -18,12 +18,20 @@
 package com.entdiy.sys.service;
 
 import com.entdiy.core.dao.jpa.BaseDao;
+import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.sys.dao.AttachmentFileDao;
 import com.entdiy.sys.entity.AttachmentFile;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Persistable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -37,4 +45,53 @@ public class AttachmentFileService extends BaseService<AttachmentFile, String> {
         return attachmentFileDao;
     }
 
+    public void injectAttachmentFilesToEntity(Persistable entity, String propertyName) {
+        if (entity == null || entity.getId() == null) {
+            return;
+        }
+        Class<?> sourceClass = entity.getClass();
+        String sourceType = sourceClass.getName();
+        String sourceId = entity.getId().toString();
+        List<AttachmentFile> attachmentFiles = attachmentFileDao.findBySourceTypeAndSourceIdAndSourceCategory(sourceType, sourceId, propertyName);
+        try {
+            MethodUtils.invokeMethod(entity, "set" + StringUtils.capitalize(propertyName), attachmentFiles);
+        } catch (Exception e) {
+            throw new ServiceException("Invoke method error", e);
+        }
+    }
+
+    public void saveBySource(Persistable entity, String propertyName) {
+        Assert.isTrue(entity != null && entity.getId() != null, "Invalid unsaved entity");
+        Class<?> sourceClass = entity.getClass();
+        String sourceType = sourceClass.getName();
+        String sourceId = entity.getId().toString();
+        try {
+            final List<AttachmentFile> attachmentFiles = (List<AttachmentFile>) MethodUtils.invokeMethod(entity, "get" + StringUtils.capitalize(propertyName));
+            List<AttachmentFile> dbAttachmentFiles = attachmentFileDao.findBySourceTypeAndSourceIdAndSourceCategory(sourceType, sourceId, propertyName);
+            if (CollectionUtils.isEmpty(attachmentFiles)) {
+                //假如最新为空，数据库原先不为空，则删除所有
+                if (!CollectionUtils.isEmpty(dbAttachmentFiles)) {
+                    attachmentFileDao.deleteAll(dbAttachmentFiles);
+                }
+            } else {
+                //假如最新不为空，则先删除已不存在项目，然后最近新项目
+                if (!CollectionUtils.isEmpty(dbAttachmentFiles)) {
+                    dbAttachmentFiles.forEach(one -> {
+                        if (attachmentFiles.stream().noneMatch(cur -> cur.getId().equals(one.getId()))) {
+                            attachmentFileDao.delete(one);
+                        }
+                    });
+                }
+                attachmentFiles.forEach(one -> {
+                    one.setSourceType(sourceType);
+                    one.setSourceId(sourceId);
+                    one.setSourceCategory(propertyName);
+                    attachmentFileDao.updateSource(one.getSourceType(), one.getSourceId(), one.getSourceCategory(), one.getId());
+                });
+            }
+        } catch (Exception e) {
+            throw new ServiceException("Invoke method error", e);
+        }
+
+    }
 }

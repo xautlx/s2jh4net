@@ -17,9 +17,11 @@
  */
 package com.entdiy.sys.web;
 
+import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.web.view.OperationResult;
+import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.sys.entity.UserProfileData;
 import com.entdiy.sys.service.UserProfileDataService;
 import com.google.common.collect.Maps;
@@ -47,9 +49,9 @@ public class UserProfileDataController {
     @RequiresUser
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(HttpServletRequest request) {
+    public OperationResult editSave(@AuthAccount Account account, HttpServletRequest request) {
         String[] codes = request.getParameter("codes").split(",");
-        User user = userService.findCurrentAuthUser();
+        User user = userService.findByAccount(account);
         for (String code : codes) {
             UserProfileData entity = userProfileDataService.findByUserAndCode(user, code);
             if (entity == null) {
@@ -67,8 +69,8 @@ public class UserProfileDataController {
     @RequiresUser
     @RequestMapping(value = "/params", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, String> params() {
-        User user = userService.findCurrentAuthUser();
+    public Map<String, String> params(@AuthAccount Account account) {
+        User user = userService.findByAccount(account);
         Map<String, String> datas = Maps.newHashMap();
         List<UserProfileData> items = userProfileDataService.findByUser(user);
         for (UserProfileData item : items) {

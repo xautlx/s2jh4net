@@ -17,8 +17,8 @@
  */
 package com.entdiy.aud.envers;
 
+import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.security.AuthUserDetails;
-import com.entdiy.security.AuthContextHolder;
 import com.google.common.collect.Maps;
 import org.hibernate.envers.RevisionListener;
 
@@ -56,7 +56,7 @@ public class ExtRevisionListener implements RevisionListener {
     @Override
     public void newRevision(Object revisionEntity) {
         ExtDefaultRevisionEntity revEntity = (ExtDefaultRevisionEntity) revisionEntity;
-        AuthUserDetails authUserDetails = AuthContextHolder.getDefaultAuthUserDetails();
+        AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
         if (authUserDetails != null) {
             revEntity.setOperationAccountId(authUserDetails.getAccountId());
             revEntity.setOperationUserName(authUserDetails.getUsername());

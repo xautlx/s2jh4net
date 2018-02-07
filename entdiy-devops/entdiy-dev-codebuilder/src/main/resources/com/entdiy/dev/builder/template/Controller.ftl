@@ -6,6 +6,7 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.core.web.json.JsonViews;
 
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,7 +46,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
     @MenuData("${model_title}")
     @RequiresPermissions("${model_title}")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity ${entity_name} entity, Model model) {
         return "admin${model_path}/${entity_name_uncapitalize}-index";
     }   
     
@@ -59,7 +59,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
     }
     
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
-    public String editTabs(HttpServletRequest request) {
+    public String editTabs(@ModelEntity User entity, HttpServletRequest request) {
         return "admin${model_path}/${entity_name_uncapitalize}-inputTabs";
     }
 
@@ -72,7 +72,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
     @RequiresPermissions("${model_title}")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") ${entity_name} entity, Model model) {
+    public OperationResult editSave(@ModelEntity ${entity_name} entity, Model model) {
         return super.editSave(entity);
     }
 

@@ -21,16 +21,18 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.service.ConfigPropertyService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,7 +52,7 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @MenuData("配置管理:系统管理:参数配置")
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index() {
+    public String index(@ModelEntity ConfigProperty entity, Model model) {
         return "admin/sys/configProperty-index";
     }
 
@@ -62,13 +64,13 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
-    public String editTabs(HttpServletRequest request) {
+    public String editTabs(@ModelEntity ConfigProperty entity, HttpServletRequest request) {
         return "admin/sys/configProperty-inputTabs";
     }
 
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow() {
+    public String editShow(@ModelEntity ConfigProperty entity) {
         return "admin/sys/configProperty-inputBasic";
     }
 
@@ -76,7 +78,7 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") ConfigProperty entity, HttpServletRequest request) {
+    public OperationResult editSave(@ModelEntity ConfigProperty entity, HttpServletRequest request) {
         return super.editSave(entity);
     }
 
@@ -85,9 +87,4 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
         return "admin/sys/configProperty-htmlPreview";
     }
 
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
 }

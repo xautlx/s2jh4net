@@ -25,18 +25,21 @@ import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.view.OperationResult;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,7 +58,7 @@ public class DepartmentController extends BaseController<Department, Long> {
     @MenuData("配置管理:权限管理:部门配置")
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity Department entity, Model model) {
         return "admin/auth/department-index";
     }
 
@@ -91,7 +94,7 @@ public class DepartmentController extends BaseController<Department, Long> {
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") Department entity, Model model) {
+    public OperationResult editSave(@ModelEntity Department entity, Model model) {
         return super.editSave(entity);
     }
 
@@ -101,11 +104,5 @@ public class DepartmentController extends BaseController<Department, Long> {
     @Override
     public OperationResult delete(@RequestParam("ids") Long... ids) {
         return super.delete(ids);
-    }
-
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
     }
 }

@@ -32,16 +32,17 @@ import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.json.LocalDateTimeSerializer;
 import com.entdiy.dev.demo.entity.DemoProduct;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequestItem;
 import com.entdiy.dev.demo.service.DemoProductService;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.entity.NotifyMessage;
 import com.entdiy.sys.entity.UserMessage;
+import com.entdiy.sys.service.AttachmentFileService;
 import com.entdiy.sys.service.DataDictService;
 import com.entdiy.sys.service.NotifyMessageService;
 import com.entdiy.sys.service.UserMessageService;
-import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -85,6 +87,9 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
     @Autowired
     private DemoProductService demoProductService;
+
+    @Autowired
+    private AttachmentFileService attachmentFileService;
 
     @Override
     public void initializeInternal() {
@@ -194,7 +199,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
 
                 {
-                    DataDict entity = dataDictService.findByProperty("primaryKey", GlobalConstant.DATADICT_MESSAGE_TYPE);
+                    DataDict entity = dataDictService.findByRootPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE).get();
 
                     DataDict item = new DataDict();
                     item.setPrimaryKey("normal");
@@ -296,7 +301,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
 
             //数据字典项初始化
-            if (dataDictService.findByProperty("primaryKey", DemoConstant.DataDict_Demo_ReimbursementRequest_UseType) == null) {
+            if (!dataDictService.findByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType).isPresent()) {
                 DataDict entity = new DataDict();
                 entity.setPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType);
                 entity.setPrimaryValue("报销申请:记账类型");
@@ -328,9 +333,18 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 int random = MockEntityUtils.randomInt(20, 40);
                 for (int i = 0; i < random; i++) {
                     DemoProduct product = new DemoProduct();
-                    product.setIntroImages(Lists.newArrayList(MockEntityUtils.buildMockObject(AttachmentFile.class, 3, 6)));
                     demoProductService.save(product);
+                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
+                    entityManager.flush();
 
+                    //附件处理
+                    product.setIntroImages(MockEntityUtils.buildMockObject(AttachmentFile.class, 2, 4));
+                    //先提前上传保存附件
+                    attachmentFileService.saveAll(product.getIntroImages());
+                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
+                    entityManager.flush();
+                    //然后和当前主对象关联
+                    attachmentFileService.saveBySource(product, "introImages");
                     //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
                     entityManager.flush();
                 }
@@ -342,13 +356,34 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 int random = MockEntityUtils.randomInt(20, 40);
                 for (int i = 0; i < random; i++) {
                     DemoReimbursementRequest rr = MockEntityUtils.buildMockObject(DemoReimbursementRequest.class);
+                    rr.setUseType(MockEntityUtils.randomCandidates("BG", "ZS", "CY"));
                     User user = MockEntityUtils.randomCandidates(users);
                     rr.setUser(user);
                     rr.setDepartment(MockEntityUtils.randomCandidates(departments));
                     //模拟用户在注册后随机时间下单
                     rr.setSubmitTime(user.getAccount().getSignupTime().plusHours(MockEntityUtils.randomInt(1, 240)));
-                    reimbursementRequestService.save(rr);
 
+                    List<DemoReimbursementRequestItem> items = MockEntityUtils.buildMockObject(DemoReimbursementRequestItem.class, 1, 3);
+                    items.forEach(one -> {
+                        one.setReimbursementRequest(rr);
+                        one.setEndDate(null);
+                        one.setUseType(MockEntityUtils.randomCandidates("BG", "ZS", "CY"));
+                    });
+                    rr.setTotalInvoiceAmount(items.stream().map(DemoReimbursementRequestItem::getInvoiceAmount).reduce(BigDecimal.ZERO, BigDecimal::add));
+                    rr.setReimbursementRequestItems(items);
+
+                    reimbursementRequestService.save(rr);
+                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
+                    entityManager.flush();
+
+                    //附件处理
+                    rr.setReceiptAttachmentFiles(MockEntityUtils.buildMockObject(AttachmentFile.class, 1, 3));
+                    //先提前上传保存附件
+                    attachmentFileService.saveAll(rr.getReceiptAttachmentFiles());
+                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
+                    entityManager.flush();
+                    //然后和当前主对象关联
+                    attachmentFileService.saveBySource(rr, "receiptAttachmentFiles");
                     //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
                     entityManager.flush();
                 }

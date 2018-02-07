@@ -23,19 +23,21 @@ import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.service.BaseService;
-import com.entdiy.core.service.Validation;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.view.OperationResult;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -56,25 +58,10 @@ public class RoleController extends BaseController<Role, Long> {
         return roleService;
     }
 
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        Validation.notDemoMode(request);
-        Role role = super.initPrepareModel(request, model, id);
-        if (role.isNew()) {
-            role.setCode("ROLE_");
-        }
-    }
-
-    @Override
-    protected Role buildDetachedBindingEntity(Long id) {
-        return roleService.findDetachedOne(id, "roleR2Privileges");
-    }
-
     @MenuData("配置管理:权限管理:角色配置")
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index() {
+    public String index(@ModelEntity Role entity, Model model) {
         return "admin/auth/role-index";
     }
 
@@ -86,20 +73,23 @@ public class RoleController extends BaseController<Role, Long> {
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
-    public String editTabs(HttpServletRequest request) {
+    public String editTabs(@ModelEntity Role entity, HttpServletRequest request) {
         return "admin/auth/role-inputTabs";
     }
 
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow() {
+    public String editShow(@ModelEntity Role entity) {
+        if (entity.isNew()) {
+            entity.setCode("ROLE_");
+        }
         return "admin/auth/role-inputBasic";
     }
 
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") Role entity, Model model) {
+    public OperationResult editSave(@ModelEntity Role entity, Model model) {
         return super.editSave(entity);
     }
 
@@ -113,7 +103,7 @@ public class RoleController extends BaseController<Role, Long> {
 
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/privileges", method = RequestMethod.GET)
-    public String privilegeR2sShow(@ModelAttribute("entity") Role entity, Model model) {
+    public String privilegeR2sShow(@ModelEntity Role entity, Model model) {
         Set<Long> r2PrivilegeIds = Sets.newHashSet();
         List<RoleR2Privilege> r2s = entity.getRoleR2Privileges();
         if (CollectionUtils.isNotEmpty(r2s)) {

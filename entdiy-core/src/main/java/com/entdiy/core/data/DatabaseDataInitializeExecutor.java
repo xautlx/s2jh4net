@@ -18,17 +18,13 @@
 package com.entdiy.core.data;
 
 import com.entdiy.core.annotation.MetaData;
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.util.ClassUtils;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -37,7 +33,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
@@ -45,7 +40,6 @@ import java.sql.DatabaseMetaData;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 数据库数据初始化处理器触发器
@@ -55,17 +49,15 @@ public class DatabaseDataInitializeExecutor {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseDataInitializeExecutor.class);
 
+    @Autowired
+    private LocalContainerEntityManagerFactoryBean entityManagerFactory;
+
     @PersistenceContext
     protected EntityManager entityManager;
 
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    @Value("${base.packages}")
-    private String basePackages;
-
-    @Value("${hibernate.hbm2ddl.auto:}")
-    private String hbm2ddl;
 
     @Value("${auto.data.skip:false}")
     private boolean autoDataSkip;
@@ -80,27 +72,23 @@ public class DatabaseDataInitializeExecutor {
             return;
         }
 
-        CountThread countThread = new CountThread();
-        countThread.start();
-
         {
-            //搜索所有entity对象，并自动进行自增初始化值设置
-            Set<BeanDefinition> beanDefinitions = Sets.newHashSet();
-            ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
-            scan.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-            scan.addIncludeFilter(new AnnotationTypeFilter(MetaData.class));
-            for (String pkg : basePackages.split(",")) {
-                beanDefinitions.addAll(scan.findCandidateComponents(pkg));
-            }
-
-            for (BeanDefinition beanDefinition : beanDefinitions) {
-                Class<?> entityClass = ClassUtils.forName(beanDefinition.getBeanClassName());
-                MetaData metaData = entityClass.getAnnotation(MetaData.class);
-                if (metaData != null && metaData.autoIncrementInitValue() > 0) {
-                    autoIncrementInitValue(entityClass, entityManager);
+            //搜索所有entity对象，并自动进行自增初始化值设
+            for (String managedClassName : entityManagerFactory.getPersistenceUnitInfo().getManagedClassNames()) {
+                try {
+                    Class<?> entityClass = Class.forName(managedClassName);
+                    MetaData metaData = entityClass.getAnnotation(MetaData.class);
+                    if (metaData != null && metaData.autoIncrementInitValue() > 0) {
+                        autoIncrementInitValue(entityClass, metaData);
+                    }
+                } catch (ClassNotFoundException e) {
+                    logger.error("class convert error", e);
                 }
             }
         }
+
+        CountThread countThread = new CountThread();
+        countThread.start();
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         for (AbstractDatabaseDataInitializeProcessor initializeProcessor : initializeProcessors) {
@@ -124,7 +112,7 @@ public class DatabaseDataInitializeExecutor {
     /**
      * 初始化自增对象起始值
      */
-    public static void autoIncrementInitValue(final Class<?> entity, final EntityManager entityManager) {
+    private void autoIncrementInitValue(final Class<?> entity, MetaData metaData) {
         Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
         if (Integer.valueOf(String.valueOf(count)) > 0) {
             logger.debug("Skipped autoIncrementInitValue as exist data: {}", entity.getClass());
@@ -133,7 +121,6 @@ public class DatabaseDataInitializeExecutor {
         Session session = entityManager.unwrap(Session.class);
         session.doWork((connection) -> {
             Table table = entity.getAnnotation(Table.class);
-            MetaData metaData = entity.getAnnotation(MetaData.class);
             Assert.isTrue(metaData.autoIncrementInitValue() > 1, "Undefined MetaData autoIncrementInitValue for entity: " + entity.getClass());
 
             DatabaseMetaData databaseMetaData = connection.getMetaData();

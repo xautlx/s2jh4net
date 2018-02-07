@@ -17,25 +17,22 @@
  */
 package com.entdiy.sys.web;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.sys.entity.UserMessage;
 import com.entdiy.sys.service.UserMessageService;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "/admin/sys/user-message")
@@ -49,16 +46,10 @@ public class UserMessageController extends BaseController<UserMessage, Long> {
         return userMessageService;
     }
 
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
-
     @MenuData("配置管理:系统管理:消息管理")
     @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity UserMessage entity, Model model) {
         return "admin/sys/userMessage-index";
     }
 

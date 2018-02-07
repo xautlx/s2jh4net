@@ -26,6 +26,7 @@ import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.view.OperationResult;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -34,7 +35,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,15 +54,10 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
         return loggingEventService;
     }
 
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
-
     @MenuData("配置管理:系统记录:异常日志记录")
     @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity LoggingEvent entity, Model model) {
         model.addAttribute("stateJson", JsonUtils.writeValueAsString(EnumUtils.getEnumDataMap(LoggingHandleStateEnum.class)));
         return "admin/aud/loggingEvent-index";
     }
@@ -82,7 +80,7 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
     @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") LoggingEvent entity, Model model) {
+    public OperationResult editSave(@ModelEntity LoggingEvent entity, Model model) {
         return super.editSave(entity);
     }
 }

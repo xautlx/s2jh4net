@@ -19,14 +19,9 @@ package com.entdiy.core.web;
 
 import com.entdiy.core.entity.AbstractPersistableEntity;
 import com.entdiy.core.exception.BaseRuntimeException;
-import com.entdiy.core.exception.WebException;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.service.BaseService;
-import com.entdiy.core.util.DateUtils;
-import com.entdiy.core.web.json.LocalDateSerializer;
-import com.entdiy.core.web.json.LocalDateTimeSerializer;
-import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -34,25 +29,14 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpMethod;
-import org.springframework.ui.Model;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.beans.PropertyEditorSupport;
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,71 +48,6 @@ public abstract class BaseController<T extends AbstractPersistableEntity<ID>, ID
      * 子类指定泛型对应的实体Service接口对象
      */
     abstract protected BaseService<T, ID> getEntityService();
-
-    /**
-     * 实体泛型对应的Class定义
-     */
-    protected Class<T> entityClass;
-
-    /**
-     * 主键泛型对应的Class定义
-     */
-    protected Class<ID> entityIdClass;
-
-    /**
-     * 实体对象校验规则字符串
-     */
-    private String entityValidationRules;
-
-    /**
-     * 初始化构造方法，计算相关泛型对象
-     */
-    @PostConstruct
-    public void init() {
-        logger.debug("Invoking init method for {}", this.getClass());
-        try {
-            // 通过反射取得Entity的Class.
-            Object genericClz = getClass().getGenericSuperclass();
-            if (genericClz instanceof ParameterizedType) {
-                entityClass = (Class<T>) ((ParameterizedType) genericClz).getActualTypeArguments()[0];
-                entityIdClass = (Class<ID>) ((ParameterizedType) genericClz).getActualTypeArguments()[1];
-            }
-        } catch (Exception e) {
-            throw new WebException(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 将id=123格式的字符串id参数转换为ID泛型对应的主键变量实例
-     * 另外，页面也会以Struts标签获取显示当前操作对象的ID值
-     *
-     * @return ID泛型对象实例
-     */
-    public ID getId(HttpServletRequest request) {
-        return getId(request, "id");
-    }
-
-    /**
-     * 将指定参数转换为ID泛型对应的主键变量实例
-     * 另外，页面也会以Struts标签获取显示当前操作对象的ID值
-     *
-     * @return ID泛型对象实例
-     */
-    @SuppressWarnings("unchecked")
-    public ID getId(HttpServletRequest request, String paramName) {
-        String entityId = request.getParameter(paramName);
-        //jqGrid inline edit新增数据传入id=负数标识 
-        if (StringUtils.isBlank(entityId) || entityId.startsWith("-")) {
-            return null;
-        }
-        if (String.class.isAssignableFrom(entityIdClass)) {
-            return (ID) entityId;
-        } else if (Long.class.isAssignableFrom(entityIdClass)) {
-            return (ID) (Long.valueOf(entityId));
-        } else {
-            throw new IllegalStateException("Undefine entity ID class: " + entityIdClass);
-        }
-    }
 
     protected Page<T> findByPage(Class<T> clazz, HttpServletRequest request, PropertyFilter... propertyFilters) {
         //RoutingDataSourceAdvice.setSlaveDatasource();
@@ -217,125 +136,6 @@ public abstract class BaseController<T extends AbstractPersistableEntity<ID>, ID
                         errorMessageMap);
             }
         }
-    }
-
-    protected T initPrepareModel(HttpServletRequest request, Model model, ID id) {
-        T entity = null;
-        if (id != null && StringUtils.isNotBlank(id.toString())) {
-            //如果是以POST方式请求数据，则获取Detach状态的对象，其他则保留Session方式以便获取Lazy属性
-            if (HttpMethod.POST.name().equalsIgnoreCase(request.getMethod())) {
-                entity = buildDetachedBindingEntity(id);
-            }
-            //如果子类没有给出detach的对象，则依然采用非detach模式查询返回对象
-            if (entity == null) {
-                entity = getEntityService().findOne(id);
-            }
-            model.addAttribute("id", id);
-        }
-        if (entity == null) {
-            try {
-                entity = entityClass.newInstance();
-            } catch (Exception e) {
-                throw new WebException(e.getMessage(), e);
-            }
-        }
-        model.addAttribute("entity", entity);
-
-        //对于GET类型请求，追加校验规则JSON字符串属性
-        if (HttpMethod.GET.name().equalsIgnoreCase(request.getMethod())) {
-            if (AppContextHolder.isDevMode()) {
-                // 开发模式则每次计算以便修改注解后及时生效
-                model.addAttribute("validationRules", ServletUtils.buildValidateRules(entityClass));
-            } else {
-                if (entityValidationRules == null) {
-                    entityValidationRules = ServletUtils.buildValidateRules(entityClass);
-                }
-                // 生成运行直接取当前类静态缓存值
-                model.addAttribute("validationRules", entityValidationRules);
-            }
-        }
-
-        return entity;
-    }
-
-    protected T fetchEntityFromModel(Model model) {
-        return (T) model.asMap().get("entity");
-    }
-
-    /**
-     * 如果编辑提交数据涉及到一对一或一对多关联对象更新处理，则需要返回Detached的对象实例，否则会遇到关联对象主键修改异常
-     *
-     * @param id 实体主键
-     * @return Detached的对象实例
-     */
-    protected T buildDetachedBindingEntity(ID id) {
-        return getEntityService().findDetachedOne(id);
-    }
-
-    /**
-     * 为了防止用户恶意传入数据修改不可访问的属性，采用白名单机制，只有在该方法中定义的属性才会进行自动绑定
-     * 请记住把所有表单元素涉及到属性添加到此方法的setAllowedFields列表中，否则会出现页面数据没有正确保存到数据库
-     */
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        //自定义类型属性转换，动态处理日期、时间等不同格式数据转换
-        binder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException {
-                if (StringUtils.isBlank(text)) {
-                    // Treat empty String as null value.
-                    setValue(null);
-                } else {
-                    setValue(DateUtils.parseDate(text));
-                }
-            }
-
-            @Override
-            public String getAsText() {
-                Date value = (Date) getValue();
-                return (value != null ? DateUtils.formatDate(value) : "");
-            }
-        });
-        binder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException {
-                if (StringUtils.isBlank(text)) {
-                    // Treat empty String as null value.
-                    setValue(null);
-                } else {
-                    setValue(LocalDate.parse(text, LocalDateSerializer.LOCAL_DATE_FORMATTER));
-                }
-            }
-
-            @Override
-            public String getAsText() {
-                LocalDate value = (LocalDate) getValue();
-                return (value != null ? value.format(LocalDateSerializer.LOCAL_DATE_FORMATTER) : "");
-            }
-        });
-        binder.registerCustomEditor(LocalDateTime.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException {
-                if (StringUtils.isBlank(text)) {
-                    // Treat empty String as null value.
-                    setValue(null);
-                } else {
-                    setValue(LocalDateTime.parse(text, LocalDateTimeSerializer.LOCAL_DATE_TIME_FORMATTER));
-                }
-            }
-
-            @Override
-            public String getAsText() {
-                LocalDateTime value = (LocalDateTime) getValue();
-                return (value != null ? value.format(LocalDateTimeSerializer.LOCAL_DATE_TIME_FORMATTER) : "");
-            }
-        });
-
-        // Converts empty strings into null when a form is submitted
-        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-
-
-        //binder.setAllowedFields("nick", "gender", "name", "idCardNo", "studentExt.dormitory");
     }
 
     /**

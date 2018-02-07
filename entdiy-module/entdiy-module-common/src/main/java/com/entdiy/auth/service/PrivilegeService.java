@@ -81,24 +81,4 @@ public class PrivilegeService extends BaseService<Privilege, Long> {
     public List<RoleR2Privilege> findRelatedRoleR2PrivilegesForPrivilege(String privilegeId) {
         return roleR2PrivilegeDao.findByPrivilegeId(privilegeId);
     }
-
-    @Override
-    public Privilege save(Privilege entity) {
-        return super.save(entity);
-    }
-
-    @Override
-    public void delete(Privilege entity) {
-        super.delete(entity);
-    }
-
-    @Override
-    public List<Privilege> save(Iterable<Privilege> entities) {
-        return super.save(entities);
-    }
-
-    @Override
-    public void delete(Iterable<Privilege> entities) {
-        super.delete(entities);
-    }
 }

@@ -15,20 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.auth.dao;
+package com.entdiy.security.annotation;
 
-import com.entdiy.auth.entity.Department;
-import com.entdiy.core.dao.jpa.BaseDao;
-import org.springframework.data.jpa.repository.QueryHints;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import java.lang.annotation.*;
 
-import javax.persistence.QueryHint;
-import java.util.Optional;
+/**
+ * 基于当前 Shiro 登录会话自动注入当前登录账号对象
+ */
+@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface AuthAccount {
 
-@Repository
-public interface DepartmentDao extends BaseDao<Department, Long> {
+    boolean required() default true;
 
-    @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    Optional<Department> findByCode(@Param("code") String code);
 }

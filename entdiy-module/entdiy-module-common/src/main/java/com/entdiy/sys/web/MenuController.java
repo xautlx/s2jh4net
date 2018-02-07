@@ -22,24 +22,24 @@ import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.service.BaseService;
-import com.entdiy.core.service.Validation;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.MenuService;
 import com.entdiy.sys.vo.NavMenuVO;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -57,22 +57,10 @@ public class MenuController extends BaseController<Menu, Long> {
         return menuService;
     }
 
-    @Override
-    protected Menu buildDetachedBindingEntity(Long id) {
-        return menuService.findDetachedOne(id, "parent");
-    }
-
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        Validation.notDemoMode(request);
-        super.initPrepareModel(request, model, id);
-    }
-
     @MenuData("配置管理:系统管理:菜单配置")
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity Menu entity, Model model) {
         return "admin/sys/menu-index";
     }
 
@@ -94,7 +82,7 @@ public class MenuController extends BaseController<Menu, Long> {
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") Menu entity, Model model) {
+    public OperationResult editSave(@ModelEntity Menu entity, Model model) {
         return super.editSave(entity);
     }
 
@@ -113,14 +101,7 @@ public class MenuController extends BaseController<Menu, Long> {
         List<Map<String, Object>> items = Lists.newArrayList();
         List<NavMenuVO> navMenuVOs = menuService.findAvailableNavMenuVOs();
         for (NavMenuVO navMenuVO : navMenuVOs) {
-            //组装zTree结构数据
-            Map<String, Object> item = Maps.newHashMap();
-            item.put("id", navMenuVO.getId());
-            item.put("pId", navMenuVO.getParentId());
-            item.put("name", navMenuVO.getName());
-            item.put("open", true);
-            item.put("isParent", StringUtils.isBlank(navMenuVO.getUrl()));
-            items.add(item);
+            items.add(navMenuVO.buildMapDataForTreeDisplay());
         }
         return items;
     }

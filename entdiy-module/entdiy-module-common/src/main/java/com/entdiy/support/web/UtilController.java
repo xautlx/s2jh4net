@@ -323,9 +323,15 @@ public class UtilController {
                 attachmentFile.setAbsolutePath(fileInfo.getAbsolutePath());
                 attachmentFileService.save(attachmentFile);
 
+                //以下两个属性用于kindeditor显示之用
                 retMap.put("error", 0);
-                retMap.put("id", attachmentFile.getId());
                 retMap.put("url", ServletUtils.getReadFileUrlPrefix(request) + fileInfo.getRelativePath());
+
+                //业务使用属性
+                retMap.put("id", attachmentFile.getId());
+                retMap.put("relativePath", attachmentFile.getRelativePath());
+                retMap.put("fileRealName", attachmentFile.getFileRealName());
+                retMap.put("fileLength", attachmentFile.getFileLength());
                 return retMap;
             }
         } catch (IOException e) {

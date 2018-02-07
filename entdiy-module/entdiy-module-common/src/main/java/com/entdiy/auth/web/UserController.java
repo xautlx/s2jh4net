@@ -31,6 +31,7 @@ import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.service.Validation;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.service.MenuService;
@@ -41,12 +42,14 @@ import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -77,21 +80,10 @@ public class UserController extends BaseController<User, Long> {
         return userService;
     }
 
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
-
-    @Override
-    protected User buildDetachedBindingEntity(Long id) {
-        return getEntityService().findDetachedOne(id, "userR2Roles");
-    }
-
     @MenuData("配置管理:权限管理:后台用户管理")
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index() {
+    public String index(@ModelEntity User entity, Model model) {
         return "admin/auth/user-index";
     }
 
@@ -103,20 +95,20 @@ public class UserController extends BaseController<User, Long> {
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
-    public String editTabs(HttpServletRequest request) {
+    public String editTabs(@ModelEntity User entity, HttpServletRequest request) {
         return "admin/auth/user-inputTabs";
     }
 
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow(Model model, @ModelAttribute("entity") User entity) {
+    public String editShow(Model model, @ModelEntity User entity) {
         return "admin/auth/user-inputBasic";
     }
 
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") User entity, Model model,
+    public OperationResult editSave(@ModelEntity User entity, Model model,
                                     @RequestParam(value = "rawPassword", required = false) String rawPassword) {
         if (entity.isNew()) {
             Validation.isTrue(StringUtils.isNotBlank(rawPassword), "创建用户必须设置初始密码");
@@ -142,7 +134,7 @@ public class UserController extends BaseController<User, Long> {
 
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/roles", method = RequestMethod.GET)
-    public String roles(@ModelAttribute("entity") User entity, Model model) {
+    public String roles(@ModelEntity(preFectchLazyFields = {"userR2Roles"}) User entity, Model model) {
         Account account = entity.getAccount();
         if (Account.AuthTypeEnum.admin.equals(account.getAuthType()) && GlobalConstant.ROOT_VALUE.equals(account.getAuthUid())) {
             model.addAttribute(GlobalConstant.ROOT_VALUE, true);
@@ -153,10 +145,18 @@ public class UserController extends BaseController<User, Long> {
         return "admin/auth/user-roles";
     }
 
+    @RequiresPermissions("配置管理:权限管理:后台用户管理")
+    @RequestMapping(value = "/roles", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult rolesSave(@ModelEntity(preFectchLazyFields = {"userR2Roles"}) User entity, Model model) {
+        userService.save(entity);
+        return OperationResult.buildSuccessResult("角色关联处理完成", entity);
+    }
+
     @MetaData(value = "汇总用户关联权限集合")
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/privileges", method = RequestMethod.GET)
-    public String privileges(Model model, @ModelAttribute("entity") User entity) {
+    public String privileges(Model model, @ModelEntity(preFectchLazyFields = {"userR2Roles"}) User entity) {
         Set<Long> r2PrivilegeIds = Sets.newHashSet();
         List<Privilege> privileges = privilegeService.findAllCached();
         List<UserR2Role> userR2Roles = entity.getUserR2Roles();
@@ -194,18 +194,11 @@ public class UserController extends BaseController<User, Long> {
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/menus/data", method = RequestMethod.GET)
     @ResponseBody
-    public Object menusData(@ModelAttribute("entity") User entity) {
+    public Object menusData(@ModelEntity(preFectchLazyFields = {"userR2Roles"}) User entity) {
         List<Map<String, Object>> items = Lists.newArrayList();
         List<NavMenuVO> navMenuVOs = menuService.processUserMenu(entity);
         for (NavMenuVO navMenuVO : navMenuVOs) {
-            //组装zTree结构数据
-            Map<String, Object> item = Maps.newHashMap();
-            item.put("id", navMenuVO.getId());
-            item.put("pId", navMenuVO.getParentId());
-            item.put("name", navMenuVO.getName());
-            item.put("open", true);
-            item.put("isParent", StringUtils.isBlank(navMenuVO.getUrl()));
-            items.add(item);
+            items.add(navMenuVO.buildMapDataForTreeDisplay());
         }
         return items;
     }

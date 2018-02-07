@@ -39,6 +39,7 @@ import javax.persistence.criteria.Root;
 import javax.validation.constraints.Size;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -95,6 +96,10 @@ public class MockEntityUtils {
                                 }
                                 value = RandomStringUtils.randomAlphabetic(columnLength);
                             } else if (parameter.isAssignableFrom(Date.class)) {
+                                throw new RuntimeException("Please use LocalData to instead Date.");
+                            } else if (parameter.isAssignableFrom(LocalDate.class)) {
+                                value = DateUtils.currentDateTime().toLocalDate();
+                            } else if (parameter.isAssignableFrom(LocalDateTime.class)) {
                                 value = DateUtils.currentDateTime();
                             } else if (parameter.isAssignableFrom(BigDecimal.class)) {
                                 value = new BigDecimal(10 + new Double(new Random().nextDouble() * 1000).intValue());

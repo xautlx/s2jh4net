@@ -19,7 +19,6 @@ package com.entdiy.core.service;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.dao.jpa.BaseDao;
-import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
@@ -29,14 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.internal.CriteriaImpl;
-import org.hibernate.loader.criteria.CriteriaJoinWalker;
-import org.hibernate.loader.criteria.CriteriaQueryTranslator;
-import org.hibernate.persister.entity.OuterJoinLoadable;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +46,7 @@ import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class BaseService<T extends Persistable<? extends Serializable>, ID extends Serializable> {
 
@@ -88,66 +81,25 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     }
 
     /**
-     * 强制从数据库刷新加载实体对象
-     * 主要用于Spring DATA JPA Modifying操作后强制refresh重新从数据库加载数据
+     * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the
+     * entity instance completely.
      *
-     * @param entity
+     * @param entity must not be {@literal null}.
+     * @return the saved entity will never be {@literal null}.
      */
-    protected void foreceRefreshEntity(Object entity) {
-        entityManager.flush();
-        entityManager.refresh(entity);
+    public <S extends T> S save(S entity) {
+        return getEntityDao().save(entity);
     }
 
     /**
-     * 创建数据保存数据之前额外操作回调方法 默认为空逻辑，子类根据需要覆写添加逻辑即可
+     * Saves all given entities.
      *
-     * @param entity 待创建数据对象
+     * @param entities must not be {@literal null}.
+     * @return the saved entities will never be {@literal null}.
+     * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
-    protected void preInsert(T entity) {
-
-    }
-
-    /**
-     * 更新数据保存数据之前额外操作回调方法 默认为空逻辑，子类根据需要覆写添加逻辑即可
-     *
-     * @param entity 待更新数据对象
-     */
-    protected void preUpdate(T entity) {
-
-    }
-
-    /**
-     * 数据保存操作
-     *
-     * @param entity
-     * @return
-     */
-    public T save(T entity) {
-        if (entity.isNew()) {
-            preInsert(entity);
-        } else {
-            preUpdate(entity);
-        }
-        getEntityDao().save(entity);
-        return entity;
-    }
-
-    /**
-     * 批量数据保存操作 其实现只是简单循环集合每个元素调用 {@link #save(Persistable)}
-     * 因此并无实际的Batch批量处理，如果需要数据库底层批量支持请自行实现
-     *
-     * @param entities 待批量操作数据集合
-     * @return
-     */
-    public List<T> save(Iterable<T> entities) {
-        List<T> result = new ArrayList<T>();
-        if (entities == null) {
-            return result;
-        }
-        for (T entity : entities) {
-            result.add(save(entity));
-        }
-        return result;
+    public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
+        return getEntityDao().saveAll(entities);
     }
 
     /**
@@ -157,60 +109,21 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @return
      */
     @Transactional(readOnly = true)
-    public T findOne(ID id) {
+    public Optional<T> findOne(ID id) {
         Assert.notNull(id, "id is required");
-        return getEntityDao().findById(id).orElse(null);
-    }
-
-    /**
-     * 基于主键查询单一数据对象
-     *
-     * @param id                    主键
-     * @param initLazyPropertyNames 需要预先初始化的lazy集合属性名称
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public T findDetachedOne(ID id, String... initLazyPropertyNames) {
-        Assert.notNull(id, "id is required");
-        Optional<T> entity = getEntityDao().findById(id);
-        entity.ifPresent((value) -> {
-            if (initLazyPropertyNames != null && initLazyPropertyNames.length > 0) {
-                for (String name : initLazyPropertyNames) {
-                    try {
-                        Object propValue = MethodUtils.invokeMethod(value, "get" + StringUtils.capitalize(name));
-                        if (propValue != null && propValue instanceof Collection<?>) {
-                            ((Collection<?>) propValue).size();
-                        } else if (propValue != null && propValue instanceof Persistable<?>) {
-                            ((Persistable<?>) propValue).getId();
-                        }
-                    } catch (Exception e) {
-                        throw new ServiceException("error.init.detached.entity", e);
-                    }
-                }
-            }
-            getEntityManager().detach(value);
-        });
-        return entity.orElse(null);
+        return getEntityDao().findById(id);
     }
 
     /**
      * 基于主键集合查询集合数据对象
      *
      * @param ids 主键集合
-     * @return
+     * @return never {@literal null}.
      */
     @Transactional(readOnly = true)
     public List<T> findAll(final ID... ids) {
-        Assert.isTrue(ids != null && ids.length > 0, "必须提供有效查询主键集合");
-        Specification<T> spec = new Specification<T>() {
-            @Override
-            public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                @SuppressWarnings("rawtypes")
-                Path expression = root.get("id");
-                return expression.in(ids);
-            }
-        };
-        return this.getEntityDao().findAll(spec);
+        Assert.isTrue(ArrayUtils.isNotEmpty(ids), "必须提供有效查询主键集合");
+        return this.getEntityDao().findAll((root, query, builder) -> root.get("id").in(ids));
     }
 
     /**
@@ -230,91 +143,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @return
      */
     public void delete(Iterable<T> entities) {
-        for (T entity : entities) {
-            delete(entity);
-        }
-    }
-
-    /**
-     * 根据泛型对象属性和值查询集合对象
-     *
-     * @param property 属性名，即对象中数量变量名称
-     * @param value    参数值
-     */
-    public List<T> findListByProperty(final String property, final Object value) {
-        Specification<T> spec = new Specification<T>() {
-            @Override
-            public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                @SuppressWarnings("rawtypes")
-                Path expression = root.get(property);
-                return builder.equal(expression, value);
-            }
-        };
-
-        return this.getEntityDao().findAll(spec);
-    }
-
-    /**
-     * 根据泛型对象属性和值查询唯一对象
-     *
-     * @param property 属性名，即对象中数量变量名称
-     * @param value    参数值
-     * @return 未查询到返回null，如果查询到多条数据则抛出异常
-     */
-    public T findByProperty(final String property, final Object value) {
-        List<T> entities = findListByProperty(property, value);
-        if (CollectionUtils.isEmpty(entities)) {
-            return null;
-        } else {
-            Assert.isTrue(entities.size() == 1);
-            return entities.get(0);
-        }
-    }
-
-    /**
-     * 根据泛型对象属性和值查询唯一对象
-     *
-     * @param property 属性名，即对象中数量变量名称
-     * @param value    参数值
-     * @return 未查询到返回null，如果查询到多条数据则返回第一条
-     */
-    public T findFirstByProperty(final String property, final Object value) {
-        List<T> entities = findListByProperty(property, value);
-        if (CollectionUtils.isEmpty(entities)) {
-            return null;
-        } else {
-            return entities.get(0);
-        }
-    }
-
-    /**
-     * 通用的对象属性和值查询接口，根据泛型参数确定返回类型数据
-     *
-     * @param baseDao  泛型参数对象DAO接口
-     * @param property 属性名，即对象中数量变量名称
-     * @param value    参数值
-     * @return 未查询到返回null，如果查询到多条数据则抛出异常
-     */
-    public <X> X findByProperty(BaseDao<X, ID> baseDao, final String property, final Object value) {
-        Specification<X> spec = new Specification<X>() {
-            @Override
-            public Predicate toPredicate(Root<X> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                String[] names = StringUtils.split(property, ".");
-                @SuppressWarnings("rawtypes")
-                Path expression = root.get(names[0]);
-                for (int i = 1; i < names.length; i++) {
-                    expression = expression.get(names[i]);
-                }
-                return builder.equal(expression, value);
-            }
-        };
-        List<X> entities = baseDao.findAll(spec);
-        if (CollectionUtils.isEmpty(entities)) {
-            return null;
-        } else {
-            Assert.isTrue(entities.size() == 1);
-            return entities.get(0);
-        }
+        Optional.ofNullable(entities).ifPresent(items -> items.forEach(item -> delete(item)));
     }
 
     /**
@@ -383,7 +212,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      */
     @Transactional(readOnly = true)
     public List<T> findByFilters(GroupPropertyFilter groupPropertyFilter, Sort sort, int limit) {
-        Pageable pageable = new PageRequest(0, limit, sort);
+        Pageable pageable = PageRequest.of(0, limit, sort);
         return findByPage(groupPropertyFilter, pageable).getContent();
     }
 
@@ -398,21 +227,6 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     public Page<T> findByPage(GroupPropertyFilter groupPropertyFilter, Pageable pageable) {
         Specification<T> specifications = buildSpecification(groupPropertyFilter);
         return getEntityDao().findAll(specifications, pageable);
-    }
-
-    public String toSql(Criteria criteria) {
-        CriteriaImpl criteriaImpl = (CriteriaImpl) criteria;
-        SharedSessionContractImplementor session = criteriaImpl.getSession();
-        SessionFactoryImplementor factory = session.getFactory();
-        CriteriaQueryTranslator translator = new CriteriaQueryTranslator(factory, criteriaImpl, criteriaImpl.getEntityOrClassName(),
-                CriteriaQueryTranslator.ROOT_SQL_ALIAS);
-        String[] implementors = factory.getImplementors(criteriaImpl.getEntityOrClassName());
-
-        CriteriaJoinWalker walker = new CriteriaJoinWalker((OuterJoinLoadable) factory.getEntityPersister(implementors[0]), translator, factory,
-                criteriaImpl, criteriaImpl.getEntityOrClassName(), session.getLoadQueryInfluencers());
-
-        String sql = walker.getSQLString();
-        return sql;
     }
 
     private class GroupAggregateProperty {
@@ -1111,12 +925,6 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
             parsed[i++] = path;
         }
         return parsed;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    @Transactional(readOnly = true)
-    public Object findEntity(Class entityClass, Serializable id) {
-        return getEntityManager().find(entityClass, id);
     }
 
     public void detach(Object entity) {

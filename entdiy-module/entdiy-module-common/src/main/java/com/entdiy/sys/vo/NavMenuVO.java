@@ -18,10 +18,13 @@
 package com.entdiy.sys.vo;
 
 import com.entdiy.core.annotation.MetaData;
+import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -52,4 +55,16 @@ public class NavMenuVO implements Serializable {
 
     @MetaData(value = "展开标识", tooltips = "是否默认展开菜单组")
     private Boolean initOpen = Boolean.FALSE;
+
+    public Map<String, Object> buildMapDataForTreeDisplay() {
+        //组装zTree结构数据
+        Map<String, Object> item = Maps.newHashMap();
+        item.put("id", this.getId());
+        item.put("parent", this.getParentId());
+        item.put("name", this.getName());
+        item.put("display", this.getName());
+        item.put("open", true);
+        item.put("enabledChildrenCount", StringUtils.isBlank(this.getUrl()) ? 1 : 0);
+        return item;
+    }
 }

@@ -32,7 +32,6 @@ import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.DateUtils;
-import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
@@ -54,8 +53,10 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -87,13 +88,6 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
     @Override
     protected BaseService<MockEntity, Long> getEntityService() {
         return null;
-    }
-
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        //只允许在开发模式下访问
-        Assert.isTrue(AppContextHolder.isDevMode());
-        super.initPrepareModel(request, model, id);
     }
 
     @MenuData("演示样例:UI组件集合")
@@ -140,9 +134,9 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
         entity.setSelectedIds(new Long[]{2L, 3L});
         entity.setTextContent("分类DDD");
         entity.setSplitText("标签AAA,选项CCC");
-        entity.setDepartment(departmentService.findByProperty("code", "YF02"));
-        entity.setDepartments(Lists.newArrayList(departmentService.findByProperty("code", "YF02"),
-                departmentService.findByProperty("code", "SC03")));
+        entity.setDepartment(departmentService.findByCode("YF02").get());
+        entity.setDepartments(Lists.newArrayList(departmentService.findByCode("YF02").get(),
+                departmentService.findByCode("SC03").get()));
         model.addAttribute("entity", entity);
 
         //构造用于remote类型select元素的初始化显示option数据项

@@ -36,7 +36,7 @@
 
                 <prop key="hibernate.cache.use_query_cache">true</prop>
                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
-                <prop key="hibernate.cache.region_prefix">hibernate</prop>
+                <prop key="hibernate.cache.region_prefix">hibernate_${build.version}</prop>
                 <prop key="hibernate.cache.use_structured_entries">true</prop>
                 <prop key="hibernate.generate_statistics">false</prop>
                 <prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>

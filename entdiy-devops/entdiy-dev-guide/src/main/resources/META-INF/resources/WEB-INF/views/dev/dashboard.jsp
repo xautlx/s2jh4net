@@ -10,19 +10,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="list-group">
+                <a class="list-group-item" href="#/dev/demo/all-in-one/index" data-path="演示样例:UI组件集合">
+                    <h4 class="list-group-item-heading">
+                        <i class="icon-puzzle"></i>
+                        All-In-One UI组件展示及用法示例
+                    </h4>
+                    <p class="list-group-item-text">针对典型的UI组件，提供一个基本的用法示意参考，结合对应的JSDoc文档了解相关UI组件的用法和支持的功能属性。</p>
+                </a>
                 <a class="list-group-item" href="dev/docs/markdown/README.md" target="_blank">
                     <h4 class="list-group-item-heading">
                         <i class="fa fa-file-text-o"></i>
                         开发框架介绍与开发指南
                     </h4>
                     <p class="list-group-item-text">对整个开发框架整体的设计说明和开发指南。</p>
-                </a>
-                <a class="list-group-item" href="#/dev/demo/all-in-one/index" data-path="演示样例:UI组件集合">
-                    <h4 class="list-group-item-heading">
-                        <i class="icon-puzzle"></i>
-                        UI组件用法示例
-                    </h4>
-                    <p class="list-group-item-text">针对典型的UI组件，提供一个基本的用法示意参考，结合对应的JSDoc文档了解相关UI组件的用法和支持的功能属性。</p>
                 </a>
                 <a class="list-group-item" href="dev/docs/jsdoc/index.html" target="_blank">
                     <h4 class="list-group-item-heading">

@@ -17,11 +17,13 @@
  */
 package com.entdiy.support.web;
 
+import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.security.DefaultAuthUserDetails;
+import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.support.service.MailService;
 import com.entdiy.sys.service.MenuService;
 import com.entdiy.sys.vo.NavMenuVO;
@@ -93,8 +95,8 @@ public class AdminController {
      */
     @RequestMapping(value = "/admin/menus", method = RequestMethod.GET)
     @ResponseBody
-    public List<NavMenuVO> navMenu() {
-        User user = userService.findCurrentAuthUser();
+    public List<NavMenuVO> navMenu(@AuthAccount Account account) {
+        User user = userService.findByAccount(account);
         //如果未登录则直接返回空
         if (user == null) {
             return Lists.newArrayList();

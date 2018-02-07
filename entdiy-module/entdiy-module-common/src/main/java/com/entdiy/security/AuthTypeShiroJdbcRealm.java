@@ -33,6 +33,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
 
@@ -82,36 +83,37 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
         DefaultAuthUserDetails authUserDetails = (DefaultAuthUserDetails) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
-        Account account = accountService.findOne(authUserDetails.getAccountId());
-        //管理端类型用户添加角色权限处理
-        if (Account.AuthTypeEnum.admin.equals(account.getAuthType())) {
-            User user = userService.findByAccount(account);
+        Optional<Account> account = accountService.findOne(authUserDetails.getAccountId());
+        account.ifPresent(one -> {
+            //管理端类型用户添加角色权限处理
+            if (Account.AuthTypeEnum.admin.equals(one.getAuthType())) {
+                User user = userService.findByAccount(one);
 
-            //管理端登录来源
-            info.addRole(DefaultAuthUserDetails.ROLE_MGMT_USER);
+                //管理端登录来源
+                info.addRole(DefaultAuthUserDetails.ROLE_MGMT_USER);
 
-            //查询用户角色列表
-            List<Role> userRoles = userService.findRoles(user);
-            for (Role role : userRoles) {
-                info.addRole(role.getCode());
-            }
+                //查询用户角色列表
+                List<Role> userRoles = userService.findRoles(user);
+                for (Role role : userRoles) {
+                    info.addRole(role.getCode());
+                }
 
-            //超级管理员特殊处理
-            for (String role : info.getRoles()) {
-                if (DefaultAuthUserDetails.ROLE_SUPER_USER.equals(role)) {
-                    //追加超级权限配置
-                    info.addStringPermission("*");
-                    break;
+                //超级管理员特殊处理
+                for (String role : info.getRoles()) {
+                    if (DefaultAuthUserDetails.ROLE_SUPER_USER.equals(role)) {
+                        //追加超级权限配置
+                        info.addStringPermission("*");
+                        break;
+                    }
+                }
+
+                //基于当前用户所有角色集合获取有效的权限集合
+                List<Privilege> privileges = userService.findPrivileges(info.getRoles());
+                for (Privilege privilege : privileges) {
+                    info.addStringPermission(privilege.getCode());
                 }
             }
-
-            //基于当前用户所有角色集合获取有效的权限集合
-            List<Privilege> privileges = userService.findPrivileges(info.getRoles());
-            for (Privilege privilege : privileges) {
-                info.addStringPermission(privilege.getCode());
-            }
-        }
-
+        });
         return info;
     }
 

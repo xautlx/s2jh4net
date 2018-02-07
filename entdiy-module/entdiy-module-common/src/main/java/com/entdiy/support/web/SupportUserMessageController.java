@@ -17,6 +17,7 @@
  */
 package com.entdiy.support.web;
 
+import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
@@ -24,6 +25,7 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
+import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.sys.entity.UserMessage;
 import com.entdiy.sys.service.UserMessageService;
 import org.apache.commons.lang3.BooleanUtils;
@@ -59,15 +61,15 @@ public class SupportUserMessageController {
     @MetaData("用户未读消息数目")
     @RequestMapping(value = "/admin/user-message/count", method = RequestMethod.GET)
     @ResponseBody
-    public OperationResult userMessageCount() {
-        User user = userService.findCurrentAuthUser();
+    public OperationResult userMessageCount(@AuthAccount Account account) {
+        User user = userService.findByAccount(account);
         return OperationResult.buildSuccessResult(userMessageService.findCountToRead(user));
     }
 
     @MetaData("个人消息列表")
     @RequestMapping(value = "/admin/profile/user-message-list", method = RequestMethod.GET)
-    public String userMessageList(HttpServletRequest request, Model model) {
-        User user = userService.findCurrentAuthUser();
+    public String userMessageList(@AuthAccount Account account, HttpServletRequest request, Model model) {
+        User user = userService.findByAccount(account);
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
         GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(UserMessage.class, request);
         groupFilter.append(new PropertyFilter(PropertyFilter.MatchType.EQ, "targetUser", user));
@@ -86,11 +88,12 @@ public class SupportUserMessageController {
 
     @MetaData("个人消息读取")
     @RequestMapping(value = "/admin/profile/user-message-view/{messageId}", method = RequestMethod.GET)
-    public String userMessageView(@PathVariable("messageId") Long messageId, Model model) {
-        User user = userService.findCurrentAuthUser();
-        UserMessage userMessage = userMessageService.findOne(messageId);
-        userMessageService.processUserRead(userMessage, user);
-        model.addAttribute("userMessage", userMessage);
+    public String userMessageView(@AuthAccount Account account, @PathVariable("messageId") Long messageId, Model model) {
+        User user = userService.findByAccount(account);
+        userMessageService.findOne(messageId).ifPresent(one -> {
+            userMessageService.processUserRead(one, user);
+            model.addAttribute("userMessage", one);
+        });
         return "admin/profile/userMessage-view";
     }
 }

@@ -22,6 +22,7 @@ import com.entdiy.auth.entity.User;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.util.DateUtils;
+import com.entdiy.sys.entity.AttachmentFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,6 +47,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Audited
 public class DemoReimbursementRequest extends BaseNativeEntity {
+
     @MetaData(value = "登录账号对象")
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id", nullable = false)
@@ -58,6 +61,10 @@ public class DemoReimbursementRequest extends BaseNativeEntity {
     @MetaData(value = "报销类型", comments = "没有什么实际业务含义，主要用于演示下拉类型数据处理")
     @Column(nullable = false, length = 128)
     private String useType;
+
+    @MetaData(value = "总计金额")
+    @Column(nullable = false)
+    private BigDecimal totalInvoiceAmount;
 
     @MetaData(value = "提交时间")
     @Column(nullable = false)
@@ -75,4 +82,8 @@ public class DemoReimbursementRequest extends BaseNativeEntity {
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @JsonIgnore
     private List<DemoReimbursementRequestItem> reimbursementRequestItems;
+
+    @Transient
+    @JsonIgnore
+    private List<AttachmentFile> receiptAttachmentFiles;
 }

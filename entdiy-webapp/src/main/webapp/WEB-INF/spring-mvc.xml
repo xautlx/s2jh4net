@@ -74,6 +74,10 @@
     </bean>
 
     <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+        <mvc:argument-resolvers>
+            <bean class="com.entdiy.security.method.AuthAccountMethodProcessor"/>
+            <bean class="com.entdiy.core.web.method.ModelEntityMethodProcessor"/>
+        </mvc:argument-resolvers>
         <mvc:message-converters register-defaults="true">
             <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -86,6 +90,7 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
 
     <bean class="com.entdiy.core.web.exception.AnnotationHandlerMethodExceptionResolver">
         <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
@@ -125,4 +130,7 @@
         <property name="securityManager" ref="securityManager"/>
     </bean>
     <!-- end -->
+
+    <!-- 对@Controller类注解元数据定制处理 -->
+    <bean class="com.entdiy.support.data.ControllerMetaDataPostProcessor"/>
 </beans>

@@ -26,6 +26,7 @@ import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -33,7 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,15 +53,10 @@ public class SendMessageLogController extends BaseController<SendMessageLog, Lon
         return sendMessageLogService;
     }
 
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
-    }
-
     @MenuData("配置管理:系统记录:发送消息记录")
     @RequiresPermissions("配置管理:系统记录:发送消息记录")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity SendMessageLog entity, Model model) {
         model.addAttribute("messageTypeJson", JsonUtils.writeValueAsString(EnumUtils.getEnumDataMap(SendMessageTypeEnum.class)));
         return "admin/aud/sendMessageLog-index";
     }

@@ -121,16 +121,18 @@ public class MenuService extends BaseService<Menu, Long> {
         List<UserR2Role> userR2Roles = user.getUserR2Roles();
         Set<String> userRoles = Sets.newHashSet();
         Set<String> userPrivileges = Sets.newHashSet();
-        for (UserR2Role userR2Role : userR2Roles) {
-            Role role = userR2Role.getRole();
-            //如果是超级管理员直接返回所有有效菜单
-            if (role.getCode().equals(DefaultAuthUserDetails.ROLE_SUPER_USER)) {
-                return navMenuVOs;
-            }
-            userRoles.add(role.getCode());
-            List<RoleR2Privilege> roleR2Privileges = role.getRoleR2Privileges();
-            for (RoleR2Privilege roleR2Privilege : roleR2Privileges) {
-                userPrivileges.add(roleR2Privilege.getPrivilege().getCode());
+        if (userR2Roles != null) {
+            for (UserR2Role userR2Role : userR2Roles) {
+                Role role = userR2Role.getRole();
+                //如果是超级管理员直接返回所有有效菜单
+                if (role.getCode().equals(DefaultAuthUserDetails.ROLE_SUPER_USER)) {
+                    return navMenuVOs;
+                }
+                userRoles.add(role.getCode());
+                List<RoleR2Privilege> roleR2Privileges = role.getRoleR2Privileges();
+                for (RoleR2Privilege roleR2Privilege : roleR2Privileges) {
+                    userPrivileges.add(roleR2Privilege.getPrivilege().getCode());
+                }
             }
         }
         //追加管理端默认角色
@@ -140,7 +142,7 @@ public class MenuService extends BaseService<Menu, Long> {
 
         //计算用户有访问权限的菜单列表
         for (NavMenuVO navMenuVO : navMenuVOs) {
-            Menu menu = findOne(navMenuVO.getId());
+            Menu menu = findOne(navMenuVO.getId()).get();
             if (StringUtils.isNotBlank(menu.getUrl())) {
                 Method mappingMethod = menu.getMappingMethod();
                 if (mappingMethod != null) {

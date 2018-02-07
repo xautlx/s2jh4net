@@ -23,12 +23,12 @@ import com.entdiy.core.web.BaseController;
 import com.entdiy.schedule.entity.JobRunHist;
 import com.entdiy.schedule.service.JobRunHistService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,11 +62,5 @@ public class JobRunHistController extends BaseController<JobRunHist, Long> {
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String htmlPreview() {
         return "admin/schedule/jobRunHist-view";
-    }
-
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
     }
 }

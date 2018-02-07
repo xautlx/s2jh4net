@@ -24,16 +24,19 @@ import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.service.DataDictService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -53,7 +56,7 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @MenuData("配置管理:系统管理:数据字典")
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(@ModelEntity DataDict entity, Model model) {
         return "admin/sys/dataDict-index";
     }
 
@@ -74,14 +77,14 @@ public class DataDictController extends BaseController<DataDict, Long> {
 
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow() {
+    public String editShow(@ModelEntity DataDict entity) {
         return "admin/sys/dataDict-inputBasic";
     }
 
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelAttribute("entity") DataDict entity, Model model) {
+    public OperationResult editSave(@ModelEntity DataDict entity, Model model) {
         return super.editSave(entity);
     }
 
@@ -91,12 +94,6 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @Override
     public OperationResult delete(@RequestParam("ids") Long... ids) {
         return super.delete(ids);
-    }
-
-    @RequiresUser
-    @ModelAttribute
-    public void prepareModel(HttpServletRequest request, Model model, @RequestParam(value = "id", required = false) Long id) {
-        super.initPrepareModel(request, model, id);
     }
 
     @MetaData(value = "级联子数据集合")

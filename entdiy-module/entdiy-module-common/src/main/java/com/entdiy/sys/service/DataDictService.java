@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,6 +50,10 @@ public class DataDictService extends BaseService<DataDict, Long> {
     @Transactional(readOnly = true)
     public List<DataDict> findAllCached() {
         return dataDictDao.findAllCached();
+    }
+
+    public Optional<DataDict> findByRootPrimaryKey(String primaryKey) {
+        return dataDictDao.findByRootPrimaryKey(primaryKey);
     }
 
     /**
@@ -97,21 +102,19 @@ public class DataDictService extends BaseService<DataDict, Long> {
         return findChildrens(dataDictDao.findByRootPrimaryKey(primaryKey), withFlatChildren);
     }
 
-    private List<DataDict> findChildrens(DataDict parent, boolean withFlatChildren) {
-        if (parent == null) {
-            return null;
-        }
-        List<DataDict> roots = dataDictDao.findEnabledChildrenByParentId(parent.getId());
-        if (withFlatChildren) {
-            List<DataDict> dataDicts = Lists.newArrayList(roots);
-            for (DataDict dataDict : roots) {
-                List<DataDict> chidren = dataDictDao.findEnabledChildrenByParentId(dataDict.getId());
-                dataDicts.addAll(chidren);
+    private List<DataDict> findChildrens(Optional<DataDict> parent, boolean withFlatChildren) {
+        List<DataDict> dataDicts = Lists.newArrayList();
+        parent.ifPresent(one -> {
+            List<DataDict> roots = dataDictDao.findEnabledChildrenByParentId(one.getId());
+            dataDicts.addAll(roots);
+            if (withFlatChildren) {
+                for (DataDict dataDict : roots) {
+                    List<DataDict> chidren = dataDictDao.findEnabledChildrenByParentId(dataDict.getId());
+                    dataDicts.addAll(chidren);
+                }
             }
-            return dataDicts;
-        } else {
-            return roots;
-        }
+        });
+        return dataDicts;
     }
 
     /**
@@ -151,7 +154,7 @@ public class DataDictService extends BaseService<DataDict, Long> {
         return findMapDatas(dataDictDao.findByRootPrimaryKey(primaryKey), withFlatChildren);
     }
 
-    private Map<String, String> findMapDatas(DataDict parent, boolean withFlatChildren) {
+    private Map<String, String> findMapDatas(Optional<DataDict> parent, boolean withFlatChildren) {
         Map<String, String> dataMap = Maps.newLinkedHashMap();
         List<DataDict> dataDicts = findChildrens(parent, withFlatChildren);
         if (dataDicts != null) {

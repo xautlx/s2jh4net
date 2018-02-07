@@ -18,7 +18,6 @@
 package com.entdiy.support.service;
 
 import com.entdiy.core.context.SpringPropertiesHolder;
-import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.service.ConfigPropertyService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
@@ -54,10 +53,7 @@ public class DynamicConfigService {
         String val = null;
         //cfg打头参数，首先从数据库取值
         if (key.startsWith("cfg")) {
-            ConfigProperty cfg = configPropertyService.findByPropKey(key);
-            if (cfg != null) {
-                val = cfg.getSimpleValue();
-            }
+            val = configPropertyService.findByPropKey(key).map(one -> one.getSimpleValue()).orElse(null);
         }
 
         //从环境变量获取
