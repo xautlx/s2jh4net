@@ -17,7 +17,6 @@
  */
 package com.entdiy.dev.demo.service;
 
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.dev.demo.dao.DemoReimbursementRequestDao;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
@@ -32,8 +31,4 @@ public class DemoReimbursementRequestService extends BaseService<DemoReimburseme
     @Autowired
     private DemoReimbursementRequestDao reimbursementRequestDao;
 
-    @Override
-    protected BaseDao<DemoReimbursementRequest, Long> getEntityDao() {
-        return reimbursementRequestDao;
-    }
 }

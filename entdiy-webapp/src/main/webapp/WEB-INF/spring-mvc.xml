@@ -77,6 +77,8 @@
         <mvc:argument-resolvers>
             <bean class="com.entdiy.security.method.AuthAccountMethodProcessor"/>
             <bean class="com.entdiy.core.web.method.ModelEntityMethodProcessor"/>
+            <bean class="com.entdiy.core.web.method.ModelPropertyFilterMethodProcessor"/>
+            <bean class="com.entdiy.core.web.method.ModelPageableRequestMethodProcessor"/>
         </mvc:argument-resolvers>
         <mvc:message-converters register-defaults="true">
             <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->

@@ -54,11 +54,6 @@ public class NotifyMessageService extends BaseService<NotifyMessage, Long> {
     @Autowired(required = false)
     private MessagePushService messagePushService;
 
-    @Override
-    protected BaseDao<NotifyMessage, Long> getEntityDao() {
-        return notifyMessageDao;
-    }
-
     /**
      * 查询用户未读公告消息个数
      *

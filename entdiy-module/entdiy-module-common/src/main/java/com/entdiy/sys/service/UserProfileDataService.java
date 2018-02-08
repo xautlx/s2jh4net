@@ -17,20 +17,17 @@
  */
 package com.entdiy.sys.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.entdiy.auth.entity.User;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.sys.dao.UserProfileDataDao;
 import com.entdiy.sys.entity.UserProfileData;
-
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -38,11 +35,6 @@ public class UserProfileDataService extends BaseService<UserProfileData, Long> {
 
     @Autowired
     private UserProfileDataDao userProfileDataDao;
-
-    @Override
-    protected BaseDao<UserProfileData, Long> getEntityDao() {
-        return userProfileDataDao;
-    }
 
     @Transactional(readOnly = true)
     public UserProfileData findByUserAndCode(User user, String code) {

@@ -21,7 +21,6 @@ import com.entdiy.auth.dao.RoleDao;
 import com.entdiy.auth.entity.Role;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.entity.UserR2Role;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +35,6 @@ public class RoleService extends BaseService<Role, Long> {
 
     @Autowired
     private RoleDao roleDao;
-
-    @Override
-    protected BaseDao<Role, Long> getEntityDao() {
-        return roleDao;
-    }
 
     @Transactional(readOnly = true)
     public List<Role> findAllCached() {

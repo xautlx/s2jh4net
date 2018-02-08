@@ -17,17 +17,15 @@
  */
 package com.entdiy.core.validation.impl;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.entdiy.core.validation.FormattedDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Assert;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import com.entdiy.core.validation.FormattedDate;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FormattedDateValidator implements ConstraintValidator<FormattedDate, Object> {
 
@@ -38,20 +36,20 @@ public class FormattedDateValidator implements ConstraintValidator<FormattedDate
         this.pattern = formattedDate.pattern();
         if (StringUtils.isBlank(this.pattern)) {
             switch (formattedDate.iso()) {
-            case DATE:
-                this.pattern = "yyyy-MM-dd";
-                break;
-            case TIME:
-                this.pattern = "hh:mm:ss";
-                break;
-            case DATE_TIME:
-                this.pattern = "yyyy-MM-dd hh:mm:ss";
-                break;
-            default:
-                break;
+                case DATE:
+                    this.pattern = "yyyy-MM-dd";
+                    break;
+                case TIME:
+                    this.pattern = "hh:mm:ss";
+                    break;
+                case DATE_TIME:
+                    this.pattern = "yyyy-MM-dd hh:mm:ss";
+                    break;
+                default:
+                    break;
             }
         }
-        Assert.notNull(this.pattern);
+        Assert.notNull(this.pattern, "pattern is required");
     }
 
     @Override

@@ -21,7 +21,6 @@ import com.entdiy.auth.entity.Role;
 import com.entdiy.auth.entity.RoleR2Privilege;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.entity.UserR2Role;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.dao.MenuDao;
@@ -52,11 +51,6 @@ public class MenuService extends BaseService<Menu, Long> {
 
     @Autowired
     private MenuDao menuDao;
-
-    @Override
-    protected BaseDao<Menu, Long> getEntityDao() {
-        return menuDao;
-    }
 
     @Transactional(readOnly = true)
     public List<Menu> findAllCached() {

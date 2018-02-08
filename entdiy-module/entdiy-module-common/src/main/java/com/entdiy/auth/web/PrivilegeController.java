@@ -20,7 +20,6 @@ package com.entdiy.auth.web;
 import com.entdiy.auth.entity.Privilege;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.core.annotation.MenuData;
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -39,11 +38,6 @@ public class PrivilegeController extends BaseController<Privilege, Long> {
 
     @Autowired
     private PrivilegeService privilegeService;
-
-    @Override
-    protected BaseService<Privilege, Long> getEntityService() {
-        return privilegeService;
-    }
 
     @MenuData("配置管理:权限管理:权限配置")
     @RequiresPermissions("配置管理:权限管理:权限配置")

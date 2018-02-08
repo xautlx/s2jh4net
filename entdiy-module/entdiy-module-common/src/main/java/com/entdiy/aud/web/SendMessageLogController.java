@@ -22,23 +22,24 @@ import com.entdiy.aud.entity.SendMessageLog.SendMessageTypeEnum;
 import com.entdiy.aud.service.SendMessageLogService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 @MetaData("发送消息记录管理")
 @Controller
@@ -47,11 +48,6 @@ public class SendMessageLogController extends BaseController<SendMessageLog, Lon
 
     @Autowired
     private SendMessageLogService sendMessageLogService;
-
-    @Override
-    protected BaseService<SendMessageLog, Long> getEntityService() {
-        return sendMessageLogService;
-    }
 
     @MenuData("配置管理:系统记录:发送消息记录")
     @RequiresPermissions("配置管理:系统记录:发送消息记录")
@@ -65,8 +61,9 @@ public class SendMessageLogController extends BaseController<SendMessageLog, Lon
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<SendMessageLog> findByPage(HttpServletRequest request) {
-        return super.findByPage(SendMessageLog.class, request);
+    public Page<SendMessageLog> findByPage(@ModelPropertyFilter(SendMessageLog.class) GroupPropertyFilter filter,
+                                         @ModelPageableRequest Pageable pageable) {
+        return sendMessageLogService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统记录:发送消息记录")

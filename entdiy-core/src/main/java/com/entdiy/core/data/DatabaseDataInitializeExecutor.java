@@ -18,6 +18,7 @@
 package com.entdiy.core.data;
 
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.web.AppContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -26,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -56,7 +56,7 @@ public class DatabaseDataInitializeExecutor {
     protected EntityManager entityManager;
 
     @Autowired
-    private PlatformTransactionManager transactionManager;
+    private TransactionTemplate transactionTemplate;
 
 
     @Value("${auto.data.skip:false}")
@@ -70,6 +70,11 @@ public class DatabaseDataInitializeExecutor {
         if (autoDataSkip) {
             logger.info("Auto data skipped.");
             return;
+        }
+
+        //开发模式先清空所有缓存数据
+        if (AppContextHolder.isDevMode() || AppContextHolder.isDemoMode()) {
+            entityManager.getEntityManagerFactory().getCache().evictAll();
         }
 
         {
@@ -90,7 +95,6 @@ public class DatabaseDataInitializeExecutor {
         CountThread countThread = new CountThread();
         countThread.start();
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         for (AbstractDatabaseDataInitializeProcessor initializeProcessor : initializeProcessors) {
             logger.debug("Invoking data initialize for {}", initializeProcessor);
             countThread.update(initializeProcessor.getClass());

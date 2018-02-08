@@ -21,9 +21,10 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.Menu;
@@ -34,6 +35,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -52,11 +53,6 @@ public class MenuController extends BaseController<Menu, Long> {
     @Autowired
     private MenuService menuService;
 
-    @Override
-    protected BaseService<Menu, Long> getEntityService() {
-        return menuService;
-    }
-
     @MenuData("配置管理:系统管理:菜单配置")
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -64,19 +60,15 @@ public class MenuController extends BaseController<Menu, Long> {
         return "admin/sys/menu-index";
     }
 
-    @Override
-    protected void appendFilterProperty(GroupPropertyFilter groupPropertyFilter) {
-        if (groupPropertyFilter.isEmptySearch()) {
-            groupPropertyFilter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
-        }
-        super.appendFilterProperty(groupPropertyFilter);
-    }
-
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<Menu> findByPage(HttpServletRequest request) {
-        return super.findByPage(Menu.class, request);
+    public Page<Menu> findByPage(@ModelPropertyFilter(Menu.class) GroupPropertyFilter filter,
+                                     @ModelPageableRequest Pageable pageable) {
+        if (filter.isEmptySearch()) {
+            filter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
+        }
+        return menuService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统管理:菜单配置")

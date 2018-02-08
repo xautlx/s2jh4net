@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * 数据库数据初始化处理基类
@@ -65,26 +64,6 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
         } finally {
             IOUtils.closeQuietly(is);
         }
-    }
-
-    protected int executeNativeSQL(String sql) {
-        return entityManager.createNativeQuery(sql).executeUpdate();
-    }
-
-    /**
-     * 查询整个数据对象表
-     */
-    @SuppressWarnings("unchecked")
-    protected <X> List<X> findAll(Class<X> entity) {
-        return entityManager.createQuery("from " + entity.getSimpleName()).getResultList();
-    }
-
-    /**
-     * 获取表数据总记录数
-     */
-    protected int countTable(Class<?> entity) {
-        Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
-        return Integer.valueOf(String.valueOf(count));
     }
 
     /**

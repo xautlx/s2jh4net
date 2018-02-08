@@ -17,7 +17,6 @@
  */
 package com.entdiy.sys.web;
 
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.service.AttachmentFileService;
@@ -31,11 +30,5 @@ public class AttachmentFileController extends BaseController<AttachmentFile, Str
 
     @Autowired
     private AttachmentFileService attachmentFileService;
-
-    @Override
-    protected BaseService<AttachmentFile, String> getEntityService() {
-        return attachmentFileService;
-    }
-
 
 }

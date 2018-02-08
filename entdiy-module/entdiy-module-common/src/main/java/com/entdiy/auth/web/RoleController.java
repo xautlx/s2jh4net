@@ -22,9 +22,11 @@ import com.entdiy.auth.entity.RoleR2Privilege;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.core.annotation.MenuData;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,11 +56,6 @@ public class RoleController extends BaseController<Role, Long> {
     @Autowired
     private PrivilegeService privilegeService;
 
-    @Override
-    protected BaseService<Role, Long> getEntityService() {
-        return roleService;
-    }
-
     @MenuData("配置管理:权限管理:角色配置")
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -68,8 +66,9 @@ public class RoleController extends BaseController<Role, Long> {
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<Role> findByPage(HttpServletRequest request) {
-        return super.findByPage(Role.class, request);
+    public Page<Role> findByPage(@ModelPropertyFilter(Role.class) GroupPropertyFilter filter,
+                                 @ModelPageableRequest Pageable pageable) {
+        return roleService.findByPage(filter,pageable);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)

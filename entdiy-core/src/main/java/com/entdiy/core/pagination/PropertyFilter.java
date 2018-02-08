@@ -19,6 +19,7 @@ package com.entdiy.core.pagination;
 
 import com.entdiy.core.util.reflection.ConvertUtils;
 import com.entdiy.core.web.json.JsonViews;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -545,7 +546,6 @@ public class PropertyFilter {
      *
      * @param request
      * @param sort        如果传入参数为null，则从request构建，否则直接取输入sort参数
-     * @param defaultRows 如果request中未提供rows参数时默认记录数
      * @return
      */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort) {
@@ -678,9 +678,8 @@ public class PropertyFilter {
 
     private static Map<String, String[]> getParametersStartingWith(ServletRequest request, String prefix, String suffix) {
         Assert.notNull(request, "Request must not be null");
-        @SuppressWarnings("rawtypes")
         Enumeration paramNames = request.getParameterNames();
-        Map<String, String[]> params = new TreeMap<String, String[]>();
+        Map<String, String[]> params = Maps.newTreeMap();
         if (prefix == null) {
             prefix = "";
         }

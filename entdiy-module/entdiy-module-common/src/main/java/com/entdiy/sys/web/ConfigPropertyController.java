@@ -19,15 +19,18 @@ package com.entdiy.sys.web;
 
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.service.ConfigPropertyService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,11 +47,6 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @Autowired
     private ConfigPropertyService configPropertyService;
 
-    @Override
-    protected BaseService<ConfigProperty, Long> getEntityService() {
-        return configPropertyService;
-    }
-
     @MenuData("配置管理:系统管理:参数配置")
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -59,8 +57,9 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<ConfigProperty> findByPage(HttpServletRequest request) {
-        return super.findByPage(ConfigProperty.class, request);
+    public Page<ConfigProperty> findByPage(@ModelPropertyFilter(ConfigProperty.class) GroupPropertyFilter filter,
+                                           @ModelPageableRequest Pageable pageable) {
+        return configPropertyService.findByPage(filter,pageable);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)

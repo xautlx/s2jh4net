@@ -22,7 +22,6 @@ import com.entdiy.auth.dao.RoleDao;
 import com.entdiy.auth.dao.RoleR2PrivilegeDao;
 import com.entdiy.auth.entity.Privilege;
 import com.entdiy.auth.entity.RoleR2Privilege;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +50,6 @@ public class PrivilegeService extends BaseService<Privilege, Long> {
 
     @Value("${auth.control.level}")
     private String authControlLevel;
-
-    @Override
-    protected BaseDao<Privilege, Long> getEntityDao() {
-        return privilegeDao;
-    }
 
     @Transactional(readOnly = true)
     public List<Privilege> findAllCached() {

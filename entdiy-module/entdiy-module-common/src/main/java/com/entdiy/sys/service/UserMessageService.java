@@ -18,7 +18,6 @@
 package com.entdiy.sys.service;
 
 import com.entdiy.auth.entity.User;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
@@ -54,11 +53,6 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
 
     @Autowired(required = false)
     private MessagePushService messagePushService;
-
-    @Override
-    protected BaseDao<UserMessage, Long> getEntityDao() {
-        return userMessageDao;
-    }
 
     /**
      * 查询用户未读消息个数

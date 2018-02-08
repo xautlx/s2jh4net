@@ -45,7 +45,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * 定制对 @ModelEntity 注解参数处理，基于id参数组从数据库查询对象
+ * 定制对  {@link com.entdiy.core.web.annotation.ModelEntity}  注解参数处理，基于id参数组从数据库查询对象
  *
  * @see org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor
  */

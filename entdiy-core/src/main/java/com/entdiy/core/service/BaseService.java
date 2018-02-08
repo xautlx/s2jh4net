@@ -35,9 +35,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.Case;
@@ -46,38 +48,32 @@ import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Consumer;
 
-public abstract class BaseService<T extends Persistable<? extends Serializable>, ID extends Serializable> {
+public class BaseService<T extends Persistable<? extends Serializable>, ID extends Serializable> {
 
     private final Logger logger = LoggerFactory.getLogger(BaseService.class);
 
-    /** 泛型对应的Class定义 */
     private Class<T> entityClass;
 
-    /** 子类设置具体的DAO对象实例 */
-    abstract protected BaseDao<T, ID> getEntityDao();
+    private SimpleJpaRepository<T, ID> jpaRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    protected Class<T> getEntityClass() {
-        if (entityClass == null) {
-            try {
-                // 通过反射取得Entity的Class.
-                Object genericClz = getClass().getGenericSuperclass();
-                if (genericClz instanceof ParameterizedType) {
-                    entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-                }
-            } catch (Exception e) {
-                logger.error("error detail:", e);
-            }
-        }
-        return entityClass;
+    public BaseService() {
     }
 
-    protected EntityManager getEntityManager() {
-        return entityManager;
+    public BaseService(Class<T> entityClass, EntityManager entityManager) {
+        this.entityClass = entityClass;
+        this.entityManager = entityManager;
+        this.jpaRepository = new SimpleJpaRepository(entityClass, entityManager);
+    }
+
+    @PostConstruct
+    public void init() {
+        // 通过反射取得Entity的Class.
+        this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        this.jpaRepository = new SimpleJpaRepository(entityClass, entityManager);
     }
 
     /**
@@ -87,8 +83,9 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @param entity must not be {@literal null}.
      * @return the saved entity will never be {@literal null}.
      */
+    @Transactional
     public <S extends T> S save(S entity) {
-        return getEntityDao().save(entity);
+        return jpaRepository.save(entity);
     }
 
     /**
@@ -98,8 +95,9 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @return the saved entities will never be {@literal null}.
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
+    @Transactional
     public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
-        return getEntityDao().saveAll(entities);
+        return jpaRepository.saveAll(entities);
     }
 
     /**
@@ -110,8 +108,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      */
     @Transactional(readOnly = true)
     public Optional<T> findOne(ID id) {
-        Assert.notNull(id, "id is required");
-        return getEntityDao().findById(id);
+        return jpaRepository.findById(id);
     }
 
     /**
@@ -123,7 +120,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public List<T> findAll(final ID... ids) {
         Assert.isTrue(ArrayUtils.isNotEmpty(ids), "必须提供有效查询主键集合");
-        return this.getEntityDao().findAll((root, query, builder) -> root.get("id").in(ids));
+        return jpaRepository.findAll((root, query, builder) -> root.get("id").in(ids));
     }
 
     /**
@@ -131,8 +128,9 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      *
      * @param entity 待操作数据
      */
+    @Transactional
     public void delete(T entity) {
-        getEntityDao().delete(entity);
+        jpaRepository.delete(entity);
     }
 
     /**
@@ -142,8 +140,9 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @param entities 待批量操作数据集合
      * @return
      */
-    public void delete(Iterable<T> entities) {
-        Optional.ofNullable(entities).ifPresent(items -> items.forEach(item -> delete(item)));
+    @Transactional
+    public void deleteAll(Iterable<T> entities) {
+        jpaRepository.deleteAll(entities);
     }
 
     /**
@@ -156,7 +155,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     public List<T> findByFilter(PropertyFilter propertyFilter) {
         GroupPropertyFilter groupPropertyFilter = GroupPropertyFilter.buildDefaultAndGroupFilter(propertyFilter);
         Specification<T> spec = buildSpecification(groupPropertyFilter);
-        return getEntityDao().findAll(spec);
+        return jpaRepository.findAll(spec);
     }
 
     /**
@@ -168,7 +167,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public long count(GroupPropertyFilter groupPropertyFilter) {
         Specification<T> spec = buildSpecification(groupPropertyFilter);
-        return getEntityDao().count(spec);
+        return jpaRepository.count(spec);
     }
 
     /**
@@ -180,7 +179,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public List<T> findByFilters(GroupPropertyFilter groupPropertyFilter) {
         Specification<T> spec = buildSpecification(groupPropertyFilter);
-        return getEntityDao().findAll(spec);
+        return jpaRepository.findAll(spec);
     }
 
     /**
@@ -193,7 +192,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public List<T> findByFilters(GroupPropertyFilter groupPropertyFilter, Sort sort) {
         Specification<T> spec = buildSpecification(groupPropertyFilter);
-        return getEntityDao().findAll(spec, sort);
+        return jpaRepository.findAll(spec, sort);
     }
 
     @Transactional(readOnly = true)
@@ -226,7 +225,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     @Transactional(readOnly = true)
     public Page<T> findByPage(GroupPropertyFilter groupPropertyFilter, Pageable pageable) {
         Specification<T> specifications = buildSpecification(groupPropertyFilter);
-        return getEntityDao().findAll(specifications, pageable);
+        return jpaRepository.findAll(specifications, pageable);
     }
 
     private class GroupAggregateProperty {
@@ -278,8 +277,9 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      *                    case(equal(sum(amount),0),-1,quot(sum(diff(amount,costAmount)),sum(amount)))
      * @return Map结构的集合分页对象
      */
+    @Transactional(readOnly = true)
     public Page<Map<String, Object>> findByGroupAggregate(Class clazz, GroupPropertyFilter groupFilter, Pageable pageable, String... properties) {
-        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
         Root<?> root = criteriaQuery.from(clazz);
 
@@ -363,7 +363,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
         select.groupBy(groupExpressions);
 
         //创建查询对象
-        TypedQuery<Tuple> query = getEntityManager().createQuery(select);
+        TypedQuery<Tuple> query = entityManager.createQuery(select);
         //动态追加分页参数
         if (pageable != null) {
             query.setFirstResult(Long.valueOf(pageable.getOffset()).intValue());
@@ -395,8 +395,9 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
      * @param properties
      * @return
      */
+    @Transactional(readOnly = true)
     public Page<Map<String, Object>> findByGroupAggregate(GroupPropertyFilter groupFilter, Pageable pageable, String... properties) {
-        return findByGroupAggregate(getEntityClass(), groupFilter, pageable, properties);
+        return findByGroupAggregate(entityClass, groupFilter, pageable, properties);
     }
 
     /**
@@ -423,27 +424,16 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     public Page<Map> findByPageNativeSQL(Pageable pageable, String sql, String orderby) {
         Query query = null;
         if (StringUtils.isNotBlank(orderby)) {
-            query = getEntityManager().createNativeQuery(sql + " " + orderby);
+            query = entityManager.createNativeQuery(sql + " " + orderby);
         } else {
-            query = getEntityManager().createNativeQuery(sql);
+            query = entityManager.createNativeQuery(sql);
         }
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        Query queryCount = getEntityManager().createNativeQuery("select count(*) from (" + sql + ") cnt");
+        Query queryCount = entityManager.createNativeQuery("select count(*) from (" + sql + ") cnt");
         query.setFirstResult(Long.valueOf(pageable.getOffset()).intValue());
         query.setMaxResults(pageable.getPageSize());
         Object count = queryCount.getSingleResult();
         return new PageImpl(query.getResultList(), pageable, Long.valueOf(count.toString()));
-    }
-
-    /**
-     * 基于JPA通用的查询条件count记录数据
-     *
-     * @param spec
-     * @return
-     */
-    @Transactional(readOnly = true)
-    private long count(Specification<T> spec) {
-        return getEntityDao().count(spec);
     }
 
     private <X> Predicate buildPredicate(String propertyName, PropertyFilter filter, Root<X> root, CriteriaQuery<?> query, CriteriaBuilder builder,
@@ -492,7 +482,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
                     }
                 } else {
                     joinTypes = (JoinType[]) filter.getMatchValue();
-                    Assert.isTrue(joinTypes.length == names.length);
+                    Assert.isTrue(joinTypes.length == names.length, filter.getMatchType() + " 操作属性个数和Join操作个数必须一致");
                 }
 
                 // Hack for Bug: https://jira.springsource.org/browse/DATAJPA-105
@@ -676,7 +666,7 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
 
         //处理集合子查询
         if (filter.getSubQueryCollectionPropetyType() != null) {
-            String owner = StringUtils.uncapitalize(getEntityClass().getSimpleName());
+            String owner = StringUtils.uncapitalize(entityClass.getSimpleName());
             subQueryFrom.join(owner);
             subquery.select(subQueryFrom.get(owner)).where(predicate);
             predicate = builder.in(root.get("id")).value(subquery);
@@ -928,6 +918,6 @@ public abstract class BaseService<T extends Persistable<? extends Serializable>,
     }
 
     public void detach(Object entity) {
-        getEntityManager().detach(entity);
+        entityManager.detach(entity);
     }
 }

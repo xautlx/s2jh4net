@@ -18,21 +18,22 @@
 package com.entdiy.sys.web;
 
 import com.entdiy.core.annotation.MenuData;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.sys.entity.UserMessage;
 import com.entdiy.sys.service.UserMessageService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "/admin/sys/user-message")
@@ -40,11 +41,6 @@ public class UserMessageController extends BaseController<UserMessage, Long> {
 
     @Autowired
     private UserMessageService userMessageService;
-
-    @Override
-    protected BaseService<UserMessage, Long> getEntityService() {
-        return userMessageService;
-    }
 
     @MenuData("配置管理:系统管理:消息管理")
     @RequiresPermissions("配置管理:系统管理:消息管理")
@@ -56,8 +52,9 @@ public class UserMessageController extends BaseController<UserMessage, Long> {
     @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<UserMessage> findByPage(HttpServletRequest request) {
-        return super.findByPage(UserMessage.class, request);
+    public Page<UserMessage> findByPage(@ModelPropertyFilter(UserMessage.class) GroupPropertyFilter filter,
+                                        @ModelPageableRequest Pageable pageable) {
+        return userMessageService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统管理:消息管理")

@@ -17,7 +17,6 @@
  */
 package com.entdiy.sys.service;
 
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.sys.dao.AttachmentFileDao;
@@ -39,11 +38,6 @@ public class AttachmentFileService extends BaseService<AttachmentFile, String> {
 
     @Autowired
     private AttachmentFileDao attachmentFileDao;
-
-    @Override
-    protected BaseDao<AttachmentFile, String> getEntityDao() {
-        return attachmentFileDao;
-    }
 
     public void injectAttachmentFilesToEntity(Persistable entity, String propertyName) {
         if (entity == null || entity.getId() == null) {

@@ -23,9 +23,10 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.view.OperationResult;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -50,11 +51,6 @@ public class DepartmentController extends BaseController<Department, Long> {
     @Autowired
     private DepartmentService departmentService;
 
-    @Override
-    protected BaseService<Department, Long> getEntityService() {
-        return departmentService;
-    }
-
     @MenuData("配置管理:权限管理:部门配置")
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -62,20 +58,17 @@ public class DepartmentController extends BaseController<Department, Long> {
         return "admin/auth/department-index";
     }
 
-    @Override
-    protected void appendFilterProperty(GroupPropertyFilter groupPropertyFilter) {
-        if (groupPropertyFilter.isEmptySearch()) {
-            groupPropertyFilter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
-        }
-        super.appendFilterProperty(groupPropertyFilter);
-    }
 
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<Department> findByPage(HttpServletRequest request) {
-        return super.findByPage(Department.class, request);
+    public Page<Department> findByPage(@ModelPropertyFilter(Department.class) GroupPropertyFilter filter,
+                                       @ModelPageableRequest Pageable pageable) {
+        if (filter.isEmptySearch()) {
+            filter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
+        }
+        return departmentService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:权限管理:部门配置")
@@ -85,7 +78,7 @@ public class DepartmentController extends BaseController<Department, Long> {
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
         GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(Department.class, request);
         groupFilter.forceAnd(new PropertyFilter(MatchType.NE, "disabled", true));
-        Object value = getEntityService().findByPage(groupFilter, pageable);
+        Object value = departmentService.findByPage(groupFilter, pageable);
         final MappingJacksonValue jacksonValue = new MappingJacksonValue(value);
         jacksonValue.setSerializationView(PropertyFilter.parseJsonView(request, JsonViews.Admin.class));
         return jacksonValue;

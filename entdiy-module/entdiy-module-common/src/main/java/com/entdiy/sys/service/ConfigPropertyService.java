@@ -17,7 +17,6 @@
  */
 package com.entdiy.sys.service;
 
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.sys.dao.ConfigPropertyDao;
 import com.entdiy.sys.entity.ConfigProperty;
@@ -37,11 +36,6 @@ public class ConfigPropertyService extends BaseService<ConfigProperty, Long> {
 
     public List<ConfigProperty> findAllCached() {
         return configPropertyDao.findAllCached();
-    }
-
-    @Override
-    protected BaseDao<ConfigProperty, Long> getEntityDao() {
-        return configPropertyDao;
     }
 
     @Transactional(readOnly = true)

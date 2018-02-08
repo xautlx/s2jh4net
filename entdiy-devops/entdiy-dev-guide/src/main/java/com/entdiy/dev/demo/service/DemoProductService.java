@@ -17,7 +17,6 @@
  */
 package com.entdiy.dev.demo.service;
 
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.dev.demo.dao.DemoProductDao;
 import com.entdiy.dev.demo.entity.DemoProduct;
@@ -31,9 +30,4 @@ public class DemoProductService extends BaseService<DemoProduct, Long> {
 
     @Autowired
     private DemoProductDao demoProductDao;
-
-    @Override
-    protected BaseDao<DemoProduct, Long> getEntityDao() {
-        return demoProductDao;
-    }
 }

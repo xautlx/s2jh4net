@@ -58,10 +58,9 @@
                    }, {
                        "label" : "挂账部门",
                        "name" : "department.display",
-                       "index" : "department.id",
+                       "index" : "department.code_OR_department.name",
                        "width" : 100,
                        "align" : "center",
-                       "search" : false,
                        "editable": false
                    }, {
                        "label" : "提交时间",

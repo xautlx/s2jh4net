@@ -173,7 +173,7 @@ public class UtilController {
     @ResponseBody
     public boolean formValidationUnique(HttpServletRequest request, Model model, @RequestParam("clazz") String clazz) {
         String element = request.getParameter("element");
-        Assert.notNull(element);
+        Assert.notNull(element, "element parameter is required");
 
         String value = request.getParameter(element);
         if (!ExtStringUtils.hasChinese(value)) {

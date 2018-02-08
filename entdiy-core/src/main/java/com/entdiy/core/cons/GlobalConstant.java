@@ -28,6 +28,12 @@ public class GlobalConstant {
     public static final String DEFAULT_VALUE = "default";
     public static final String NONE_VALUE = "none";
 
+    /**
+     * 对于一些复杂处理逻辑需要基于提交数据服务器校验后有提示警告信息需要用户二次确认
+     * 标识服务端校验用户提交确认的参数名称，判断当前表单是否已被用户confirm确认OK
+     */
+    public static final String PARAM_KEY_USER_CONFIRMED = "_serverValidationConfirmed_";
+
     public static final Map<Boolean, String> booleanLabelMap = Maps.newLinkedHashMap();
 
     static {

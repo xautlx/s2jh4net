@@ -22,7 +22,6 @@ import com.entdiy.auth.dao.RoleDao;
 import com.entdiy.auth.dao.UserDao;
 import com.entdiy.auth.dao.UserExtDao;
 import com.entdiy.auth.entity.*;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +49,6 @@ public class UserService extends BaseService<User, Long> {
 
     @Autowired
     private RoleDao roleDao;
-
-
-    @Override
-    protected BaseDao<User, Long> getEntityDao() {
-        return userDao;
-    }
 
     @Transactional(readOnly = true)
     public User findByAccount(Account account) {

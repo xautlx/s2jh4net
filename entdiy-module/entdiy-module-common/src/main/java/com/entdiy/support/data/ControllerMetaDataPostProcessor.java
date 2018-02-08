@@ -112,7 +112,7 @@ public class ControllerMetaDataPostProcessor {
             });
 
             //移除代码定义已不存在的菜单项
-            menuService.delete(menus.stream().filter(one -> !mergedMenus.contains(one.getPath())).collect(Collectors.toSet()));
+            menuService.deleteAll(menus.stream().filter(one -> !mergedMenus.contains(one.getPath())).collect(Collectors.toSet()));
 
             //追加新增定义选项项
             mergedPermissions.forEach(code -> {
@@ -123,7 +123,7 @@ public class ControllerMetaDataPostProcessor {
                 }
             });
             //移除代码定义已不存在的权限项
-            privilegeService.delete(privileges.stream().filter(one -> !mergedPermissions.contains(one.getCode())).collect(Collectors.toSet()));
+            privilegeService.deleteAll(privileges.stream().filter(one -> !mergedPermissions.contains(one.getCode())).collect(Collectors.toSet()));
         }
     }
 }

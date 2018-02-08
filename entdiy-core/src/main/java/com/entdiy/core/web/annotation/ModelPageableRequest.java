@@ -15,25 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.aud.service;
+package com.entdiy.core.web.annotation;
 
-import com.entdiy.aud.dao.SendMessageLogDao;
-import com.entdiy.aud.entity.SendMessageLog;
-import com.entdiy.core.service.BaseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.lang.annotation.*;
 
-@Service
-@Transactional
-public class SendMessageLogService extends BaseService<SendMessageLog, Long> {
-
-    @Autowired
-    private SendMessageLogDao sendMessageLogDao;
-
-    @Async
-    public void asyncSave(SendMessageLog entity) {
-        sendMessageLogDao.save(entity);
-    }
+/**
+ * 注解参数对象自动基于request请求构建分页排序参数对象
+ *
+ * @see com.entdiy.core.web.method.ModelEntityMethodProcessor
+ */
+@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface ModelPageableRequest {
+    
 }

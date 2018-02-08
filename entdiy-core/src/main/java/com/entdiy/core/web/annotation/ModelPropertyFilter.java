@@ -15,27 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.core.dao;
+package com.entdiy.core.web.annotation;
 
-import java.util.Optional;
+import org.springframework.core.annotation.AliasFor;
 
-public interface MiniBaseDao<T, ID> {
+import java.lang.annotation.*;
+
+/**
+ * 注解参数对象自动基于request请求构建查询参数对象
+ *
+ * @see com.entdiy.core.web.method.ModelPropertyFilterMethodProcessor
+ */
+@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface ModelPropertyFilter {
 
     /**
-     * Retrieves an entity by its id.
-     *
-     * @param id must not be {@literal null}.
-     * @return the entity with the given id or {@literal Optional#empty()} if none found
-     * @throws IllegalArgumentException if {@code id} is {@literal null}.
+     * Alias for {@link #clazz()}.
      */
-    Optional<T> findById(ID id);
+    @AliasFor("clazz")
+    Class<?> value() default void.class;
 
     /**
-     * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the
-     * entity instance completely.
-     *
-     * @param entity
-     * @return the saved entity
+     * Alias for {@link #value()}.
      */
-    <S extends T> S save(S entity);
+    @AliasFor("value")
+    Class<?> clazz() default void.class;
 }

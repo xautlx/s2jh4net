@@ -26,8 +26,10 @@ import com.entdiy.core.entity.AbstractPersistableEntity;
 import com.entdiy.core.entity.BaseEntity;
 import com.entdiy.core.exception.WebException;
 import com.entdiy.core.pagination.ExtPageRequest;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
@@ -47,6 +49,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,11 +80,6 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
     @Autowired
     private RevisionEntityService revisionEntityService;
 
-    @Override
-    protected BaseService<ExtDefaultRevisionEntity, Long> getEntityService() {
-        return revisionEntityService;
-    }
-
     @MenuData("配置管理:系统记录:业务操作记录")
     @RequiresPermissions("配置管理:系统记录:业务操作记录")
     @RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -93,8 +91,10 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
     @RequestMapping(value = "/user/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<ExtDefaultRevisionEntity> findByPage(HttpServletRequest request) {
-        return super.findByPage(ExtDefaultRevisionEntity.class, request);
+    public Page<ExtDefaultRevisionEntity> findByPage(
+            @ModelPropertyFilter(ExtDefaultRevisionEntity.class) GroupPropertyFilter filter,
+            @ModelPageableRequest Pageable pageable) {
+        return revisionEntityService.findByPage(filter, pageable);
     }
 
     /**

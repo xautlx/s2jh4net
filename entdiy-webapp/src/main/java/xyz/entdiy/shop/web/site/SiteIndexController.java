@@ -18,7 +18,6 @@
 package xyz.entdiy.shop.web.site;
 
 import com.entdiy.auth.service.UserService;
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.FileUtils;
 import com.entdiy.core.util.ImageUtils;
 import com.entdiy.core.web.AppContextHolder;
@@ -57,10 +56,6 @@ public class SiteIndexController extends BaseController<SiteUser, Long> {
     @Autowired
     private SiteUserService siteUserService;
 
-    @Override
-    protected BaseService<SiteUser, Long> getEntityService() {
-        return siteUserService;
-    }
 
     @RequestMapping(value = {"/", "/index", "/index/"}, method = RequestMethod.GET)
     public String siteIndex(HttpServletRequest request, Model model) {

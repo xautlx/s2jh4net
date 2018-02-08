@@ -21,21 +21,22 @@ import com.entdiy.aud.entity.AccountLogonLog;
 import com.entdiy.aud.service.AccountLogonLogService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 @MetaData("配置管理:系统记录:账户登录记录管理")
 @Controller
@@ -44,11 +45,6 @@ public class AccountLogonLogController extends BaseController<AccountLogonLog, L
 
     @Autowired
     private AccountLogonLogService accountLogonLogService;
-
-    @Override
-    protected BaseService<AccountLogonLog, Long> getEntityService() {
-        return accountLogonLogService;
-    }
 
     @MenuData("配置管理:系统记录:账户登录记录")
     @RequiresPermissions("配置管理:系统记录:账户登录记录")
@@ -61,8 +57,9 @@ public class AccountLogonLogController extends BaseController<AccountLogonLog, L
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<AccountLogonLog> findByPage(HttpServletRequest request) {
-        return super.findByPage(AccountLogonLog.class, request);
+    public Page<AccountLogonLog> findByPage(@ModelPropertyFilter(AccountLogonLog.class) GroupPropertyFilter filter,
+                                            @ModelPageableRequest Pageable pageable) {
+        return accountLogonLogService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统记录:账户登录记录")

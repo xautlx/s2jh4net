@@ -22,15 +22,17 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.service.DataDictService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,11 +50,6 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @Autowired
     private DataDictService dataDictService;
 
-    @Override
-    protected BaseService<DataDict, Long> getEntityService() {
-        return dataDictService;
-    }
-
     @MenuData("配置管理:系统管理:数据字典")
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -60,19 +57,16 @@ public class DataDictController extends BaseController<DataDict, Long> {
         return "admin/sys/dataDict-index";
     }
 
-    @Override
-    protected void appendFilterProperty(GroupPropertyFilter groupPropertyFilter) {
-        if (groupPropertyFilter.isEmptySearch()) {
-            groupPropertyFilter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
-        }
-        super.appendFilterProperty(groupPropertyFilter);
-    }
 
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<DataDict> findByPage(HttpServletRequest request) {
-        return super.findByPage(DataDict.class, request);
+    public Page<DataDict> findByPage(@ModelPropertyFilter(DataDict.class) GroupPropertyFilter filter,
+                                     @ModelPageableRequest Pageable pageable) {
+        if (filter.isEmptySearch()) {
+            filter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
+        }
+        return dataDictService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统管理:数据字典")

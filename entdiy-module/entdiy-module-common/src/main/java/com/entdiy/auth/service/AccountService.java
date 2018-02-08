@@ -20,7 +20,6 @@ package com.entdiy.auth.service;
 import com.entdiy.auth.dao.AccountDao;
 import com.entdiy.auth.entity.Account;
 import com.entdiy.core.cons.GlobalConstant;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.DateUtils;
@@ -57,11 +56,6 @@ public class AccountService extends BaseService<Account, Long> {
 
     @Autowired(required = false)
     private FreemarkerService freemarkerService;
-
-    @Override
-    protected BaseDao<Account, Long> getEntityDao() {
-        return accountDao;
-    }
 
     /**
      * 基于登录界面输入的单一username参数值进行转换处理查询用户对象

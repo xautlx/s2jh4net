@@ -39,11 +39,6 @@ public class AccountLogonLogService extends BaseService<AccountLogonLog, Long> {
     @Autowired
     private MyBatisDao myBatisDao;
 
-    @Override
-    protected BaseDao<AccountLogonLog, Long> getEntityDao() {
-        return accountLogonLogDao;
-    }
-
     @Transactional(readOnly = true)
     public AccountLogonLog findBySessionId(String httpSessionId) {
         return accountLogonLogDao.findByHttpSessionId(httpSessionId);

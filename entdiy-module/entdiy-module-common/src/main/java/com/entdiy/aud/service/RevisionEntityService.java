@@ -17,17 +17,11 @@
  */
 package com.entdiy.aud.service;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import com.entdiy.aud.dao.RevisionEntityDao;
 import com.entdiy.aud.envers.EntityRevision;
 import com.entdiy.aud.envers.ExtDefaultRevisionEntity;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.envers.AuditReaderFactory;
@@ -38,7 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Service
 @Transactional
@@ -49,11 +45,6 @@ public class RevisionEntityService extends BaseService<ExtDefaultRevisionEntity,
 
     @Autowired
     private RevisionEntityDao revisionEntityDao;
-
-    @Override
-    protected BaseDao<ExtDefaultRevisionEntity, Long> getEntityDao() {
-        return revisionEntityDao;
-    }
 
     /**
      * 查询对象历史记录版本集合

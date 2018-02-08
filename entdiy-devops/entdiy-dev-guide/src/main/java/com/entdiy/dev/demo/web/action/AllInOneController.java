@@ -30,9 +30,7 @@ import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.DateUtils;
-import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.google.common.collect.Lists;
@@ -69,7 +67,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value = "/dev/demo/all-in-one")
-public class AllInOneController extends BaseController<AllInOneController.MockEntity, Long> {
+public class AllInOneController {
 
     private final static Logger logger = LoggerFactory.getLogger(AllInOneController.class);
 
@@ -84,11 +82,6 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
 
     @Autowired
     private AccountService accountService;
-
-    @Override
-    protected BaseService<MockEntity, Long> getEntityService() {
-        return null;
-    }
 
     @MenuData("演示样例:UI组件集合")
     @RequestMapping(value = "/index", method = RequestMethod.GET)
@@ -211,11 +204,13 @@ public class AllInOneController extends BaseController<AllInOneController.MockEn
     @MetaData("模拟表单校验Confirm")
     @RequestMapping(value = "/validation-confirm", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult validationConfirm(HttpServletRequest request, Model model, @RequestParam("quantity") Integer quantity) {
+    public OperationResult validationConfirm(HttpServletRequest request, Model model,
+                                             @RequestParam("quantity") Integer quantity,
+                                             @RequestParam(value = GlobalConstant.PARAM_KEY_USER_CONFIRMED, required = false) Boolean userConfirmed) {
         //先进行常规的must数据校验
 
         //检测本次提交表单没有用户已confirm确认标识，则进行相关预警校验检查
-        if (postNotConfirmedByUser(request)) {
+        if (userConfirmed == null || userConfirmed.equals(Boolean.FALSE)) {
             if (quantity > 100) {
                 return OperationResult.buildConfirmResult("库存余量不足");
             }

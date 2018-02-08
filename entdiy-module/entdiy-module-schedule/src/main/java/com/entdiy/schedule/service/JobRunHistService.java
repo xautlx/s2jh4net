@@ -18,7 +18,6 @@
 package com.entdiy.schedule.service;
 
 
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.schedule.dao.JobRunHistDao;
 import com.entdiy.schedule.entity.JobRunHist;
@@ -33,8 +32,4 @@ public class JobRunHistService extends BaseService<JobRunHist, Long> {
     @Autowired
     private JobRunHistDao jobRunHistDao;
 
-    @Override
-    protected BaseDao<JobRunHist, Long> getEntityDao() {
-        return jobRunHistDao;
-    }
 }

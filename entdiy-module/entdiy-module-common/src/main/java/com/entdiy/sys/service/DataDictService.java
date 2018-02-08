@@ -17,7 +17,6 @@
  */
 package com.entdiy.sys.service;
 
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.sys.dao.DataDictDao;
 import com.entdiy.sys.entity.DataDict;
@@ -41,11 +40,6 @@ public class DataDictService extends BaseService<DataDict, Long> {
 
     @Autowired
     private DataDictDao dataDictDao;
-
-    @Override
-    protected BaseDao<DataDict, Long> getEntityDao() {
-        return dataDictDao;
-    }
 
     @Transactional(readOnly = true)
     public List<DataDict> findAllCached() {

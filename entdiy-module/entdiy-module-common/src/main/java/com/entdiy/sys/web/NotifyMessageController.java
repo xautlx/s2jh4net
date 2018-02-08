@@ -21,10 +21,11 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
-import com.entdiy.core.service.BaseService;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.sys.entity.NotifyMessage;
 import com.entdiy.sys.entity.NotifyMessage.NotifyMessagePlatformEnum;
@@ -58,11 +59,6 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @Autowired
     private DataDictService dataDictService;
 
-    @Override
-    protected BaseService<NotifyMessage, Long> getEntityService() {
-        return notifyMessageService;
-    }
-
     @MenuData("配置管理:系统管理:公告管理")
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -73,8 +69,9 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<NotifyMessage> findByPage(HttpServletRequest request) {
-        return super.findByPage(NotifyMessage.class, request);
+    public Page<NotifyMessage> findByPage(@ModelPropertyFilter(NotifyMessage.class) GroupPropertyFilter filter,
+                                          @ModelPageableRequest Pageable pageable) {
+        return notifyMessageService.findByPage(filter,pageable);
     }
 
     @RequiresPermissions("配置管理:系统管理:公告管理")

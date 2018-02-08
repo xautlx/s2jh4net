@@ -21,11 +21,13 @@ import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
@@ -42,6 +44,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,11 +73,6 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     @Autowired
     private AttachmentFileService attachmentFileService;
 
-    @Override
-    protected BaseService<DemoReimbursementRequest, Long> getEntityService() {
-        return reimbursementRequestService;
-    }
-
     @MenuData("演示样例:报销申请")
     @RequiresPermissions("演示样例:报销申请")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -88,8 +86,9 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<DemoReimbursementRequest> findByPage(HttpServletRequest request) {
-        return super.findByPage(DemoReimbursementRequest.class, request);
+    public Page<DemoReimbursementRequest> findByPage(@ModelPropertyFilter(DemoReimbursementRequest.class) GroupPropertyFilter filter,
+                                                     @ModelPageableRequest Pageable pageable) {
+        return reimbursementRequestService.findByPage(filter, pageable);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)

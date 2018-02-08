@@ -17,23 +17,15 @@
  */
 package com.entdiy.schedule.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.entdiy.core.context.SpringContextHolder;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.service.BaseService;
 import com.entdiy.schedule.ExtSchedulerFactoryBean;
 import com.entdiy.schedule.dao.JobBeanCfgDao;
 import com.entdiy.schedule.entity.JobBeanCfg;
-
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +33,8 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -51,11 +44,6 @@ public class JobBeanCfgService extends BaseService<JobBeanCfg, Long> {
 
     @Autowired
     private JobBeanCfgDao jobBeanCfgDao;
-
-    @Override
-    protected BaseDao<JobBeanCfg, Long> getEntityDao() {
-        return jobBeanCfgDao;
-    }
 
     public List<JobBeanCfg> findAll() {
         return jobBeanCfgDao.findAll();

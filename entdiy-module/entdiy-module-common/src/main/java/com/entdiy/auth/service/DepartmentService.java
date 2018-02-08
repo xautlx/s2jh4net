@@ -19,7 +19,6 @@ package com.entdiy.auth.service;
 
 import com.entdiy.auth.dao.DepartmentDao;
 import com.entdiy.auth.entity.Department;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +32,6 @@ public class DepartmentService extends BaseService<Department, Long> {
 
     @Autowired
     private DepartmentDao departmentDao;
-
-    @Override
-    protected BaseDao<Department, Long> getEntityDao() {
-        return departmentDao;
-    }
 
     public Optional<Department> findByCode(String code) {
         return departmentDao.findByCode(code);

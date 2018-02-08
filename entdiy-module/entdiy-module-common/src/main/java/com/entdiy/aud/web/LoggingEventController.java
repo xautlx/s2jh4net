@@ -22,24 +22,25 @@ import com.entdiy.aud.entity.LoggingEvent.LoggingHandleStateEnum;
 import com.entdiy.aud.service.LoggingEventService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.view.OperationResult;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 @MetaData("日志事件管理")
 @Controller
@@ -48,11 +49,6 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
 
     @Autowired
     private LoggingEventService loggingEventService;
-
-    @Override
-    protected BaseService<LoggingEvent, Long> getEntityService() {
-        return loggingEventService;
-    }
 
     @MenuData("配置管理:系统记录:异常日志记录")
     @RequiresPermissions("配置管理:系统记录:异常日志记录")
@@ -66,8 +62,9 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<LoggingEvent> findByPage(HttpServletRequest request) {
-        return super.findByPage(LoggingEvent.class, request);
+    public Page<LoggingEvent> findByPage(@ModelPropertyFilter(LoggingEvent.class) GroupPropertyFilter filter,
+                                         @ModelPageableRequest Pageable pageable) {
+        return loggingEventService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统记录:异常日志记录")

@@ -17,14 +17,10 @@
  */
 package com.entdiy.support.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.Map;
-
 import com.entdiy.core.exception.ServiceException;
-
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,9 +28,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import freemarker.cache.StringTemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.Map;
 
 @Service
 public class FreemarkerService extends Configuration {
@@ -49,8 +47,8 @@ public class FreemarkerService extends Configuration {
     }
 
     public String processTemplate(String templateName, long version, String templateContents, Map<String, Object> dataMap) {
-        Assert.notNull(templateName);
-        Assert.notNull(version);
+        Assert.notNull(templateName, "templateName is required");
+        Assert.notNull(version, "version is required");
         if (StringUtils.isBlank(templateContents)) {
             return null;
         }

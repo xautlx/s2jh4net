@@ -50,11 +50,6 @@ public class SmsVerifyCodeService extends BaseService<SmsVerifyCode, Long> {
     @Autowired
     private DynamicConfigService dynamicConfigService;
 
-    @Override
-    protected BaseDao<SmsVerifyCode, Long> getEntityDao() {
-        return smsVerifyCodeDao;
-    }
-
     /**
      * 基于手机号码生成6位随机验证码
      *
