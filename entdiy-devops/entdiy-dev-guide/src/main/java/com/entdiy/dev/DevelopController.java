@@ -18,6 +18,7 @@
 package com.entdiy.dev;
 
 import com.entdiy.core.web.AppContextHolder;
+import com.entdiy.security.DefaultAuthUserDetails;
 import com.google.common.collect.Sets;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
@@ -27,6 +28,7 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -49,12 +51,13 @@ public class DevelopController {
 
     private final static Logger logger = LoggerFactory.getLogger(DevelopController.class);
 
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard() {
         return "dev/dashboard";
     }
 
-
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/docs/markdown/{name}", method = RequestMethod.GET)
     public String markdown(HttpServletRequest request, @PathVariable("name") String name, Model model) throws Exception {
         Set<String> fileNames = Sets.newTreeSet();

@@ -80,6 +80,10 @@
                         <a href="javascript:void(0)" onclick="setupDevUser('root','123456')">
                             root/123456
                         </a>
+                        &nbsp;|&nbsp;
+                        <a href="javascript:void(0)" onclick="setupDevUser('user','123456')">
+                            user/123456
+                        </a>
                     </b>
                 </p>
                 <script type="text/javascript">
@@ -107,7 +111,7 @@
 <script>
     //百度统计代码，做一个基础的框架演示站点访问数据统计，实际项目开发可以移除
     var _hmt = _hmt || [];
-    (function() {
+    (function () {
         var hm = document.createElement("script");
         hm.src = "https://hm.baidu.com/hm.js?5f64653382c3bd79af3c297bbafa5a6a";
         var s = document.getElementsByTagName("script")[0];

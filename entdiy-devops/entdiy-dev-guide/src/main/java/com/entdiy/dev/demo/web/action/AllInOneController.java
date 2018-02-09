@@ -37,6 +37,7 @@ import com.entdiy.dev.demo.entity.DemoProduct;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
 import com.entdiy.dev.demo.service.DemoProductService;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
+import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.service.AttachmentFileService;
 import com.google.common.collect.Lists;
@@ -46,7 +47,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.util.ClassUtils;
 import org.hibernate.envers.Audited;
 import org.slf4j.Logger;
@@ -101,13 +102,13 @@ public class AllInOneController {
     private AttachmentFileService attachmentFileService;
 
     @MenuData("演示样例:UI组件集合")
-    @RequiresPermissions("演示样例:UI组件集合")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(Model model) {
         return "dev/demo/allInOne-index";
     }
 
-    @RequiresPermissions("演示样例:UI组件集合")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String detail(HttpServletRequest request, Model model) {
         Map<String, String> clazzMapping = Maps.newHashMap();

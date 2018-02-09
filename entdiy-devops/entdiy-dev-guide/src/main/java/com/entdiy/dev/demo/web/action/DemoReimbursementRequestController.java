@@ -35,13 +35,14 @@ import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequestItem;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
 import com.entdiy.dev.demo.support.DemoConstant;
+import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.sys.service.AttachmentFileService;
 import com.entdiy.sys.service.DataDictService;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,7 +75,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     private AttachmentFileService attachmentFileService;
 
     @MenuData("演示样例:报销申请")
-    @RequiresPermissions("演示样例:报销申请")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(@ModelEntity DemoReimbursementRequest entity, Model model) {
         model.addAttribute("useTypeJson",
@@ -82,7 +83,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return "dev/demo/reimbursementRequest-index";
     }
 
-    @RequiresPermissions("演示样例:报销申请")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -96,7 +97,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return "dev/demo/reimbursementRequest-inputTabs";
     }
 
-    @RequiresPermissions("演示样例:报销申请")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(@AuthAccount Account account, @ModelEntity(preFectchLazyFields = {"reimbursementRequestItems"}) DemoReimbursementRequest entity,
                            Model model) {
@@ -126,7 +127,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return "dev/demo/reimbursementRequest-inputBasic";
     }
 
-    @RequiresPermissions("演示样例:报销申请")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@AuthAccount Account account,
@@ -163,7 +164,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return result;
     }
 
-    @RequiresPermissions("演示样例:报销申请")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     @Override
