@@ -45,6 +45,7 @@ import com.entdiy.sys.service.NotifyMessageService;
 import com.entdiy.sys.service.UserMessageService;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -350,7 +351,8 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     int randomInt = MockEntityUtils.randomInt(2, 4);
                     for (int j = 0; j < randomInt; j++) {
                         Resource resource = MockEntityUtils.randomCandidates(imageResources);
-                        File file = resource.getFile();
+                        File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
+                        FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
                         AttachmentFile attachmentFile = new AttachmentFile();
                         attachmentFile.setFileRealName(file.getName());
                         attachmentFile.setFileLength(file.length());
@@ -363,7 +365,8 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     attachmentFileService.saveAll(attachmentFiles);
 
                     Resource resource = MockEntityUtils.randomCandidates(imageResources);
-                    File file = resource.getFile();
+                    File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
+                    FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
                     AttachmentFile attachmentFile = new AttachmentFile();
                     attachmentFile.setFileRealName(file.getName());
                     attachmentFile.setFileLength(file.length());
@@ -418,7 +421,8 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     for (int j = 0; j < randomInt; j++) {
                         {
                             Resource resource = MockEntityUtils.randomCandidates(fileResources);
-                            File file = resource.getFile();
+                            File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
+                            FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
                             AttachmentFile attachmentFile = new AttachmentFile();
                             attachmentFile.setFileRealName(file.getName());
                             attachmentFile.setFileLength(file.length());
@@ -430,7 +434,8 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
                         {
                             Resource resource = MockEntityUtils.randomCandidates(imageResources);
-                            File file = resource.getFile();
+                            File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
+                            FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
                             AttachmentFile attachmentFile = new AttachmentFile();
                             attachmentFile.setFileRealName(file.getName());
                             attachmentFile.setFileLength(file.length());
