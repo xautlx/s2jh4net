@@ -44,6 +44,10 @@ public class DemoProduct extends BaseNativeEntity {
 
     @Transient
     @JsonIgnore
+    private AttachmentFile mainImage;
+
+    @Transient
+    @JsonIgnore
     private List<AttachmentFile> introImages;
 
 

@@ -77,22 +77,22 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             roleService.save(superRole);
 
             //预置超级管理员账号
-            Account account = new Account();
-            account.setAuthType(Account.AuthTypeEnum.admin);
-            account.setAuthUid(GlobalConstant.ROOT_VALUE);
-            account.setDataDomain(GlobalConstant.ROOT_VALUE);
-            account.setEmail("xautlx@hotmail.com");
-            accountService.save(account, "123456");
+            Account rootAccount = new Account();
+            rootAccount.setAuthType(Account.AuthTypeEnum.admin);
+            rootAccount.setAuthUid(GlobalConstant.ROOT_VALUE);
+            rootAccount.setDataDomain(GlobalConstant.ROOT_VALUE);
+            rootAccount.setEmail("xautlx@hotmail.com");
+            accountService.save(rootAccount, "123456");
 
-            User entity = new User();
-            entity.setAccount(account);
-            entity.setTrueName(GlobalConstant.ROOT_VALUE);
+            User rootUser = new User();
+            rootUser.setAccount(rootAccount);
+            rootUser.setTrueName(rootAccount.getAuthUid());
             //关联超级管理员角色
             UserR2Role r2 = new UserR2Role();
-            r2.setUser(entity);
+            r2.setUser(rootUser);
             r2.setRole(superRole);
-            entity.setUserR2Roles(Lists.newArrayList(r2));
-            userService.save(entity);
+            rootUser.setUserR2Roles(Lists.newArrayList(r2));
+            userService.save(rootUser);
 
             //后端登录用户默认角色，具体权限可通过管理界面配置
             //所有后端登录用户默认关联此角色，无需额外写入用户和角色关联数据
@@ -101,6 +101,19 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             mgmtRole.setName("后端登录用户默认角色");
             mgmtRole.setDescription("系统预置，请勿随意修改。注意：所有后端登录用户默认关联此角色，无需额外写入用户和角色关联数据。");
             roleService.save(mgmtRole);
+
+            //预置普通管理账号
+            Account userAccount = new Account();
+            userAccount.setAuthType(Account.AuthTypeEnum.admin);
+            userAccount.setAuthUid("user");
+            userAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
+            userAccount.setEmail("user@entdiy.com");
+            accountService.save(userAccount, "123456");
+
+            User user = new User();
+            user.setAccount(userAccount);
+            user.setTrueName(userAccount.getAuthUid());
+            userService.save(user);
 
             entityManager.flush();
         }

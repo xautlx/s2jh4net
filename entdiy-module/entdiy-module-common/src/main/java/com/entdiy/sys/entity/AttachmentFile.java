@@ -44,12 +44,16 @@ public class AttachmentFile extends BaseUuidEntity {
     private String sourceType;
 
     @MetaData(value = "所属对象ID")
-    @Column(nullable = true)
+    @Column(length = 64, nullable = true)
     private String sourceId;
 
     @MetaData(value = "所属分类", comments = "同一个对象类型下面，附件分类，如产品图片，参考文档等")
-    @Column(nullable = true)
+    @Column(length = 256, nullable = true)
     private String sourceCategory = GlobalConstant.DEFAULT_VALUE;
+
+    @MetaData(value = "显示排序号", tooltips = "相对排序号，取集合索引下标，数字越大越靠后显示")
+    @Column(nullable = true)
+    private Integer orderIndex = 0;
 
     @MetaData(value = "附件上传文件名称")
     @Column(length = 512, nullable = false)
@@ -69,7 +73,7 @@ public class AttachmentFile extends BaseUuidEntity {
     private Long fileLength;
 
     @MetaData(value = "附件MIME类型")
-    @Column(length = 32, nullable = false)
+    @Column(length = 256, nullable = false)
     private String fileContentType;
 
     @MetaData(value = "相对存储路径")

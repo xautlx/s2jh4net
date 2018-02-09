@@ -18,6 +18,7 @@
 package com.entdiy.core.cache;
 
 import com.entdiy.core.context.SpringPropertiesHolder;
+import com.entdiy.core.web.AppContextHolder;
 import org.hibernate.cache.redis.hibernate52.SingletonRedisRegionFactory;
 import org.hibernate.cache.redis.util.Timestamper;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class ReloadableSingletonRedisRegionFactory extends SingletonRedisRegionF
 
     @Override
     public long nextTimestamp() {
-        if (cacheTimestamper == null) {
+        if (cacheTimestamper == null && AppContextHolder.isDevMode()) {
             cacheTimestamper = new Timestamper();
         }
         return cacheTimestamper.next();

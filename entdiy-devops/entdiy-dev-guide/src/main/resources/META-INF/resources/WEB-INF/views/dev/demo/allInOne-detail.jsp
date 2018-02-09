@@ -1155,9 +1155,16 @@
                 <div class="row">
                     <div class="col-md-11">
                         <div class="form-group">
-                            <label class="control-label">单文件上传组件</label>
+                            <label class="control-label">单文件上传</label>
                             <div class="controls">
-                                <form:input id="" path="filePath" class="form-control" data-fileuploader="single"/>
+                                <ul class="list-group" data-fileuploader="oneFile" data-multiple="false">
+                                    <li class="list-group-item">
+                                        <form:hidden id="" path="oneFile.id"/>
+                                        <form:hidden id="" path="oneFile.relativePath"/>
+                                        <form:hidden id="" path="oneFile.fileRealName"/>
+                                        <form:hidden id="" path="oneFile.fileLength"/>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -1173,49 +1180,36 @@
                 <div class="row">
                     <div class="col-md-11">
                         <div class="form-group">
-                            <label class="control-label">单图片文件上传预览组件</label>
+                            <label class="control-label">多文件上传</label>
                             <div class="controls">
-                                <form:hidden id="" path="filePath" class="form-control" data-imageuploader="single"/>
+                                <ul class="list-group" data-fileuploader="multiFiles" data-multiple="true">
+                                    <c:forEach var="item" items="${entity.multiFiles}" varStatus="status">
+                                        <li class="list-group-item">
+                                            <form:hidden id="" path="multiFiles[${status.index}].id"/>
+                                            <form:hidden id="" path="multiFiles[${status.index}].relativePath"/>
+                                            <form:hidden id="" path="multiFiles[${status.index}].fileRealName"/>
+                                            <form:hidden id="" path="multiFiles[${status.index}].fileLength"/>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-1 visible-md visible-lg">
                         <span class="help-block">
-                            <a href="dev/docs/jsdoc/ExtImageUploader.html" target="_blank"
+                            <a href="dev/docs/jsdoc/ExtFileUploader.html" target="_blank"
                                class="btn btn-icon-only green btn-dev-demo-info">
                                 <i class="fa fa-info"></i>
                             </a>
-                        </span>
-                    </div>
-                </div>
-                <div class="row hide">
-                    <div class="col-md-11">
-                        <div class="form-group">
-                            <label class="control-label">多图片文件上传预览组件(集合数组方式)</label>
-                            <div class="controls">
-                                <c:forEach items="${imagePaths}" var="item" varStatus="status">
-                                    <input type="hidden" name="imagePaths[${status.index}]" data-multiimage="edit"
-                                           data-pk="${status.index}"
-                                           value="${item}"/>
-                                </c:forEach>
-                                <input type="hidden" name="imagePaths[x]" data-multiimage="btn"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-1 visible-md visible-lg">
-                        <span class="help-block">
-
                         </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-11">
                         <div class="form-group">
-                            <label class="control-label">多图片文件上传预览组件(逗号分隔方式)</label>
+                            <label class="control-label">单图片上传(单一文本)</label>
                             <div class="controls">
-                                <input type="hidden" name="imagePaths" class="form-control"
-                                       data-imageuploader="multi-text-split"
-                                       value="/assets/apps/img/bg01_h.jpg,/assets/apps/img/bg02_h.jpg"/>
+                                <form:hidden id="" path="imagePath" class="form-control" data-imageuploader="single"/>
                             </div>
                         </div>
                     </div>
@@ -1228,6 +1222,66 @@
                         </span>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-group">
+                            <label class="control-label">多图片上传(逗号文本)</label>
+                            <div class="controls">
+                                <form:hidden id="" path="imagePaths" class="form-control" data-imageuploader="multiple"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 visible-md visible-lg">
+                        <span class="help-block">
+                            <a href="dev/docs/jsdoc/ExtImageUploader.html" target="_blank"
+                               class="btn btn-icon-only green btn-dev-demo-info">
+                                <i class="fa fa-info"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-group">
+                            <label class="control-label">单图片上传(单一对象)</label>
+                            <div class="controls">
+                                <form:select id="" path="oneImage"
+                                             class="form-control" data-imageuploader="single">
+                                    <form:option value="${entity.oneImage.id}" label="${entity.oneImage.relativePath}"/>
+                                </form:select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 visible-md visible-lg">
+                        <span class="help-block">
+                            <a href="dev/docs/jsdoc/ExtImageUploader.html" target="_blank"
+                               class="btn btn-icon-only green btn-dev-demo-info">
+                                <i class="fa fa-info"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-group">
+                            <label class="control-label">多图片上传(集合对象)</label>
+                            <div class="controls">
+                                <form:select id="" path="multiImages" items="${entity.multiImages}" itemLabel="relativePath" itemValue="id"
+                                             class="form-control" data-imageuploader="multiple"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 visible-md visible-lg">
+                        <span class="help-block">
+                            <a href="dev/docs/jsdoc/ExtImageUploader.html" target="_blank"
+                               class="btn btn-icon-only green btn-dev-demo-info">
+                                <i class="fa fa-info"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-11">
                         <div class="form-group">

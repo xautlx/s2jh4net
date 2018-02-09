@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <form:form class="form-horizontal form-bordered form-label-stripped"
            data-validation='true' data-post-reload-grid="false"
-           action="admin/auth/role/edit">
+           action="admin/auth/role/privileges">
     <input type="hidden" name="id" value="${param.id}"/>
     <%-- 未选择任何元素提供标识参数，以便SpringMVC处理 --%>
     <input type="hidden" name="_privilegeIds" value="1">

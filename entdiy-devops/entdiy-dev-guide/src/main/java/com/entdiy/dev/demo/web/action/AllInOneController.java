@@ -33,6 +33,12 @@ import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
+import com.entdiy.dev.demo.entity.DemoProduct;
+import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
+import com.entdiy.dev.demo.service.DemoProductService;
+import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
+import com.entdiy.sys.entity.AttachmentFile;
+import com.entdiy.sys.service.AttachmentFileService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -40,6 +46,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.util.ClassUtils;
 import org.hibernate.envers.Audited;
 import org.slf4j.Logger;
@@ -64,6 +71,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/dev/demo/all-in-one")
@@ -83,12 +91,23 @@ public class AllInOneController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private DemoProductService productService;
+
+    @Autowired
+    private DemoReimbursementRequestService reimbursementRequestService;
+
+    @Autowired
+    private AttachmentFileService attachmentFileService;
+
     @MenuData("演示样例:UI组件集合")
+    @RequiresPermissions("演示样例:UI组件集合")
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(Model model) {
         return "dev/demo/allInOne-index";
     }
 
+    @RequiresPermissions("演示样例:UI组件集合")
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String detail(HttpServletRequest request, Model model) {
         Map<String, String> clazzMapping = Maps.newHashMap();
@@ -130,6 +149,35 @@ public class AllInOneController {
         entity.setDepartment(departmentService.findByCode("YF02").get());
         entity.setDepartments(Lists.newArrayList(departmentService.findByCode("YF02").get(),
                 departmentService.findByCode("SC03").get()));
+        {
+            List<DemoProduct> products = productService.findAll(1L, 2L, 3L, 4L);
+            if (CollectionUtils.isNotEmpty(products)) {
+                DemoProduct product = products.get(0);
+                attachmentFileService.injectToSourceEntity(product, "mainImage", "introImages");
+                entity.setOneImage(product.getMainImage());
+                entity.setMultiImages(product.getIntroImages());
+            }
+        }
+
+        {
+            List<DemoProduct> products = productService.findAll(5L, 6L, 6L, 7L);
+            if (CollectionUtils.isNotEmpty(products)) {
+                DemoProduct product = products.get(0);
+                attachmentFileService.injectToSourceEntity(product, "mainImage", "introImages");
+                entity.setImagePath(product.getMainImage().getRelativePath());
+                entity.setImagePaths(product.getIntroImages().stream().map(one -> one.getRelativePath()).collect(Collectors.joining(",")));
+            }
+        }
+
+        {
+            List<DemoReimbursementRequest> items = reimbursementRequestService.findAll(1L, 2L, 3L, 4L);
+            if (CollectionUtils.isNotEmpty(items)) {
+                DemoReimbursementRequest item = items.get(0);
+                attachmentFileService.injectToSourceEntity(item, "receiptAttachmentFiles");
+                entity.setMultiFiles(item.getReceiptAttachmentFiles());
+            }
+        }
+
         model.addAttribute("entity", entity);
 
         //构造用于remote类型select元素的初始化显示option数据项
@@ -140,7 +188,7 @@ public class AllInOneController {
         //二维码组件使用
         model.addAttribute("webContextFullUrl", ServletUtils.getRequestFullContextURL(request));
 
-        model.addAttribute("user", userService.findByAccount(accountService.findByUsername(Account.AuthTypeEnum.admin, GlobalConstant.ROOT_VALUE)));
+        model.addAttribute("user", userService.findByAccount(accountService.findByUsername(Account.AuthTypeEnum.admin, "user")));
 
         return "dev/demo/allInOne-detail";
     }
@@ -232,8 +280,6 @@ public class AllInOneController {
 
         private List<Department> departments;
 
-        private String filePath;
-
         private Long selectedId;
 
         private Long[] selectedIds;
@@ -258,12 +304,22 @@ public class AllInOneController {
 
         private String[] emptyTexts4;
 
-        @MetaData(value = "图片路径数组", comments = "用于UI表单数据收集，实际可根据设计转换为另外的逗号分隔字符串存储属性")
-        private String[] imagePaths;
+        private AttachmentFile oneFile;
+
+        private List<AttachmentFile> multiFiles;
+
+        private String imagePath;
+
+        private String imagePaths;
+
+        private AttachmentFile oneImage;
+
+        private List<AttachmentFile> multiImages;
 
         private BigDecimal quantity;
 
         private Boolean expired;
+
 
         private List<MockItemEntity> mockItemEntites;
 
@@ -279,7 +335,6 @@ public class AllInOneController {
             return departments.stream().map(Department::getId).toArray(Long[]::new);
         }
 
-
         public List<MockItemEntity> getMockItemEntitesForDynamicTable() {
             if (CollectionUtils.isEmpty(mockItemEntites)) {
                 List<MockItemEntity> items = Lists.newArrayList();
@@ -288,14 +343,6 @@ public class AllInOneController {
             } else {
                 return mockItemEntites;
             }
-        }
-
-        @Override
-        public String toString() {
-            return "MockEntity [department=" + department + ", filePath=" + filePath + ", selectedId=" + selectedId + ", selectedIds="
-                    + Arrays.toString(selectedIds) + ", saleDate=" + saleDate + ", publishTime=" + publishTime + ", searchDate=" + searchDate
-                    + ", textContent=" + textContent + ", htmlContent=" + htmlContent + ", splitText=" + splitText + ", imagePaths="
-                    + Arrays.toString(imagePaths) + ", quantity=" + quantity + "]";
         }
     }
 

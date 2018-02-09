@@ -68,7 +68,7 @@ public class RoleController extends BaseController<Role, Long> {
     @ResponseBody
     public Page<Role> findByPage(@ModelPropertyFilter(Role.class) GroupPropertyFilter filter,
                                  @ModelPageableRequest Pageable pageable) {
-        return roleService.findByPage(filter,pageable);
+        return roleService.findByPage(filter, pageable);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
@@ -102,7 +102,7 @@ public class RoleController extends BaseController<Role, Long> {
 
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/privileges", method = RequestMethod.GET)
-    public String privilegeR2sShow(@ModelEntity Role entity, Model model) {
+    public String privilegesShow(@ModelEntity(preFectchLazyFields = "roleR2Privileges") Role entity, Model model) {
         Set<Long> r2PrivilegeIds = Sets.newHashSet();
         List<RoleR2Privilege> r2s = entity.getRoleR2Privileges();
         if (CollectionUtils.isNotEmpty(r2s)) {
@@ -112,5 +112,12 @@ public class RoleController extends BaseController<Role, Long> {
         }
         model.addAttribute("r2PrivilegeIds", StringUtils.join(r2PrivilegeIds, ","));
         return "admin/auth/role-privileges";
+    }
+
+    @RequiresPermissions("配置管理:权限管理:角色配置")
+    @RequestMapping(value = "/privileges", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult privilegesSave(@ModelEntity(preFectchLazyFields = "roleR2Privileges") Role entity, Model model) {
+        return super.editSave(entity);
     }
 }

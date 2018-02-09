@@ -18,7 +18,7 @@
 package com.entdiy.core.data;
 
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.web.AppContextHolder;
+import com.entdiy.core.exception.ServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -72,11 +72,6 @@ public class DatabaseDataInitializeExecutor {
             return;
         }
 
-        //开发模式先清空所有缓存数据
-        if (AppContextHolder.isDevMode() || AppContextHolder.isDemoMode()) {
-            entityManager.getEntityManagerFactory().getCache().evictAll();
-        }
-
         {
             //搜索所有entity对象，并自动进行自增初始化值设
             for (String managedClassName : entityManagerFactory.getPersistenceUnitInfo().getManagedClassNames()) {
@@ -102,7 +97,11 @@ public class DatabaseDataInitializeExecutor {
             transactionTemplate.execute(new TransactionCallbackWithoutResult() {
                 @Override
                 protected void doInTransactionWithoutResult(TransactionStatus status) {
-                    initializeProcessor.initialize(entityManager);
+                    try {
+                        initializeProcessor.initialize(entityManager);
+                    } catch (Exception e) {
+                        throw new ServiceException("DatabaseDataInitialize Error", e);
+                    }
                 }
             });
         }

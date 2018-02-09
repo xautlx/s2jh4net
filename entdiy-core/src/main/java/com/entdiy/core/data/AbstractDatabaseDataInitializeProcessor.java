@@ -36,7 +36,7 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
 
     protected EntityManager entityManager;
 
-    public void initialize(EntityManager entityManager) {
+    public void initialize(EntityManager entityManager) throws Exception {
         this.entityManager = entityManager;
 
         logger.debug("Invoking data process for {}", this);
@@ -78,5 +78,5 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
         }
     }
 
-    public abstract void initializeInternal();
+    public abstract void initializeInternal() throws Exception;
 }

@@ -32,9 +32,13 @@ import java.util.List;
 public interface AttachmentFileDao extends BaseDao<AttachmentFile, String> {
 
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    List<AttachmentFile> findBySourceTypeAndSourceIdAndSourceCategory(String sourceType, String sourceId, String sourceCategory);
+    List<AttachmentFile> findBySourceTypeAndSourceIdAndSourceCategoryOrderByOrderIndexAsc(String sourceType, String sourceId, String sourceCategory);
 
     @Modifying
-    @Query("update AttachmentFile set sourceType=:sourceType , sourceId=:sourceId, sourceCategory=:sourceCategory where id=:id")
-    void updateSource(@Param("sourceType") String sourceType, @Param("sourceId") String sourceId, @Param("sourceCategory") String sourceCategory, @Param("id") String id);
+    @Query("update AttachmentFile set sourceType=:sourceType , sourceId=:sourceId, sourceCategory=:sourceCategory, orderIndex=:orderIndex where id=:id")
+    void updateSource(@Param("sourceType") String sourceType,
+                      @Param("sourceId") String sourceId,
+                      @Param("sourceCategory") String sourceCategory,
+                      @Param("orderIndex") Integer orderIndex,
+                      @Param("id") String id);
 }

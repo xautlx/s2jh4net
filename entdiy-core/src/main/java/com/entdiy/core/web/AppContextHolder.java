@@ -23,7 +23,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -79,26 +78,23 @@ public class AppContextHolder {
         return SYSTEM_NAME;
     }
 
-    @Value("${build.version}")
-    public void setBuildVersion(String buildVersion) {
+
+    public static void setBuildVersion(String buildVersion) {
         BUILD_VERSION = buildVersion;
         logger.info("System runnging at build.version={}", BUILD_VERSION);
     }
 
-    @Value("${demo.mode:false}")
-    public void setDemoMode(String demoMode) {
+    public static void setDemoMode(String demoMode) {
         DEMO_MODE = BooleanUtils.toBoolean(demoMode);
         logger.info("System runnging at demo.mode={}", DEMO_MODE);
     }
 
-    @Value("${dev.mode:false}")
-    public void setDevMode(String devMode) {
+    public static void setDevMode(String devMode) {
         DEV_MODE = BooleanUtils.toBoolean(devMode);
         logger.info("System runnging at dev.mode={}", DEV_MODE);
     }
 
-    @Value("${system.name}")
-    public void setSystemName(String systemName) {
+    public static void setSystemName(String systemName) {
         SYSTEM_NAME = systemName;
         logger.info("System name={}", SYSTEM_NAME);
     }

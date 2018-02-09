@@ -17,6 +17,7 @@
  */
 package com.entdiy.core.context;
 
+import com.entdiy.core.web.AppContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -39,6 +40,12 @@ public class SpringPropertiesHolder extends PropertySourcesPlaceholderConfigurer
 		super.processProperties(beanFactoryToProcess, propertyResolver);
 		logger.info("Setting propertyResolver to SpringPropertiesHolder");
 		SpringPropertiesHolder.propertyResolver = propertyResolver;
+
+		//尽早初始化全局参数值，以便后续逻辑使用
+		AppContextHolder.setBuildVersion(propertyResolver.getProperty("build.version"));
+		AppContextHolder.setDemoMode(propertyResolver.getProperty("demo.mode"));
+		AppContextHolder.setDevMode(propertyResolver.getProperty("dev.mode"));
+		AppContextHolder.setSystemName(propertyResolver.getProperty("system.name"));
 	}
 
 	public static String getProperty(String name) {

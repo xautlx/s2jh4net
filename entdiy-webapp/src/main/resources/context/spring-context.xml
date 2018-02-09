@@ -14,9 +14,6 @@
 
     <description>Spring公共配置</description>
 
-    <!-- 首先加载全局属性处理，以便后续相关逻辑调用判断 -->
-    <bean class="com.entdiy.core.web.AppContextHolder" depends-on="propertyPlaceholderConfigurer"/>
-
     <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
     <context:component-scan base-package="com.entdiy,xyz.entdiy" use-default-filters="false"
                             scoped-proxy="targetClass">

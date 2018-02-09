@@ -43,13 +43,18 @@ import com.entdiy.sys.service.AttachmentFileService;
 import com.entdiy.sys.service.DataDictService;
 import com.entdiy.sys.service.NotifyMessageService;
 import com.entdiy.sys.service.UserMessageService;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -81,7 +86,6 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
     @Autowired
     private DepartmentService departmentService;
 
-
     @Autowired
     private DemoReimbursementRequestService reimbursementRequestService;
 
@@ -92,7 +96,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
     private AttachmentFileService attachmentFileService;
 
     @Override
-    public void initializeInternal() {
+    public void initializeInternal() throws Exception {
         logger.info("Running " + this.getClass().getName());
 
         if (AppContextHolder.isDemoMode() || AppContextHolder.isDevMode()) {
@@ -328,9 +332,12 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
             //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
             entityManager.flush();
 
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] imageResources = resolver.getResources("classpath*:/META-INF/resources/assets/images/*.jpg");
+            Resource[] fileResources = resolver.getResources("classpath*:/META-INF/resources/dev/docs/markdown/*.md");
 
             if (isEmptyTable(DemoProduct.class)) {
-                int random = MockEntityUtils.randomInt(20, 40);
+                int random = MockEntityUtils.randomInt(15, 30);
                 for (int i = 0; i < random; i++) {
                     DemoProduct product = new DemoProduct();
                     demoProductService.save(product);
@@ -338,13 +345,41 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     entityManager.flush();
 
                     //附件处理
-                    product.setIntroImages(MockEntityUtils.buildMockObject(AttachmentFile.class, 2, 4));
+                    //创建附件记录
+                    List<AttachmentFile> attachmentFiles = Lists.newArrayList();
+                    int randomInt = MockEntityUtils.randomInt(2, 4);
+                    for (int j = 0; j < randomInt; j++) {
+                        Resource resource = MockEntityUtils.randomCandidates(imageResources);
+                        File file = resource.getFile();
+                        AttachmentFile attachmentFile = new AttachmentFile();
+                        attachmentFile.setFileRealName(file.getName());
+                        attachmentFile.setFileLength(file.length());
+                        attachmentFile.setFileContentType("image/jpg");
+                        attachmentFile.setRelativePath("/assets/images/" + file.getName());
+                        attachmentFile.setAbsolutePath("jar:/assets/images/" + file.getName());
+                        attachmentFiles.add(attachmentFile);
+                    }
                     //先提前上传保存附件
-                    attachmentFileService.saveAll(product.getIntroImages());
+                    attachmentFileService.saveAll(attachmentFiles);
+
+                    Resource resource = MockEntityUtils.randomCandidates(imageResources);
+                    File file = resource.getFile();
+                    AttachmentFile attachmentFile = new AttachmentFile();
+                    attachmentFile.setFileRealName(file.getName());
+                    attachmentFile.setFileLength(file.length());
+                    attachmentFile.setFileContentType("image/jpg");
+                    attachmentFile.setRelativePath("/assets/images/" + file.getName());
+                    attachmentFile.setAbsolutePath("jar:/assets/images/" + file.getName());
+                    attachmentFiles.add(attachmentFile);
+                    attachmentFileService.save(attachmentFile);
+
                     //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
                     entityManager.flush();
+
                     //然后和当前主对象关联
-                    attachmentFileService.saveBySource(product, "introImages");
+                    product.setIntroImages(attachmentFiles);
+                    product.setMainImage(attachmentFile);
+                    attachmentFileService.saveBySourceEntity(product, "introImages", "mainImage");
                     //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
                     entityManager.flush();
                 }
@@ -353,7 +388,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
             entityManager.flush();
 
             if (isEmptyTable(DemoReimbursementRequest.class)) {
-                int random = MockEntityUtils.randomInt(20, 40);
+                int random = MockEntityUtils.randomInt(15, 30);
                 for (int i = 0; i < random; i++) {
                     DemoReimbursementRequest rr = MockEntityUtils.buildMockObject(DemoReimbursementRequest.class);
                     rr.setUseType(MockEntityUtils.randomCandidates("BG", "ZS", "CY"));
@@ -377,13 +412,41 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     entityManager.flush();
 
                     //附件处理
-                    rr.setReceiptAttachmentFiles(MockEntityUtils.buildMockObject(AttachmentFile.class, 1, 3));
+                    //创建附件记录
+                    List<AttachmentFile> attachmentFiles = Lists.newArrayList();
+                    int randomInt = MockEntityUtils.randomInt(1, 2);
+                    for (int j = 0; j < randomInt; j++) {
+                        {
+                            Resource resource = MockEntityUtils.randomCandidates(fileResources);
+                            File file = resource.getFile();
+                            AttachmentFile attachmentFile = new AttachmentFile();
+                            attachmentFile.setFileRealName(file.getName());
+                            attachmentFile.setFileLength(file.length());
+                            attachmentFile.setFileContentType("plain/txt");
+                            attachmentFile.setRelativePath("/dev/docs/markdown/" + file.getName());
+                            attachmentFile.setAbsolutePath("jar:/dev/docs/markdown/" + file.getName());
+                            attachmentFiles.add(attachmentFile);
+                        }
+
+                        {
+                            Resource resource = MockEntityUtils.randomCandidates(imageResources);
+                            File file = resource.getFile();
+                            AttachmentFile attachmentFile = new AttachmentFile();
+                            attachmentFile.setFileRealName(file.getName());
+                            attachmentFile.setFileLength(file.length());
+                            attachmentFile.setFileContentType("image/jpg");
+                            attachmentFile.setRelativePath("/assets/images/" + file.getName());
+                            attachmentFile.setAbsolutePath("jar:/assets/images/" + file.getName());
+                            attachmentFiles.add(attachmentFile);
+                        }
+                    }
                     //先提前上传保存附件
-                    attachmentFileService.saveAll(rr.getReceiptAttachmentFiles());
+                    attachmentFileService.saveAll(attachmentFiles);
                     //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
                     entityManager.flush();
                     //然后和当前主对象关联
-                    attachmentFileService.saveBySource(rr, "receiptAttachmentFiles");
+                    rr.setReceiptAttachmentFiles(attachmentFiles);
+                    attachmentFileService.saveBySourceEntity(rr, "receiptAttachmentFiles");
                     //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
                     entityManager.flush();
                 }

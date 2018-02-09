@@ -118,7 +118,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         }
         reimbursementRequestItems.add(newItemTemplate);
 
-        attachmentFileService.injectAttachmentFilesToEntity(entity, "receiptAttachmentFiles");
+        attachmentFileService.injectToSourceEntity(entity, "receiptAttachmentFiles");
 
         model.addAttribute("useTypeMap",
                 dataDictService.findMapDataByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType));
@@ -158,7 +158,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         OperationResult result = super.editSave(entity);
 
         //附件处理（考虑到附件就是简单的字段更新基本不会出现业务失败，即便异常也不会对主业务逻辑带来严重问题，因此放在另外事务中调用）
-        attachmentFileService.saveBySource(entity, "receiptAttachmentFiles");
+        attachmentFileService.saveBySourceEntity(entity, "receiptAttachmentFiles");
 
         return result;
     }
