@@ -74,12 +74,6 @@ public class AccountService extends BaseService<Account, Long> {
             dataDomain = GlobalConstant.DEFAULT_VALUE;
             uname = splits[0];
         }
-        //root超级账户特殊处理
-        if (GlobalConstant.ROOT_VALUE.equalsIgnoreCase(uname)) {
-            //转换为小写统一处理
-            uname = GlobalConstant.ROOT_VALUE;
-            dataDomain = GlobalConstant.ROOT_VALUE;
-        }
 
         //按照顺序从authUid、email、mobile查询唯一对象
         Account account = accountDao.findByDataDomainAndAuthTypeAndAuthUid(dataDomain, authType, uname);
