@@ -523,7 +523,6 @@ public class ServletUtils {
         sb.append(request.getScheme()).append("://").append(request.getServerName());
         sb.append(request.getServerPort() == 80 ? "" : ":" + request.getServerPort());
         sb.append(request.getContextPath());
-        sb.append(request.getServletPath());
         return sb.toString();
     }
 

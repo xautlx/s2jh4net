@@ -19,6 +19,7 @@ package com.entdiy.dev;
 
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.web.AppContextHolder;
+import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.api.ClientValidationAuthenticationFilter;
 import com.google.common.collect.Lists;
@@ -140,8 +141,9 @@ public class DevelopController {
     @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/api/smoke-test", method = RequestMethod.GET)
     @ResponseBody
-    public void apiSmokeTest(HttpServletResponse httpServletResponse) throws Exception {
-        String url = "http://127.0.0.1:8080/entdiy";
+    public void apiSmokeTest(HttpServletRequest httpServletRequest,
+                             HttpServletResponse httpServletResponse) throws Exception {
+        String url = ServletUtils.getRequestFullContextURL(httpServletRequest);
         RestTemplate restTemplate = new RestTemplate();
         List<String> responseList = Lists.newArrayList();
 
