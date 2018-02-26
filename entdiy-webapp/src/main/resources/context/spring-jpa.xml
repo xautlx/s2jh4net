@@ -29,7 +29,7 @@
         </property>
         <property name="jpaProperties">
             <props>
-                <prop key="hibernate.dialect">${jpa.database.platform}</prop>
+                <prop key="hibernate.dialect">${jdbc.database.dialect}</prop>
                 <prop key="hibernate.connection.autocommit">false</prop>
                 <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.DefaultNamingStrategy</prop>
                 <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
@@ -58,9 +58,6 @@
     <!-- JPA 事务配置 -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
-    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
-        <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
     <!-- 使用annotation定义事务 -->

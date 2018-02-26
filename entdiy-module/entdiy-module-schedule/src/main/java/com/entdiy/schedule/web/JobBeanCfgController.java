@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,7 +45,7 @@ public class JobBeanCfgController extends BaseController<JobBeanCfg, Long> {
     @MenuData("配置管理:计划任务管理:可配置任务管理")
     @RequiresPermissions("配置管理:计划任务管理:可配置任务管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(@ModelEntity JobBeanCfg entity, Model model) {
+    public String index(@ModelEntity JobBeanCfg entity) {
         return "admin/schedule/jobBeanCfg-index";
     }
 
@@ -58,11 +57,10 @@ public class JobBeanCfgController extends BaseController<JobBeanCfg, Long> {
         return jobBeanCfgService.findByPage(filter, pageable);
     }
 
-    @Override
     @RequiresPermissions("配置管理:计划任务管理:可配置任务管理")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity JobBeanCfg entity) {
-        return super.editSave(entity);
+        return super.editSave(jobBeanCfgService, entity);
     }
 }

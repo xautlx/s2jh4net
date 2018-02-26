@@ -19,11 +19,16 @@ package com.entdiy.core.service;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.dao.jpa.BaseDao;
+import com.entdiy.core.entity.AbstractPersistableEntity;
+import com.entdiy.core.entity.BaseNativeNestedSetEntity;
+import com.entdiy.core.pagination.ExtPageRequest;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,32 +52,36 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class BaseService<T extends Persistable<? extends Serializable>, ID extends Serializable> {
+public abstract class BaseService<T extends AbstractPersistableEntity, ID extends Serializable> {
 
     private final Logger logger = LoggerFactory.getLogger(BaseService.class);
 
-    private Class<T> entityClass;
+    protected Class<T> entityClass;
 
-    private SimpleJpaRepository<T, ID> jpaRepository;
+    protected String entityName;
+
+    protected SimpleJpaRepository<T, ID> jpaRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
-
-    public BaseService() {
-    }
-
-    public BaseService(Class<T> entityClass, EntityManager entityManager) {
-        this.entityClass = entityClass;
-        this.entityManager = entityManager;
-        this.jpaRepository = new SimpleJpaRepository(entityClass, entityManager);
-    }
+    protected EntityManager entityManager;
 
     @PostConstruct
     public void init() {
         // 通过反射取得Entity的Class.
         this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+
+        //获取实体类对应的JQL实体名称
+        Entity annoEntity = entityClass.getAnnotation(Entity.class);
+        this.entityName = annoEntity.name();
+        if (StringUtils.isBlank(entityName)) {
+            this.entityName = entityClass.getSimpleName();
+        }
+
+        //构造对应的JPA操作接口对象
         this.jpaRepository = new SimpleJpaRepository(entityClass, entityManager);
     }
 
@@ -84,7 +93,7 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
      * @return the saved entity will never be {@literal null}.
      */
     @Transactional
-    public <S extends T> S save(S entity) {
+    public T save(T entity) {
         return jpaRepository.save(entity);
     }
 
@@ -96,8 +105,13 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
     @Transactional
-    public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
-        return jpaRepository.saveAll(entities);
+    public Iterable<T> saveAll(Iterable<T> entities) {
+        Assert.notNull(entities, "The given Iterable of entities not be null!");
+        List<T> result = new ArrayList();
+        for (T entity : entities) {
+            result.add(save(entity));
+        }
+        return result;
     }
 
     /**
@@ -112,15 +126,18 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
     }
 
     /**
-     * 基于主键集合查询集合数据对象
+     * 基于主键集合查询集合数据对象，如果可变参数为空则查询全部数据
      *
      * @param ids 主键集合
      * @return never {@literal null}.
      */
     @Transactional(readOnly = true)
     public List<T> findAll(final ID... ids) {
-        Assert.isTrue(ArrayUtils.isNotEmpty(ids), "必须提供有效查询主键集合");
-        return jpaRepository.findAll((root, query, builder) -> root.get("id").in(ids));
+        if (ArrayUtils.isEmpty(ids)) {
+            return jpaRepository.findAll();
+        } else {
+            return jpaRepository.findAll((root, query, builder) -> root.get("id").in(ids));
+        }
     }
 
     /**
@@ -134,7 +151,7 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
     }
 
     /**
-     * 批量数据删除操作 其实现只是简单循环集合每个元素调用 {@link #delete(Persistable)}
+     * 批量数据删除操作 其实现只是简单循环集合每个元素调用 {@link #delete(AbstractPersistableEntity)}
      * 因此并无实际的Batch批量处理，如果需要数据库底层批量支持请自行实现
      *
      * @param entities 待批量操作数据集合
@@ -142,7 +159,10 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
      */
     @Transactional
     public void deleteAll(Iterable<T> entities) {
-        jpaRepository.deleteAll(entities);
+        Assert.notNull(entities, "The given Iterable of entities not be null!");
+        for (T entity : entities) {
+            delete(entity);
+        }
     }
 
     /**
@@ -228,60 +248,42 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
         return jpaRepository.findAll(specifications, pageable);
     }
 
+    @Getter
+    @Setter
     private class GroupAggregateProperty {
         @MetaData(value = "字面属性", comments = "最后用于前端JSON输出的key")
         private String label;
+
         @MetaData(value = "JPA表达式", comments = "传入JPA CriteriaBuilder组装的内容")
         private String name;
+
         @MetaData(value = "JPA表达式alias", comments = "用于获取聚合值的别名")
         private String alias;
 
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getAlias() {
-            return alias;
-        }
-
-        public void setAlias(String alias) {
-            this.alias = alias;
-        }
-
+        @MetaData(value = "JPA Expression")
+        private Expression expression;
     }
 
     /**
      * 分组聚合统计，常用于类似按账期时间段统计商品销售利润，按会计科目总帐统计等
      *
-     * @param clazz       ROOT实体类型
      * @param groupFilter 过滤参数对象
-     * @param pageable    分页排序参数对象，TODO：目前有个限制未实现总记录数处理，直接返回一个固定大数字
+     * @param pageable    分页排序参数对象，可为null表示不做分页查询。TODO：目前有个限制未实现总记录数处理，直接返回一个固定大数字
      * @param properties  属性集合，判断规则：属性名称包含"("则标识为聚合属性，其余为分组属性
      *                    属性语法规则：sum = + , diff = - , prod = * , quot = / , case(condition,when,else)
      *                    示例：
-     *                    sum(amount)
-     *                    sum(diff(amount,costAmount))
-     *                    min(case(equal(amount,0),-1,quot(diff(amount,costAmount),amount)))
-     *                    case(equal(sum(amount),0),-1,quot(sum(diff(amount,costAmount)),sum(amount)))
+     *                    sum(amount) as xyz
+     *                    count(id) as xyz
+     *                    sum(diff(amount,costAmount)) as xyz
+     *                    min(case(equal(amount,0),-1,quot(diff(amount,costAmount),amount))) as xyz
+     *                    case(equal(sum(amount),0),-1,quot(sum(diff(amount,costAmount)),sum(amount))) as xyz
      * @return Map结构的集合分页对象
      */
     @Transactional(readOnly = true)
-    public Page<Map<String, Object>> findByGroupAggregate(Class clazz, GroupPropertyFilter groupFilter, Pageable pageable, String... properties) {
+    public Page<Map<String, Object>> findByGroupAggregate(GroupPropertyFilter groupFilter, Pageable pageable, String... properties) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
-        Root<?> root = criteriaQuery.from(clazz);
+        Root<?> root = criteriaQuery.from(groupFilter.getEntityClass());
 
         //挑出分组和聚合属性组，以是否存在“(”作为标识
         List<GroupAggregateProperty> groupProperties = Lists.newArrayList();
@@ -318,21 +320,46 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
             }
         }
 
-        //构建JPA Expression
-        Expression<?>[] groupExpressions = buildExpressions(root, criteriaBuilder, groupProperties);
-        Expression<?>[] aggregateExpressions = buildExpressions(root, criteriaBuilder, aggregateProperties);
-        Expression<?>[] selectExpressions = ArrayUtils.addAll(groupExpressions, aggregateExpressions);
+        //分组属性 JPA Expression 集合
+        List<Expression<?>> groupExpressions = groupProperties.stream().map(one -> {
+            Expression<?> expression = buildExpression(root, criteriaBuilder, one.getName(), one.getAlias());
+            one.setExpression(expression);
+            return expression;
+        }).collect(Collectors.toList());
+        //分组聚合 JPA Expression 集合
+        List<Expression<?>> aggregateExpressions = aggregateProperties.stream().map(one -> {
+            Expression<?> expression = buildExpression(root, criteriaBuilder, one.getName(), one.getAlias());
+            one.setExpression(expression);
+            return expression;
+        }).collect(Collectors.toList());
+        //全部查询 JPA Expression 集合
+        List<Selection<?>> selectExpressions = Lists.newArrayList(groupExpressions);
+        selectExpressions.addAll(aggregateExpressions);
+
+        //构建JPA SELECT
         CriteriaQuery<Tuple> select = criteriaQuery.multiselect(selectExpressions);
 
-        //基于前端动态条件对象动态where条件组装
-        Predicate where = buildPredicatesFromFilters(groupFilter, root, criteriaQuery, criteriaBuilder, false);
+        //基于前端动态条件对象动态having条件组装
+        Predicate[] havingPredicates = groupFilter.getFilters().stream().map(one -> {
+            //把查询条件属性名称与聚合属性匹配，获取对应的Expression然后构造对应的Predicate
+            String name = one.getConvertedPropertyName();
+            for (GroupAggregateProperty agg : aggregateProperties) {
+                if (name.equals(agg.getAlias()) || name.equals(agg.getName()) || name.equals(agg.getLabel())) {
+                    one.setHaving(true);
+                    return buildPredicateByExpression(agg.getExpression(), one, root, criteriaBuilder);
+                }
+            }
+            return null;
+        }).toArray(Predicate[]::new);
+        if (ArrayUtils.isNotEmpty(havingPredicates)) {
+            Predicate having = criteriaBuilder.and(havingPredicates);
+            select.having(having);
+        }
+
+        //基于前端动态条件对象动态where条件组装，注意放在having处理之后以剔除掉having查询条件
+        Predicate where = buildPredicatesFromFilters(groupFilter, root, criteriaQuery, criteriaBuilder);
         if (where != null) {
             select.where(where);
-        }
-        //基于前端动态条件对象动态having条件组装
-        Predicate having = buildPredicatesFromFilters(groupFilter, root, criteriaQuery, criteriaBuilder, true);
-        if (having != null) {
-            select.having(having);
         }
 
         //分页和排序处理
@@ -340,19 +367,30 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
             Iterator<Order> orders = pageable.getSort().iterator();
             List<javax.persistence.criteria.Order> jpaOrders = Lists.newArrayList();
             while (orders.hasNext()) {
+                Expression expression = null;
+
                 Order order = orders.next();
-                String prop = order.getProperty();
-                String alias = fixCleanAlias(prop);
-                //目前发现JPA不支持传入alias作为排序属性，因此只能基于alias找到匹配的Expression表达式作为排序参数
-                List<Selection<?>> selections = select.getSelection().getCompoundSelectionItems();
-                for (Selection<?> selection : selections) {
-                    if (selection.getAlias().equals(alias)) {
-                        if (order.isAscending()) {
-                            jpaOrders.add(criteriaBuilder.asc((Expression<?>) selection));
-                        } else {
-                            jpaOrders.add(criteriaBuilder.desc((Expression<?>) selection));
-                        }
+                String name = order.getProperty();
+
+                //与聚合属性比较，获取对应的Expression
+                for (GroupAggregateProperty agg : aggregateProperties) {
+                    if (name.equals(agg.getAlias()) || name.equals(agg.getName()) || name.equals(agg.getLabel())) {
+                        expression = agg.getExpression();
                         break;
+                    }
+                }
+
+                //非聚合属性，按照标准的对象属性构造Expression
+                if (expression == null) {
+                    expression = buildExpression(root, criteriaBuilder, name, null);
+                }
+
+                //有效的Expression，追加排序
+                if (expression != null) {
+                    if (order.isAscending()) {
+                        jpaOrders.add(criteriaBuilder.asc(expression));
+                    } else {
+                        jpaOrders.add(criteriaBuilder.desc(expression));
                     }
                 }
             }
@@ -383,21 +421,12 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
             mapDatas.add(data);
         }
 
-        //TODO：目前有个限制未实现总记录数处理，直接返回一个固定大数字
-        return new PageImpl(mapDatas, pageable, Integer.MAX_VALUE);
-    }
-
-    /**
-     * 基于当前泛型实体对象类型，调用分组统计接口
-     *
-     * @param groupFilter
-     * @param pageable
-     * @param properties
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public Page<Map<String, Object>> findByGroupAggregate(GroupPropertyFilter groupFilter, Pageable pageable, String... properties) {
-        return findByGroupAggregate(entityClass, groupFilter, pageable, properties);
+        if (pageable == null) {
+            return ExtPageRequest.buildPageResultFromList(mapDatas);
+        } else {
+            //TODO：目前有个限制未实现总记录数处理，直接返回一个固定大数字
+            return new PageImpl(mapDatas, pageable, Integer.MAX_VALUE);
+        }
     }
 
     /**
@@ -436,18 +465,14 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
         return new PageImpl(query.getResultList(), pageable, Long.valueOf(count.toString()));
     }
 
-    private <X> Predicate buildPredicate(String propertyName, PropertyFilter filter, Root<X> root, CriteriaQuery<?> query, CriteriaBuilder builder,
-                                         Boolean having) {
+    private <X> Predicate buildPredicate(String propertyName, PropertyFilter filter, Root<X> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         Object matchValue = filter.getMatchValue();
         String[] names = StringUtils.split(propertyName, ".");
 
         if (matchValue == null) {
             return null;
         }
-        if (having && propertyName.indexOf("(") == -1) {
-            return null;
-        }
-        if (!having && propertyName.indexOf("(") > -1) {
+        if (filter.isHaving()) {
             return null;
         }
         if (matchValue instanceof String) {
@@ -467,7 +492,7 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
 
                 // Hack for Bug: https://jira.springsource.org/browse/DATAJPA-105
                 // 如果是在count计算总记录，则添加join；否则说明正常分页查询添加fetch
-                if (!Long.class.isAssignableFrom(query.getResultType())) {
+                if (Persistable.class.isAssignableFrom(query.getResultType())) {
                     root.fetch(names[0], joinType);
                 } else {
                     root.join(names[0], joinType);
@@ -487,7 +512,7 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
 
                 // Hack for Bug: https://jira.springsource.org/browse/DATAJPA-105
                 // 如果是在count计算总记录，则添加join；否则说明正常分页查询添加fetch
-                if (!Long.class.isAssignableFrom(query.getResultType())) {
+                if (Persistable.class.isAssignableFrom(query.getResultType())) {
                     Fetch fetch = root.fetch(names[0], joinTypes[0]);
                     for (int i = 1; i < names.length; i++) {
                         fetch.fetch(names[i], joinTypes[i]);
@@ -503,7 +528,7 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
             return null;
         }
 
-        Predicate predicate = null;
+
         Expression expression = null;
 
         // 处理集合子查询
@@ -518,11 +543,38 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
                     path = path.get(names[i]);
                 }
             }
-            expression = (Expression) path;
+            expression = path;
         } else {
             expression = buildExpression(root, builder, propertyName, null);
         }
 
+        Predicate predicate = buildPredicateByExpression(expression, filter, root, builder);
+
+        //处理集合子查询
+        if (filter.getSubQueryCollectionPropetyType() != null) {
+            String owner = StringUtils.uncapitalize(entityClass.getSimpleName());
+            subQueryFrom.join(owner);
+            subquery.select(subQueryFrom.get(owner)).where(predicate);
+            predicate = builder.in(root.get("id")).value(subquery);
+        }
+
+        return predicate;
+    }
+
+    /**
+     * 基于表达式构建查询条件对象
+     *
+     * @param expression
+     * @param filter
+     * @param root
+     * @param builder
+     * @return
+     */
+    private Predicate buildPredicateByExpression(Expression expression, PropertyFilter filter, Root<?> root, CriteriaBuilder builder) {
+        Object matchValue = filter.getMatchValue();
+        Predicate predicate = null;
+
+        //对于几个特殊字符串含义特殊处理
         if ("NULL".equalsIgnoreCase(String.valueOf(matchValue))) {
             return expression.isNull();
         } else if ("EMPTY".equalsIgnoreCase(String.valueOf(matchValue))) {
@@ -599,12 +651,12 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
                 Assert.isTrue(matchValue.getClass().isArray(), "Match value must be array");
                 Object[] matchValues = (Object[]) matchValue;
                 Assert.isTrue(matchValues.length == 2, "Match value must have two value");
-                if (matchValues[0] instanceof LocalDate) {
+                if (matchValues[0] instanceof LocalDateTime) {
                     // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
                     // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
-                    LocalDate dateTo = ((LocalDate) matchValues[1]).plusDays(1);
+                    LocalDateTime dateTo = ((LocalDateTime) matchValues[1]).plusDays(1);
 
-                    return builder.and(builder.greaterThanOrEqualTo(expression, (LocalDate) matchValues[0]),
+                    return builder.and(builder.greaterThanOrEqualTo(expression, (LocalDateTime) matchValues[0]),
                             builder.lessThan(expression, dateTo));
                 } else {
                     return builder.between(expression, (Comparable) matchValues[0], (Comparable) matchValues[1]);
@@ -619,10 +671,10 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
                 predicate = builder.lessThan(expression, (Comparable) matchValue);
                 break;
             case LE:
-                if (matchValue instanceof LocalDate) {
+                if (matchValue instanceof LocalDateTime) {
                     // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
                     // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
-                    LocalDate dateTo = ((LocalDate) matchValue).plusDays(1);
+                    LocalDateTime dateTo = ((LocalDateTime) matchValue).plusDays(1);
 
                     predicate = builder.lessThan(expression, dateTo);
                 } else {
@@ -664,13 +716,6 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
                 break;
         }
 
-        //处理集合子查询
-        if (filter.getSubQueryCollectionPropetyType() != null) {
-            String owner = StringUtils.uncapitalize(entityClass.getSimpleName());
-            subQueryFrom.join(owner);
-            subquery.select(subQueryFrom.get(owner)).where(predicate);
-            predicate = builder.in(root.get("id")).value(subquery);
-        }
 
         Assert.notNull(predicate, "Undefined match type: " + filter.getMatchType());
         return predicate;
@@ -687,19 +732,19 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
      * @return
      */
     private <X> List<Predicate> buildPredicatesFromFilters(final Collection<PropertyFilter> filters, Root<X> root, CriteriaQuery<?> query,
-                                                           CriteriaBuilder builder, Boolean having) {
+                                                           CriteriaBuilder builder) {
         List<Predicate> predicates = Lists.newArrayList();
         if (CollectionUtils.isNotEmpty(filters)) {
             for (PropertyFilter filter : filters) {
                 if (!filter.hasMultiProperties()) { // 只有一个属性需要比较的情况.
-                    Predicate predicate = buildPredicate(filter.getConvertedPropertyName(), filter, root, query, builder, having);
+                    Predicate predicate = buildPredicate(filter.getConvertedPropertyName(), filter, root, query, builder);
                     if (predicate != null) {
                         predicates.add(predicate);
                     }
                 } else {// 包含多个属性需要比较的情况,进行or处理.
                     List<Predicate> orpredicates = Lists.newArrayList();
                     for (String param : filter.getConvertedPropertyNames()) {
-                        Predicate predicate = buildPredicate(param, filter, root, query, builder, having);
+                        Predicate predicate = buildPredicate(param, filter, root, query, builder);
                         if (predicate != null) {
                             orpredicates.add(predicate);
                         }
@@ -714,45 +759,47 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
     }
 
     private <X extends Persistable> Specification<X> buildSpecification(final GroupPropertyFilter groupPropertyFilter) {
-        return new Specification<X>() {
-            @Override
-            public Predicate toPredicate(Root<X> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                if (groupPropertyFilter != null) {
-                    return buildPredicatesFromFilters(groupPropertyFilter, root, query, builder);
-                } else {
-                    return null;
-                }
+        if (BaseNativeNestedSetEntity.class.isAssignableFrom(entityClass)) {
+            //排除Nested Set Model模型默认根节点
+            groupPropertyFilter.forceAnd(new PropertyFilter(MatchType.NE, "depth", 0));
+        }
+
+        return (Specification<X>) (root, query, builder) -> {
+            if (groupPropertyFilter != null) {
+                return buildPredicatesFromFilters(groupPropertyFilter, root, query, builder);
+            } else {
+                return null;
             }
         };
     }
 
-    protected Predicate buildPredicatesFromFilters(GroupPropertyFilter groupPropertyFilter, Root root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-        return buildPredicatesFromFilters(groupPropertyFilter, root, query, builder, false);
-    }
-
     protected Predicate buildPredicatesFromFilters(GroupPropertyFilter groupPropertyFilter, Root root, CriteriaQuery<?> query,
-                                                   CriteriaBuilder builder, Boolean having) {
+                                                   CriteriaBuilder builder) {
         if (groupPropertyFilter == null) {
             return null;
         }
-        List<Predicate> predicates = buildPredicatesFromFilters(groupPropertyFilter.getFilters(), root, query, builder, having);
+
+        //根据 GroupPropertyFilter 嵌套数据结构，递归组装查询条件
+        List<Predicate> predicates = buildPredicatesFromFilters(groupPropertyFilter.getFilters(), root, query, builder);
         if (CollectionUtils.isNotEmpty(groupPropertyFilter.getGroups())) {
             for (GroupPropertyFilter group : groupPropertyFilter.getGroups()) {
                 if (CollectionUtils.isEmpty(group.getFilters()) && CollectionUtils.isEmpty(group.getForceAndFilters())) {
                     continue;
                 }
-                Predicate subPredicate = buildPredicatesFromFilters(group, root, query, builder, having);
+                Predicate subPredicate = buildPredicatesFromFilters(group, root, query, builder);
                 if (subPredicate != null) {
                     predicates.add(subPredicate);
                 }
             }
         }
+
+        //对各组查询条件集合进行AND或OR合并
         Predicate predicate = null;
         if (CollectionUtils.isNotEmpty(predicates)) {
             if (predicates.size() == 1) {
                 predicate = predicates.get(0);
             } else {
-                if (groupPropertyFilter.getGroupType().equals(GroupPropertyFilter.GROUP_OPERATION_OR)) {
+                if (groupPropertyFilter.getGroupType().equals(GroupPropertyFilter.GroupOperationEnum.OR)) {
                     predicate = builder.or(predicates.toArray(new Predicate[predicates.size()]));
                 } else {
                     predicate = builder.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -760,7 +807,8 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
             }
         }
 
-        List<Predicate> appendAndPredicates = buildPredicatesFromFilters(groupPropertyFilter.getForceAndFilters(), root, query, builder, having);
+        //额外强制追加的AND组合过滤条件处理
+        List<Predicate> appendAndPredicates = buildPredicatesFromFilters(groupPropertyFilter.getForceAndFilters(), root, query, builder);
         if (CollectionUtils.isNotEmpty(appendAndPredicates)) {
             if (predicate != null) {
                 appendAndPredicates.add(predicate);
@@ -769,13 +817,6 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
         }
 
         return predicate;
-    }
-
-    /**
-     * 子类额外追加过滤限制条件的入口方法，一般基于当前登录用户强制追加过滤条件
-     */
-    protected List<Predicate> appendPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-        return null;
     }
 
     private Expression parseExpr(Root<?> root, CriteriaBuilder criteriaBuilder, String expr, Map<String, Expression<?>> parsedExprMap) {
@@ -845,7 +886,7 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
                             } else {
                                 item = root.get(name);
                             }
-                            subExpressions[i] = (Expression) item;
+                            subExpressions[i] = item;
                         } catch (Exception e) {
                             subExpressions[i] = new BigDecimal(name);
                         }
@@ -864,12 +905,13 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
             expr = expr.replace(exprPart, exprPartConvert);
             parsedExprMap.put(exprPartConvert, expression);
 
+            //嵌套逻辑递归调用
             if (expr.indexOf("(") > -1) {
                 expression = parseExpr(root, criteriaBuilder, expr, parsedExprMap);
             }
         } else {
             String name = expr;
-            Path<?> item = null;
+            Path<?> item;
             if (name.indexOf(".") > -1) {
                 String[] props = StringUtils.split(name, ".");
                 item = root.get(props[0]);
@@ -894,27 +936,6 @@ public class BaseService<T extends Persistable<? extends Serializable>, ID exten
             expr.alias(alias);
         }
         return expr;
-    }
-
-    private Expression<?>[] buildExpressions(Root<?> root, CriteriaBuilder criteriaBuilder, List<GroupAggregateProperty> groupAggregateProperties) {
-        Expression<?>[] parsed = new Expression<?>[groupAggregateProperties.size()];
-        int i = 0;
-        for (GroupAggregateProperty groupAggregateProperty : groupAggregateProperties) {
-            parsed[i++] = buildExpression(root, criteriaBuilder, groupAggregateProperty.getName(), groupAggregateProperty.getAlias());
-        }
-        return parsed;
-    }
-
-    private Selection<?>[] mergeSelections(Root<?> root, Selection<?>[] path1, Selection<?>... path2) {
-        Selection<?>[] parsed = new Selection<?>[path1.length + path2.length];
-        int i = 0;
-        for (Selection<?> path : path1) {
-            parsed[i++] = path;
-        }
-        for (Selection<?> path : path2) {
-            parsed[i++] = path;
-        }
-        return parsed;
     }
 
     public void detach(Object entity) {

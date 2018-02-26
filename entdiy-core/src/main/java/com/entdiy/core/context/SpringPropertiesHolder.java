@@ -18,6 +18,7 @@
 package com.entdiy.core.context;
 
 import com.entdiy.core.web.AppContextHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -30,25 +31,31 @@ import org.springframework.core.env.ConfigurablePropertyResolver;
  */
 public class SpringPropertiesHolder extends PropertySourcesPlaceholderConfigurer {
 
-	private static Logger logger = LoggerFactory.getLogger(SpringPropertiesHolder.class);
+    private static Logger logger = LoggerFactory.getLogger(SpringPropertiesHolder.class);
 
-	private static ConfigurablePropertyResolver propertyResolver;
+    private static ConfigurablePropertyResolver propertyResolver;
 
-	@Override
-	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess,
-			final ConfigurablePropertyResolver propertyResolver) throws BeansException {
-		super.processProperties(beanFactoryToProcess, propertyResolver);
-		logger.info("Setting propertyResolver to SpringPropertiesHolder");
-		SpringPropertiesHolder.propertyResolver = propertyResolver;
+    @Override
+    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess,
+                                     final ConfigurablePropertyResolver propertyResolver) throws BeansException {
+        super.processProperties(beanFactoryToProcess, propertyResolver);
+        logger.info("Setting propertyResolver to SpringPropertiesHolder");
+        SpringPropertiesHolder.propertyResolver = propertyResolver;
 
-		//尽早初始化全局参数值，以便后续逻辑使用
-		AppContextHolder.setBuildVersion(propertyResolver.getProperty("build.version"));
-		AppContextHolder.setDemoMode(propertyResolver.getProperty("demo.mode"));
-		AppContextHolder.setDevMode(propertyResolver.getProperty("dev.mode"));
-		AppContextHolder.setSystemName(propertyResolver.getProperty("system.name"));
-	}
+        //https://hibernate.atlassian.net/browse/HHH-11610
+        String storageEngine = propertyResolver.getProperty("jdbc.database.storageEngine");
+        if (StringUtils.isNotBlank(storageEngine)) {
+            System.setProperty("hibernate.dialect.storage_engine", storageEngine);
+        }
 
-	public static String getProperty(String name) {
-		return propertyResolver.getProperty(name);
-	}
+        //尽早初始化全局参数值，以便后续逻辑使用
+        AppContextHolder.setBuildVersion(propertyResolver.getProperty("build.version"));
+        AppContextHolder.setDemoMode(propertyResolver.getProperty("demo.mode"));
+        AppContextHolder.setDevMode(propertyResolver.getProperty("dev.mode"));
+        AppContextHolder.setSystemName(propertyResolver.getProperty("system.name"));
+    }
+
+    public static String getProperty(String name) {
+        return propertyResolver.getProperty(name);
+    }
 }

@@ -26,6 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 /**
@@ -42,6 +44,9 @@ public abstract class SpringTransactionalTestCase extends AbstractTransactionalJ
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected DataSource dataSource;
+
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     @PostConstruct
     public void init() {

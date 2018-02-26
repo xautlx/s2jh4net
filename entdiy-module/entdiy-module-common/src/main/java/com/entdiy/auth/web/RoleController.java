@@ -89,15 +89,14 @@ public class RoleController extends BaseController<Role, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity Role entity, Model model) {
-        return super.editSave(entity);
+        return super.editSave(roleService, entity);
     }
 
-    @Override
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(ids);
+        return super.delete(roleService, ids);
     }
 
     @RequiresPermissions("配置管理:权限管理:角色配置")
@@ -118,6 +117,6 @@ public class RoleController extends BaseController<Role, Long> {
     @RequestMapping(value = "/privileges", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult privilegesSave(@ModelEntity(preFectchLazyFields = "roleR2Privileges") Role entity, Model model) {
-        return super.editSave(entity);
+        return super.editSave(roleService, entity);
     }
 }

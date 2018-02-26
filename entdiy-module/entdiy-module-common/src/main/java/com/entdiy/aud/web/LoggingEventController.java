@@ -77,7 +77,7 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
     @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult editSave(@ModelEntity LoggingEvent entity, Model model) {
-        return super.editSave(entity);
+    public OperationResult editSave(@ModelEntity LoggingEvent entity) {
+        return super.editSave(loggingEventService, entity);
     }
 }

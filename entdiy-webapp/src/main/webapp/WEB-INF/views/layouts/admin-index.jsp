@@ -85,7 +85,7 @@
 
                     <!-- BEGIN INBOX DROPDOWN -->
                     <li class="dropdown dropdown-extended" id="header_inbox_bar">
-                        <a href="#/admin/profile/user-message" class="dropdown-toggle"
+                        <a href="#/admin/profile/account-message" class="dropdown-toggle"
                            data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true"
                            data-path="个人消息列表">

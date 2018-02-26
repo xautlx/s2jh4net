@@ -65,8 +65,9 @@ public class DepartmentController extends BaseController<Department, Long> {
     @JsonView(JsonViews.Admin.class)
     public Page<Department> findByPage(@ModelPropertyFilter(Department.class) GroupPropertyFilter filter,
                                        @ModelPageableRequest Pageable pageable) {
+        //如果没有业务查询参数，则限制只查询业务根节点数据
         if (filter.isEmptySearch()) {
-            filter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
+            filter.forceAnd(new PropertyFilter(MatchType.EQ, "depth", 1));
         }
         return departmentService.findByPage(filter, pageable);
     }
@@ -74,13 +75,13 @@ public class DepartmentController extends BaseController<Department, Long> {
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
     @ResponseBody
-    public MappingJacksonValue findTreeData(HttpServletRequest request) {
-        Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
-        GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(Department.class, request);
-        groupFilter.forceAnd(new PropertyFilter(MatchType.NE, "disabled", true));
-        Object value = departmentService.findByPage(groupFilter, pageable);
+    public MappingJacksonValue findTreeData(@ModelPropertyFilter(Department.class) GroupPropertyFilter filter,
+                                            @ModelPageableRequest Pageable pageable,
+                                            HttpServletRequest request) {
+        filter.forceAnd(new PropertyFilter(MatchType.NE, "disabled", true));
+        Object value = departmentService.findByPage(filter, pageable);
         final MappingJacksonValue jacksonValue = new MappingJacksonValue(value);
-        jacksonValue.setSerializationView(PropertyFilter.parseJsonView(request, JsonViews.Admin.class));
+        jacksonValue.setSerializationView(PropertyFilter.parseJsonView(request, JsonViews.Tree.class));
         return jacksonValue;
     }
 
@@ -88,14 +89,13 @@ public class DepartmentController extends BaseController<Department, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity Department entity, Model model) {
-        return super.editSave(entity);
+        return super.editSave(departmentService, entity);
     }
 
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    @Override
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(ids);
+        return super.delete(departmentService, ids);
     }
 }

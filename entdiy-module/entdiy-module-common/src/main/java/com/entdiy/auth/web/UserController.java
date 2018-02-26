@@ -35,8 +35,8 @@ import com.entdiy.core.web.annotation.ModelPageableRequest;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
+import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.MenuService;
-import com.entdiy.sys.vo.NavMenuVO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -89,7 +89,7 @@ public class UserController extends BaseController<User, Long> {
     @ResponseBody
     public Page<User> findByPage(@ModelPropertyFilter(User.class) GroupPropertyFilter filter,
                                  @ModelPageableRequest Pageable pageable) {
-        return userService.findByPage(filter,pageable);
+        return userService.findByPage(filter, pageable);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
@@ -122,12 +122,11 @@ public class UserController extends BaseController<User, Long> {
         return OperationResult.buildSuccessResult("数据保存处理完成", entity);
     }
 
-    @Override
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(ids);
+        return super.delete(userService, ids);
     }
 
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
@@ -194,9 +193,9 @@ public class UserController extends BaseController<User, Long> {
     @ResponseBody
     public Object menusData(@ModelEntity(preFectchLazyFields = {"userR2Roles"}) User entity) {
         List<Map<String, Object>> items = Lists.newArrayList();
-        List<NavMenuVO> navMenuVOs = menuService.processUserMenu(entity);
-        for (NavMenuVO navMenuVO : navMenuVOs) {
-            items.add(navMenuVO.buildMapDataForTreeDisplay());
+        List<Menu> userMenus = menuService.processUserMenu(entity);
+        for (Menu menu : userMenus) {
+            items.add(menu.buildMapDataForTreeDisplay());
         }
         return items;
     }

@@ -17,7 +17,7 @@
  */
 package com.entdiy.sys.service;
 
-import com.entdiy.auth.entity.User;
+import com.entdiy.auth.entity.Account;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
@@ -27,8 +27,8 @@ import com.entdiy.support.service.MailService;
 import com.entdiy.support.service.MessagePushService;
 import com.entdiy.support.service.SmsService;
 import com.entdiy.support.service.SmsService.SmsMessageTypeEnum;
-import com.entdiy.sys.dao.UserMessageDao;
-import com.entdiy.sys.entity.UserMessage;
+import com.entdiy.sys.dao.AccountMessageDao;
+import com.entdiy.sys.entity.AccountMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class UserMessageService extends BaseService<UserMessage, Long> {
+public class AccountMessageService extends BaseService<AccountMessage, Long> {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserMessageService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountMessageService.class);
 
     @Autowired
-    private UserMessageDao userMessageDao;
+    private AccountMessageDao accountMessageDao;
 
     @Autowired(required = false)
     private MailService mailService;
@@ -57,17 +57,17 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
     /**
      * 查询用户未读消息个数
      *
-     * @param user 当前登录用户
+     * @param account 当前登录用户
      */
     @Transactional(readOnly = true)
-    public Long findCountToRead(User user) {
+    public Long findCountToRead(Account account) {
         GroupPropertyFilter filter = GroupPropertyFilter.buildDefaultAndGroupFilter();
-        filter.append(new PropertyFilter(MatchType.EQ, "targetUser", user));
+        filter.append(new PropertyFilter(MatchType.EQ, "targetAccount", account));
         filter.append(new PropertyFilter(MatchType.NU, "firstReadTime", Boolean.TRUE));
         return count(filter);
     }
 
-    public void processUserRead(UserMessage entity, User user) {
+    public void processUserRead(AccountMessage entity) {
         if (entity.getFirstReadTime() == null) {
             entity.setFirstReadTime(DateUtils.currentDateTime());
             entity.setLastReadTime(entity.getFirstReadTime());
@@ -76,7 +76,7 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
             entity.setLastReadTime(DateUtils.currentDateTime());
             entity.setReadTotalCount(entity.getReadTotalCount() + 1);
         }
-        userMessageDao.save(entity);
+        accountMessageDao.save(entity);
     }
 
     /**
@@ -84,13 +84,13 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
      *
      * @param entity
      */
-    public void pushMessage(UserMessage entity) {
+    public void pushMessage(AccountMessage entity) {
         //定向用户消息处理
-        User targetUser = entity.getTargetUser();
+        Account targetAccount = entity.getTargetAccount();
 
         //邮件推送处理
         if (entity.getEmailPush() && entity.getEmailPushTime() == null) {
-            String email = targetUser.getAccount().getEmail();
+            String email = targetAccount.getEmail();
             if (StringUtils.isNotBlank(email)) {
                 mailService.sendHtmlMail(entity.getTitle(), entity.getMessage(), true, email);
                 entity.setEmailPushTime(DateUtils.currentDateTime());
@@ -100,7 +100,7 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
         //短信推送处理
         if (entity.getSmsPush() && entity.getSmsPushTime() == null) {
             if (smsService != null) {
-                String mobileNum = targetUser.getAccount().getMobile();
+                String mobileNum = targetAccount.getMobile();
                 if (StringUtils.isNotBlank(mobileNum)) {
                     String errorMessage = smsService.sendSMS(entity.getNotification(), mobileNum, SmsMessageTypeEnum.Default);
                     if (StringUtils.isBlank(errorMessage)) {
@@ -125,11 +125,11 @@ public class UserMessageService extends BaseService<UserMessage, Long> {
             }
         }
 
-        userMessageDao.save(entity);
+        accountMessageDao.save(entity);
     }
 
     @Override
-    public UserMessage save(UserMessage entity) {
+    public AccountMessage save(AccountMessage entity) {
         super.save(entity);
         pushMessage(entity);
         return entity;

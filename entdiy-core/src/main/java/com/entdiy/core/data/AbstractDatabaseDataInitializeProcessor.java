@@ -17,6 +17,7 @@
  */
 package com.entdiy.core.data;
 
+import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.AppContextHolder;
 import org.apache.commons.io.IOUtils;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,14 +36,16 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
 
     private final static Logger logger = LoggerFactory.getLogger(AbstractDatabaseDataInitializeProcessor.class);
 
-    protected EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public void initialize(EntityManager entityManager) throws Exception {
-        this.entityManager = entityManager;
-
+    public void initialize() {
         logger.debug("Invoking data process for {}", this);
-        initializeInternal();
-
+        try {
+            initializeInternal();
+        } catch (Exception e) {
+            throw new ServiceException("data initialize error", e);
+        }
         if (AppContextHolder.isDevMode()) {
             //重置恢复模拟数据设置的临时时间
             DateUtils.setCurrentDateTime(null);
@@ -78,5 +82,10 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
         }
     }
 
+    /**
+     * 各模板数据初始化内部逻辑
+     *
+     * @throws Exception
+     */
     public abstract void initializeInternal() throws Exception;
 }

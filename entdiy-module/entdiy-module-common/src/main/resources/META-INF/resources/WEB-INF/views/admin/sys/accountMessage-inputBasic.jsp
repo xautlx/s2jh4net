@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <form:form class="form-horizontal form-bordered form-label-stripped" method="post"
            modelAttribute="entity" data-validation='${validationRules}'
-           action="admin/sys/user-message/edit">
+           action="admin/sys/account-message/edit">
     <form:hidden path="id"/>
     <form:hidden path="version"/>
     <div class="form-body">

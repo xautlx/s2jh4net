@@ -32,14 +32,14 @@ import java.util.Optional;
 public interface DataDictDao extends BaseDao<DataDict, Long> {
 
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    @Query("from DataDict where primaryKey=:primaryKey and parent is null")
+    @Query("from DataDict where primaryKey=:primaryKey")
     Optional<DataDict> findByRootPrimaryKey(@Param("primaryKey") String primaryKey);
 
-    @Query("from DataDict where parent.id=:parentId and disabled=false order by orderRank desc")
+    @Query("from DataDict where parent.id=:parentId and disabled=false order by rgt desc")
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
     List<DataDict> findEnabledChildrenByParentId(@Param("parentId") Long parentId);
 
-    @Query("from DataDict order by parent asc,orderRank desc")
+    @Query("from DataDict order by rgt desc")
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
     List<DataDict> findAllCached();
 }

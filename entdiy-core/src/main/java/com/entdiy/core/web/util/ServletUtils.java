@@ -22,6 +22,8 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.entity.BaseEntity;
+import com.entdiy.core.security.AuthContextHolder;
+import com.entdiy.core.security.AuthUserDetails;
 import com.entdiy.core.util.Encodes;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.AppContextHolder;
@@ -31,9 +33,7 @@ import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Persistable;
@@ -271,7 +271,8 @@ public class ServletUtils {
         Map<String, String> dataMap = Maps.newLinkedHashMap();
 
         // Request相关的参数、属性等数据组装
-        dataMap.put("req.user", ObjectUtils.toString(SecurityUtils.getSubject().getPrincipal()));
+        AuthUserDetails auth = AuthContextHolder.getAuthUserDetails();
+        dataMap.put("req.user", auth == null ? "NULL" : auth.getUsername());
         dataMap.put("req.method", request.getMethod());
         dataMap.put(ClassicConstants.REQUEST_REQUEST_URI, request.getRequestURI());
         dataMap.put(ClassicConstants.REQUEST_USER_AGENT_MDC_KEY, request.getHeader("User-Agent"));

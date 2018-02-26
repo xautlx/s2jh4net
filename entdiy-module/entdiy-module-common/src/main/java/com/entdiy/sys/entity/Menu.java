@@ -18,8 +18,9 @@
 package com.entdiy.sys.entity;
 
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.entity.BaseNativeEntity;
+import com.entdiy.core.entity.BaseNativeNestedSetEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.*;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -44,7 +46,7 @@ import java.lang.reflect.Method;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "菜单")
 @Audited
-public class Menu extends BaseNativeEntity {
+public class Menu extends BaseNativeNestedSetEntity<Menu> {
 
     private static final long serialVersionUID = 2860233299443173932L;
 
@@ -56,19 +58,10 @@ public class Menu extends BaseNativeEntity {
     @Column(nullable = false, length = 255, unique = true)
     private String path;
 
-    @MetaData(value = "父节点", comments = "设置外键为none，便于批量重建数据")
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "parent_id")
-    @JsonIgnore
-    private Menu parent;
-
     @MetaData(value = "描述")
     @Column(length = 1000)
     @JsonIgnore
     private String description;
-
-    @MetaData(value = "禁用标识", tooltips = "禁用菜单全局不显示")
-    private Boolean disabled = Boolean.FALSE;
 
     @MetaData(value = "菜单URL")
     @Column(length = 256)
@@ -78,15 +71,8 @@ public class Menu extends BaseNativeEntity {
     @Column(length = 128)
     private String style;
 
-    @MetaData(value = "排序号", tooltips = "相对排序号，数字越大越靠上显示")
-    @Column(nullable = false)
-    private Integer orderRank = 100;
-
     @MetaData(value = "展开标识", tooltips = "是否默认展开菜单组")
     private Boolean initOpen = Boolean.FALSE;
-
-    @MetaData(value = "所在层级")
-    private Integer inheritLevel;
 
     @MetaData(value = "对应Web Controller类名")
     @Column(length = 256)
@@ -127,5 +113,17 @@ public class Menu extends BaseNativeEntity {
             }
         }
         return mappingMethod;
+    }
+
+    public Map<String, Object> buildMapDataForTreeDisplay() {
+        //组装zTree结构数据
+        Map<String, Object> item = Maps.newHashMap();
+        item.put("id", this.getId());
+        item.put("parent", this.getParent().getId());
+        item.put("name", this.getName());
+        item.put("display", this.getName());
+        item.put("open", true);
+        item.put("hasChildren", this.hasChildren());
+        return item;
     }
 }

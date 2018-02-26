@@ -63,8 +63,9 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @ResponseBody
     public Page<DataDict> findByPage(@ModelPropertyFilter(DataDict.class) GroupPropertyFilter filter,
                                      @ModelPageableRequest Pageable pageable) {
+        //如果没有业务查询参数，则限制只查询业务根节点数据
         if (filter.isEmptySearch()) {
-            filter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
+            filter.forceAnd(new PropertyFilter(MatchType.EQ, "depth", 1));
         }
         return dataDictService.findByPage(filter, pageable);
     }
@@ -79,15 +80,14 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity DataDict entity, Model model) {
-        return super.editSave(entity);
+        return super.editSave(dataDictService, entity);
     }
 
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    @Override
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(ids);
+        return super.delete(dataDictService, ids);
     }
 
     @MetaData(value = "级联子数据集合")

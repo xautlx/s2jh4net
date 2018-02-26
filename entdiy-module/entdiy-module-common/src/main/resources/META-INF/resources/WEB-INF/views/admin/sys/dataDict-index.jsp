@@ -58,15 +58,6 @@
                        editable: true,
                        formatter: "checkbox"
                    }, {
-                       label: "排序号",
-                       name: "orderRank",
-                       width: 60,
-                       editable: true,
-                       editoptions: {
-                           defaultValue: 100
-                       },
-                       formatter: "integer"
-                   }, {
                        label: "大文本数据",
                        name: "richTextValue",
                        width: 200,
@@ -74,11 +65,7 @@
                        editable: true,
                        edittype: "textarea"
                    }],
-                   sortorder: "desc",
-                   sortname: "orderRank",
-                   subGrid: true,
                    subGridRowExpandedKey: "parent.id",
-                   gridDnD: true,
                    editurl: "/admin/sys/data-dict/edit",
                    fullediturl: "/admin/sys/data-dict/edit",
                    delurl: "/admin/sys/data-dict/delete"

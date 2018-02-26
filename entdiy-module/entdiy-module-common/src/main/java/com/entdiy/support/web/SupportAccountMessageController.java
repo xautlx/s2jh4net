@@ -18,16 +18,17 @@
 package com.entdiy.support.web;
 
 import com.entdiy.auth.entity.Account;
-import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
+import com.entdiy.core.web.annotation.ModelPageableRequest;
+import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.annotation.AuthAccount;
-import com.entdiy.sys.entity.UserMessage;
-import com.entdiy.sys.service.UserMessageService;
+import com.entdiy.sys.entity.AccountMessage;
+import com.entdiy.sys.service.AccountMessageService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,57 +44,55 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class SupportUserMessageController {
+public class SupportAccountMessageController {
 
     @Autowired
-    private UserMessageService userMessageService;
+    private AccountMessageService accountMessageService;
 
     @Autowired
     private UserService userService;
 
     @MenuData("个人信息:个人消息")
-    @RequestMapping(value = "/admin/profile/user-message", method = RequestMethod.GET)
-    public String userMessageIndex() {
-        return "admin/profile/userMessage-index";
+    @RequestMapping(value = "/admin/profile/account-message", method = RequestMethod.GET)
+    public String accountMessageIndex() {
+        return "admin/profile/accountMessage-index";
     }
 
 
     @MetaData("用户未读消息数目")
-    @RequestMapping(value = "/admin/user-message/count", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/account-message/count", method = RequestMethod.GET)
     @ResponseBody
-    public OperationResult userMessageCount(@AuthAccount Account account) {
-        User user = userService.findByAccount(account);
-        return OperationResult.buildSuccessResult(userMessageService.findCountToRead(user));
+    public OperationResult accountMessageCount(@AuthAccount Account account) {
+        return OperationResult.buildSuccessResult(accountMessageService.findCountToRead(account));
     }
 
     @MetaData("个人消息列表")
-    @RequestMapping(value = "/admin/profile/user-message-list", method = RequestMethod.GET)
-    public String userMessageList(@AuthAccount Account account, HttpServletRequest request, Model model) {
-        User user = userService.findByAccount(account);
-        Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
-        GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(UserMessage.class, request);
-        groupFilter.append(new PropertyFilter(PropertyFilter.MatchType.EQ, "targetUser", user));
+    @RequestMapping(value = "/admin/profile/account-message-list", method = RequestMethod.GET)
+    public String accountMessageList(@AuthAccount Account account,
+                                  @ModelPropertyFilter(AccountMessage.class) GroupPropertyFilter filter,
+                                  @ModelPageableRequest Pageable pageable,
+                                  HttpServletRequest request, Model model) {
+        filter.append(new PropertyFilter(PropertyFilter.MatchType.EQ, "targetAccount", account));
         String readed = request.getParameter("readed");
         if (StringUtils.isNotBlank(readed)) {
             if (BooleanUtils.toBoolean(request.getParameter("readed"))) {
-                groupFilter.append(new PropertyFilter(PropertyFilter.MatchType.NN, "firstReadTime", Boolean.TRUE));
+                filter.append(new PropertyFilter(PropertyFilter.MatchType.NN, "firstReadTime", Boolean.TRUE));
             } else {
-                groupFilter.append(new PropertyFilter(PropertyFilter.MatchType.NU, "firstReadTime", Boolean.TRUE));
+                filter.append(new PropertyFilter(PropertyFilter.MatchType.NU, "firstReadTime", Boolean.TRUE));
             }
         }
-        Page<UserMessage> pageData = userMessageService.findByPage(groupFilter, pageable);
+        Page<AccountMessage> pageData = accountMessageService.findByPage(filter, pageable);
         model.addAttribute("pageData", pageData);
-        return "admin/profile/userMessage-list";
+        return "admin/profile/accountMessage-list";
     }
 
     @MetaData("个人消息读取")
-    @RequestMapping(value = "/admin/profile/user-message-view/{messageId}", method = RequestMethod.GET)
-    public String userMessageView(@AuthAccount Account account, @PathVariable("messageId") Long messageId, Model model) {
-        User user = userService.findByAccount(account);
-        userMessageService.findOne(messageId).ifPresent(one -> {
-            userMessageService.processUserRead(one, user);
-            model.addAttribute("userMessage", one);
+    @RequestMapping(value = "/admin/profile/account-message-view/{messageId}", method = RequestMethod.GET)
+    public String accountMessageView(@AuthAccount Account account, @PathVariable("messageId") Long messageId, Model model) {
+        accountMessageService.findOne(messageId).ifPresent(one -> {
+            accountMessageService.processUserRead(one);
+            model.addAttribute("accountMessage", one);
         });
-        return "admin/profile/userMessage-view";
+        return "admin/profile/accountMessage-view";
     }
 }

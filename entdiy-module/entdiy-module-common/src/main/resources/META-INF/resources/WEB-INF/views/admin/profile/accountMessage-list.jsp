@@ -16,7 +16,7 @@
             <c:forEach var="item" items="${pageData.content}">
                 <tr>
                     <td><a href="javascript:;"
-                           data-url="admin/profile/user-message-view/${item.id}?readed=${item.lastReadTime!=null}"
+                           data-url="admin/profile/account-message-view/${item.id}?readed=${item.lastReadTime!=null}"
                            data-toggle="modal-ajaxify" title="查看消息">
                         <c:if test="${item.lastReadTime==null}">
                             <i class="fa fa-envelope-o"></i>

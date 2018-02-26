@@ -29,11 +29,11 @@
         <div class="col-md-12">
             <table class="search-group-target"
                    grid-options='{
-                   url: "/admin/sys/user-message/list?search[EQ_targetUser]=${param.siteUserId}",
+                   url: "/admin/sys/account-message/list?search[EQ_targetAccount]=${param.siteUserId}",
                    colModel: [{
                        label: "目标用户",
-                       name: "targetUser.display",
-                       name: "targetUser.id",
+                       name: "targetAccount.display",
+                       name: "targetAccount.id",
                        editable: true,
                        width: 100,
                        align: "left"

@@ -19,14 +19,12 @@ package com.entdiy.auth.service.test;
 
 import com.entdiy.auth.entity.Department;
 import com.entdiy.auth.service.DepartmentService;
-import com.entdiy.core.pagination.GroupPropertyFilter;
-import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.test.SpringTransactionalTestCase;
-import com.entdiy.core.util.MockEntityUtils;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 public class DepartmentServiceTest extends SpringTransactionalTestCase {
@@ -34,46 +32,98 @@ public class DepartmentServiceTest extends SpringTransactionalTestCase {
     @Autowired
     private DepartmentService departmentService;
 
-    @PostConstruct
+    @Before
     public void init() {
-        Department root = MockEntityUtils.buildMockObject(Department.class);
-        root.setParent(null);
-        root.setName("root");
-        departmentService.save(root);
-
-        Department child1 = MockEntityUtils.buildMockObject(Department.class);
-        child1.setParent(root);
-        child1.setName("child1");
-        departmentService.save(child1);
-
-        Department child2 = MockEntityUtils.buildMockObject(Department.class);
-        child2.setParent(root);
-        child1.setName("child2");
-        departmentService.save(child2);
     }
 
     @Test
     public void findByCodeOrName() {
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.clear();
+
+        Department root = departmentService.findRoot();
+
+        Department d01 = new Department();
+        d01.setParent(root);
+        d01.setCode("d01");
+        d01.setName(d01.getCode());
+        departmentService.save(d01);
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.flush();
+        entityManager.clear();
+        Assert.assertTrue(d01.getLft().equals(2));
+
+        Department d02 = new Department();
+        d02.setParent(root);
+        d02.setCode("d02");
+        d02.setName(d02.getCode());
+        departmentService.save(d02);
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.flush();
+        entityManager.clear();
+        assertNestedSetModel();
+        Assert.assertTrue(d02.getLft().equals(4));
+
+        Department d0101 = new Department();
+        d0101.setParent(d01);
+        d0101.setCode("d0101");
+        d0101.setName(d0101.getCode());
+        departmentService.save(d0101);
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.flush();
+        entityManager.clear();
+        assertNestedSetModel();
+
+        Assert.assertTrue(d0101.getLft().equals(3));
+
+        Department d0102 = new Department();
+        d0102.setParent(d01);
+        d0102.setCode("d0102");
+        d0102.setName(d0102.getCode());
+        departmentService.save(d0102);
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.flush();
+        entityManager.clear();
+        assertNestedSetModel();
+
+        Assert.assertTrue(d0102.getLft().equals(5));
+
+        departmentService.delete(departmentService.findByCode("d0101").get());
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.flush();
+        entityManager.clear();
+        assertNestedSetModel();
+
+        Assert.assertTrue(departmentService.findRoot().getRgt().equals(8));
 
 
-        logger.debug("LAZY 1. Start...");
-        GroupPropertyFilter groupFilter1 = GroupPropertyFilter.buildDefaultAndGroupFilter();
-        groupFilter1.forceAnd(new PropertyFilter(PropertyFilter.MatchType.NE, "disabled", true));
-        List<Department> datas = departmentService.findByFilters(groupFilter1);
-        logger.debug("LAZY 2. Code...");
-        datas.forEach((item) -> logger.debug("item code: {}", item.getCode()));
-        logger.debug("LAZY 3. enabledChildrenCount...");
-        datas.forEach((item) -> logger.debug("item enabledChildrenCount: {}", item.getEnabledChildrenCount()));
+        departmentService.delete(departmentService.findByCode("d0102").get());
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.flush();
+        entityManager.clear();
+        assertNestedSetModel();
 
+        Assert.assertTrue(departmentService.findRoot().getRgt().equals(6));
+        Assert.assertTrue(departmentService.findByCode("d02").get().getRgt().equals(5));
 
-        logger.debug("EAGER 1. Start...");
-        GroupPropertyFilter groupFilter2 = GroupPropertyFilter.buildDefaultAndGroupFilter();
-        groupFilter2.forceAnd(new PropertyFilter(PropertyFilter.MatchType.NE, "disabled", true));
-        groupFilter2.forceAnd(new PropertyFilter(PropertyFilter.MatchType.FETCH, "enabledChildrenCount", "INNER"));
-        List<Department> datas2 = departmentService.findByFilters(groupFilter2);
-        logger.debug("EAGER 2. Code...");
-        datas2.forEach((item) -> logger.debug("item code: {}", item.getCode()));
-        logger.debug("EAGER 3. enabledChildrenCount...");
-        datas2.forEach((item) -> logger.debug("item enabledChildrenCount: {}", item.getEnabledChildrenCount()));
+        departmentService.delete(departmentService.findByCode("d01").get());
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.flush();
+        entityManager.clear();
+        assertNestedSetModel();
+
+        Assert.assertTrue(departmentService.findRoot().getRgt().equals(4));
+        Assert.assertTrue(departmentService.findByCode("d02").get().getRgt().equals(3));
+    }
+
+    private void assertNestedSetModel() {
+        //清空缓存，避免同会话缓存数据干扰
+        entityManager.clear();
+        List<Department> entities = entityManager.createQuery("from Department").getResultList();
+        entities.forEach(entity -> {
+            entityManager.detach(entity);
+            logger.debug("id: {}, code: {}, lft: {}, rgt: {}, depth: {}",
+                    entity.getId(), entity.getCode(), entity.getLft(), entity.getRgt(), entity.getDepth());
+        });
     }
 }

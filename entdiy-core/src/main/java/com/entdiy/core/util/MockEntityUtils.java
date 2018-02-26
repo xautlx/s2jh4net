@@ -202,6 +202,7 @@ public class MockEntityUtils {
      */
     public static LocalDateTime randomDateTime(int daysBeforeNow, int daysAfterNow) {
         LocalDateTime dt = LocalDateTime.now();
+        dt = dt.plusSeconds(randomInt(-30, 30));
         dt = dt.plusMinutes(randomInt(-30, 30));
         dt = dt.plusHours(randomInt(-12, 12));
         dt = dt.minusDays(daysBeforeNow);

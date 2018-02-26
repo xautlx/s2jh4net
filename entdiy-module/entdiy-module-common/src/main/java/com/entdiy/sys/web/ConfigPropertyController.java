@@ -59,7 +59,7 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @ResponseBody
     public Page<ConfigProperty> findByPage(@ModelPropertyFilter(ConfigProperty.class) GroupPropertyFilter filter,
                                            @ModelPageableRequest Pageable pageable) {
-        return configPropertyService.findByPage(filter,pageable);
+        return configPropertyService.findByPage(filter, pageable);
     }
 
     @RequestMapping(value = "/edit-tabs", method = RequestMethod.GET)
@@ -78,7 +78,7 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity ConfigProperty entity, HttpServletRequest request) {
-        return super.editSave(entity);
+        return super.editSave(configPropertyService, entity);
     }
 
     @RequestMapping(value = "/html-preview", method = RequestMethod.POST)

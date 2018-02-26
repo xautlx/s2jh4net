@@ -18,18 +18,14 @@
 package com.entdiy.core.data;
 
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.exception.ServiceException;
+import com.entdiy.core.web.AppContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
@@ -56,20 +52,13 @@ public class DatabaseDataInitializeExecutor {
     protected EntityManager entityManager;
 
     @Autowired
-    private TransactionTemplate transactionTemplate;
-
-
-    @Value("${auto.data.skip:false}")
-    private boolean autoDataSkip;
-
-    @Autowired
     private List<AbstractDatabaseDataInitializeProcessor> initializeProcessors;
 
     @PostConstruct
     public void initialize() {
-        if (autoDataSkip) {
-            logger.info("Auto data skipped.");
-            return;
+        //先清空缓存数据
+        if (AppContextHolder.isDevMode()) {
+            entityManager.getEntityManagerFactory().getCache().evictAll();
         }
 
         {
@@ -94,16 +83,7 @@ public class DatabaseDataInitializeExecutor {
             logger.debug("Invoking data initialize for {}", initializeProcessor);
             countThread.update(initializeProcessor.getClass());
 
-            transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus status) {
-                    try {
-                        initializeProcessor.initialize(entityManager);
-                    } catch (Exception e) {
-                        throw new ServiceException("DatabaseDataInitialize Error", e);
-                    }
-                }
-            });
+            initializeProcessor.initialize();
         }
 
         //停止计数线程

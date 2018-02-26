@@ -3,6 +3,6 @@
 <c:forEach var="item" items="${pageData.content}">
 	<tr>
 		<td>${item.code}</td>
-		<td>${item.rebuildTime}</td>
+		<td>${item.createDate}</td>
 	</tr>
 </c:forEach>

@@ -22,6 +22,8 @@ import com.entdiy.auth.dao.RoleDao;
 import com.entdiy.auth.dao.UserDao;
 import com.entdiy.auth.dao.UserExtDao;
 import com.entdiy.auth.entity.*;
+import com.entdiy.core.security.AuthContextHolder;
+import com.entdiy.core.security.AuthUserDetails;
 import com.entdiy.core.service.BaseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +57,14 @@ public class UserService extends BaseService<User, Long> {
         return userDao.findByAccount(account);
     }
 
-    //@Transactional(readOnly = true)
-    //public User findCurrentAuthUser() {
-    //    return userDao.findByAccount(AuthContextHolder.findRequiredAuthAccount());
-    //}
+    @Transactional(readOnly = true)
+    public User findCurrentAuthUser() {
+        AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
+        if (authUserDetails == null) {
+            return null;
+        }
+        return userDao.findByAccount(accountService.findOne(authUserDetails.getAccountId()).get());
+    }
 
     @Override
     public User save(User entity) {

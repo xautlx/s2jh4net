@@ -25,8 +25,8 @@ import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.support.service.MailService;
+import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.MenuService;
-import com.entdiy.sys.vo.NavMenuVO;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -95,7 +95,7 @@ public class AdminController {
      */
     @RequestMapping(value = "/admin/menus", method = RequestMethod.GET)
     @ResponseBody
-    public List<NavMenuVO> navMenu(@AuthAccount Account account) {
+    public List<Menu> navMenu(@AuthAccount Account account) {
         User user = userService.findByAccount(account);
         //如果未登录则直接返回空
         if (user == null) {

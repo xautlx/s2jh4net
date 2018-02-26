@@ -46,15 +46,9 @@
                        name: "disabled",
                        editable: true,
                        formatter: "checkbox"
-                   }, {
-                       label: "排序号",
-                       name: "orderRank",
-                       editable: true,
-                       width: 200
                    }],
-                   subGrid: true,
+                   inlineNavAddable: true,
                    subGridRowExpandedKey: "parent.id",
-                   gridDnD: true,
                    editurl: "/admin/auth/department/edit",
                    delurl: "/admin/auth/department/delete"
                 }'>

@@ -56,6 +56,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @MetaData("报销申请管理")
 @Controller
@@ -156,7 +157,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         entity.setTotalInvoiceAmount(items.stream().map(DemoReimbursementRequestItem::getInvoiceAmount).reduce(BigDecimal.ZERO, BigDecimal::add));
 
         //先调用业务接口持久化主对象
-        OperationResult result = super.editSave(entity);
+        OperationResult result = super.editSave(reimbursementRequestService, entity);
 
         //附件处理（考虑到附件就是简单的字段更新基本不会出现业务失败，即便异常也不会对主业务逻辑带来严重问题，因此放在另外事务中调用）
         attachmentFileService.saveBySourceEntity(entity, "receiptAttachmentFiles");
@@ -167,8 +168,80 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    @Override
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(ids);
+        return super.delete(reimbursementRequestService, ids);
+    }
+
+    @MenuData("演示样例:报销申请统计")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat", method = RequestMethod.GET)
+    public String statIndex() {
+        return "dev/demo/reimbursementRequest-statIndex";
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat/use-type", method = RequestMethod.GET)
+    public String statUseType(Model model) {
+        model.addAttribute("useTypeJson",
+                JsonUtils.writeValueAsString(dataDictService.findMapDataByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType)));
+        return "dev/demo/reimbursementRequest-statUseType";
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat/use-type/list", method = RequestMethod.GET)
+    @ResponseBody
+    @JsonView(JsonViews.Admin.class)
+    public Page<Map<String, Object>> statUseTypeList(@ModelPropertyFilter(DemoReimbursementRequest.class) GroupPropertyFilter filter,
+                                                     @ModelPageableRequest Pageable pageable) {
+        return reimbursementRequestService.findByGroupAggregate(filter, pageable, "useType", "sum(totalInvoiceAmount) as totalInvoiceAmount");
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat/submit-date", method = RequestMethod.GET)
+    public String statSubmitDate(Model model) {
+        return "dev/demo/reimbursementRequest-statSubmitDate";
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat/submit-date/list", method = RequestMethod.GET)
+    @ResponseBody
+    @JsonView(JsonViews.Admin.class)
+    public Page<Map<String, Object>> statSubmitDateList(@ModelPropertyFilter(DemoReimbursementRequest.class) GroupPropertyFilter filter,
+                                                        @ModelPageableRequest Pageable pageable) {
+        return reimbursementRequestService.findByGroupAggregate(filter, pageable, "submitDate", "count(id) as cnt",
+                "max(totalInvoiceAmount) as maxTotalInvoiceAmount", "min(totalInvoiceAmount) as minTotalInvoiceAmount",
+                "sum(totalInvoiceAmount) as totalInvoiceAmount");
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat/submit-user/list", method = RequestMethod.GET)
+    @ResponseBody
+    @JsonView(JsonViews.Admin.class)
+    public Page<Map<String, Object>> statSubmitUserList(@ModelPropertyFilter(DemoReimbursementRequest.class) GroupPropertyFilter filter,
+                                                        @ModelPageableRequest Pageable pageable) {
+        return reimbursementRequestService.findByGroupAggregate(filter, pageable, "user", "count(id) as cnt",
+                "max(totalInvoiceAmount) as maxTotalInvoiceAmount", "min(totalInvoiceAmount) as minTotalInvoiceAmount",
+                "sum(totalInvoiceAmount) as totalInvoiceAmount");
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat/department", method = RequestMethod.GET)
+    public String statDepartment(Model model) {
+        return "dev/demo/reimbursementRequest-statDepartment";
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequestMapping(value = "/stat/department/list", method = RequestMethod.GET)
+    @ResponseBody
+    @JsonView(JsonViews.Admin.class)
+    public Page<Map<String, Object>> statDepartmentList(@ModelPropertyFilter(DemoReimbursementRequest.class) GroupPropertyFilter filter,
+                                                        @ModelPageableRequest Pageable pageable) {
+        //如果没有业务查询参数，则限制只查询业务根节点数据
+        if (filter.isEmptySearch()) {
+            //filter.forceAnd(new PropertyFilter(PropertyFilter.MatchType.EQ, "department.depth", 1));
+        }
+        return reimbursementRequestService.findByGroupAggregate(filter, pageable, "department", "count(id) as cnt",
+                "max(totalInvoiceAmount) as maxTotalInvoiceAmount", "min(totalInvoiceAmount) as minTotalInvoiceAmount",
+                "sum(totalInvoiceAmount) as totalInvoiceAmount");
     }
 }

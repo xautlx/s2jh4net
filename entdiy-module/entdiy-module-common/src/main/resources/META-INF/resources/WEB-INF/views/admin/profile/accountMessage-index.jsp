@@ -5,17 +5,17 @@
     <div class="search-group-form">
         <div class="row">
             <div class="col-md-12">
-                <form action="admin/profile/user-message-list?readed=${param.readed}"
+                <form action="admin/profile/account-message-list?readed=${param.readed}"
                       method="get" class="form-inline form-search-init" data-validation="true">
                     <div class="form-group">
                         <div class="controls controls-clearfix">
                             <div class="btn-group">
                                 <a class="btn btn-default ${empty param.readed?'active':''}"
-                                   href='#/admin/profile/user-message' data-path='个人消息列表'>全部</a>
+                                   href='#/admin/profile/account-message' data-path='个人消息列表'>全部</a>
                                 <a class="btn btn-default ${param.readed=='no'?'active':''}"
-                                   href='#/admin/profile/user-message?readed=no' data-path='未读个人消息列表'>未读</a>
+                                   href='#/admin/profile/account-message?readed=no' data-path='未读个人消息列表'>未读</a>
                                 <a class="btn btn-default ${param.readed=='yes'?'active':''}"
-                                   href='#/admin/profile/user-message?readed=yes' data-path='已读个人消息列表'>已读</a>
+                                   href='#/admin/profile/account-message?readed=yes' data-path='已读个人消息列表'>已读</a>
                             </div>
                         </div>
                     </div>

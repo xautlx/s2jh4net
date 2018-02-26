@@ -18,13 +18,11 @@
 package com.entdiy.sys.entity;
 
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.entity.BaseNativeEntity;
-import com.entdiy.core.web.json.EntityIdDisplaySerializer;
+import com.entdiy.core.entity.BaseNativeNestedSetEntity;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.sys.service.DataDictService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -44,7 +42,7 @@ import javax.persistence.*;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "数据字典")
 @Audited
-public class DataDict extends BaseNativeEntity {
+public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
 
     private static final long serialVersionUID = 5732022663570063926L;
 
@@ -112,22 +110,7 @@ public class DataDict extends BaseNativeEntity {
     @Lob
     @JsonView(JsonViews.Detail.class)
     private String richTextValue;
-
-    @MetaData(value = "禁用标识", tooltips = "禁用项目全局不显示")
-    @JsonView(JsonViews.Admin.class)
-    private Boolean disabled = Boolean.FALSE;
-
-    @MetaData(value = "排序号", tooltips = "相对排序号，数字越大越靠上显示")
-    @JsonView(JsonViews.Admin.class)
-    private Integer orderRank = 10;
-
-    @MetaData(value = "父节点")
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "none"))
-    @JsonSerialize(using = EntityIdDisplaySerializer.class)
-    @JsonView(JsonViews.Admin.class)
-    private DataDict parent;
-
+    
     @Override
     @Transient
     public String getDisplay() {
@@ -138,8 +121,8 @@ public class DataDict extends BaseNativeEntity {
     @JsonIgnore
     public String getUniqueKey() {
         StringBuilder sb = new StringBuilder();
-        if (parent != null) {
-            sb.append(parent.getPrimaryKey() + "_");
+        if (this.getParent() != null) {
+            sb.append(this.getParent().getPrimaryKey() + "_");
         }
         sb.append(primaryKey);
         if (StringUtils.isNotBlank(secondaryKey)) {

@@ -18,6 +18,11 @@
         <property name="accountService" ref="accountService"/>
     </bean>
 
+    <!-- Access Token Realm -->
+    <bean id="bearerTokenRealm" class="com.entdiy.security.api.BearerTokenRealm">
+        <property name="accountService" ref="accountService"/>
+    </bean>
+
     <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
         <property name="authenticationStrategy">
             <bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>
@@ -30,6 +35,7 @@
         <property name="realms">
             <list>
                 <ref bean="authTypeShiroJdbcRealm"/>
+                <ref bean="bearerTokenRealm"/>
             </list>
         </property>
         <!-- 由于使用了Spring Session Redis，因此直接使用默认session管理即可。
@@ -70,6 +76,7 @@
     <bean id="apiClientAuthenticationFilter" class="com.entdiy.security.api.ClientValidationAuthenticationFilter">
         <property name="appKeySecrets">
             <props>
+                <!-- default: -->
                 <prop key="default">${auth.api.default}</prop>
                 <prop key="jenkins">${auth.api.jenkins}</prop>
                 <!-- 可以在后面追加prop定义，允许新的Client访问控制。可考虑扩展为从数据库获取Api访问控制信息。 -->

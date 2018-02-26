@@ -19,7 +19,7 @@ package com.entdiy.auth.service;
 
 import com.entdiy.auth.dao.DepartmentDao;
 import com.entdiy.auth.entity.Department;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.service.BaseNestedSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +28,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class DepartmentService extends BaseService<Department, Long> {
+public class DepartmentService extends BaseNestedSetService<Department, Long> {
 
     @Autowired
     private DepartmentDao departmentDao;
 
+    @Transactional(readOnly = true)
     public Optional<Department> findByCode(String code) {
         return departmentDao.findByCode(code);
     }

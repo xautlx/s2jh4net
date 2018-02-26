@@ -17,14 +17,22 @@
  */
 package com.entdiy.support.web;
 
+import com.entdiy.auth.entity.Account;
 import com.entdiy.core.security.AuthContextHolder;
+import com.entdiy.core.util.DateUtils;
+import com.entdiy.core.web.json.LocalDateTimeSerializer;
 import com.entdiy.core.web.view.OperationResult;
+import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.admin.AdminFormAuthenticationFilter;
+import com.entdiy.security.annotation.AuthAccount;
 import com.google.common.collect.Maps;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,7 +41,36 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
-public class AppController {
+@RequestMapping("/api")
+public class ApiController {
+
+    @GetMapping("/ping")
+    @ResponseBody
+    public OperationResult ping(HttpServletRequest request) {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("datetime", DateUtils.currentDateTime().format(LocalDateTimeSerializer.LOCAL_DATE_TIME_FORMATTER));
+        return OperationResult.buildSuccessResult(data);
+    }
+
+    @RequiresUser
+    @GetMapping("/ping/user")
+    @ResponseBody
+    public OperationResult pingUser(HttpServletRequest request, @AuthAccount Account account) {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("authUid", account.getAuthUid());
+        data.put("accessToken", account.getAccessToken());
+        return OperationResult.buildSuccessResult(data);
+    }
+
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
+    @GetMapping("/ping/super")
+    @ResponseBody
+    public OperationResult pingSuperUser(HttpServletRequest request, @AuthAccount Account account) {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("authUid", account.getAuthUid());
+        data.put("accessToken", account.getAccessToken());
+        return OperationResult.buildSuccessResult(data);
+    }
 
     /**
      * <h3>APP接口: 登录。</h3>
@@ -56,9 +93,9 @@ public class AppController {
      *
      * @return {@link OperationResult} 通用标准结构
      */
-    @RequestMapping(value = "/app/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult appLogin(HttpServletRequest request, Model model) {
+    public OperationResult apiLogin(HttpServletRequest request, Model model) {
         //获取认证异常的类名
         AuthenticationException ae = (AuthenticationException) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
         if (ae == null) {
@@ -67,7 +104,7 @@ public class AppController {
             OperationResult result = OperationResult.buildFailureResult(ae.getMessage());
             Boolean captchaRequired = (Boolean) request.getAttribute(AdminFormAuthenticationFilter.KEY_AUTH_CAPTCHA_REQUIRED);
             Map<String, Object> datas = Maps.newHashMap();
-            datas.put("captchaRequired", captchaRequired);
+            datas.put("captchaRequired", captchaRequired == null ? false : captchaRequired);
             datas.put("captchaImageUrl", request.getContextPath() + "/pub/jcaptcha.servlet");
             result.setData(datas);
             return result;

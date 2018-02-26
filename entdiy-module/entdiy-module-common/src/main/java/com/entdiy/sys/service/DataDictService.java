@@ -17,7 +17,7 @@
  */
 package com.entdiy.sys.service;
 
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.service.BaseNestedSetService;
 import com.entdiy.sys.dao.DataDictDao;
 import com.entdiy.sys.entity.DataDict;
 import com.google.common.collect.Lists;
@@ -34,7 +34,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class DataDictService extends BaseService<DataDict, Long> {
+public class DataDictService extends BaseNestedSetService<DataDict, Long> {
 
     private static final Logger logger = LoggerFactory.getLogger(DataDictService.class);
 

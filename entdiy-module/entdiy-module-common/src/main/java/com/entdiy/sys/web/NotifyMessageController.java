@@ -71,7 +71,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @ResponseBody
     public Page<NotifyMessage> findByPage(@ModelPropertyFilter(NotifyMessage.class) GroupPropertyFilter filter,
                                           @ModelPageableRequest Pageable pageable) {
-        return notifyMessageService.findByPage(filter,pageable);
+        return notifyMessageService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统管理:公告管理")
@@ -86,15 +86,14 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity NotifyMessage entity, Model model) {
-        return super.editSave(entity);
+        return super.editSave(notifyMessageService, entity);
     }
 
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    @Override
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(ids, (entity) -> notifyMessageReadService.countByNotifyMessage(entity) > 0 ? "公告[" + entity.getTitle() + "]已经被阅读，不能被删除" : null);
+        return super.delete(notifyMessageService, ids, (entity) -> notifyMessageReadService.countByNotifyMessage(entity) > 0 ? "公告[" + entity.getTitle() + "]已经被阅读，不能被删除" : null);
     }
 
     @RequiresPermissions("配置管理:系统管理:公告管理")

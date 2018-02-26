@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,54 +40,34 @@ public class GroupPropertyFilter {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static final String GROUP_OPERATION_AND = "and";
-    public static final String GROUP_OPERATION_OR = "or";
-
     /** 组合类型:AND/OR */
-    private String groupType = GROUP_OPERATION_AND;
+    @Getter
+    @Setter
+    private GroupOperationEnum groupType = GroupOperationEnum.AND;
 
     /** 组合条件列表 */
+    @Getter
+    @Setter
     private List<PropertyFilter> filters = Lists.newArrayList();
 
     /** 强制追加AND条件列表 */
     private List<PropertyFilter> forceAndFilters = Lists.newArrayList();
 
     /** 组合条件组 */
+    @Getter
+    @Setter
     private List<GroupPropertyFilter> groups = Lists.newArrayList();
 
-    public List<GroupPropertyFilter> getGroups() {
-        return groups;
-    }
+    @Getter
+    @Setter
+    private Class<?> entityClass;
 
-    public void setGroups(List<GroupPropertyFilter> groups) {
-        this.groups = groups;
-    }
-
-    public String getGroupType() {
-        return groupType;
-    }
-
-    public void setGroupType(String groupType) {
-        this.groupType = groupType;
-    }
-
-    public List<PropertyFilter> getFilters() {
-        return filters;
-    }
-
-    public void setFilters(List<PropertyFilter> filters) {
-        this.filters = filters;
-    }
 
     public List<PropertyFilter> getForceAndFilters() {
         return forceAndFilters;
     }
 
     private GroupPropertyFilter() {
-    }
-
-    private GroupPropertyFilter(String groupType) {
-        this.groupType = groupType;
     }
 
     public GroupPropertyFilter append(GroupPropertyFilter... groups) {
@@ -109,6 +91,7 @@ public class GroupPropertyFilter {
             String filtersJson = request.getParameter("filters");
 
             GroupPropertyFilter groupPropertyFilter = new GroupPropertyFilter();
+            groupPropertyFilter.setEntityClass(entityClass);
 
             if (StringUtils.isNotBlank(filtersJson)) {
                 JqGridSearchFilter jqFilter = objectMapper.readValue(filtersJson, JqGridSearchFilter.class);
@@ -119,10 +102,11 @@ public class GroupPropertyFilter {
             if (CollectionUtils.isNotEmpty(filters)) {
 
                 GroupPropertyFilter comboGroupPropertyFilter = new GroupPropertyFilter();
-                comboGroupPropertyFilter.setGroupType(GROUP_OPERATION_AND);
+                comboGroupPropertyFilter.setEntityClass(entityClass);
+                comboGroupPropertyFilter.setGroupType(GroupOperationEnum.AND);
 
                 GroupPropertyFilter normalGroupPropertyFilter = new GroupPropertyFilter();
-                normalGroupPropertyFilter.setGroupType(GROUP_OPERATION_AND);
+                normalGroupPropertyFilter.setGroupType(GroupOperationEnum.AND);
                 normalGroupPropertyFilter.setFilters(filters);
                 comboGroupPropertyFilter.getGroups().add(normalGroupPropertyFilter);
 
@@ -137,14 +121,9 @@ public class GroupPropertyFilter {
         }
     }
 
-    public static GroupPropertyFilter buildDefaultAndGroupFilter(List<PropertyFilter> filters) {
-        GroupPropertyFilter dpf = new GroupPropertyFilter(GROUP_OPERATION_AND);
-        dpf.setFilters(filters);
-        return dpf;
-    }
-
     public static GroupPropertyFilter buildDefaultAndGroupFilter(PropertyFilter... filters) {
-        GroupPropertyFilter dpf = new GroupPropertyFilter(GROUP_OPERATION_AND);
+        GroupPropertyFilter dpf = new GroupPropertyFilter();
+        dpf.setGroupType(GroupOperationEnum.AND);
         if (filters != null && filters.length > 0) {
             dpf.setFilters(Lists.newArrayList(filters));
         }
@@ -152,7 +131,8 @@ public class GroupPropertyFilter {
     }
 
     public static GroupPropertyFilter buildDefaultOrGroupFilter(PropertyFilter... filters) {
-        GroupPropertyFilter dpf = new GroupPropertyFilter(GROUP_OPERATION_OR);
+        GroupPropertyFilter dpf = new GroupPropertyFilter();
+        dpf.setGroupType(GroupOperationEnum.AND);
         if (filters != null && filters.length > 0) {
             dpf.setFilters(Lists.newArrayList(filters));
         }
@@ -160,7 +140,7 @@ public class GroupPropertyFilter {
     }
 
     private static void convertJqGridToFilter(Class<?> entityClass, GroupPropertyFilter jqGroupPropertyFilter, JqGridSearchFilter jqFilter) {
-        jqGroupPropertyFilter.setGroupType("OR".equalsIgnoreCase(jqFilter.getGroupOp()) ? GROUP_OPERATION_OR : GROUP_OPERATION_AND);
+        jqGroupPropertyFilter.setGroupType("OR".equalsIgnoreCase(jqFilter.getGroupOp()) ? GroupOperationEnum.OR : GroupOperationEnum.AND);
 
         List<JqGridSearchRule> rules = jqFilter.getRules();
         List<PropertyFilter> filters = Lists.newArrayList();
@@ -185,40 +165,22 @@ public class GroupPropertyFilter {
      * filters =
      * {"groupOp":"AND","rules":[{"field":"code","op":"eq","data":"123"}]}
      */
+    @Getter
+    @Setter
     public static class JqGridSearchFilter {
         private String groupOp;
         private List<JqGridSearchRule> rules = Lists.newArrayList();
         private List<JqGridSearchFilter> groups = Lists.newArrayList();
-
-        public List<JqGridSearchFilter> getGroups() {
-            return groups;
-        }
-
-        public void setGroups(List<JqGridSearchFilter> groups) {
-            this.groups = groups;
-        }
-
-        public String getGroupOp() {
-            return groupOp;
-        }
-
-        public void setGroupOp(String groupOp) {
-            this.groupOp = groupOp;
-        }
-
-        public List<JqGridSearchRule> getRules() {
-            return rules;
-        }
-
-        public void setRules(List<JqGridSearchRule> rules) {
-            this.rules = rules;
-        }
     }
 
+    @Getter
+    @Setter
     public static class JqGridSearchRule {
+        /** 查询字段 */
         private String field;
 
         /**
+         * 查询匹配规则
          * [
          * 'eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','cn','nc'
          * ] The corresponding texts are in language file and mean the
@@ -228,36 +190,15 @@ public class GroupPropertyFilter {
          * with','contains','does not contain']
          */
         private String op;
+
+        /** 查询数据 */
         private String data;
-
-        public String getField() {
-            return field;
-        }
-
-        public void setField(String field) {
-            this.field = field;
-        }
-
-        public String getOp() {
-            return op;
-        }
-
-        public void setOp(String op) {
-            this.op = op;
-        }
-
-        public String getData() {
-            return data;
-        }
-
-        public void setData(String data) {
-            this.data = data;
-        }
     }
 
     /**
      * 判断当前是没有提供任何参数的默认查询
      * 一般用于父子结构类型数据根据无参数判断追加parent==null的查询条件
+     *
      * @return
      */
     public boolean isEmptySearch() {
@@ -281,6 +222,7 @@ public class GroupPropertyFilter {
 
     /**
      * 转换为Key-Value的Map结构数据
+     *
      * @return
      */
     public Map<String, Object> convertToMapParameters() {
@@ -307,7 +249,8 @@ public class GroupPropertyFilter {
     /**
      * 转换为PropertyFilter查询集合，用于传递给MyBatis作为动态查询参数
      * 注意限制：仅考虑最常用的一个层次的查询调整合并处理，暂不支持复杂的多级嵌套层次查询
-     * @return 
+     *
+     * @return
      */
     public List<PropertyFilter> convertToPropertyFilters() {
         List<PropertyFilter> propertyFilters = Lists.newArrayList();
@@ -321,5 +264,9 @@ public class GroupPropertyFilter {
             }
         }
         return propertyFilters;
+    }
+
+    public enum GroupOperationEnum {
+        AND, OR
     }
 }

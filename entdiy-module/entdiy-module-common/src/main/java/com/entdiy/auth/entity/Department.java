@@ -18,17 +18,12 @@
 package com.entdiy.auth.entity;
 
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.entity.BaseNativeEntity;
-import com.entdiy.core.entity.TreeDataDto;
-import com.entdiy.core.web.json.JsonViews;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.entdiy.core.entity.BaseNativeNestedSetEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Formula;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -41,7 +36,7 @@ import javax.validation.constraints.Size;
 @MetaData(value = "部门")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Audited
-public class Department extends BaseNativeEntity {
+public class Department extends BaseNativeNestedSetEntity<Department> {
 
     private static final long serialVersionUID = -7634994834209530394L;
 
@@ -54,25 +49,6 @@ public class Department extends BaseNativeEntity {
     @Column(nullable = false, length = 32)
     private String name;
 
-    @MetaData(value = "父节点")
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "none"))
-    @JsonView(JsonViews.Tree.class)
-    private Department parent;
-
-    @MetaData(value = "排序号", tooltips = "相对排序号，数字越大越靠上显示")
-    @JsonView(JsonViews.Admin.class)
-    private Integer orderRank = 10;
-
-    @MetaData(value = "禁用标识", tooltips = "禁用项目用户端不显示")
-    @JsonView(JsonViews.Admin.class)
-    private Boolean disabled = Boolean.FALSE;
-
-    @Formula("(select count(*) from auth_Department d where d.parent_id = id)")
-    @Basic(fetch = FetchType.LAZY)
-    @NotAudited
-    private Integer enabledChildrenCount;
-
     @Override
     @Transient
     public String getDisplay() {
@@ -80,15 +56,5 @@ public class Department extends BaseNativeEntity {
             return null;
         }
         return code + " " + name;
-    }
-
-    public interface DepartmentTreeDataDto extends TreeDataDto {
-        String getCode();
-
-        String getName();
-
-        default String getDisplay() {
-            return getCode().concat(" ").concat(getName());
-        }
     }
 }

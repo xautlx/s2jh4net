@@ -27,35 +27,35 @@
 		<div class="col-md-12">
 			<table class="search-group-target"
 				   grid-options='{
-                    url : "/admin/auth/role/list",
-                    colModel : [ {
-                    	label : "代码",
-                    	name : "code",
-                    	width : 100,
-                    	editoptions : {
-                    		defaultValue : "ROLE_"
-                    	},
-                    	editable : true
-                    }, {
-                    	label : "名称",
-                    	name : "name",
-                    	width : 100,
-                    	editable : true
-                    }, {
-                    	label : "禁用",
-                    	name : "disabled",
-                    	width : 60,
-                    	editable : true,
-                    	formatter : "checkbox"
-                    }, {
-                    	label : "描述",
-                    	name : "description",
-                    	sortable : false,
-                    	editable : true,
-                    	width : 200,
-                    	edittype : "textarea",
-                    	align : "left"
-                    } ],
+                   url : "/admin/auth/role/list",
+                   colModel : [ {
+                   	label : "代码",
+                   	name : "code",
+                   	width : 100,
+                   	editoptions : {
+                   		defaultValue : "ROLE_"
+                   	},
+                   	editable : true
+                   }, {
+                   	label : "名称",
+                   	name : "name",
+                   	width : 100,
+                   	editable : true
+                   }, {
+                   	label : "禁用",
+                   	name : "disabled",
+                   	width : 60,
+                   	editable : true,
+                   	formatter : "checkbox"
+                   }, {
+                   	label : "描述",
+                   	name : "description",
+                   	sortable : false,
+                   	editable : true,
+                   	width : 200,
+                   	edittype : "textarea",
+                   	align : "left"
+                   } ],
                    editurl : "/admin/auth/role/edit",
                    fullediturl : "/admin/auth/role/edit-tabs",
                    delurl : "/admin/auth/role/delete",

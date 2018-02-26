@@ -21,14 +21,12 @@ import com.entdiy.auth.entity.Role;
 import com.entdiy.auth.entity.RoleR2Privilege;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.entity.UserR2Role;
-import com.entdiy.core.service.BaseService;
+import com.entdiy.core.service.BaseNestedSetService;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.dao.MenuDao;
 import com.entdiy.sys.entity.Menu;
-import com.entdiy.sys.vo.NavMenuVO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -42,10 +40,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class MenuService extends BaseService<Menu, Long> {
+public class MenuService extends BaseNestedSetService<Menu, Long> {
 
     private static final Logger logger = LoggerFactory.getLogger(MenuService.class);
 
@@ -58,50 +57,20 @@ public class MenuService extends BaseService<Menu, Long> {
     }
 
     @Transactional(readOnly = true)
-    public List<NavMenuVO> findAvailableNavMenuVOs() {
+    public List<Menu> findAvailableMenus() {
+        //全部排序缓存菜单数据
         List<Menu> allMenus = findAllCached();
-        Set<String> disabledMenuPaths = Sets.newHashSet();
-        for (Menu menu : allMenus) {
-            if (Boolean.TRUE.equals(menu.getDisabled())) {
-                disabledMenuPaths.add(menu.getPath());
-            }
-        }
-        List<Menu> availableMenus = Lists.newArrayList();
-        for (Menu menu : allMenus) {
-            if (!Boolean.TRUE.equals(menu.getDisabled())) {
-                String path = menu.getPath();
-                boolean disabled = false;
-                if (CollectionUtils.isNotEmpty(disabledMenuPaths)) {
-                    for (String disabledMenuPath : disabledMenuPaths) {
-                        if (path.startsWith(disabledMenuPath)) {
-                            disabled = true;
-                            break;
-                        }
-                    }
-                }
-                if (!disabled) {
-                    availableMenus.add(menu);
-                }
-            }
-        }
 
-        List<NavMenuVO> navMenuVOs = Lists.newArrayList();
-        for (Menu menu : availableMenus) {
-            NavMenuVO vo = new NavMenuVO();
-            navMenuVOs.add(vo);
-            vo.setId(menu.getId());
-            vo.setName(menu.getName());
-            vo.setPath(menu.getPath());
-            vo.setLevel(StringUtils.split(menu.getPath(), ":").length);
-            vo.setStyle(menu.getStyle());
-            vo.setUrl(menu.getUrl());
-            vo.setInitOpen(menu.getInitOpen());
-            if (menu.getParent() != null) {
-                vo.setParentId(menu.getParent().getId());
-            }
-        }
+        //停用菜单集合，某节点停用但是子节点未停用不在此集合里
+        List<Menu> disabledMenus = allMenus.stream().filter(one -> one.getDisabled()).collect(Collectors.toList());
 
-        return navMenuVOs;
+        //启用菜单集合
+        List<Menu> availableMenus = allMenus.stream().filter(one -> {
+            //所有没有落在停用节点区间的节点为可用节点
+            return disabledMenus.stream().noneMatch(disabledMenu -> one.getLft() >= disabledMenu.getLft() && one.getRgt() <= disabledMenu.getRgt());
+        }).collect(Collectors.toList());
+
+        return availableMenus;
     }
 
     /**
@@ -109,9 +78,9 @@ public class MenuService extends BaseService<Menu, Long> {
      *
      * @return
      */
-    public List<NavMenuVO> processUserMenu(User user) {
+    public List<Menu> processUserMenu(User user) {
         //获取所有有效的菜单集合
-        List<NavMenuVO> navMenuVOs = findAvailableNavMenuVOs();
+        List<Menu> menus = findAvailableMenus();
         List<UserR2Role> userR2Roles = user.getUserR2Roles();
         Set<String> userRoles = Sets.newHashSet();
         Set<String> userPrivileges = Sets.newHashSet();
@@ -120,7 +89,7 @@ public class MenuService extends BaseService<Menu, Long> {
                 Role role = userR2Role.getRole();
                 //如果是超级管理员直接返回所有有效菜单
                 if (role.getCode().equals(DefaultAuthUserDetails.ROLE_SUPER_USER)) {
-                    return navMenuVOs;
+                    return menus;
                 }
                 userRoles.add(role.getCode());
                 List<RoleR2Privilege> roleR2Privileges = role.getRoleR2Privileges();
@@ -132,10 +101,10 @@ public class MenuService extends BaseService<Menu, Long> {
         //追加管理端默认角色
         userRoles.add(DefaultAuthUserDetails.ROLE_MGMT_USER);
 
-        List<NavMenuVO> userNavMenuVOs = Lists.newArrayList();
+        List<Menu> userMenus = Lists.newArrayList();
 
         //计算用户有访问权限的菜单列表
-        for (NavMenuVO navMenuVO : navMenuVOs) {
+        for (Menu navMenuVO : menus) {
             Menu menu = findOne(navMenuVO.getId()).get();
             if (StringUtils.isNotBlank(menu.getUrl())) {
                 Method mappingMethod = menu.getMappingMethod();
@@ -222,41 +191,19 @@ public class MenuService extends BaseService<Menu, Long> {
                 }
             }
             //添加用户显示菜单项
-            userNavMenuVOs.add(navMenuVO);
+            userMenus.add(navMenuVO);
         }
 
         //移除没有子项的父项
-        removeEmptyParentItem(userNavMenuVOs);
+        //removeEmptyParentItem(userMenus);
 
         if (logger.isDebugEnabled()) {
             logger.debug("User Menu list: {}", user.getDisplay());
-            for (NavMenuVO navMenuVO : userNavMenuVOs) {
-                logger.debug(" - {}", navMenuVO.getPath());
+            for (Menu menu : userMenus) {
+                logger.debug(" - {}", menu.getName());
             }
         }
 
-        return userNavMenuVOs;
-    }
-
-    public void removeEmptyParentItem(List<NavMenuVO> userNavMenuVOs) {
-        List<NavMenuVO> toRemoves = Lists.newArrayList();
-        for (NavMenuVO vo : userNavMenuVOs) {
-            if (StringUtils.isBlank(vo.getUrl())) {
-                boolean toRemove = true;
-                for (NavMenuVO item : userNavMenuVOs) {
-                    if (vo.getId().equals(item.getParentId())) {
-                        toRemove = false;
-                        break;
-                    }
-                }
-                if (toRemove) {
-                    toRemoves.add(vo);
-                }
-            }
-        }
-        if (toRemoves.size() > 0) {
-            userNavMenuVOs.removeAll(toRemoves);
-            removeEmptyParentItem(userNavMenuVOs);
-        }
+        return userMenus;
     }
 }

@@ -21,6 +21,7 @@ import com.entdiy.aud.entity.AccountLogonLog;
 import com.entdiy.aud.service.AccountLogonLogService;
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.service.AccountService;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.IPAddrFetcher;
 import com.entdiy.core.util.UidUtils;
@@ -92,7 +93,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
     protected AuthenticationToken createToken(String username, String password, ServletRequest request, ServletResponse response) {
         boolean rememberMe = isRememberMe(request);
         String host = getHost(request);
-        Account.AuthTypeEnum authType = Account.AuthTypeEnum.site;
+        Account.AuthTypeEnum authType = this.authType;
         String authTypeParam = request.getParameter("authType");
         if (StringUtils.isNotBlank(authTypeParam)) {
             authType = Account.AuthTypeEnum.valueOf(authTypeParam);
@@ -125,8 +126,8 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
                 HttpServletRequest httpServletRequest = (HttpServletRequest) request;
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-                //如果是APP接口访问或AJAX请求，直接返回401状态码替代302便于客户端处理
-                if ("XMLHttpRequest".equalsIgnoreCase(httpServletRequest.getHeader("X-Requested-With"))) {
+                //如果是API接口访问或AJAX请求，直接返回401状态码替代302便于客户端处理
+                if (isApiRequest(request)) {
                     httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
                     //追加loginUrl到响应头，方便AJAX转向登录界面
                     String loginUrl = getLoginUrl();
@@ -146,10 +147,11 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
-        UsernamePasswordToken token = (UsernamePasswordToken) createToken(request, response);
-        String username = getUsername(request);
-        Account account = accountService.findByUsername(authType, username);
+        AuthTypeUsernamePasswordToken token = (AuthTypeUsernamePasswordToken) createToken(request, response);
         try {
+            String username = getUsername(request);
+            Account account = accountService.findByUsername(token.getAuthType(), username);
+
             if (account != null) {
                 //失败LOGON_FAILURE_LIMIT次，强制要求验证码验证
                 if (account.getLastFailureTimes() > LOGON_FAILURE_LIMIT) {
@@ -171,8 +173,8 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
             } else {
                 return onLoginFailure(account, token, new UnknownAccountException("登录账号或密码不正确"), request, response);
             }
-        } catch (AuthenticationException e) {
-            return onLoginFailure(account, token, e, request, response);
+        } catch (Exception e) {
+            return onLoginFailure(null, token, new AuthenticationException("登录账号或密码不正确"), request, response);
         }
     }
 
@@ -255,8 +257,9 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         accountLogonLog.setXforwardFor(IPAddrFetcher.getRemoteIpAddress(httpServletRequest));
         accountLogonLogService.save(accountLogonLog);
 
-        //根据不同登录类型转向不同成功界面 TODO JSON接口和页面交互判断处理
-        if (true) {
+        //根据不同登录类型转向不同成功界面
+        if (isApiRequest(request)) {
+            httpServletResponse.addHeader(GlobalConstant.APP_AUTH_ACCESS_TOKEN, account.getAccessToken());
             return true;
         } else {
             //判断密码是否已到期，如果是则转向密码修改界面
@@ -273,5 +276,18 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
     protected void setFailureAttribute(ServletRequest request, AuthenticationException ae) {
         //写入认证异常对象用于错误显示
         request.setAttribute(getFailureKeyAttribute(), ae);
+    }
+
+    private boolean isApiRequest(ServletRequest request) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        //API Client 请求
+        if (httpServletRequest.getHeader("appkey") != null || httpServletRequest.getParameter("appkey") != null) {
+            return true;
+        }
+        //AJAX请求
+        if ("XMLHttpRequest".equalsIgnoreCase(httpServletRequest.getHeader("X-Requested-With"))) {
+            return true;
+        }
+        return false;
     }
 }

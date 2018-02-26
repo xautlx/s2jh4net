@@ -107,7 +107,11 @@
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -127,7 +131,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>发起AJAX数据请求的URL</p></td>
@@ -145,7 +159,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>列属性参数对象，详见随后参数说明</p></td>
@@ -163,7 +187,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>固定追加的查询参数JSON结构数据对象</p></td>
@@ -181,7 +215,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>inline编辑模式POST提交请求的处理url地址，没有此参数则工具条屏蔽相关编辑操作按钮</p></td>
@@ -199,7 +243,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>inline删除操作请求url，没有此参数则工具条屏蔽相关删除操作按钮</p></td>
@@ -217,7 +271,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>是否显示多选复选框列，默认true</p></td>
@@ -235,7 +299,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>如果为true，开启鼠标拖放移动行项功能，一般用于类似菜单父子结构数据的管理操作</p></td>
@@ -253,7 +327,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>如果为true，行项左侧出现一个展开的加号图标点击触发执行subGridRowExpanded加载子表格</p></td>
@@ -271,7 +355,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>如果提供值如parent.id，安装默认规则组装initRecursiveSubGrid调用</p></td>
@@ -289,10 +383,56 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
             
 
             <td class="description last"><p>是否允许添加操作，默认为true，如果为false则不会显示相关的添加操作按钮图标</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inlineNavAddable</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>一般新增数据项都比较复杂需要使用弹出表单编辑，对于适合inline编辑的属性支持更新编辑操作</p></td>
         </tr>
 
     
@@ -307,7 +447,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>排序列名称，默认为id</p></td>
@@ -325,7 +475,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>排序顺序，默认为desc</p>
@@ -344,7 +504,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>列标题label</p></td>
@@ -362,7 +532,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>从JSON响应数据取值的属性名称</p></td>
@@ -380,7 +560,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>点击排序或查询回传服务器的属性名称，可选，默认值等于name值，可以传入复杂格式，如department.code_OR_department.name查询按照组合规则查询，排序取第一部分属性</p></td>
@@ -398,7 +588,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>列宽度，如果是自动百分比模式会取所有宽度按照百分比换算</p></td>
@@ -416,7 +616,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>列单元格是否支持inline编辑，editurl有值才有意义</p></td>
@@ -434,7 +644,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>单元格数据对齐模式：left|right|center，基本原则是等长或简短内容center居中；金额类型一般right对齐；其余不等长文本一般left对齐</p></td>
@@ -452,7 +672,17 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>单元格类型，用于合理的控制显示格式和排序等特性，指定不同formatter格式一般会同步自动设定相关的width，align等属性，因此一般建议合理设置。<br><br>可选值说明：<br>    <pre><br>     currency=货币类型数据，逗号千分位分隔符，默认两位小数 ，自动设定width=80和align=right<br>     percentage=百分比类型数据，value为小数乘以100转换为%格式，自动设定width=50和align=right<br>     integer=整数类型，自动设定width=60和align=center<br>     number=数字类型，整数或浮点数 ，自动设定width=60和align=right<br>     date=ISO年月日格式，自动设定width=120和align=center<br>     timestamp=ISO年月日时分秒格式，自动设定width=150和align=center<br>     showlink=以AJAX对话框模式请求URL，需自行合理设置width属性，子参数示意：<br>         formatoptions.baseLinkUrl : '/admin/user/view',<br>         formatoptions.title : '/admin/user/view',<br>     checkbox=复选框，一般用于boolean类型 ，自动设定width=60和align=center,<br>     select=下拉选项框，一般用于枚举类型属性，子参数示意：<br>         searchoptions.valueJson : &quot;JSON结构对象&quot;<br>     </pre></p></td>
@@ -517,7 +747,13 @@
 			
 			<li><a href="https://github.com/free-jqgrid">https://github.com/free-jqgrid</a></li>
 			
-			<li><a href="https://free-jqgrid.github.io%0A%0AGrid%E8%A1%A8%E6%A0%BC%E5%B1%9E%E6%80%A7%E5%8F%82%E6%95%B0%EF%BC%9A">https://free-jqgrid.github.io
+			<li><a href="https://free-jqgrid.github.io">https://free-jqgrid.github.io</a></li>
+			
+			<li><a href="https://segmentfault.com/a/1190000012986149">https://segmentfault.com/a/1190000012986149</a></li>
+			
+			<li><a href="https://en.wikipedia.org/wiki/Nested_set_model">https://en.wikipedia.org/wiki/Nested_set_model</a></li>
+			
+			<li><a href="https://segmentfault.com/a/1190000012984944%0A%0AGrid%E8%A1%A8%E6%A0%BC%E5%B1%9E%E6%80%A7%E5%8F%82%E6%95%B0%EF%BC%9A">https://segmentfault.com/a/1190000012984944
 
 Grid表格属性参数：</a></li>
 			</ul>
@@ -1637,7 +1873,7 @@ Grid表格属性参数：</a></li>
             
 <hr>
 <dt>
-    <h4 class="name" id="getSelectedRowdata"><span class="type-signature"></span>getSelectedRowdata()</h4>
+    <h4 class="name" id="getSelectedRowdata"><span class="type-signature"></span>getSelectedRowdata(<span class="optional">selrow</span>)</h4>
     
     
 </dt>
@@ -1654,6 +1890,68 @@ Grid表格属性参数：</a></li>
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>selrow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>指定选中行项id标识，如果未指定则获取当前选中行项id</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     

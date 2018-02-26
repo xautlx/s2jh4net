@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="form-horizontal">
     <div class="form-body">
-        <h3 class="margin-bottom-20">${userMessage.title}</h3>
+        <h3 class="margin-bottom-20">${accountMessage.title}</h3>
         <div class="row">
-            <div class="col-md-12">${userMessage.message}</div>
+            <div class="col-md-12">${accountMessage.message}</div>
         </div>
     </div>
 </div>

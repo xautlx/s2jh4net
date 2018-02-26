@@ -50,22 +50,11 @@ public class DepartmentDaoTest extends SpringTransactionalTestCase {
         departmentDao.save(child2);
     }
 
-//    @Test
-//    public void findTreeDataRoots() {
-//
-
-//
-//        departmentDao.findTreeDataRootsss().forEach((item) -> logger.debug("item: {}", item));
-//
-//    }
-
     @Test
     public void findAll() {
         logger.debug("1. Start...");
         List<Department> datas = departmentDao.findAll();
         logger.debug("2. Code...");
         datas.forEach((item) -> logger.debug("item code: {}", item.getCode()));
-        logger.debug("3. enabledChildrenCount...");
-        datas.forEach((item) -> logger.debug("item enabledChildrenCount: {}", item.getEnabledChildrenCount()));
     }
 }

@@ -34,6 +34,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -69,6 +70,10 @@ public class DemoReimbursementRequest extends BaseNativeEntity {
     @MetaData(value = "提交时间")
     @Column(nullable = false)
     private LocalDateTime submitTime = DateUtils.currentDateTime();
+
+    @MetaData(value = "提交日期", comments = "冗余属性，方便按日分组统计")
+    @Column(nullable = true)
+    private LocalDate submitDate;
 
     @MetaData(value = "报销摘要说明")
     @Column(length = 2000)

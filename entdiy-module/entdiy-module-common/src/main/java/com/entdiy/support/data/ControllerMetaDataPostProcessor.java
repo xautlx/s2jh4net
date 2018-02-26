@@ -84,9 +84,8 @@ public class ControllerMetaDataPostProcessor {
                                 }
                                 item.setPath(path);
                                 String parentPath = StringUtils.join(names, ":", 0, i);
-                                item.setParent(menus.stream().filter(one -> one.getPath().equals(parentPath)).findFirst().orElse(null));
+                                item.setParent(menus.stream().filter(one -> one.getPath().equals(parentPath)).findFirst().orElse(menuService.findRoot()));
                                 item.setName(names[i]);
-                                item.setInheritLevel(i);
                                 //计算菜单对应URL路径
                                 if (i + 1 == names.length) {
                                     item.setUrl(info.getPatternsCondition().getPatterns().stream().findFirst().get());

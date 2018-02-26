@@ -71,6 +71,7 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
         authUserDetails.setDataDomain(account.getDataDomain());
         authUserDetails.setAccountId(account.getId());
         authUserDetails.setUsername(username);
+        authUserDetails.setAccessToken(account.getAccessToken());
 
         return new SimpleAuthenticationInfo(authUserDetails, account.getPassword(), "Admin Shiro JDBC Realm");
     }

@@ -17,11 +17,9 @@
  */
 package com.entdiy.support.data;
 
-import com.entdiy.auth.entity.Account;
-import com.entdiy.auth.entity.Role;
-import com.entdiy.auth.entity.User;
-import com.entdiy.auth.entity.UserR2Role;
+import com.entdiy.auth.entity.*;
 import com.entdiy.auth.service.AccountService;
+import com.entdiy.auth.service.DepartmentService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.cons.GlobalConstant;
@@ -29,8 +27,10 @@ import com.entdiy.core.data.AbstractDatabaseDataInitializeProcessor;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.entity.DataDict;
+import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.ConfigPropertyService;
 import com.entdiy.sys.service.DataDictService;
+import com.entdiy.sys.service.MenuService;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +63,14 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
     @Autowired
     private DataDictService dataDictService;
 
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private MenuService menuService;
+
     @Override
-    public void initializeInternal() {
+    public void initializeInternal() throws Exception {
         logger.info("Running " + this.getClass().getName());
 
         //角色、用户等数据初始化,默认密码为:123456
@@ -82,7 +88,6 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             rootAccount.setAuthUid(GlobalConstant.ROOT_VALUE);
             rootAccount.setDataDomain(GlobalConstant.ROOT_VALUE);
             rootAccount.setEmail("xautlx@hotmail.com");
-            accountService.save(rootAccount, "123456");
 
             User rootUser = new User();
             rootUser.setAccount(rootAccount);
@@ -92,7 +97,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             r2.setUser(rootUser);
             r2.setRole(superRole);
             rootUser.setUserR2Roles(Lists.newArrayList(r2));
-            userService.save(rootUser);
+            userService.saveCascadeAccount(rootUser, "123456");
 
             //后端登录用户默认角色，具体权限可通过管理界面配置
             //所有后端登录用户默认关联此角色，无需额外写入用户和角色关联数据
@@ -108,14 +113,35 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             userAccount.setAuthUid("user");
             userAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
             userAccount.setEmail("user@entdiy.com");
-            accountService.save(userAccount, "123456");
 
             User user = new User();
             user.setAccount(userAccount);
             user.setTrueName(userAccount.getAuthUid());
-            userService.save(user);
+            userService.saveCascadeAccount(user, "123456");
+        }
 
-            entityManager.flush();
+        //初始化Nested Set Model默认根节点数据
+        if (isEmptyTable(Department.class)) {
+            Department root = new Department();
+            root.setName(GlobalConstant.ROOT_VALUE);
+            root.setCode(GlobalConstant.ROOT_VALUE);
+            departmentService.save(root);
+        }
+
+        //初始化Nested Set Model默认根节点数据
+        if (isEmptyTable(Menu.class)) {
+            Menu root = new Menu();
+            root.setName(GlobalConstant.ROOT_VALUE);
+            root.setPath(GlobalConstant.ROOT_VALUE);
+            menuService.save(root);
+        }
+
+        //初始化Nested Set Model默认根节点数据
+        if (isEmptyTable(DataDict.class)) {
+            DataDict root = new DataDict();
+            root.setPrimaryKey(GlobalConstant.ROOT_VALUE);
+            root.setPrimaryValue(GlobalConstant.ROOT_VALUE);
+            dataDictService.save(root);
         }
 
         if (!configPropertyService.findByPropKey(GlobalConstant.CFG_SMS_DISABLED).isPresent()) {
@@ -125,7 +151,6 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             entity.setSimpleValue("false");
             entity.setPropDescn("紧急情况关闭短信发送接口服务");
             configPropertyService.save(entity);
-            entityManager.flush();
         }
 
         //数据字典项初始化
@@ -133,8 +158,8 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             DataDict entity = new DataDict();
             entity.setPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE);
             entity.setPrimaryValue("消息类型");
+            entity.setParent(dataDictService.findRoot());
             dataDictService.save(entity);
-            entityManager.flush();
         }
     }
 }

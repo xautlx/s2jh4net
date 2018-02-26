@@ -19,10 +19,10 @@ import com.entdiy.core.util.MockEntityUtils;
 import com.entdiy.dev.demo.dao.DemoProductDao;
 import com.entdiy.dev.demo.entity.DemoProduct;
 import com.entdiy.sys.entity.AttachmentFile;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 public class DemoProductDaoTest extends SpringTransactionalTestCase {
@@ -30,7 +30,7 @@ public class DemoProductDaoTest extends SpringTransactionalTestCase {
     @Autowired
     private DemoProductDao demoProductDao;
 
-    @PostConstruct
+    @Before
     public void init() {
         MockEntityUtils.buildMockObject(DemoProduct.class, 5, 10).stream().forEach(
                 p -> {

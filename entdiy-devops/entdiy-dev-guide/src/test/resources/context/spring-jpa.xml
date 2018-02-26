@@ -18,9 +18,7 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="persistenceUnitName" value="entityManager"/>
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="databasePlatform" value="${jpa.database.platform}"/>
-            </bean>
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
         <property name="packagesToScan">
             <list>

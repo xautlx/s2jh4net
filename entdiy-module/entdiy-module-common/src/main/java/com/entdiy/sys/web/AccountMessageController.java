@@ -23,8 +23,8 @@ import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
-import com.entdiy.sys.entity.UserMessage;
-import com.entdiy.sys.service.UserMessageService;
+import com.entdiy.sys.entity.AccountMessage;
+import com.entdiy.sys.service.AccountMessageService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,30 +36,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value = "/admin/sys/user-message")
-public class UserMessageController extends BaseController<UserMessage, Long> {
+@RequestMapping(value = "/admin/sys/account-message")
+public class AccountMessageController extends BaseController<AccountMessage, Long> {
 
     @Autowired
-    private UserMessageService userMessageService;
+    private AccountMessageService accountMessageService;
 
     @MenuData("配置管理:系统管理:消息管理")
     @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(@ModelEntity UserMessage entity, Model model) {
-        return "admin/sys/userMessage-index";
+    public String index(@ModelEntity AccountMessage entity, Model model) {
+        return "admin/sys/accountMessage-index";
     }
 
     @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<UserMessage> findByPage(@ModelPropertyFilter(UserMessage.class) GroupPropertyFilter filter,
-                                        @ModelPageableRequest Pageable pageable) {
-        return userMessageService.findByPage(filter, pageable);
+    public Page<AccountMessage> findByPage(@ModelPropertyFilter(AccountMessage.class) GroupPropertyFilter filter,
+                                           @ModelPageableRequest Pageable pageable) {
+        return accountMessageService.findByPage(filter, pageable);
     }
 
     @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(Model model) {
-        return "admin/sys/userMessage-inputBasic";
+        return "admin/sys/accountMessage-inputBasic";
     }
 }

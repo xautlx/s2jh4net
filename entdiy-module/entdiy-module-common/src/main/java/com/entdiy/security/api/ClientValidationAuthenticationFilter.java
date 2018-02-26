@@ -17,8 +17,13 @@
  */
 package com.entdiy.security.api;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.codec.Base64;
+import com.entdiy.core.exception.ValidationException;
+import com.entdiy.core.service.Validation;
+import com.entdiy.core.web.AppContextHolder;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
@@ -28,79 +33,73 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Properties;
 
 public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientValidationAuthenticationFilter.class);
 
+    @Getter
+    @Setter
     private Properties appKeySecrets = new Properties();
 
     /**
-     * HTTP Authorization header, equal to <code>Authorization</code>
+     * 从Request请求从参数或Header中提取参数值
+     *
+     * @param request
+     * @param key
+     * @return
      */
-    protected static final String AUTHORIZATION_HEADER = "Authorization";
+    private String getValidationValue(ServletRequest request, String key) {
+        HttpServletRequest req = (HttpServletRequest) request;
+        String value = req.getParameter(key);
+        if (value == null) {
+            value = req.getHeader(key);
+        }
+        Validation.notBlank(value, "Request parameter or header '" + key + "' is required");
+        return value;
+    }
 
     @Override
-    protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) {
-        String authzHeader = getAuthzHeader(request);
-        if (StringUtils.isNotBlank(authzHeader)) {
-            String[] keySecrets = getPrincipalsAndCredentials(HttpServletRequest.BASIC_AUTH, authzHeader);
-            String key = keySecrets[0];
-            String secret = (String) appKeySecrets.get(key);
-            if (StringUtils.isNotBlank(secret) && secret.equals(keySecrets[1])) {
+    protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
+        String message;
+        try {
+            /**
+             * 对请求参数做鉴权校验，目前主要实现请求客户端来源的合法性校验。
+             * 可以进一步优化追加timestamp和nonce的防重放和拦截攻击等支持。
+             * 可以进一步优化追加重要业务参数加入到签名，以防业务数据篡改和防抵赖支持。
+             */
+            String sign = getValidationValue(request, "sign");
+            //在开发模式并且sign值为dev，直接放行以便Restful接口开发调试
+            if (AppContextHolder.isDevMode() && "dev".equalsIgnoreCase(sign)) {
                 return true;
             }
+
+            String appkey = getValidationValue(request, "appkey");
+            String timestamp = getValidationValue(request, "timestamp");
+            String nonce = getValidationValue(request, "nonce");
+
+
+            String secret = (String) appKeySecrets.get(appkey);
+            Validation.notBlank(secret, "Invalid appkey: " + appkey);
+
+            String str = "{" + secret + "}timestamp=" + timestamp + "&nonce=" + nonce;
+            String encode = DigestUtils.sha1Hex(str);
+
+            Validation.isTrue(encode.equalsIgnoreCase(sign), "Sign value invalid");
+
+            return true;
+        } catch (ValidationException e) {
+            message = e.getMessage();
+        } catch (Exception e) {
+            message = "API Client Validation Error";
+            logger.error(message, e);
         }
-        if (logger.isDebugEnabled()) {
-            logger.debug(AUTHORIZATION_HEADER + " header value '{}' not valid, sending 401 response.", authzHeader);
-        }
+
         HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        IOUtils.write(message, httpResponse.getOutputStream());
         httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         return false;
-    }
-
-    /**
-     * Returns the {@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER} from the specified ServletRequest.
-     * <p/>
-     * This implementation merely casts the request to an <code>HttpServletRequest</code> and returns the header:
-     * <p/>
-     * <code>HttpServletRequest httpRequest = {@link WebUtils#toHttp(javax.servlet.ServletRequest) toHttp(reaquest)};<br/>
-     * return httpRequest.getHeader({@link #AUTHORIZATION_HEADER AUTHORIZATION_HEADER});</code>
-     *
-     * @param request the incoming <code>ServletRequest</code>
-     * @return the <code>Authorization</code> header's value.
-     */
-    protected String getAuthzHeader(ServletRequest request) {
-        HttpServletRequest httpRequest = WebUtils.toHttp(request);
-        return httpRequest.getHeader(AUTHORIZATION_HEADER);
-    }
-
-    /**
-     * Returns the username and password pair based on the specified <code>encoded</code> String obtained from
-     * the request's authorization header.
-     * <p/>
-     * Per RFC 2617, the default implementation first Base64 decodes the string and then splits the resulting decoded
-     * string into two based on the ":" character.  That is:
-     * <p/>
-     * <code>String decoded = Base64.decodeToString(encoded);<br/>
-     * return decoded.split(":");</code>
-     *
-     * @param scheme  the {@link #getAuthcScheme() authcScheme} found in the request
-     *                {@link #getAuthzHeader(javax.servlet.ServletRequest) authzHeader}.  It is ignored by this implementation,
-     *                but available to overriding implementations should they find it useful.
-     * @param encoded the Base64-encoded username:password value found after the scheme in the header
-     * @return the username (index 0)/password (index 1) pair obtained from the encoded header data.
-     */
-    protected String[] getPrincipalsAndCredentials(String scheme, String encoded) {
-        if (encoded.indexOf(" ") > -1) {
-            encoded = encoded.split(" ")[1];
-        }
-        String decoded = Base64.decodeToString(encoded);
-        return decoded.split(":", 2);
-    }
-
-    public void setAppKeySecrets(Properties appKeySecrets) {
-        this.appKeySecrets = appKeySecrets;
     }
 }

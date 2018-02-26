@@ -17,7 +17,7 @@
  */
 package com.entdiy.sys.entity;
 
-import com.entdiy.auth.entity.User;
+import com.entdiy.auth.entity.Account;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.util.WebFormatter;
@@ -42,10 +42,10 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "sys_UserMessage")
+@Table(name = "sys_AccountMessage")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@MetaData(value = "用户消息", comments = "如果用户消息量担心影响查询效率，可以考虑引入定期归档处理把过期消息搬迁归档")
-public class UserMessage extends BaseNativeEntity {
+@MetaData(value = "账号消息", comments = "如果用户消息量担心影响查询效率，可以考虑引入定期归档处理把过期消息搬迁归档")
+public class AccountMessage extends BaseNativeEntity {
 
     private static final long serialVersionUID = 1685596718660284598L;
 
@@ -68,12 +68,12 @@ public class UserMessage extends BaseNativeEntity {
     @JsonView(JsonViews.AppDetail.class)
     private String message;
 
-    @MetaData(value = "目标用户")
+    @MetaData(value = "目标账号")
     @ManyToOne
-    @JoinColumn(name = "targetUser_id", nullable = false)
+    @JoinColumn(name = "targetAccount_id", nullable = false)
     @JsonSerialize(using = EntityIdDisplaySerializer.class)
     @JsonView(JsonViews.Admin.class)
-    private User targetUser;
+    private Account targetAccount;
 
     @MetaData(value = "发布时间", comments = "全局的消息创建时间")
     @Column(nullable = false)

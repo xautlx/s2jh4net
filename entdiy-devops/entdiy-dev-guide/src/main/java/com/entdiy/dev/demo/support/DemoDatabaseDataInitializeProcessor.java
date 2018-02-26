@@ -35,14 +35,14 @@ import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequestItem;
 import com.entdiy.dev.demo.service.DemoProductService;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
+import com.entdiy.sys.entity.AccountMessage;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.entity.NotifyMessage;
-import com.entdiy.sys.entity.UserMessage;
+import com.entdiy.sys.service.AccountMessageService;
 import com.entdiy.sys.service.AttachmentFileService;
 import com.entdiy.sys.service.DataDictService;
 import com.entdiy.sys.service.NotifyMessageService;
-import com.entdiy.sys.service.UserMessageService;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -59,6 +59,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 演示数据初始化处理器
@@ -73,7 +74,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
     private DataDictService dataDictService;
 
     @Autowired
-    private UserMessageService userMessageService;
+    private AccountMessageService accountMessageService;
 
     @Autowired
     private NotifyMessageService notifyMessageService;
@@ -110,19 +111,13 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
             List<Department> departments = departmentService.findByFilter(new PropertyFilter(PropertyFilter.MatchType.NN, "parent", true));
 
             if (CollectionUtils.isEmpty(users)) {
-                Department rootDepartment = new Department();
-                rootDepartment.setCode("ROOT");
-                rootDepartment.setName("总部");
-                departmentService.save(rootDepartment);
-                entityManager.flush();
-
+                Department rootDepartment = departmentService.findRoot();
 
                 Department department10 = new Department();
                 department10.setCode("SC00");
                 department10.setName("市场部");
                 department10.setParent(rootDepartment);
                 departmentService.save(department10);
-                entityManager.flush();
 
                 Department department11 = new Department();
                 department11.setCode("SC01");
@@ -141,14 +136,12 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 department13.setName("市场三部");
                 department13.setParent(department10);
                 departmentService.save(department13);
-                entityManager.flush();
 
                 Department department20 = new Department();
                 department20.setCode("YF00");
                 department20.setName("研发部");
                 department20.setParent(rootDepartment);
                 departmentService.save(department20);
-                entityManager.flush();
 
                 Department department21 = new Department();
                 department21.setCode("YF01");
@@ -161,11 +154,10 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 department22.setName("研发二部");
                 department22.setParent(department20);
                 departmentService.save(department22);
-                entityManager.flush();
 
                 departments = departmentService.findByFilter(new PropertyFilter(PropertyFilter.MatchType.NN, "parent", true));
                 {
-                    int random = MockEntityUtils.randomInt(20, 40);
+                    int random = MockEntityUtils.randomInt(8, 20);
                     for (int i = 0; i < random; i++) {
                         String seq = String.format("%03d", i);
                         //基于当前循环流水号作为模拟数据账号
@@ -183,23 +175,16 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                             account.setMobile("100123456" + (10 + i));
                             //对email属性设置有效格式的值，否则无法通过实体上定义的@Email注解验证
                             account.setEmail(account.getAuthUid() + "@entdiy.com");
-                            //调用业务接口进行模拟数据保存
-                            accountService.save(account, "123456");
 
                             User user = MockEntityUtils.buildMockObject(User.class);
                             user.setAccount(account);
                             user.setDepartment(MockEntityUtils.randomCandidates(departments));
                             user.setTrueName("模拟账号" + authUid);
-                            userService.save(user);
-
-                            //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                            entityManager.flush();
+                            userService.saveCascadeAccount(user, "123456");
                         }
                         users.add(userService.findByAccount(account));
                     }
                 }
-                //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                entityManager.flush();
                 users = userService.findByFilter(propertyFilter);
 
 
@@ -226,9 +211,6 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     item.setSecondaryValue("#FF0000");
                     item.setParent(entity);
                     dataDictService.save(item);
-
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
                 }
 
                 //初始化演示通知消息
@@ -259,48 +241,39 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     entity.setPublishTime(now.plusDays(MockEntityUtils.randomInt(4, 7)));
                     entity.setMessage("<p>计划在XX进行系统迁移升级，届时本系统不可用，预计一小时迁移完成恢复使用</p>");
                     notifyMessageService.save(entity);
-
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
                 }
 
                 //初始化演示通知消息
-                if (isEmptyTable(UserMessage.class)) {
+                if (isEmptyTable(AccountMessage.class)) {
                     Account adminAccount = accountService.findByUsername(Account.AuthTypeEnum.admin, GlobalConstant.ROOT_VALUE);
-                    User admin = userService.findByAccount(adminAccount);
 
-                    UserMessage entity = new UserMessage();
+                    AccountMessage entity = new AccountMessage();
                     entity.setType("normal");
-                    entity.setPublishTime(DateUtils.currentDateTime());
+                    entity.setPublishTime(MockEntityUtils.randomDateTime(10, 0));
                     entity.setTitle("演示个人消息1");
-                    entity.setTargetUser(admin);
+                    entity.setTargetAccount(adminAccount);
                     entity.setMessage("<p>演示定向发送个人消息1内容</p>");
-                    userMessageService.save(entity);
+                    accountMessageService.save(entity);
 
-                    entity = new UserMessage();
+                    entity = new AccountMessage();
                     entity.setType("important");
-                    entity.setPublishTime(DateUtils.currentDateTime());
+                    entity.setPublishTime(MockEntityUtils.randomDateTime(10, 0));
                     entity.setTitle("演示个人消息2");
-                    entity.setTargetUser(admin);
+                    entity.setTargetAccount(adminAccount);
                     entity.setMessage("<p>演示定向发送个人消息2内容</p>");
-                    userMessageService.save(entity);
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
+                    accountMessageService.save(entity);
 
                     int random = MockEntityUtils.randomInt(20, 40);
                     for (int i = 0; i < random; i++) {
                         String seq = String.format("%03d", i);
-                        entity = new UserMessage();
+                        entity = new AccountMessage();
                         entity.setType(MockEntityUtils.randomCandidates("normal", "important", "urgent"));
-                        entity.setPublishTime(DateUtils.currentDateTime());
+                        entity.setPublishTime(MockEntityUtils.randomDateTime(10, 0));
                         entity.setTitle("演示个人消息" + seq);
-                        entity.setTargetUser(MockEntityUtils.randomCandidates(users));
+                        entity.setTargetAccount(MockEntityUtils.randomCandidates(users).getAccount());
                         entity.setMessage("<p>演示定向发送个人消息内容" + seq + "</p>");
-                        userMessageService.save(entity);
+                        accountMessageService.save(entity);
                     }
-
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
                 }
             }
 
@@ -310,6 +283,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 DataDict entity = new DataDict();
                 entity.setPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType);
                 entity.setPrimaryValue("报销申请:记账类型");
+                entity.setParent(dataDictService.findRoot());
                 dataDictService.save(entity);
 
                 DataDict item = new DataDict();
@@ -330,8 +304,6 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 item.setParent(entity);
                 dataDictService.save(item);
             }
-            //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-            entityManager.flush();
 
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             Resource[] imageResources = resolver.getResources("classpath*:/META-INF/resources/assets/images/*.jpg");
@@ -342,8 +314,6 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 for (int i = 0; i < random; i++) {
                     DemoProduct product = new DemoProduct();
                     demoProductService.save(product);
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
 
                     //附件处理
                     //创建附件记录
@@ -376,30 +346,25 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     attachmentFiles.add(attachmentFile);
                     attachmentFileService.save(attachmentFile);
 
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
-
                     //然后和当前主对象关联
                     product.setIntroImages(attachmentFiles);
                     product.setMainImage(attachmentFile);
                     attachmentFileService.saveBySourceEntity(product, "introImages", "mainImage");
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
                 }
             }
-            //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-            entityManager.flush();
 
             if (isEmptyTable(DemoReimbursementRequest.class)) {
-                int random = MockEntityUtils.randomInt(15, 30);
+                List<Department> leafDepartments = departments.stream().filter(one -> !one.hasChildren()).collect(Collectors.toList());
+                int random = MockEntityUtils.randomInt(40, 60);
                 for (int i = 0; i < random; i++) {
                     DemoReimbursementRequest rr = MockEntityUtils.buildMockObject(DemoReimbursementRequest.class);
                     rr.setUseType(MockEntityUtils.randomCandidates("BG", "ZS", "CY"));
                     User user = MockEntityUtils.randomCandidates(users);
                     rr.setUser(user);
-                    rr.setDepartment(MockEntityUtils.randomCandidates(departments));
+                    rr.setDepartment(MockEntityUtils.randomCandidates(leafDepartments));
                     //模拟用户在注册后随机时间下单
-                    rr.setSubmitTime(user.getAccount().getSignupTime().plusHours(MockEntityUtils.randomInt(1, 240)));
+                    rr.setSubmitTime(now.minusHours(MockEntityUtils.randomInt(12, 240)).minusMinutes(MockEntityUtils.randomInt(1, 60)).minusSeconds(MockEntityUtils.randomInt(1, 60)));
+                    rr.setSubmitDate(rr.getSubmitTime().toLocalDate());
 
                     List<DemoReimbursementRequestItem> items = MockEntityUtils.buildMockObject(DemoReimbursementRequestItem.class, 1, 3);
                     items.forEach(one -> {
@@ -411,8 +376,6 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     rr.setReimbursementRequestItems(items);
 
                     reimbursementRequestService.save(rr);
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
 
                     //附件处理
                     //创建附件记录
@@ -447,13 +410,10 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     }
                     //先提前上传保存附件
                     attachmentFileService.saveAll(attachmentFiles);
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
+
                     //然后和当前主对象关联
                     rr.setReceiptAttachmentFiles(attachmentFiles);
                     attachmentFileService.saveBySourceEntity(rr, "receiptAttachmentFiles");
-                    //提交当前事务数据，以模拟实际情况中分步骤创建业务数据
-                    entityManager.flush();
                 }
             }
         }

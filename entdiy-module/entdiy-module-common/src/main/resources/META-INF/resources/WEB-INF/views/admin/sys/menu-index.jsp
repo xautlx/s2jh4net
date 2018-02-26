@@ -59,27 +59,14 @@
                        editable : true,
                        formatter : "checkbox"
                    }, {
-                       label : "排序号",
-                       name : "orderRank",
-                       width : 60,
-                       editable : true,
-                       editoptions : {
-                           defaultValue : 1000
-                       },
-                       sorttype : "number"
-                   }, {
                        label : "备注说明",
                        name : "description",
                        width : 200,
                        hidden : true,
                        editable : true,
                        edittype : "textarea"
-                   } ],
+                   }],
                    multiselect: false,
-                   sortorder: "desc",
-                   sortname: "orderRank",
-                   gridDnD : true,
-                   subGrid : true,
                    addable: false,
                    subGridRowExpandedKey: "parent.id",
                    editurl : "/admin/sys/menu/edit",

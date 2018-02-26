@@ -19,7 +19,10 @@ package com.entdiy.core.pagination;
 
 import com.entdiy.core.util.reflection.ConvertUtils;
 import com.entdiy.core.web.json.JsonViews;
+import com.entdiy.core.web.json.LocalDateSerializer;
 import com.google.common.collect.Maps;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -38,6 +41,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -57,8 +61,7 @@ import java.util.*;
  * </p>
  * <p>
  * 上述拼装字符串形式主要用于JSP页面form表单元素name属性值,如果是Java代码层面追加过滤条件,一般直接用构造函数:
- * PropertyFilter(final MatchType matchType, final String propertyName, final
- * Object matchValue)
+ * PropertyFilter(final MatchType matchType, final String propertyName, final Object matchValue)
  * </p>
  */
 public class PropertyFilter {
@@ -228,6 +231,11 @@ public class PropertyFilter {
      */
     private Class subQueryCollectionPropetyType;
 
+    /** 标识为分组 having 条件 */
+    @Getter
+    @Setter
+    private boolean having = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -260,6 +268,12 @@ public class PropertyFilter {
             String propertyType = matchTypeCodes[1];
             if (Date.class.getName().equalsIgnoreCase(propertyType)) {
                 propertyClass = Date.class;
+            } else if (LocalDate.class.getName().equalsIgnoreCase(propertyType)) {
+                propertyClass = LocalDate.class;
+            } else if (LocalDateTime.class.getName().equalsIgnoreCase(propertyType)) {
+                propertyClass = LocalDateTime.class;
+            } else if (Number.class.getName().equalsIgnoreCase(propertyType)) {
+                propertyClass = Number.class;
             } else if (Number.class.getName().equalsIgnoreCase(propertyType)) {
                 propertyClass = Number.class;
             } else {
@@ -287,7 +301,7 @@ public class PropertyFilter {
                 String propertyType = firstPropertyName.split("@")[1];
                 if (LocalDate.class.getSimpleName().equalsIgnoreCase(propertyType)) {
                     propertyClass = LocalDate.class;
-                }else if (Date.class.getSimpleName().equalsIgnoreCase(propertyType)) {
+                } else if (Date.class.getSimpleName().equalsIgnoreCase(propertyType)) {
                     propertyClass = LocalDate.class;
                 } else if (LocalDateTime.class.getSimpleName().equalsIgnoreCase(propertyType)) {
                     propertyClass = LocalDateTime.class;
@@ -329,7 +343,7 @@ public class PropertyFilter {
             if (matchType.equals(MatchType.IN) || matchType.equals(MatchType.NI)) {
                 String value = values[0];
                 values = value.split(",");
-            } else if (propertyClass.equals(LocalDate.class)) {
+            } else if (propertyClass.equals(LocalDate.class) || propertyClass.equals(LocalDateTime.class)) {
                 String value = values[0].trim();
                 value = value.replace("～", "~");
                 if (value.indexOf(" ") > -1) {
@@ -364,9 +378,9 @@ public class PropertyFilter {
         } else if (propertyClass.equals(Boolean.class) || matchType.equals(MatchType.NN) || matchType.equals(MatchType.NU)) {
             return new Boolean(BooleanUtils.toBoolean(value));
         } else if (propertyClass.equals(LocalDate.class)) {
-            return LocalDate.parse(value);
+            return LocalDate.parse(value, LocalDateSerializer.LOCAL_DATE_FORMATTER);
         } else if (propertyClass.equals(LocalDateTime.class)) {
-            return LocalDateTime.parse(value);
+            return LocalDateTime.of(LocalDate.parse(value, LocalDateSerializer.LOCAL_DATE_FORMATTER), LocalTime.of(0, 0, 0));
         } else if (propertyClass.equals(Number.class)) {
             if (value.indexOf(".") > -1) {
                 return new Double(value);
@@ -397,7 +411,7 @@ public class PropertyFilter {
      * String[]{"code","name"}, value));
      *
      * @param matchType
-     * @param propertyName
+     * @param propertyNames
      * @param matchValue
      */
     public PropertyFilter(final MatchType matchType, final String[] propertyNames, final Object matchValue) {
@@ -545,7 +559,7 @@ public class PropertyFilter {
      * sord 排序规则，asc=升序，desc=降序，默认asc
      *
      * @param request
-     * @param sort        如果传入参数为null，则从request构建，否则直接取输入sort参数
+     * @param sort    如果传入参数为null，则从request构建，否则直接取输入sort参数
      * @return
      */
     public static Pageable buildPageableFromHttpRequest(HttpServletRequest request, Sort sort) {

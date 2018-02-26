@@ -29,7 +29,6 @@ import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.MenuService;
-import com.entdiy.sys.vo.NavMenuVO;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -64,9 +63,10 @@ public class MenuController extends BaseController<Menu, Long> {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public Page<Menu> findByPage(@ModelPropertyFilter(Menu.class) GroupPropertyFilter filter,
-                                     @ModelPageableRequest Pageable pageable) {
+                                 @ModelPageableRequest Pageable pageable) {
+        //如果没有业务查询参数，则限制只查询业务根节点数据
         if (filter.isEmptySearch()) {
-            filter.forceAnd(new PropertyFilter(MatchType.NU, "parent", true));
+            filter.forceAnd(new PropertyFilter(MatchType.EQ, "depth", 1));
         }
         return menuService.findByPage(filter, pageable);
     }
@@ -75,15 +75,14 @@ public class MenuController extends BaseController<Menu, Long> {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity Menu entity, Model model) {
-        return super.editSave(entity);
+        return super.editSave(menuService, entity);
     }
 
-    @Override
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("id") Long... id) {
-        return super.delete(id);
+        return super.delete(menuService, id);
     }
 
     @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
@@ -91,9 +90,9 @@ public class MenuController extends BaseController<Menu, Long> {
     @ResponseBody
     public Object menusData(Model model) {
         List<Map<String, Object>> items = Lists.newArrayList();
-        List<NavMenuVO> navMenuVOs = menuService.findAvailableNavMenuVOs();
-        for (NavMenuVO navMenuVO : navMenuVOs) {
-            items.add(navMenuVO.buildMapDataForTreeDisplay());
+        List<Menu> availableMenus = menuService.findAvailableMenus();
+        for (Menu menu : availableMenus) {
+            items.add(menu.buildMapDataForTreeDisplay());
         }
         return items;
     }
