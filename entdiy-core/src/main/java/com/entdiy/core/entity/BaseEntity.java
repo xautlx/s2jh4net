@@ -83,7 +83,7 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractPersis
     @MetaData(value = "数据隔离域", comments = "类似Windows域的概念，进行用户数据隔离")
     @Column(name = "_dataDomain", length = 100, updatable = false)
     @JsonView(JsonViews.Admin.class)
-    private String dataDomain;
+    private String dataDomain = GlobalConstant.DEFAULT_VALUE;
 
     private static final String[] PROPERTY_LIST = new String[]{"id", "version"};
 

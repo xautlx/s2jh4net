@@ -70,7 +70,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
     private MenuService menuService;
 
     @Override
-    public void initializeInternal() throws Exception {
+    public void initializeInternal() {
         logger.info("Running " + this.getClass().getName());
 
         //角色、用户等数据初始化,默认密码为:123456
@@ -86,7 +86,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             Account rootAccount = new Account();
             rootAccount.setAuthType(Account.AuthTypeEnum.admin);
             rootAccount.setAuthUid(GlobalConstant.ROOT_VALUE);
-            rootAccount.setDataDomain(GlobalConstant.ROOT_VALUE);
+            rootAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
             rootAccount.setEmail("xautlx@hotmail.com");
 
             User rootUser = new User();
