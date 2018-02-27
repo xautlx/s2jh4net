@@ -113,7 +113,7 @@
     var _hmt = _hmt || [];
     (function () {
         var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?5f64653382c3bd79af3c297bbafa5a6a";
+        hm.src = "https://hm.baidu.com/hm.js?f45bc1f8673efcfa75c673a96ca2f5d5";
         var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(hm, s);
     })();
