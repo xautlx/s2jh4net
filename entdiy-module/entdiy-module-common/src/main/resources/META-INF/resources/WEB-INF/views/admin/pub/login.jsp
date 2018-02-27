@@ -107,16 +107,5 @@
     </div>
 </div>
 <script src="assets/pages/admin/scripts/login.js"></script>
-
-<script>
-    //百度统计代码，做一个基础的框架演示站点访问数据统计，实际项目开发可以移除
-    var _hmt = _hmt || [];
-    (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?f45bc1f8673efcfa75c673a96ca2f5d5";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
-</script>
 </body>
 </html>
