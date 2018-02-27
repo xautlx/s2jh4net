@@ -17,23 +17,20 @@
  */
 package com.entdiy.security;
 
+import com.entdiy.auth.service.UserService;
+import lombok.Setter;
+import org.apache.shiro.web.filter.authc.LogoutFilter;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import com.entdiy.auth.service.UserService;
-
-import org.apache.shiro.web.filter.authc.LogoutFilter;
-
 public class AppLogoutFilter extends LogoutFilter {
 
+    @Setter
     private UserService userService;
 
     @Override
-    protected void issueRedirect(ServletRequest request, ServletResponse response, String redirectUrl) throws Exception {
+    protected void issueRedirect(ServletRequest request, ServletResponse response, String redirectUrl) {
         //TODO 基于accessToken找到登录记录相关处理
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 }

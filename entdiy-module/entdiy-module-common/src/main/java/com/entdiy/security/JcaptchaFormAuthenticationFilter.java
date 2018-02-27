@@ -24,7 +24,6 @@ import com.entdiy.auth.service.AccountService;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.IPAddrFetcher;
-import com.entdiy.core.util.UidUtils;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.captcha.CaptchaValidationException;
 import lombok.Setter;
@@ -234,9 +233,6 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         account.setLastFailureTimes(0);
         account.setLastLogonSuccessTime(now);
         account.setLogonSuccessTimes(account.getLogonSuccessTimes() + 1);
-        if (StringUtils.isBlank(account.getAccessToken())) {
-            account.setAccessToken(UidUtils.buildUID());
-        }
         accountService.save(account);
 
         //写入登入记录信息
@@ -281,7 +277,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
     private boolean isApiRequest(ServletRequest request) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         //API Client 请求
-        if (httpServletRequest.getHeader("appkey") != null || httpServletRequest.getParameter("appkey") != null) {
+        if (httpServletRequest.getHeader("sign") != null || httpServletRequest.getParameter("sign") != null) {
             return true;
         }
         //AJAX请求

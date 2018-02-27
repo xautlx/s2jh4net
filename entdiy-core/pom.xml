@@ -51,6 +51,15 @@
             <groupId>org.sitemesh</groupId>
             <artifactId>sitemesh</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
         <!-- WEB end -->
 
         <!-- SPRING basic begin(一般不需要显式定义) -->

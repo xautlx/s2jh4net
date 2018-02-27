@@ -43,10 +43,11 @@
         <quartz.version>2.2.1</quartz.version>
         <hibernate-validator.version>6.0.7.Final</hibernate-validator.version>
         <jackson.version>2.9.3</jackson.version>
+        <swagger.version>2.8.0</swagger.version>
         <slf4j.version>1.7.7</slf4j.version>
         <commons-lang3.version>3.1</commons-lang3.version>
         <commons-io.version>2.4</commons-io.version>
-        <guava.version>13.0.1</guava.version>
+        <guava.version>24.0-jre</guava.version>
         <freemarker.version>2.3.19</freemarker.version>
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
@@ -208,6 +209,17 @@
                 <groupId>org.springframework.session</groupId>
                 <artifactId>spring-session-data-redis</artifactId>
                 <version>${spring-session.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
             <!-- WEB end -->
 

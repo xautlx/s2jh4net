@@ -17,6 +17,8 @@
  */
 package com.entdiy.core.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 审计操作需要提取的登录用户信息接口定义
  */
@@ -41,5 +43,6 @@ public interface AuthUserDetails {
      *
      * @return
      */
+    @JsonIgnore
     String getDataDomain();
 }

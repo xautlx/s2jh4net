@@ -24,7 +24,10 @@
     <context:component-scan base-package="com.entdiy,xyz.entdiy" use-default-filters="false">
         <context:include-filter type="annotation"
                                 expression="org.springframework.web.servlet.config.annotation.EnableWebMvc"/>
-        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.RestController"/>
         <context:include-filter type="annotation"
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
@@ -135,4 +138,8 @@
 
     <!-- 对@Controller类注解元数据定制处理 -->
     <bean class="com.entdiy.support.data.ControllerMetaDataPostProcessor"/>
+
+    <!-- for Swagger2 -->
+    <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
+    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
 </beans>

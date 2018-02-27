@@ -23,7 +23,9 @@ import com.entdiy.auth.entity.Role;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.AccountService;
 import com.entdiy.auth.service.UserService;
+import com.entdiy.core.util.UidUtils;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -61,6 +63,12 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
         Account account = accountService.findByUsername(token.getAuthType(), username);
         if (account == null) {
             throw new UnknownAccountException("登录账号或密码不正确");
+        }
+
+        //如果token为空，则初始化
+        if (StringUtils.isBlank(account.getAccessToken())) {
+            account.setAccessToken(UidUtils.buildUID());
+            accountService.save(account);
         }
 
         //把盐值注入到用户输入密码，用于后续加密算法使用

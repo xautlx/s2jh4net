@@ -17,16 +17,17 @@
  */
 package com.entdiy.core.web.view;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-
 import com.entdiy.core.annotation.MetaData;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 /**
  * 用于Object到JSON序列化的对象结构体定义
@@ -36,12 +37,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Accessors(chain = true)
 @Access(AccessType.FIELD)
 @JsonInclude(Include.NON_NULL)
+@ApiModel
 public class OperationResult {
 
-    //全局成功标识代码
+    /** 全局成功标识代码 */
     public final static String SUCCESS = "100000";
 
-    //全局未知错误标识代码
+    /** 全局未知错误标识代码 */
     public final static String FAILURE = "999999";
 
     /** 标识操作结果类型 */
@@ -60,9 +62,11 @@ public class OperationResult {
     }
 
     /** 返回success或failure操作标识 */
+    @ApiModelProperty(value = "处理结果类型", name = "type", allowableValues = "success,failure")
     private String type;
 
     /** 成功：100000，其他标识错误 */
+    @ApiModelProperty(value = "处理结果代码", name = "code", notes = "100000 标识成功，其余为错误代码")
     private String code;
 
     /** 国际化处理的返回JSON消息正文，一般用于提供failure错误消息 */
