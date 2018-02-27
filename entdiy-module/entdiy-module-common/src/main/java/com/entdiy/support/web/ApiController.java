@@ -31,7 +31,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -44,6 +43,15 @@ import java.util.Map;
 public class ApiController {
 
     @ApiOperation("验证API接口服务状态及获取基本信息")
+    @GetMapping("/pub/ping")
+    @ResponseBody
+    public OperationResult pubPing() {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("datetime", DateUtils.currentDateTime().format(LocalDateTimeSerializer.LOCAL_DATE_TIME_FORMATTER));
+        return OperationResult.buildSuccessResult(data);
+    }
+
+    @ApiIgnore
     @GetMapping("/ping")
     @ResponseBody
     public OperationResult ping() {
@@ -53,10 +61,10 @@ public class ApiController {
     }
 
     @ApiIgnore
-    @RequiresUser
-    @GetMapping("/ping/user")
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SITE_USER)
+    @GetMapping("/ping/customer")
     @ResponseBody
-    public OperationResult pingUser(@AuthAccount Account account) {
+    public OperationResult pingCustomer(@AuthAccount Account account) {
         Map<String, Object> data = Maps.newHashMap();
         data.put("authUid", account.getAuthUid());
         data.put("accessToken", account.getAccessToken());

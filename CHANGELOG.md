@@ -12,3 +12,4 @@
   * 核心组件版本升级到最新：SpringMVC/Spring 5.0.X, Hibernate 5.2.X, Spring Data 2.0.X, 及其他关联组件版本
   * UI基础框架版本从 Metronic 1.4.5 升级到 4.7.5
   * 基于Bootstrap Plugin模式全面重构所有UI扩展组件
+  * 全面采用Docker模式实现应用的部署运维管理

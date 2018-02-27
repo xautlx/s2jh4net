@@ -26,6 +26,7 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.IPAddrFetcher;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.captcha.CaptchaValidationException;
+import com.entdiy.security.api.ClientValidationAuthenticationFilter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
@@ -145,11 +146,12 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
     }
 
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         AuthTypeUsernamePasswordToken token = (AuthTypeUsernamePasswordToken) createToken(request, response);
+        Account account = null;
         try {
             String username = getUsername(request);
-            Account account = accountService.findByUsername(token.getAuthType(), username);
+            account = accountService.findByUsername(token.getAuthType(), username);
 
             if (account != null) {
                 //失败LOGON_FAILURE_LIMIT次，强制要求验证码验证
@@ -173,7 +175,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
                 return onLoginFailure(account, token, new UnknownAccountException("登录账号或密码不正确"), request, response);
             }
         } catch (Exception e) {
-            return onLoginFailure(null, token, new AuthenticationException("登录账号或密码不正确"), request, response);
+            return onLoginFailure(account, token, new AuthenticationException("登录账号或密码不正确"), request, response);
         }
     }
 
@@ -188,10 +190,7 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
         if (e instanceof CaptchaValidationException) {
             request.setAttribute(KEY_AUTH_CAPTCHA_REQUIRED, Boolean.TRUE);
-        } else if (e instanceof IncorrectCredentialsException) {
-            //消息友好提示
-            e = new IncorrectCredentialsException("登录账号或密码不正确");
-
+        } else if (e instanceof AuthenticationException) {
             //失败记录
             if (account != null) {
                 //最近连续失败次数累加，超过一定次数强制要求验证码
@@ -277,7 +276,8 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
     private boolean isApiRequest(ServletRequest request) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         //API Client 请求
-        if (httpServletRequest.getHeader("sign") != null || httpServletRequest.getParameter("sign") != null) {
+        if (httpServletRequest.getHeader(ClientValidationAuthenticationFilter.HEADER_NAME_SIGN) != null
+                || httpServletRequest.getParameter(ClientValidationAuthenticationFilter.HEADER_NAME_SIGN) != null) {
             return true;
         }
         //AJAX请求

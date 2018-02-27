@@ -41,6 +41,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * 数据库基础数据初始化处理器
+ *
+ * @see com.entdiy.support.data.ControllerMetaDataPostProcessor
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -118,6 +120,26 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             user.setAccount(userAccount);
             user.setTrueName(userAccount.getAuthUid());
             userService.saveCascadeAccount(user, "123456");
+
+            //前端站点/APP用户默认角色，具体权限可通过管理界面配置
+            //所有前端站点/APP注册登录用户默认关联此角色，无需额外写入用户和角色关联数据
+            Role siteRole = new Role();
+            siteRole.setCode(DefaultAuthUserDetails.ROLE_SITE_USER);
+            siteRole.setName("前端站点/APP注册登录用户默认角色");
+            siteRole.setDescription("系统预置，请勿随意修改。注意：所有前端站点/APP用户默认关联此角色，无需额外写入用户和角色关联数据。");
+            roleService.save(siteRole);
+
+            //预置普通前端站点/APP账号
+            Account customerAccount = new Account();
+            customerAccount.setAuthType(Account.AuthTypeEnum.site);
+            customerAccount.setAuthUid("customer");
+            customerAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
+            customerAccount.setEmail("customer@entdiy.com");
+
+            User customer = new User();
+            customer.setAccount(customerAccount);
+            customer.setTrueName(customerAccount.getAuthUid());
+            userService.saveCascadeAccount(customer, "123456");
         }
 
         //初始化Nested Set Model默认根节点数据

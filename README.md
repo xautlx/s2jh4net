@@ -24,6 +24,7 @@
   * 核心组件版本升级到最新：SpringMVC/Spring 5.0.X, Hibernate 5.2.X, Spring Data 2.0.X, 及其他关联组件版本
   * UI基础框架版本从 Metronic 1.4.5 升级到 4.7.5
   * 基于Bootstrap Plugin模式全面重构所有UI扩展组件 
+  * 全面采用Docker模式实现应用的部署运维管理
 
 > **提示**：为了方便用户区分链接资源是外部和内部，文档特别以![link](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/link.gif)标识：链接前面有此图标说明是外部链接，如果你已经熟悉相关概念可以忽略点击；没有此标识说明是文档内部链接，建议点击访问以完整查阅项目文档。
 
@@ -64,6 +65,8 @@
 * [基础数据](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/310.基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
 * [数据审计](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/320.数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
 * [计划任务](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/330.计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
+* [API接口设计](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/340.API接口设计.md) - 介绍API接口部分设计思路
+
 
 ## 在线演示
 

@@ -70,6 +70,7 @@
         <property name="loginUrl" value="/api/login"/>
         <property name="accountService" ref="accountService"/>
         <property name="accountLogonLogService" ref="accountLogonLogService"/>
+        <!-- 登录账号默认类型，一般都是面向前端站点/APP用户，登录请求可通过传递对应参数值覆盖指定账号类型 -->
         <property name="authType" value="site"/>
     </bean>
 

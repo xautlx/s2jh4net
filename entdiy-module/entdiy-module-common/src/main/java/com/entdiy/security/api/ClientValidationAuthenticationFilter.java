@@ -40,6 +40,8 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientValidationAuthenticationFilter.class);
 
+    public static final String HEADER_NAME_SIGN = "sign";
+
     @Getter
     @Setter
     private Properties appKeySecrets = new Properties();
@@ -53,9 +55,9 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
      */
     private String getValidationValue(ServletRequest request, String key) {
         HttpServletRequest req = (HttpServletRequest) request;
-        String value = req.getParameter(key);
+        String value = req.getHeader(key);
         if (value == null) {
-            value = req.getHeader(key);
+            value = req.getParameter(key);
         }
         Validation.notBlank(value, "Request parameter or header '" + key + "' is required");
         return value;
@@ -70,7 +72,7 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
              * 可以进一步优化追加timestamp和nonce的防重放和拦截攻击等支持。
              * 可以进一步优化追加重要业务参数加入到签名，以防业务数据篡改和防抵赖支持。
              */
-            String sign = getValidationValue(request, "sign");
+            String sign = getValidationValue(request, HEADER_NAME_SIGN);
             //在开发模式并且sign值为dev，直接放行以便Restful接口开发调试
             if (AppContextHolder.isDevMode() && "dev".equalsIgnoreCase(sign)) {
                 return true;
@@ -78,12 +80,14 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
 
             String appkey = getValidationValue(request, "appkey");
             String timestamp = getValidationValue(request, "timestamp");
+            //客户端提供的此值建议保持足够的随机性，可以考虑使用UUID之类的全局唯一值
             String nonce = getValidationValue(request, "nonce");
 
 
             String secret = (String) appKeySecrets.get(appkey);
             Validation.notBlank(secret, "Invalid appkey: " + appkey);
 
+            //加密签名规则，主要客户端需要与此规则保持完全一致
             String str = "{" + secret + "}timestamp=" + timestamp + "&nonce=" + nonce;
             String encode = DigestUtils.sha1Hex(str);
 

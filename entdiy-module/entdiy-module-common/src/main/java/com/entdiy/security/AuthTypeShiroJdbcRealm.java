@@ -94,11 +94,10 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
 
         Optional<Account> account = accountService.findOne(authUserDetails.getAccountId());
         account.ifPresent(one -> {
-            //管理端类型用户添加角色权限处理
-            if (Account.AuthTypeEnum.admin.equals(one.getAuthType())) {
+            if (Account.AuthTypeEnum.admin.equals(one.getAuthType())) { //管理端类型用户添加角色权限处理
                 User user = userService.findByAccount(one);
 
-                //管理端登录来源
+                //追加默认角色
                 info.addRole(DefaultAuthUserDetails.ROLE_MGMT_USER);
 
                 //查询用户角色列表
@@ -121,6 +120,9 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
                 for (Privilege privilege : privileges) {
                     info.addStringPermission(privilege.getCode());
                 }
+            } else if (Account.AuthTypeEnum.site.equals(one.getAuthType())) { //前端站点/APP类型用户添加角色权限处理
+                //追加默认角色
+                info.addRole(DefaultAuthUserDetails.ROLE_SITE_USER);
             }
         });
         return info;

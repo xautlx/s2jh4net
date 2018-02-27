@@ -147,7 +147,15 @@ public class DevelopController {
         RestTemplate restTemplate = new RestTemplate();
         List<String> responseList = Lists.newArrayList();
 
-        //未提供Client鉴权信息，请求抛出401异常
+        //开放接口，自由访问
+         {
+            HttpEntity httpEntity = HttpEntity.EMPTY;
+            ResponseEntity<String> response = restTemplate.exchange(url + "/api/pub/ping", HttpMethod.GET, httpEntity, String.class);
+            responseList.add(response.getBody());
+            Assert.isTrue(response.getBody().indexOf("datetime") > -1, "datetime required");
+        }
+
+        //非开放接口，未提供Client鉴权信息，请求抛出401异常
         try {
             HttpEntity httpEntity = HttpEntity.EMPTY;
             restTemplate.exchange(url + "/api/ping", HttpMethod.GET, httpEntity, String.class);
@@ -169,46 +177,44 @@ public class DevelopController {
         //Client鉴权通过，但是访问需要登录访问的接口，请求抛出401异常
         try {
             HttpEntity httpEntity = new HttpEntity(buildApiClientHeaders());
-            restTemplate.exchange(url + "/api/ping/user", HttpMethod.GET, httpEntity, String.class);
+            restTemplate.exchange(url + "/api/ping/customer", HttpMethod.GET, httpEntity, String.class);
         } catch (Exception e) {
             responseList.add(e.getMessage());
             Assert.isTrue(e.getMessage().indexOf("401") > -1, "401 required");
         }
 
-        //user账号登录：错误密码情况
+        //customer账号登录：错误密码情况
         {
             MultiValueMap<String, String> postData = new LinkedMultiValueMap();
-            postData.add("username", "user");
+            postData.add("username", "customer");
             postData.add("password", "123");
-            postData.add("authType", "admin");
             HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(postData, buildApiClientHeaders());
             ResponseEntity<String> response = restTemplate.exchange(url + "/api/login", HttpMethod.POST, httpEntity, String.class);
             responseList.add(response.getBody());
             Assert.isTrue(response.getBody().indexOf("不正确") > -1, "login error");
         }
 
-        //user账号登录：正确账号密码
-        String userAccessToken;
+        //customer账号登录：正确账号密码
+        String customerAccessToken;
         {
             MultiValueMap<String, String> postData = new LinkedMultiValueMap();
-            postData.add("username", "user");
+            postData.add("username", "customer");
             postData.add("password", "123456");
-            postData.add("authType", "admin");
             HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(postData, buildApiClientHeaders());
             ResponseEntity<String> response = restTemplate.exchange(url + "/api/login", HttpMethod.POST, httpEntity, String.class);
             responseList.add(response.getBody());
-            userAccessToken = response.getHeaders().getFirst(GlobalConstant.APP_AUTH_ACCESS_TOKEN);
-            Assert.isTrue(userAccessToken != null, "access token error");
+            customerAccessToken = response.getHeaders().getFirst(GlobalConstant.APP_AUTH_ACCESS_TOKEN);
+            Assert.isTrue(customerAccessToken != null, "access token error");
         }
 
         //提供user登录返回的access token，请求权限范围内的接口，正确拿到响应数据
         {
             HttpHeaders httpHeaders = buildApiClientHeaders();
             //追加user登录获取的access token
-            httpHeaders.add(GlobalConstant.APP_AUTH_ACCESS_TOKEN, userAccessToken);
+            httpHeaders.add(GlobalConstant.APP_AUTH_ACCESS_TOKEN, customerAccessToken);
 
             HttpEntity httpEntity = new HttpEntity(httpHeaders);
-            ResponseEntity<String> response = restTemplate.exchange(url + "/api/ping/user", HttpMethod.GET, httpEntity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(url + "/api/ping/customer", HttpMethod.GET, httpEntity, String.class);
             responseList.add(response.getBody());
             Assert.isTrue(response.getBody().indexOf("authUid") > -1, "authUid required");
         }
@@ -217,7 +223,7 @@ public class DevelopController {
         try {
             HttpHeaders httpHeaders = buildApiClientHeaders();
             //追加user登录获取的access token
-            httpHeaders.add(GlobalConstant.APP_AUTH_ACCESS_TOKEN, userAccessToken);
+            httpHeaders.add(GlobalConstant.APP_AUTH_ACCESS_TOKEN, customerAccessToken);
 
             HttpEntity httpEntity = new HttpEntity(httpHeaders);
             ResponseEntity<String> response = restTemplate.exchange(url + "/api/ping/super", HttpMethod.GET, httpEntity, String.class);

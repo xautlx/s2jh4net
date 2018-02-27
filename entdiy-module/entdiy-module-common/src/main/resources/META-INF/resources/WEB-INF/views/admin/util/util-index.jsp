@@ -203,3 +203,23 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-reorder"></i> API接口冒烟测试
+                </div>
+                <div class="tools">
+                    <a class="collapse" href="javascript:;"></a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="note note-info">
+                    <p>开放框架提供一个基础的冒烟测试方法，一方面可以简单的验证相关配置和服务运行正常，一方面相关测试逻辑代码可以作为API用法编码参考。</p>
+                </div>
+                <a class="btn blue" href="dev/api/smoke-test" target="_blank">点击发起 API接口冒烟测试</a>
+            </div>
+        </div>
+    </div>
+</div>
