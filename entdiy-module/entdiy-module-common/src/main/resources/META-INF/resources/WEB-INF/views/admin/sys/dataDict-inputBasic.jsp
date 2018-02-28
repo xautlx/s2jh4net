@@ -15,7 +15,7 @@
     </div>
     <div class="form-body">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label">主标识</label>
                     <div class="controls">
@@ -24,7 +24,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label">次标识</label>
                     <div class="controls">
@@ -58,50 +60,19 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="control-label">文件路径数据</label>
+                    <label class="control-label">HTML属性值</label>
                     <div class="controls">
-                        <form:input path="filePathValue" class="form-control" data-upload="single-file"/>
-                        <div class="help-block">在主要数据基础上可以再额外维护一个文件路径数据，在业务逻辑中根据需要定制使用</div>
+                        <form:textarea path="richTextValue" class="form-control" data-htmleditor="kindeditor" data-height="400px"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="form-group">
-                    <label class="control-label">图片路径数据</label>
-                    <div class="controls">
-                        <div class="help-block">在主要数据基础上可以再额外维护一个图片路径数据，在业务逻辑中根据需要定制使用</div>
-                        <form:hidden path="imagePathValue" class="form-control" data-multisplitimage="edit"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="control-label">排序号</label>
-                    <div class="controls">
-                        <form:input path="orderRank" class="form-control"/>
-                        <div class="help-block">数字越大，越靠前</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
                 <div class="form-group">
                     <label class="control-label">禁用标识</label>
                     <div class="controls">
                         <form:radiobuttons path="disabled" items="${applicationScope.cons.booleanLabelMap}"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="control-label">HTML属性值</label>
-                    <div class="controls">
-                        <form:textarea path="richTextValue" class="form-control" data-htmleditor="kindeditor" data-height="400px"/>
                     </div>
                 </div>
             </div>

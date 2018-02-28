@@ -82,26 +82,6 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
     private String secondaryValue;
 
     /**
-     * 字典数据对应的补充文件类型Value值，页面以文件组件方式维护
-     * 对于扩展数据的获取一般通过{@link com.entdiy.sys.service.DataDictService#findChildrenByRootPrimaryKey(String)}
-     * 对于返回的数据，根据实际业务定制化使用即可
-     */
-    @MetaData(value = "文件路径数据")
-    @JsonView(JsonViews.List.class)
-    @Column(length = 512)
-    private String filePathValue;
-
-    /**
-     * 字典数据对应的补充图片类型Value值，页面以多图组件方式维护
-     * 对于扩展数据的获取一般通过{@link com.entdiy.sys.service.DataDictService#findChildrenByRootPrimaryKey(String)}
-     * 对于返回的数据，根据实际业务定制化使用即可
-     */
-    @MetaData(value = "图片路径数据")
-    @JsonView(JsonViews.List.class)
-    @Column(length = 1024)
-    private String imagePathValue;
-
-    /**
      * 字典数据对应的补充数据大文本类型Value值，如果除了primaryValue业务设计需要其他补充数据可启用扩展Value字段存取这些值
      * 对于扩展数据的获取一般通过{@link com.entdiy.sys.service.DataDictService#findChildrenByRootPrimaryKey(String)}
      * 对于返回的数据，根据实际业务定制化使用即可
@@ -110,7 +90,7 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
     @Lob
     @JsonView(JsonViews.Detail.class)
     private String richTextValue;
-    
+
     @Override
     @Transient
     public String getDisplay() {
