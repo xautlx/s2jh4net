@@ -10,16 +10,12 @@ echo "Using ROOT_DIR: ${ROOT_DIR}"
 # JAVA_HOME=
 
 port="8080"
-cluster=0
 
 while getopts p:c opt
 do
   case $opt in
     p)
       port="$OPTARG"
-    ;;
-    c)
-      cluster=1
     ;;
   esac
 done
@@ -62,11 +58,7 @@ done
 echo Init MySQL CREATE DATABASE...
 ${SHELL_DIR}/docker/tomcat/bin/docker-one.sh init
 
-if [ ${cluster} -eq 1 ] ; then
-  ${SHELL_DIR}/docker/tomcat/bin/docker-nodes.sh deploy
-else
-  echo "Using PORT: ${port}"
-  ${SHELL_DIR}/docker/tomcat/bin/docker-one.sh -p ${port} deploy
-fi
+echo "Using PORT: ${port}"
+${SHELL_DIR}/docker/tomcat/bin/docker-one.sh -p ${port} deploy
 
 cd  ${RUN_DIR}

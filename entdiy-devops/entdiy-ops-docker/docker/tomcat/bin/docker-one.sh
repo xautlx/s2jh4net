@@ -42,7 +42,26 @@ case "$1" in
                 -d openweb/oracle-tomcat:8-jre8
 
     echo docker started for $docker_name.
-    ;;
+
+    maxWaitTimes=50
+    url=http://localhost:$port/entdiy/api/pub/ping
+    times=0
+    echo  Waiting for tomcat webapp startup
+    while [ $times -lt $maxWaitTimes ] ; do
+      let times++
+      sleep 1s
+      # 此处故意设计为不断追加新行显示方式而不是一行不停追加，主要是为了友好支持Jenkins界面不断刷新新行输出方式
+      echo ${times}s...
+      if [ $times -lt 10 ] ; then
+        continue
+      fi
+      response=`curl -s -I $url | grep '200 OK'`
+      if [ -n "$response" ] ;then
+        break
+      fi
+    done
+    echo Tomcat $port webapp fully startup.
+    ;;  
     stop)
     cids=$(docker ps -aq --filter "name=$docker_name")
     if [ "$cids" == "" ]; then
