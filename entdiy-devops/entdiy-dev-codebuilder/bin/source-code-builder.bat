@@ -5,8 +5,8 @@ echo "Using SHELL_DIR: %SHELL_DIR%"
 set RUN_DIR=%cd%
 echo "Using RUN_DIR: %RUN_DIR%"
 
-echo Rebuild codebuilder...
-cd %SHELL_DIR%/..
+echo Rebuild root project...
+cd %SHELL_DIR%/../../..
 mvn clean install
 
 echo Generate template files...

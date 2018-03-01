@@ -9,7 +9,6 @@
             max-width: 100%;
         }
     </style>
-    <base href="${applicationScope.ctx}/dev/docs/markdown/"/>
     <link rel="shortcut icon" href="${applicationScope.ctx}/assets/apps/img/favicon.ico"/>
     <link href="${applicationScope.ctx}/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>

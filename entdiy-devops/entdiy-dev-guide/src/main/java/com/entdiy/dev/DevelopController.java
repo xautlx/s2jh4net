@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.ext.toc.TocExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.options.MutableDataSet;
@@ -125,7 +126,7 @@ public class DevelopController {
 
         MutableDataSet options = new MutableDataSet();
         // uncomment to set optional extensions
-        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
+        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), TocExtension.create()));
         // uncomment to convert soft-breaks to hard breaks
         //options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
         Parser parser = Parser.builder(options).build();
@@ -148,7 +149,7 @@ public class DevelopController {
         List<String> responseList = Lists.newArrayList();
 
         //开放接口，自由访问
-         {
+        {
             HttpEntity httpEntity = HttpEntity.EMPTY;
             ResponseEntity<String> response = restTemplate.exchange(url + "/api/pub/ping", HttpMethod.GET, httpEntity, String.class);
             responseList.add(response.getBody());

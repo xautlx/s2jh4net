@@ -3,8 +3,8 @@
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 echo "Using SHELL_DIR: ${SHELL_DIR}"
 
-echo Rebuild codebuilder...
-cd ${SHELL_DIR}/..
+echo Rebuild root project...
+cd ${SHELL_DIR}/../../..
 mvn clean install
 
 echo Generate template files...
