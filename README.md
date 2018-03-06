@@ -95,9 +95,9 @@ QQ群讨论组：303438676 或提交到Git平台的Issue：
 
 https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/issues
 
-* 专业版咨询联系方式
+* 专业版咨询及技术支持
 
-EMail: xautlx@hotmail.com 或 QQ: 2414521719
+EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专业版咨询方式仅限专业版咨询和付费用户，普通技术咨询请通过上述社区版渠道沟通，敬请理解。
 
 ### 参考引用
 
