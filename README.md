@@ -84,21 +84,6 @@
 
 ![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg?_=20180125)
 
-### 许可说明
-
-按照流行的社区版(Community Edition)和专业版(Professional Edition)运作模式。
-详见 [许可说明](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md)
-
-* 社区版技术交流渠道
-
-QQ群讨论组：303438676 或提交到Git平台的Issue：
-
-https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/issues
-
-* 专业版咨询及技术支持
-
-EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专业版咨询方式仅限专业版咨询和付费用户，普通技术咨询请通过上述社区版渠道沟通，敬请理解。
-
 ### 参考引用
 
 欢迎关注作者其他项目：
@@ -111,5 +96,5 @@ EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专�
  
 * [Nutch 1.X AJAX Plugins (Deprecated)](https://github.com/xautlx/nutch-htmlunit) -  基于Apache Nutch 1.X和Htmlunit的扩展实现AJAX页面爬虫抓取解析插件
  
-* [12306 Hunter (Deprecated)](https://github.com/xautlx/12306-hunter) - （功能已失效不可用，不过还可以当作Swing开发样列参考只用）Java Swing C/S版本12306订票助手，用处你懂的
+* [12306 Hunter (Deprecated)](https://github.com/xautlx/12306-hunter) - （功能已失效不可用，不过还可以当作Swing开发样列参考之用）Java Swing C/S版本12306订票助手，用处你懂的
 
