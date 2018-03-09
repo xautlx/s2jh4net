@@ -98,6 +98,8 @@ https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/is
 
 * 专业版咨询及技术支持
 
+有兴趣者可访问了解 [专业版资源摘要](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md#专业版资源摘要)
+
 EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专业版咨询方式仅限专业版咨询和付费用户，普通技术咨询请通过上述社区版渠道沟通，敬请理解。
 
 
