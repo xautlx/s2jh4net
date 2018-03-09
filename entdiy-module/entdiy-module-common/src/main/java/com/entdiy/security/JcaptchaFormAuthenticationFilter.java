@@ -273,6 +273,14 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
         request.setAttribute(getFailureKeyAttribute(), ae);
     }
 
+    /**
+     * 判断是否是API形式请求登录，以便以JSON格式响应而不是转向登录界面
+     * 规则：对于API请求从设计上要求提供Client鉴权信息，详见：ClientValidationAuthenticationFilter，
+     *      因此一个判断是请求头是否包含名称为sign的Header值，并且在 开发模式 此值可以固定传入 dev 直接放行校验以便开发调试；
+     *      另一个判断是对于AJAX请求 X-Requested-With=XMLHttpRequest 也作为API形式请求
+     * @param request
+     * @return
+     */
     private boolean isApiRequest(ServletRequest request) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         //API Client 请求

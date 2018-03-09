@@ -42,9 +42,13 @@ public class SwaggerConfig {
     @Bean
     public Docket createRestApi() {
         List<Parameter> pars = Lists.newArrayList();
-        ParameterBuilder sign = new ParameterBuilder();
-        sign.name("sign").description("客户端鉴权签名参数").modelRef(new ModelRef("string")).parameterType("header").required(true).defaultValue("dev");
-        pars.add(sign.build());
+
+        //开发模式，全局追加一个默认值为dev的sign头参数
+        if (AppContextHolder.isDevMode()) {
+            ParameterBuilder sign = new ParameterBuilder();
+            sign.name("sign").description("客户端鉴权签名参数").modelRef(new ModelRef("string")).parameterType("header").required(true).defaultValue("dev");
+            pars.add(sign.build());
+        }
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
