@@ -85,6 +85,22 @@
 
 ![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg?_=20180125)
 
+### 许可说明
+
+按照流行的免费开源社区版(Community Edition)和收费服务专业版(Professional Edition)运作模式。
+详见 [许可说明](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md)
+
+* 社区版技术交流渠道
+
+QQ群讨论组：303438676 或提交到Git平台的Issue：
+
+https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/issues
+
+* 专业版咨询及技术支持
+
+EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专业版咨询方式仅限专业版咨询和付费用户，普通技术咨询请通过上述社区版渠道沟通，敬请理解。
+
+
 ### 参考引用
 
 欢迎关注作者其他项目：
