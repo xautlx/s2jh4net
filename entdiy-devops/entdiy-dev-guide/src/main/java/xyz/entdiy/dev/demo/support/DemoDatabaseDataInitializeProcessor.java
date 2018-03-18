@@ -377,6 +377,8 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                 int random = MockEntityUtils.randomInt(15, 30);
                 for (int i = 0; i < random; i++) {
                     DemoProduct product = new DemoProduct();
+                    product.setCode("P0" + (10 + i));
+                    product.setName("商品" + product.getCode());
                     demoProductService.save(product);
 
                     //附件处理
