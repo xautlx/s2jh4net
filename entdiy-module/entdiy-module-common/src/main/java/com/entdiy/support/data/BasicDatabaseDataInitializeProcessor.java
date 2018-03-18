@@ -110,16 +110,16 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             roleService.save(mgmtRole);
 
             //预置普通管理账号
-            Account userAccount = new Account();
-            userAccount.setAuthType(Account.AuthTypeEnum.admin);
-            userAccount.setAuthUid("user");
-            userAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
-            userAccount.setEmail("user@entdiy.com");
+            Account managerAccount = new Account();
+            managerAccount.setAuthType(Account.AuthTypeEnum.admin);
+            managerAccount.setAuthUid("manager");
+            managerAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
+            managerAccount.setEmail("manager@entdiy.com");
 
-            User user = new User();
-            user.setAccount(userAccount);
-            user.setTrueName(userAccount.getAuthUid());
-            userService.saveCascadeAccount(user, "123456");
+            User manager = new User();
+            manager.setAccount(managerAccount);
+            manager.setTrueName(managerAccount.getAuthUid());
+            userService.saveCascadeAccount(manager, "123456");
 
             //前端站点/APP用户默认角色，具体权限可通过管理界面配置
             //所有前端站点/APP注册登录用户默认关联此角色，无需额外写入用户和角色关联数据
@@ -128,18 +128,6 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             siteRole.setName("前端站点/APP注册登录用户默认角色");
             siteRole.setDescription("系统预置，请勿随意修改。注意：所有前端站点/APP用户默认关联此角色，无需额外写入用户和角色关联数据。");
             roleService.save(siteRole);
-
-            //预置普通前端站点/APP账号
-            Account customerAccount = new Account();
-            customerAccount.setAuthType(Account.AuthTypeEnum.site);
-            customerAccount.setAuthUid("customer");
-            customerAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
-            customerAccount.setEmail("customer@entdiy.com");
-
-            User customer = new User();
-            customer.setAccount(customerAccount);
-            customer.setTrueName(customerAccount.getAuthUid());
-            userService.saveCascadeAccount(customer, "123456");
         }
 
         //初始化Nested Set Model默认根节点数据

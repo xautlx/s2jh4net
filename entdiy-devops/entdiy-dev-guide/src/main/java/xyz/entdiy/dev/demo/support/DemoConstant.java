@@ -15,20 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.security.annotation;
+package xyz.entdiy.dev.demo.support;
 
-import java.lang.annotation.*;
+import com.entdiy.core.annotation.MetaData;
 
-/**
- * 基于当前 Shiro 登录会话自动注入当前登录账号对象
- *
- * @see com.entdiy.security.method.AuthAccountMethodProcessor
- */
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface AuthAccount {
-
-    boolean required() default true;
+public class DemoConstant {
+    @MetaData("数据字典:报销申请:记账类型")
+    public final static String DataDict_Demo_ReimbursementRequest_UseType = "DataDict_Demo_ReimbursementRequest_UseType";
 
 }

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.AuditOverride;
@@ -51,38 +52,47 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractPersis
     @Column(name = "_version", nullable = false)
     @JsonProperty
     @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private Integer version = 0;
 
     @Column(name = "_createUserName", length = 256, updatable = false)
     @JsonProperty
     @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private String createUserName = GlobalConstant.NONE_VALUE;
 
     @Column(name = "_createAccountId", length = 256, updatable = false)
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private Long createAccountId;
 
     @JsonProperty
     @Column(name = "_createDate", updatable = false)
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     protected LocalDateTime createDate;
 
     @Column(name = "_updateUserName", length = 256)
     @JsonProperty
     @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private String updateUserName;
 
     @Column(name = "_updateAccountId", length = 256)
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private Long updateAccountId;
 
     @JsonProperty
     @JsonView(JsonViews.Admin.class)
     @Column(name = "_updateDate")
+    @ApiModelProperty(hidden = true)
     private LocalDateTime updateDate;
 
     @MetaData(value = "数据隔离域", comments = "类似Windows域的概念，进行用户数据隔离")
     @Column(name = "_dataDomain", length = 100, updatable = false)
     @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private String dataDomain = GlobalConstant.DEFAULT_VALUE;
 
     private static final String[] PROPERTY_LIST = new String[]{"id", "version"};
@@ -95,6 +105,7 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractPersis
     @Transient
     @JsonProperty
     @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     public String getDisplay() {
         return "[" + getId() + "]" + this.getClass().getSimpleName();
     }

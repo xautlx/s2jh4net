@@ -80,7 +80,12 @@ public class AttachmentFile extends BaseUuidEntity {
     @Column(length = 512, nullable = false)
     private String relativePath;
 
-    @MetaData(value = "存储绝对路径", comments = "记录参考之用，一般业务功能不做使用")
+    @MetaData(value = "存储绝对路径")
     @Column(length = 512, nullable = true)
     private String absolutePath;
+
+    @Transient
+    public String getAccessUrl() {
+        return "/pub/file/" + getId();
+    }
 }

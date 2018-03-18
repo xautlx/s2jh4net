@@ -14,6 +14,7 @@
  */
 package com.entdiy.core.web.api;
 
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.web.AppContextHolder;
 import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +49,10 @@ public class SwaggerConfig {
             ParameterBuilder sign = new ParameterBuilder();
             sign.name("sign").description("客户端鉴权签名参数").modelRef(new ModelRef("string")).parameterType("header").required(true).defaultValue("dev");
             pars.add(sign.build());
+
+            ParameterBuilder accessToken = new ParameterBuilder();
+            accessToken.name(GlobalConstant.APP_AUTH_ACCESS_TOKEN).description("登录接口返回的accessToken").modelRef(new ModelRef("string")).parameterType("header").required(false);
+            pars.add(accessToken.build());
         }
 
         return new Docket(DocumentationType.SWAGGER_2)

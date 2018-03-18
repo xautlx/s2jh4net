@@ -19,6 +19,8 @@ package com.entdiy.security;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.security.AuthUserDetails;
+import com.entdiy.core.web.json.JsonViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,15 +48,18 @@ public class DefaultAuthUserDetails implements Serializable, AuthUserDetails {
     public final static String ROLE_PROTECTED = "ROLE_PROTECTED";
 
     @MetaData(value = "登录标识")
+    @JsonView(JsonViews.App.class)
     private String username;
 
     @MetaData(value = "账号全局唯一标识")
+    @JsonView(JsonViews.App.class)
     private Long accountId;
 
     @MetaData(value = "数据访问域")
     private String dataDomain;
 
     @MetaData(value = "访问TOKEN")
+    @JsonView(JsonViews.App.class)
     private String accessToken;
 
     @Override

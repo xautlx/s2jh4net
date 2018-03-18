@@ -29,7 +29,6 @@ import com.entdiy.core.util.ExtStringUtils;
 import com.entdiy.core.util.FileUtils;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.captcha.CaptchaUtils;
-import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.support.service.SmsService;
@@ -60,9 +59,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -325,7 +323,7 @@ public class UtilController {
 
                 //以下两个属性用于kindeditor显示之用
                 retMap.put("error", 0);
-                retMap.put("url", ServletUtils.getReadFileUrlPrefix(request) + fileInfo.getRelativePath());
+                retMap.put("url", attachmentFile.getAccessUrl());
 
                 //业务使用属性
                 retMap.put("id", attachmentFile.getId());
@@ -340,5 +338,30 @@ public class UtilController {
         retMap.put("error", 1);
         retMap.put("message", "图片处理失败");
         return retMap;
+    }
+
+    @RequestMapping(value = "/pub/file/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public void fileDownload(@PathVariable("id") String id, HttpServletResponse response) {
+        attachmentFileService.findOne(id).ifPresent(attachmentFile -> {
+            try {
+                String absolutePath = attachmentFile.getAbsolutePath();
+                if (absolutePath.startsWith("http://") || absolutePath.startsWith("https://")) {
+                    response.sendRedirect(absolutePath);
+                } else {
+                    String fileName = URLEncoder.encode(attachmentFile.getFileRealName(), "UTF-8");
+                    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                    response.addHeader("Content-Length", "" + attachmentFile.getFileLength());
+                    response.setContentType(attachmentFile.getFileContentType());
+                    InputStream in = new FileInputStream(new File(absolutePath));
+                    OutputStream out = response.getOutputStream();
+                    IOUtils.copy(in, out);
+                    IOUtils.closeQuietly(in);
+                    IOUtils.closeQuietly(out);
+                }
+            } catch (Exception e) {
+                logger.error("File download error", e);
+            }
+        });
     }
 }

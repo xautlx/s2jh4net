@@ -94,4 +94,7 @@ public @interface ModelEntity {
      * @see org.springframework.web.bind.WebDataBinder#setDisallowedFields(String...)
      */
     String[] disallowedFields() default {};
+
+
+    boolean byAuthAccount() default false;
 }

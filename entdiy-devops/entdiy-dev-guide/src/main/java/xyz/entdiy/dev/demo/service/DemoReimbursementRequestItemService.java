@@ -15,20 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.security.annotation;
+package xyz.entdiy.dev.demo.service;
 
-import java.lang.annotation.*;
+import com.entdiy.core.service.BaseService;
+import xyz.entdiy.dev.demo.dao.DemoReimbursementRequestItemDao;
+import xyz.entdiy.dev.demo.entity.DemoReimbursementRequestItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * 基于当前 Shiro 登录会话自动注入当前登录账号对象
- *
- * @see com.entdiy.security.method.AuthAccountMethodProcessor
- */
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface AuthAccount {
-
-    boolean required() default true;
-
+@Service
+@Transactional
+public class DemoReimbursementRequestItemService extends BaseService<DemoReimbursementRequestItem,Long>{
+    
+    @Autowired
+    private DemoReimbursementRequestItemDao reimbursementRequestItemDao;
 }

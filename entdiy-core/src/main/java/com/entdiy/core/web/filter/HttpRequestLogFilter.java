@@ -17,23 +17,16 @@
  */
 package com.entdiy.core.web.filter;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.core.web.util.ServletUtils;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * 打印输出HTTP请求信息，一般用于开发调试
@@ -61,7 +54,7 @@ public class HttpRequestLogFilter implements Filter {
             String uri = req.getRequestURI();
             //静态资源直接跳过
             if (uri == null || uri.endsWith(".js") || uri.endsWith(".css") || uri.endsWith(".gif") || uri.endsWith(".png") || uri.endsWith(".jpg")
-                    || uri.endsWith(".woff") || uri.endsWith(".ico") || uri.endsWith(".mp3")) {
+                    || uri.endsWith(".woff") || uri.endsWith(".woff2") || uri.endsWith(".ico") || uri.endsWith(".mp3")) {
                 chain.doFilter(request, reponse);
                 return;
             }

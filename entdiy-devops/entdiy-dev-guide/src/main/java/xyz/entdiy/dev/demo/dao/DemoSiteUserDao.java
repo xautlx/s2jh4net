@@ -15,20 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.security.annotation;
+package xyz.entdiy.dev.demo.dao;
 
-import java.lang.annotation.*;
+import com.entdiy.auth.entity.Account;
+import com.entdiy.core.dao.jpa.BaseDao;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.stereotype.Repository;
+import xyz.entdiy.dev.demo.entity.DemoSiteUser;
 
-/**
- * 基于当前 Shiro 登录会话自动注入当前登录账号对象
- *
- * @see com.entdiy.security.method.AuthAccountMethodProcessor
- */
-@Target({ElementType.PARAMETER, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface AuthAccount {
+import javax.persistence.QueryHint;
 
-    boolean required() default true;
+@Repository
+public interface DemoSiteUserDao extends BaseDao<DemoSiteUser, Long> {
 
+    @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
+    DemoSiteUser findByAccount(Account account);
 }

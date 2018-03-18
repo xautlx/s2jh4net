@@ -38,7 +38,7 @@ import javax.persistence.AccessType;
 @Access(AccessType.FIELD)
 @JsonInclude(Include.NON_NULL)
 @ApiModel
-public class OperationResult {
+public class OperationResult<T> {
 
     /** 全局成功标识代码 */
     public final static String SUCCESS = "100000";
@@ -61,24 +61,22 @@ public class OperationResult {
         confirm
     }
 
-    /** 返回success或failure操作标识 */
     @ApiModelProperty(value = "处理结果类型", name = "type", allowableValues = "success,failure")
     private String type;
 
-    /** 成功：100000，其他标识错误 */
     @ApiModelProperty(value = "处理结果代码", name = "code", notes = "100000 标识成功，其余为错误代码")
     private String code;
 
-    /** 国际化处理的返回JSON消息正文，一般用于提供failure错误消息 */
+    @ApiModelProperty(value = "消息文本", name = "message", notes = "一般用于提供failure错误消息")
     private String message;
 
-    /** 补充的业务数据 */
-    private Object data;
+    @ApiModelProperty(value = "业务数据", name = "data")
+    private T data;
 
     /** 标识redirect路径 */
     private String redirect;
 
-    public static OperationResult buildSuccessResult(String message, Object data) {
+    public static <X> OperationResult<X> buildSuccessResult(String message, X data) {
         return new OperationResult(OPERATION_RESULT_TYPE.success, message, data).setCode(SUCCESS);
     }
 
@@ -90,11 +88,11 @@ public class OperationResult {
         return new OperationResult(OPERATION_RESULT_TYPE.success, message).setCode(SUCCESS);
     }
 
-    public static OperationResult buildSuccessResult(Object data) {
+    public static <X> OperationResult<X> buildSuccessResult(X data) {
         return new OperationResult(OPERATION_RESULT_TYPE.success, "success", data).setCode(SUCCESS);
     }
 
-    public static OperationResult buildWarningResult(String message, Object data) {
+    public static <X> OperationResult<X> buildWarningResult(String message, X data) {
         return new OperationResult(OPERATION_RESULT_TYPE.warning, message, data).setCode(SUCCESS);
     }
 
@@ -102,11 +100,11 @@ public class OperationResult {
         return new OperationResult(OPERATION_RESULT_TYPE.failure, message).setCode(FAILURE);
     }
 
-    public static OperationResult buildFailureResult(String message, Object data) {
+    public static <X> OperationResult<X> buildFailureResult(String message, X data) {
         return new OperationResult(OPERATION_RESULT_TYPE.failure, message, data).setCode(FAILURE);
     }
 
-    public static OperationResult buildConfirmResult(String message, Object data) {
+    public static <X> OperationResult<X> buildConfirmResult(String message, X data) {
         return new OperationResult(OPERATION_RESULT_TYPE.confirm, message, data).setCode(SUCCESS);
     }
 
@@ -119,7 +117,7 @@ public class OperationResult {
         this.message = message;
     }
 
-    public OperationResult(OPERATION_RESULT_TYPE type, String message, Object data) {
+    public OperationResult(OPERATION_RESULT_TYPE type, String message, T data) {
         this.type = type.name();
         this.message = message;
         this.data = data;

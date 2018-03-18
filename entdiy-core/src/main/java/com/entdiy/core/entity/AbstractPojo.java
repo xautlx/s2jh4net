@@ -20,6 +20,7 @@ package com.entdiy.core.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Maps;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -32,6 +33,7 @@ public abstract class AbstractPojo implements Serializable {
     /** Entity本身无用，主要用于UI层辅助参数传递 */
     @Transient
     @JsonProperty
+    @ApiModelProperty(hidden = true)
     protected Map<String, Object> extraAttributes;
 
     @Transient

@@ -21,9 +21,12 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.entity.EnumKeyLabelPair;
+import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.json.LocalDateSerializer;
 import com.entdiy.core.web.json.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
@@ -51,6 +54,8 @@ public class Account extends BaseNativeEntity {
     @MetaData(value = "账户类型")
     @Column(length = 64, nullable = false)
     @Enumerated(EnumType.STRING)
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private AuthTypeEnum authType;
 
     @MetaData(value = "账号类型所对应唯一标识")
@@ -59,14 +64,19 @@ public class Account extends BaseNativeEntity {
 
     @MetaData(value = "注册时间")
     @Column(updatable = false)
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private LocalDateTime signupTime;
 
     @MetaData(value = "密码加密盐值")
     @Column(length = 128, nullable = false)
+    @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private String salt;
 
     @MetaData(value = "用户密码", comments = "加密算法：MD5({salt}+原始密码)")
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private String password;
 
     @MetaData(value = "电子邮件", tooltips = "请仔细填写，可用于系统通知邮件发送，找回密码等功能")
@@ -80,34 +90,53 @@ public class Account extends BaseNativeEntity {
     private String mobile;
 
     @MetaData(value = "账户未锁定标志", tooltips = "账号锁定后无法登录")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private Boolean accountNonLocked = Boolean.TRUE;
 
     @MetaData(value = "失效日期", tooltips = "设定账号访问系统的失效日期，为空表示永不失效")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private LocalDate accountExpireDate;
 
     @MetaData(value = "账户密码过期时间", tooltips = "到期后强制用户登录成功后必须修改密码", comments = "比如用于初始化密码时设置当前时间，这样用户下次登录成功后则强制用户必须修改密码。")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private LocalDate credentialsExpireDate;
 
     @MetaData(value = "最近认证失败次数", comments = "认证失败累加，成功后清零。达到设定失败次数后锁定帐号，防止无限制次数尝试猜测密码")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private Integer lastFailureTimes = 0;
 
     @MetaData(value = "总计认证成功次数", comments = "不断累加")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private Long logonSuccessTimes = 0L;
 
     @MetaData(value = "总计认证失败次数", comments = "不断累加")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private Long logonFailureTimes = 0L;
 
     @MetaData(value = "最近认证失败时间")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private LocalDateTime lastLogonFailureTime;
 
     @MetaData(value = "最近认证成功时间")
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
     private LocalDateTime lastLogonSuccessTime;
 
     @MetaData(value = "REST访问Token")
     @Column(unique = true)
+    @ApiModelProperty(hidden = true)
     private String accessToken;
 
     @MetaData(value = "随机数", comments = "用于找回密码设定的随机UUID字符串")
+    @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private String randomCode;
 
     public enum AuthTypeEnum implements EnumKeyLabelPair {
@@ -146,6 +175,7 @@ public class Account extends BaseNativeEntity {
 
     @Override
     @Transient
+    @ApiModelProperty(hidden = true)
     public String getDisplay() {
         String dataDomain = getDataDomain();
         if (dataDomain == null || GlobalConstant.DEFAULT_VALUE.equals(dataDomain) || GlobalConstant.ROOT_VALUE.equals(dataDomain)) {
@@ -157,6 +187,7 @@ public class Account extends BaseNativeEntity {
 
     @MetaData(value = "用户标识别名", comments = "用户在多个终端登录，需要一个标识同一个身份以便多终端推送消息")
     @Transient
+    @JsonIgnore
     public String getAlias() {
         return getDataDomain() + "/" + authUid;
     }

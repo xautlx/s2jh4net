@@ -81,8 +81,8 @@
                             root/123456
                         </a>
                         &nbsp;|&nbsp;
-                        <a href="javascript:void(0)" onclick="setupDevUser('user','123456')">
-                            user/123456
+                        <a href="javascript:void(0)" onclick="setupDevUser('manager','123456')">
+                            manager/123456
                         </a>
                     </b>
                 </p>

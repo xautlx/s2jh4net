@@ -16,8 +16,8 @@ package com.entdiy.dev.demo.dao.test;
 
 import com.entdiy.core.test.SpringTransactionalTestCase;
 import com.entdiy.core.util.MockEntityUtils;
-import com.entdiy.dev.demo.dao.DemoProductDao;
-import com.entdiy.dev.demo.entity.DemoProduct;
+import xyz.entdiy.dev.demo.dao.DemoProductDao;
+import xyz.entdiy.dev.demo.entity.DemoProduct;
 import com.entdiy.sys.entity.AttachmentFile;
 import org.junit.Before;
 import org.junit.Test;

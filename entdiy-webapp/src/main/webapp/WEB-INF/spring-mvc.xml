@@ -96,7 +96,6 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-
     <bean class="com.entdiy.core.web.exception.AnnotationHandlerMethodExceptionResolver">
         <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
     </bean>

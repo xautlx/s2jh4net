@@ -153,6 +153,18 @@ public class MockEntityUtils {
         return list.get(randomDataGenerator.nextInt(0, list.size() - 1));
     }
 
+
+    /**
+     * 返回区间段随机字符串
+     *
+     * @param min 最小长度
+     * @param max 最大长度
+     * @return
+     */
+    public static String randomString(int min, int max) {
+        return RandomStringUtils.randomAlphabetic(randomInt(min, max));
+    }
+
     /**
      * 返回区间段随机整数
      *

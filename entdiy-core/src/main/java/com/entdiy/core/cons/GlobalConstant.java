@@ -18,6 +18,7 @@
 package com.entdiy.core.cons;
 
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.entity.EnumKeyLabelPair;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
@@ -27,6 +28,8 @@ public class GlobalConstant {
     public static final String ROOT_VALUE = "root";
     public static final String DEFAULT_VALUE = "default";
     public static final String NONE_VALUE = "none";
+
+    public static final String API_MAPPING_PREFIX="/api";
 
     /**
      * 对于一些复杂处理逻辑需要基于提交数据服务器校验后有提示警告信息需要用户二次确认
@@ -41,16 +44,28 @@ public class GlobalConstant {
         booleanLabelMap.put(Boolean.FALSE, "否");
     }
 
-    //性别  
-    public enum GenderEnum {
-        @MetaData(value = "男")
-        M,
+    @MetaData("性别枚举定义")
+    public enum GenderEnum implements EnumKeyLabelPair {
+        M {
+            @Override
+            public String getLabel() {
+                return "男";
+            }
+        },
 
-        @MetaData(value = "女")
-        F,
+        F {
+            @Override
+            public String getLabel() {
+                return "女";
+            }
+        },
 
-        @MetaData(value = "保密")
-        S
+        S {
+            @Override
+            public String getLabel() {
+                return "保密";
+            }
+        }
     }
 
     @MetaData("类似OAuth的APP认证AccessToken请求Header名称")
