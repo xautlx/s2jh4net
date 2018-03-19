@@ -1,0 +1,37 @@
+export const AUTH_LOGIN='AUTH_LOGIN';  //登录
+export const AUTH_LOGIN_OUT='AUTH_LOGIN_OUT'  //登出
+
+//判断相关页面是否已初次加载
+export const LOADED_HOME='LOADED_HOME';  //首页
+export const LOADED_ORDER='LOADED_ORDER';  //我的订单
+export const LOADED_MINE='LOADED_MINE';   //个人中心（我的）
+
+//我的消息相关
+export const MESSAGE_GET_COUNT='MESSAGE_GET_COUNT' //获取消息数量
+
+// 密码相关
+export const PASSWORD_MODIFY = 'PASSWORD_MODIFY'
+export const PASSWORD_RESET = 'PASSWORD_RESET'
+export const GESTURE_PASSWORD_SET = 'GESTURE_PASSWORD_SET'
+
+/* 我的订单列表 */
+export const GET_MY_ORDER_TOPAY='GET_MY_ORDER_TOPAY'; //获取我的待支付订单
+export const GET_MY_ORDER_ALL='GET_MY_ORDER_ALL'; //获取我的所有订单
+export const CHANGE_MY_ORDER_ACTIVE_TAB='CHANGE_MY_ORDER_ACTIVE_TAB';
+export const CHANGE_MY_ORDER_NEED_REFRESH='CHANGE_MY_ORDER_NEED_REFRESH';
+export const CHANGE_MY_ORDER_HISTORY_SCROLLTOP='CHANGE_MY_ORDER_HISTORY_SCROLLTOP';
+
+// 订单详情
+export const ORDER_DETAIL_FETCH = 'ORDER_DETAIL_FETCH'
+
+// 个人信息
+export const USER_INFO_FETCH = 'USER_INFO_FETCH'
+export const USER_INFO_AVATAR_UPDATE = 'USER_INFO_AVATAR_UPDATE'
+export const USER_INFO_UPDATE = 'USER_INFO_UPDATE'
+
+// 更新
+export const UPDATE_INFO_FETCH = 'UPDATE_INFO_FETCH'
+export const UPDATE_INFO_CHANGE = 'UPDATE_INFO_CHANGE'
+
+
+

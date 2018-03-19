@@ -1,0 +1,1 @@
+window.apiHost='http://192.168.3.251:8080/entdiy'

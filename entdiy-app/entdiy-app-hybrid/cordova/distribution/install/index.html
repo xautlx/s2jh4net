@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="ZH">
+    <meta charset="UTF-8">
+    <title>APP_NAME:APP_VERSION</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body style="text-align: center">
+<h4 style="padding: 30px">
+    APP_NAME
+</h4>
+<p style="padding: 30px">
+    <a class="btn btn-primary btn-lg btn-block downloadBtn">下载安装APP</a>
+</p>
+<p style="padding: 30px">
+    版本: APP_VERSION
+</p>
+<div class="popUp hide"></div>
+<div class="notice hide">
+    <p>请点击右上角并选择"在Safari中打开22"</p>
+    <img src="assets/img/example.png">
+</div>
+
+<script src="assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+    var version = navigator.userAgent;
+    var href = window.location.href;
+    var reg = /(.*)index.html.*/gi;
+    var prefix = reg.exec(href);
+    if (prefix != null) {
+        prefix = prefix[1];
+    } else {
+        prefix = href;
+    }
+    if (version.indexOf('iPhone') > -1 || version.indexOf('iPad') > -1) {
+        if (version.indexOf('MicroMessenger') > -1) {
+            $('.popUp').removeClass('hide');
+            $('.notice').removeClass('hide');
+        } else {
+            //填写ios的下载地址
+            $('.downloadBtn').attr('href', 'javascript:alert("当前仅支持Android系统，暂未构建iOS版本")');
+            //$('.downloadBtn').attr('href', 'itms-services://?action=download-manifest&url='+prefix.replace('http:','https:')+'app/ios/entdiy.plist');
+        }
+    } else if (version.indexOf('Android') > -1) {
+        if (version.indexOf('MicroMessenger') > -1) {
+            $('.popUp').removeClass('hide');
+            $('.notice').removeClass('hide');
+            $('.notice img').attr('src', 'assets/img/example2.png');
+            $('.notice p').text('请点击右上角并选择"在浏览器中打开"');
+        } else {
+            //填写android的下载地址
+            $('.downloadBtn').attr('href', prefix + 'app/android/entdiy.apk');
+        }
+    } else {
+        console.log("其他所有平台");
+    }
+</script>
+</body>
+</html>

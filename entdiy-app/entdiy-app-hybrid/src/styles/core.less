@@ -1,0 +1,65 @@
+
+body { margin: 0; }
+
+.am-tabs-bar .am-tabs-prevpage:before{
+  background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#ffffff), to(rgba(255, 255, 255, 0)));
+}
+
+.am-tabs-bar .am-tabs-nextpage:after{
+  background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(rgba(255, 255, 255, 0)), to(#ffffff));
+}
+
+// 限制首页tabbar图标的大小
+.am-tab-bar-tab-icon img {
+  width: 50px;
+  height: 50px;
+}
+
+// 修复tab-item过多时的渐变问题
+.am-tabs-bar .am-tabs-prevpage:before{
+  background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#ffffff), to(rgba(255, 255, 255, 0)));
+}
+.am-tabs-bar .am-tabs-nextpage:after{
+  background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(rgba(255, 255, 255, 0)), to(#ffffff));
+}
+
+// 修复modal-prompt输入框文字过小的问题
+.am-modal-input input {
+  font-size: 32px;
+}
+
+
+// ================
+// 页面切换效果
+// ================
+
+.page-enter{
+  opacity: 0;
+  z-index: 1;
+}
+
+.page-enter.page-enter-active{
+  opacity: 1;
+  transition: opacity 300ms 0ms ease;
+}
+
+.page-leave{
+  opacity: 0;
+}
+
+
+
+// 加载条
+
+.custom-loading-bar{
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: width 400ms linear;
+  z-index: 10000;
+  height: 8px;
+  border-radius: 4px;
+  background: #108ee9; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #108ee9, #0fbbe0); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #108ee9, #0fbbe0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}

@@ -1,0 +1,15 @@
+.m-rating{
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+  i{
+    float: left;
+    width: 44px;
+    height: 44px;
+    background: url('./star-template@2x.png') no-repeat center;
+    background-size: cover;
+    &.sel{
+      background-image: url(./star-highlighted-template@2x.png);
+    }
+  }
+}
