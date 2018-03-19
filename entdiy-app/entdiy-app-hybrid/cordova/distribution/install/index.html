@@ -21,6 +21,9 @@
 <p style="padding: 30px">
     版本: APP_VERSION
 </p>
+<p>
+    注意：目前仅构建了Android安装包，iOS版本随后发布
+</p>
 <div class="popUp hide"></div>
 <div class="notice hide">
     <p>请点击右上角并选择"在Safari中打开22"</p>
@@ -58,7 +61,7 @@
             $('.downloadBtn').attr('href', prefix + 'app/android/entdiy.apk');
         }
     } else {
-        console.log("其他所有平台");
+        $('.downloadBtn').attr('href', 'javascript:alert("请使用移动设备浏览器访问当前页面地址")');
     }
 </script>
 </body>
