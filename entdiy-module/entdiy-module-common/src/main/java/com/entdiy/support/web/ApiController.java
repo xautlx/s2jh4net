@@ -21,6 +21,7 @@ import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.service.AccountService;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.security.AuthContextHolder;
+import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.core.web.json.LocalDateTimeSerializer;
@@ -139,6 +140,7 @@ public class ApiController {
     @ResponseBody
     public OperationResult modifyPasswordSave(@AuthAccount Account account, @RequestParam("oldpasswd") String oldpasswd,
                                               @RequestParam("newpasswd") String newpasswd) {
+        Validation.notDemoMode();
         String encodedPasswd = accountService.encodeUserPasswd(account, oldpasswd);
         if (!encodedPasswd.equals(account.getPassword())) {
             return OperationResult.buildFailureResult("原密码不正确,请重新输入");

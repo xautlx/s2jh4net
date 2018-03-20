@@ -26,7 +26,7 @@ docker_name=${app_name}-${port}
 case "$1" in
     start)
     echo docker run ${docker_name}...
-    mkdir -p ${app_dir} ; mkdir -p ${data_dir}; mkdir -p ${config_dir}; mkdir -p ${log_dir}
+    mkdir -p ${app_dir} ; mkdir -p ${data_dir}/upload; mkdir -p ${config_dir}; mkdir -p ${log_dir}
     deploy_dir="/usr/local/tomcat/webapps"
     docker run --name ${docker_name} -p $port:8080 --restart=always --privileged=true \
                --link redis:redis-server \
