@@ -250,20 +250,20 @@
                         <p class="form-control-static">当前页面相关表单和框架已有基础功能包含一系列表单控制处理演示，可直接参考各功能点设计实现</p>
                         <p class="form-control-static">点击相关链接可查阅主要技术点文说明文档:</p>
                         <span class="help-block">
-                            <a href="dev/docs/markdown/表单控制#get" target="_blank">列表界面的GET查询表单</a>
+                            <a href="dev/docs/markdown/290.表单控制.md#get" target="_blank">列表界面的GET查询表单</a>
                         </span>
                         <span class="help-block">
-                            <a href="dev/docs/markdown/表单控制#post" target="_blank">编辑界面的POST提交表单</a>
+                            <a href="dev/docs/markdown/290.表单控制.md#post" target="_blank">编辑界面的POST提交表单</a>
                         </span>
                         <span class="help-block">
-                            <a href="dev/docs/markdown/表单控制#jsr303" target="_blank">集成服务端和客户端的Form/Data Validation的设计处理</a>
+                            <a href="dev/docs/markdown/290.表单控制.md#jsr303" target="_blank">集成服务端和客户端的Form/Data Validation的设计处理</a>
                         </span>
                         <span class="help-block">
-                            <a href="dev/docs/markdown/表单控制#rules"
+                            <a href="dev/docs/markdown/290.表单控制.md#rules"
                                target="_blank">基于JQuery Validation及扩展的校验语法规则定义</a>
                         </span>
                         <span class="help-block">
-                            <a href="dev/docs/markdown/表单控制#confirm"
+                            <a href="dev/docs/markdown/290.表单控制.md#confirm"
                                target="_blank">Form表单数据的提交Confirm确认处理</a>
                         </span>
                     </div>

@@ -63,9 +63,16 @@ public class Validation {
      */
     public static void notDemoMode(HttpServletRequest request) {
         if (AppContextHolder.isDemoMode()) {
-            if (HttpMethod.POST.toString().equalsIgnoreCase(request.getMethod())) {
+            if (request == null || HttpMethod.POST.toString().equalsIgnoreCase(request.getMethod())) {
                 throw new ValidationException("抱歉，此功能在演示模式被禁用，请参考文档在本地部署运行体验。");
             }
         }
+    }
+
+    /**
+     * 如果是演示模式则拒绝以避免用户随意修改数据导致演示不完整
+     */
+    public static void notDemoMode() {
+        notDemoMode(null);
     }
 }

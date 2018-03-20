@@ -19,6 +19,7 @@ package com.entdiy.support.web;
 
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.service.AccountService;
+import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.util.ServletUtils;
@@ -33,8 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Controller
 public class SupportAccountController {
@@ -64,12 +63,12 @@ public class SupportAccountController {
 
     @RequestMapping(value = "/pub/account/password/reset", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult resetPasswordSave(HttpServletRequest request, HttpServletResponse response,
-                                             @RequestParam("uid") String uid,
+    public OperationResult resetPasswordSave(@RequestParam("uid") String uid,
                                              @RequestParam(value = "authType", defaultValue = "site") String authType,
                                              @RequestParam("email") String email,
                                              @RequestParam("code") String code,
-                                             @RequestParam("newpasswd") String newpasswd) throws IOException {
+                                             @RequestParam("newpasswd") String newpasswd) {
+        Validation.notDemoMode();
         Account account = accountService.findByUsername(Account.AuthTypeEnum.valueOf(authType), uid);
         if (account == null) {
             return OperationResult.buildFailureResult("未找到匹配账号信息，请联系管理员处理");
@@ -92,6 +91,7 @@ public class SupportAccountController {
     @ResponseBody
     public OperationResult modifyPasswordSave(@AuthAccount Account account, @RequestParam("oldpasswd") String oldpasswd,
                                               @RequestParam("newpasswd") String newpasswd) {
+        Validation.notDemoMode();
         String encodedPasswd = accountService.encodeUserPasswd(account, oldpasswd);
         if (!encodedPasswd.equals(account.getPassword())) {
             return OperationResult.buildFailureResult("原密码不正确,请重新输入");

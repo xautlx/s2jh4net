@@ -152,9 +152,9 @@ public class UtilController {
     @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/admin/util/logger-update", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult loggerLevelUpdate(HttpServletRequest request, @RequestParam(value = "loggerName", required = false) String loggerName,
+    public OperationResult loggerLevelUpdate(@RequestParam(value = "loggerName", required = false) String loggerName,
                                              @RequestParam("loggerLevel") String loggerLevel) {
-        Validation.notDemoMode(request);
+        Validation.notDemoMode();
         if (StringUtils.isBlank(loggerName)) {
             loggerName = Logger.ROOT_LOGGER_NAME;
         }
@@ -274,6 +274,7 @@ public class UtilController {
     @RequestMapping(value = "/admin/util/systime/setup", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult systimeSetup(@RequestParam(value = "time", required = true) LocalDateTime dateTime) {
+        Validation.notDemoMode();
         DateUtils.setCurrentDateTime(dateTime);
 
         // 为了避免遗忘执行手工恢复操作，在“临时调整系统时间”操作后，默认在N分钟后强制恢复为当前系统时间。
@@ -323,7 +324,7 @@ public class UtilController {
 
                 //以下两个属性用于kindeditor显示之用
                 retMap.put("error", 0);
-                retMap.put("url", attachmentFile.getAccessUrl());
+                retMap.put("url", request.getContextPath() + attachmentFile.getAccessUrl());
 
                 //业务使用属性
                 retMap.put("id", attachmentFile.getId());
