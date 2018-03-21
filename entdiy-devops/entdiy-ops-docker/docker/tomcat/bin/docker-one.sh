@@ -39,7 +39,7 @@ case "$1" in
                 -e TZ="Asia/Shanghai" \
                 -e JAVA_OPTS="-Xms256m -Xmx4096m -Dspring.profiles.active=production" \
                 -e CATALINA_OPTS="-Djava.security.egd=file:/dev/./urandom -Dfile.encoding=utf-8" \
-                -d openweb/oracle-tomcat:8-jre8
+                -d entdiy/oracle-tomcat:8-jre8
 
     echo docker started for $docker_name.
 

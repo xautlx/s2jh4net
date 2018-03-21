@@ -328,7 +328,7 @@ public class UtilController {
 
                 //业务使用属性
                 retMap.put("id", attachmentFile.getId());
-                retMap.put("relativePath", attachmentFile.getRelativePath());
+                retMap.put("accessUrl", attachmentFile.getAccessUrl());
                 retMap.put("fileRealName", attachmentFile.getFileRealName());
                 retMap.put("fileLength", attachmentFile.getFileLength());
                 return retMap;

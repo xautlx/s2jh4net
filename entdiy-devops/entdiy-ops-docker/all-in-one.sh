@@ -46,6 +46,10 @@ ${SHELL_DIR}/docker/redis/bin/docker-one.sh restart
 
 echo Deploy webapp to docker...
 chmod +x ${SHELL_DIR}/docker/tomcat/bin/*.sh
+chmod +x ${SHELL_DIR}/docker/tomcat/dockerfile/*.sh
+
+echo "Build tomcat docker image..."
+${SHELL_DIR}/docker/tomcat/dockerfile/docker-image-build.sh
 
 seconds=10
 echo "Sleep ${seconds}s to wait mysql start and execute database init..."
