@@ -14,6 +14,7 @@
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
 * 主体基于主流的（Java 8 + SpringMVC/Spring 5 + Hibernate 5.2/MyBatis 3/JPA 2.1/Spring Data 2）架构
+* 基于Webpack/NodeJS/React/Cordova的Hybrid混合式APP与Restful API接口的集成应用
 * 基于流行JQuery 1.12/Bootstrap 3.3等UI框架和插件扩展，良好的浏览器兼容性和移动设备访问支持
 * 提供一个基础的代码生成框架，简化实现快速基本的CRUD功能开发
 * 基于Maven的模块化项目和组件依赖管理模式，便捷高效的与持续集成开发集成
@@ -39,14 +40,14 @@
 * [表单控制](290.表单控制.md) - 介绍Web开发过程最主要的表单处理设计
 * [常见问题](295.常见问题.md)     - 对框架相关常见问题FAQ说明
 
-> 由于项目采用了Lombok等插件，如果你想把git获取工程代码导入开发环境，请一定提前浏览文档 [开发配置](230.开发配置.md) 为IDE进行Lombok等插件配置，否则会出一大堆编译错误。
-
 ## 核心模块
 
 * [基础数据](310.基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
 * [数据审计](320.数据审计.md) - 基于Hibernate Envers组件实现业务数据变更审计记录
 * [计划任务](330.计划任务.md) - 基于Quartz组件实现计划任务的配置监控管理
 * [API接口设计](340.API接口设计.md) - 介绍API接口部分设计思路
+
+> 项目最新自动化持续集成构建状态 Travis-CI Status: [![Build Status](https://travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://travis-ci.org/xautlx/s2jh4net)
 
 ### 许可说明
 

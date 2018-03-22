@@ -3,7 +3,9 @@
 集结最新主流时尚开源技术的面向企业应用的Hybrid混合式APP及后端管理系统一体的的基础开发框架，
 提供一套Java EE相关主流开源技术架构整合及企业级Web应用的设计实现的最佳实践和原型参考。
 
-### 项目托管同步更新站点列表：
+**https://www.entdiy.com**
+
+### 项目托管同步更新GIT资源库：
 
 **https://github.com/xautlx/s2jh4net**
 
@@ -13,7 +15,7 @@
 
 2.3.0 / 2018-03-19
 ==================
-  * 基于React和Cordova的Hybrid混合式APP与API接口整合应用展示
+  * 基于React和Cordova的Hybrid混合式APP与Restful API接口整合应用展示
   * 混合式APP HTML5原型演示站点，建议以移动设备浏览器访问：  https://demo.entdiy.com/app/h5/index.html  
   * 混合式APP下载安装页面（当前仅提供Android版本构建，iOS随后推出）： https://demo.entdiy.com/app/install/index.html
 
@@ -39,6 +41,7 @@
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
 * 主体基于主流的（Java 8 + SpringMVC/Spring 5 + Hibernate 5.2/MyBatis 3/JPA 2.1/Spring Data 2）架构，详见[技术列表清单](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/100.技术列表.md)
+* 基于Webpack/NodeJS/React/Cordova的Hybrid混合式APP与Restful API接口的集成应用
 * 基于流行JQuery 1.12/Bootstrap 3.3等UI框架和插件扩展，良好的浏览器兼容性和移动设备访问支持
 * 提供一个基础的代码生成框架，简化实现快速基本的CRUD功能开发
 * 基于Maven的模块化项目和组件依赖管理模式，便捷高效的与持续集成开发集成
@@ -64,9 +67,6 @@
 * [表单控制](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/290.表单控制.md) - 介绍Web开发过程最主要的表单处理设计
 * [常见问题](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/295.常见问题.md) - 对框架相关常见问题FAQ说明
 
-
-> 由于项目采用了Lombok等插件，如果你想把git获取工程代码导入开发环境，请一定提前浏览文档 [开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/230.开发配置.md) 为IDE进行Lombok等插件配置，否则会出一大堆编译错误。
-
 ## 核心模块
 
 * [基础数据](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/310.基础数据.md) - 介绍框架对于基础数据及开发测试数据的设计思路
@@ -75,18 +75,14 @@
 * [API接口设计](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/340.API接口设计.md) - 介绍API接口部分设计思路
 
 
-## 在线演示
+## 项目主站
 
-**https://demo.entdiy.com/entdiy**
+**https://www.entdiy.com**
 
-前端门户和HTML5移动站点目前内容较少，主要演示集中在管理端。账号：root，密码：123456，或直接点击右下方的“超级管理员”登录链接即可。
+整个站点为Ngrok穿透访问家用台式机，可能存在访问缓慢情况或更新时短暂中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
 
-在线演示站点为Ngrok穿透访问家用台式机，可能存在访问缓慢情况或更新时中断。同时为了防止随意数据变更导致系统崩溃，对个别功能启用了演示禁用控制。
-
-建议可参考 [演示运行](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/210.演示运行.md) 或 
-[开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/230.开发配置.md) 在本地运行完整体验。
-
-> 项目最新自动化持续集成构建状态 Travis-CI Status: [![Build Status](https://travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://travis-ci.org/xautlx/s2jh4net)
+如需完整体验建议参考 [演示运行](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/210.演示运行.md) 或 
+[开发配置](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/230.开发配置.md) 在本地运行。
 
 ## 截图展示
 
@@ -105,10 +101,10 @@ https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/is
 
 * 专业版咨询及技术支持
 
-有兴趣者可访问了解 [专业版资源摘要](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md#专业版资源摘要)
+除了开发框架，如果还对诸如利用VMWare ESXi、虚拟Mac OSX、React/Cordova混合式APP、Jenkins持续集成Java Web/Android和iOS APP自动化构建分发、Docker化开发测试运维部署、Ngrok/HTTPS内网穿透服务、
+JRebel(远程)热部署开发模式等DevOps理念和工具以全面提升开发测试运维等整个技术团队综合实力、研发效率和交付质量等主题感兴趣，详情可访问了解 [专业版资源摘要](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md#专业版资源摘要)
 
 EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专业版咨询方式仅限专业版咨询和付费用户，普通技术咨询请通过上述社区版渠道沟通，敬请理解。
-
 
 ### 参考引用
 
