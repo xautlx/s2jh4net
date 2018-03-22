@@ -86,7 +86,13 @@
 
 ## 截图展示
 
-![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg?_=20180125)
+* 后台系统All In One样例集中展示页面
+
+![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/ui-example.jpg)
+
+* React/Cordova Hybrid APP界面展示
+
+![ui-example](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/images/app-example.png)
 
 ### 许可说明
 
