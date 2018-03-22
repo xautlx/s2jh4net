@@ -5,7 +5,7 @@
     <author email="xautlx@hotmail.com" href="https://www.entdiy.com">EntDIY应用开发框架</author>
     <content src="index.html" />
     <engine name="android" spec="6.2.3" />
-    <engine name="ios" spec="4.5.3" />
+    <engine name="ios" spec="4.5.4" />
     <plugin name="cordova-plugin-app-version" spec="0.1.9" />
     <plugin name="cordova-plugin-camera" spec="2.4.1">
         <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />

@@ -11,7 +11,7 @@
           <key>kind</key>
           <string>software-package</string>
           <key>url</key>
-          <string>HTTPS_URL_PREFIX/app/ios/entdiy.ipa</string>
+          <string>HTTPS_URL_PREFIX/app/ios/EntDIY.ipa</string>
         </dict>
         <dict>
           <key>kind</key>

@@ -9,25 +9,37 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <style>
+        p {
+            padding: 5px;
+        }
+    </style>
 </head>
 
 <body style="text-align: center">
-<h4 style="padding: 30px">
-    APP_NAME
-</h4>
-<p style="padding: 30px">
+<img src="assets/img/app_logo.png" style="width: 100%;">
+<p>
     <a class="btn btn-primary btn-lg btn-block downloadBtn">下载安装APP</a>
 </p>
-<p style="padding: 30px">
+<p>
     版本: APP_VERSION
 </p>
 <p>
-    注意：目前仅构建了Android安装包，iOS版本随后发布
+    特别提示：
 </p>
-<div class="popUp hide"></div>
-<div class="notice hide">
-    <p>请点击右上角并选择"在Safari中打开22"</p>
-    <img src="assets/img/example.png">
+<p>
+    由于iOS应用涉及到苹果收费开发账户、证书签名等敏感信息不便于演示分发，社区版本仅提供Android版本，暂不提供iOS版本下载安装
+</p>
+<p>
+    专业版本中提供完整的 WMWare MacOSX 虚拟操作系统 + Android SDK/Xcode + Jenkins 全自动持续集成分发apk、plist和ipa安装文件的文档和资料
+</p>
+
+<div id="weixinAndroidTips" style="display: none; position: absolute; left:0px; top:0px;width: 100%">
+    <img src="assets/img/weixin-open-android.png" style="width: 100%;">
+</div>
+
+<div id="weixiniOSTips" style="display: none; position: absolute; left:0px; top:0px;width: 100%">
+    <img src="assets/img/weixin-open-ios.png" style="width: 100%;">
 </div>
 
 <script src="assets/js/jquery.min.js"></script>
@@ -43,25 +55,24 @@
     }
     if (version.indexOf('iPhone') > -1 || version.indexOf('iPad') > -1) {
         if (version.indexOf('MicroMessenger') > -1) {
-            $('.popUp').removeClass('hide');
-            $('.notice').removeClass('hide');
+            $('.downloadBtn').click(function () {
+                $("#weixiniOSTips").show();
+            });
         } else {
-            //填写ios的下载地址
-            $('.downloadBtn').attr('href', 'javascript:alert("当前仅支持Android系统，暂未构建iOS版本")');
-            //$('.downloadBtn').attr('href', 'itms-services://?action=download-manifest&url='+prefix.replace('http:','https:')+'app/ios/entdiy.plist');
+            $('.downloadBtn').attr('href', 'itms-services://?action=download-manifest&url=' + prefix.replace('http:', 'https:') + 'app/ios/EntDIY.plist');
         }
     } else if (version.indexOf('Android') > -1) {
         if (version.indexOf('MicroMessenger') > -1) {
-            $('.popUp').removeClass('hide');
-            $('.notice').removeClass('hide');
-            $('.notice img').attr('src', 'assets/img/example2.png');
-            $('.notice p').text('请点击右上角并选择"在浏览器中打开"');
+            $('.downloadBtn').click(function () {
+                $("#weixinAndroidTips").show();
+            });
         } else {
-            //填写android的下载地址
-            $('.downloadBtn').attr('href', prefix + 'app/android/entdiy.apk');
+            $('.downloadBtn').attr('href', prefix + 'app/android/EntDIY.apk');
         }
     } else {
-        $('.downloadBtn').attr('href', 'javascript:alert("请使用移动设备浏览器访问当前页面地址")');
+        $('.downloadBtn').click(function () {
+            alert("请使用移动设备浏览器访问当前页面地址");
+        });
     }
 </script>
 </body>

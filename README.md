@@ -14,7 +14,7 @@
 2.3.0 / 2018-03-19
 ==================
   * 基于React和Cordova的Hybrid混合式APP与API接口整合应用展示
-  * 混合式APP HTML5原型演示站点，建议以移动设备浏览器访问：  https://demo.entdiy.com/h5/index.html  
+  * 混合式APP HTML5原型演示站点，建议以移动设备浏览器访问：  https://demo.entdiy.com/app/h5/index.html  
   * 混合式APP下载安装页面（当前仅提供Android版本构建，iOS随后推出）： https://demo.entdiy.com/app/install/index.html
 
 2.2.0 / 2018-02-26
