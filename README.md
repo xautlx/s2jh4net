@@ -97,7 +97,7 @@
 ### 许可说明
 
 按照流行的免费开源社区版(Community Edition)和收费服务专业版(Professional Edition)运作模式。
-详见 [许可说明](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md)
+详见 [许可说明](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/LICENSE.md)
 
 * 社区版技术交流渠道
 
@@ -108,7 +108,7 @@ https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/is
 * 专业版咨询及技术支持
 
 除了开发框架，如果还对诸如利用VMWare ESXi、虚拟Mac OSX、React/Cordova混合式APP、Jenkins持续集成Java Web/Android和iOS APP自动化构建分发、Docker化开发测试运维部署、Ngrok/HTTPS内网穿透服务、
-JRebel(远程)热部署开发模式等DevOps理念和工具以全面提升开发测试运维等整个技术团队综合实力、研发效率和交付质量等主题感兴趣，详情可访问了解 [专业版资源摘要](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/800.许可说明.md#专业版资源摘要)
+JRebel(远程)热部署开发模式等DevOps理念和工具以全面提升开发测试运维等整个技术团队综合实力、研发效率和交付质量等主题感兴趣，详情可访问了解 [专业版资源摘要](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/LICENSE.md#Professional_Edition_Introduction)
 
 EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专业版咨询方式仅限专业版咨询和付费用户，普通技术咨询请通过上述社区版渠道沟通，敬请理解。
 

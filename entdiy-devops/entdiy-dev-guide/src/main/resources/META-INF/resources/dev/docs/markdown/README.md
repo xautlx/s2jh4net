@@ -52,7 +52,7 @@
 ### 许可说明
 
 按照流行的社区版(Community Edition)和专业版(Professional Edition)运作模式。
-详见 [许可说明](800.许可说明.md)
+详见 [许可说明](LICENSE.md#Professional_Edition_Introduction)
 
 * 社区版技术交流渠道
 
