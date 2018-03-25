@@ -1,6 +1,6 @@
 ### 项目发展模式
 
-为了本项目的健康可持续发展，按照流行的免费开源社区版(Community Edition)和收费服务专业版(Professional Edition)运作模式。
+为了本项目的健康可持续发展，按照流行的社区版(Community Edition)和专业版(Professional Edition)运作模式。
 
 本项目核心旨在提供一整套基于 Java 8 + SpringMVC/Spring 5 + Hibernate 5.2/MyBatis 3/JPA 2.1/Spring Data 2 + React/Cordova Hybrid APP 
 等主流开源技术架构整合及企业级Web应用的设计实现的最佳实践和原型参考，对于初学者来说社区版所有开源内容已具有足够全面的参考借鉴价值。
