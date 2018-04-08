@@ -18,6 +18,11 @@
             <artifactId>entdiy-module-common</artifactId>
             <version>${entdiy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.entdiy</groupId>
+            <artifactId>entdiy-assets</artifactId>
+            <version>${entdiy.version}</version>
+        </dependency>
 
         <!-- 可选组件列表 -->
         <dependency>

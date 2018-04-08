@@ -14,6 +14,7 @@
         <module>entdiy-module</module>
         <module>entdiy-devops</module>
         
+        <module>entdiy-assets</module>
         <module>entdiy-webapp</module>
     </modules>
 
