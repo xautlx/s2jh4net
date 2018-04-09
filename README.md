@@ -25,7 +25,7 @@
 * [技术列表](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/100.技术列表.md) - 框架主要技术(Java/Web/Tool)组件列表介绍
 * [技术特性](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/110.技术特性.md) - 主要技术选型和设计说明
 * [异常处理](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/120.异常处理.md) - 介绍框架的异常处理的策略设计
-* [TODO Hybrid APP](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/TODO.md) - 基于React+Cordova架构的Hybrid混合式APP
+* [混合式APP](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/130.混合式APP.md) - 基于React+Cordova架构的Hybrid混合式APP
 * [开发计划](entdiy-devops/entdiy-dev-guide/src/main/resources/META-INF/resources/dev/docs/markdown/140.开发计划.md) - 规划引入的新功能新特性
 * [更新记录](CHANGELOG.md) - 了解项目架构设计和功能层面的主要版本更新记录
 
