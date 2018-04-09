@@ -17,8 +17,6 @@
  */
 package ${root_package}.web.admin;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
@@ -53,14 +51,14 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
     @Autowired
     private ${entity_name}Service ${entity_name_uncapitalize}Service;
 
-    @MenuData("${model_title}")
+    @MenuData("${model_title}管理")
     @RequiresPermissions("${model_title}")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(@ModelEntity ${entity_name} entity, Model model) {
+    public String index(@ModelEntity ${entity_name} entity) {
         return "admin${model_path}/${entity_name_uncapitalize}-index";
     }   
     
-    @RequiresPermissions("${model_title}")
+    @RequiresPermissions("${model_title}管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -74,25 +72,23 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
         return "admin${model_path}/${entity_name_uncapitalize}-inputTabs";
     }
 
-    @RequiresPermissions("${model_title}")
+    @RequiresPermissions("${model_title}编辑")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(@ModelEntity ${entity_name} entity) {
         return "admin${model_path}/${entity_name_uncapitalize}-inputBasic";
     }
 
-    @RequiresPermissions("${model_title}")
+    @RequiresPermissions("${model_title}编辑")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    @Override
     public OperationResult editSave(@ModelEntity ${entity_name} entity) {
-        return super.editSave(entity);
+        return super.editSave(${entity_name_uncapitalize}Service, entity);
     }
 
-    @RequiresPermissions("${model_title}")
+    @RequiresPermissions("${model_title}删除")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    @Override
     public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(ids);
+        return super.delete(${entity_name_uncapitalize}Service, ids);
     }
 }

@@ -67,7 +67,7 @@
 <div class="header">
     <div class="container">
         <a class="site-logo" href="index">
-            <img src="assets/apps/img/logo.png" style="height: 28px"/> EntDIY Shop
+            <img src="assets/pages/img/logo.png" style="height: 28px"/> EntDIY Shop
         </a>
 
         <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>

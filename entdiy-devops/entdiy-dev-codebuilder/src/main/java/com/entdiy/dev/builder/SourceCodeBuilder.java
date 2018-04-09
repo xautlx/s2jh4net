@@ -25,6 +25,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -131,7 +133,12 @@ public class SourceCodeBuilder {
                 root.put("model_title", classEntityComment.value());
                 entityEditable = classEntityComment.editable();
             } else {
-                root.put("model_title", entityName);
+                ApiModel apiModel = (ApiModel) entityClass.getAnnotation(ApiModel.class);
+                if (apiModel != null) {
+                    root.put("model_title", apiModel.value());
+                } else {
+                    root.put("model_title", entityName);
+                }
             }
             root.put("model_editable", entityEditable);
             debug("Entity Data Map=" + root);
@@ -201,7 +208,12 @@ public class SourceCodeBuilder {
                                 if (fieldMetaData != null) {
                                     searchOrFields.put(field.getName(), fieldMetaData.value());
                                 } else {
-                                    searchOrFields.put(field.getName(), field.getName());
+                                    ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
+                                    if (apiModelProperty != null) {
+                                        searchOrFields.put(field.getName(), apiModelProperty.value());
+                                    } else {
+                                        searchOrFields.put(field.getName(), field.getName());
+                                    }
                                 }
                             }
                         }
@@ -246,6 +258,12 @@ public class SourceCodeBuilder {
                     entityCodeField.setOrder(cnt++);
 
                     entityCodeField.setEdit(entityEditable);
+
+                    ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
+                    if (apiModelProperty != null) {
+                        entityCodeField.setTitle(apiModelProperty.value());
+                    }
+
                     MetaData entityMetaData = field.getAnnotation(MetaData.class);
                     if (entityMetaData != null) {
                         entityCodeField.setTitle(entityMetaData.value());

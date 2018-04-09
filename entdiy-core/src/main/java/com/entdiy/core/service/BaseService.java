@@ -33,7 +33,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -457,7 +457,7 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
         } else {
             query = entityManager.createNativeQuery(sql);
         }
-        query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        query.unwrap(NativeQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         Query queryCount = entityManager.createNativeQuery("select count(*) from (" + sql + ") cnt");
         query.setFirstResult(Long.valueOf(pageable.getOffset()).intValue());
         query.setMaxResults(pageable.getPageSize());
