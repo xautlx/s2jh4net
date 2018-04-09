@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <span style="float: left;margin-right: 10px">
-                        <img src="assets/apps/img/logo.png"/>
+                        <img src="assets/pages/img/logo.png"/>
                     </span>
                 </div>
                 <div class="col-md-9">

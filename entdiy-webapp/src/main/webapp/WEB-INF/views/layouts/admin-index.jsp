@@ -52,7 +52,7 @@
             <div class="page-logo">
                 <a href="admin" style="text-decoration:none">
                     <span style="float: left">
-                       <img src="assets/apps/img/logo.png" style="height: 30px;margin: 10px"/>
+                       <img src="assets/pages/img/logo.png" style="height: 30px;margin: 10px"/>
                     </span>
                     <span style="color: white;font-size: 25px;display:inline-block;padding-top: 5px">${systemName}</span>
                 </a>

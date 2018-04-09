@@ -89,6 +89,10 @@ public abstract class BaseNativeNestedSetEntity<T extends BaseNativeNestedSetEnt
         this.setDepth(0);
     }
 
+    public boolean isRoot() {
+        return this.getDepth() == 0;
+    }
+
     @JsonProperty
     public Boolean hasChildren() {
         return (this.getRgt() - this.getLft()) > 1;
