@@ -1,7 +1,7 @@
 import * as actionTypes from 'src/actions/actionTypes'
 
 // 此处判断页面是否已初次加载，若加载后再次返回相关页面则不重新加载数据
-// 此state不记录在持久化中
+// 此state不记录在持久化中   目前仅有首页、订单、个人中心
 
 const initialState={
 	home:false,			//首页

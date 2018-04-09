@@ -42,8 +42,8 @@ document.off=function(event){
 }
 
 if (!window.cordova) {
-  startApp()
+  startApp();
 } else {
-  document.addEventListener('deviceready', startApp, false)
+  document.addEventListener('deviceready', startApp, false);
 }
 
