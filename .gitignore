@@ -24,6 +24,9 @@ target
 *.xml.bak
 *temp.jsp
 
+# Office ignore
+~$*
+
 # system ignore
 .DS_Store
 Thumbs.db

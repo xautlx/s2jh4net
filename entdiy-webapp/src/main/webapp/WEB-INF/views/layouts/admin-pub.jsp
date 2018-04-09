@@ -15,7 +15,7 @@
     <%@include file="/WEB-INF/views/layouts/include-header.jsp" %>
     <title><sitemesh:write property='title'/> : ${systemName}</title>
     <link href="assets/pages/admin/css/pub.css" rel="stylesheet" type="text/css"/>
-    <link rel="shortcut icon" href="assets/apps/img/favicon.ico"/>
+    <link rel="shortcut icon" href="assets/pages/img/favicon.ico"/>
     <sitemesh:write property='head'/>
 </head>
 <!-- END HEAD -->

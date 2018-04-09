@@ -1288,7 +1288,7 @@
                             <label class="control-label">二维码组件</label>
                             <div class="controls">
                                 <div data-qrcode="${webContextFullUrl}/admin"
-                                     data-qrcode-icon="assets/apps/img/favicon.ico"
+                                     data-qrcode-icon="assets/pages/img/favicon.ico"
                                      data-qrcode-header="欢迎访问"
                                      data-qrcode-footer="扫码查看详情"
                                      data-foreground="#FF0000"/>

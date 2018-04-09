@@ -37,7 +37,7 @@
 
     <link href="assets/apps/css/admin.css?_=${buildVersion}" rel="stylesheet" type="text/css"/>
 
-    <link rel="shortcut icon" href="assets/apps/img/favicon.ico"/>
+    <link rel="shortcut icon" href="assets/pages/img/favicon.ico"/>
     <sitemesh:write property='head'/>
 </head>
 <!-- END HEAD -->
