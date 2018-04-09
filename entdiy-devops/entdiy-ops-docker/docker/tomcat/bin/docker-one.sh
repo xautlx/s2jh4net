@@ -36,7 +36,6 @@ case "$1" in
                 -v $config_dir/app:/etc/entdiy/config \
                 -v $data_dir:/etc/entdiy/data \
                 -v $config_dir/tomcat/server.xml:/usr/local/tomcat/conf/server.xml \
-                -e TZ="Asia/Shanghai" \
                 -e JAVA_OPTS="-Xms256m -Xmx4096m -Dspring.profiles.active=production" \
                 -e CATALINA_OPTS="-Djava.security.egd=file:/dev/./urandom -Dfile.encoding=utf-8" \
                 -d entdiy/oracle-tomcat:8-jre8
