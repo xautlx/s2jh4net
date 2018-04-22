@@ -46,8 +46,8 @@
         <jackson.version>2.9.3</jackson.version>
         <swagger.version>2.8.0</swagger.version>
         <slf4j.version>1.7.7</slf4j.version>
-        <commons-lang3.version>3.1</commons-lang3.version>
-        <commons-io.version>2.4</commons-io.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-io.version>2.5</commons-io.version>
         <guava.version>24.0-jre</guava.version>
         <freemarker.version>2.3.19</freemarker.version>
         <junit.version>4.12</junit.version>
@@ -497,7 +497,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.7</version>
+                <version>1.10</version>
             </dependency>
             <dependency>
                 <groupId>commons-collections</groupId>
