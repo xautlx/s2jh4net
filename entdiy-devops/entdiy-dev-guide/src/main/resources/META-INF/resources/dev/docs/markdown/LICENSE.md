@@ -16,7 +16,7 @@ https://github.com/xautlx/s2jh4net/issues , https://gitee.com/xautlx/s2jh4net/is
 * 专业版咨询及技术支持
 
 除了开发框架，如果还对诸如利用VMWare ESXi、虚拟Mac OSX、React/Cordova混合式APP、Jenkins持续集成Java Web/Android和iOS APP自动化构建分发、Docker化开发测试运维部署、Ngrok/HTTPS内网穿透服务、
-JRebel(远程)热部署开发模式等DevOps理念和工具以全面提升开发测试运维等整个技术团队综合实力、研发效率和交付质量等主题感兴趣，详情可访问了解 [专业版资源摘要](LICENSE.md#Professional_Edition_Introduction)
+JRebel(远程)热部署开发模式等DevOps理念和工具以全面提升开发测试运维等整个技术团队综合实力、研发效率和交付质量等主题感兴趣，详情可访问了解 [专业版资源摘要](LICENSE.md#professional_edition_introduction)
 
 EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专业版咨询方式仅限专业版咨询和付费用户，普通技术咨询请通过上述社区版渠道沟通，敬请理解。
 
@@ -49,7 +49,7 @@ EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专�
         </td>
         <td colspan="2">
             提供不断完善的基于框架开发过程、项目交付、运维部署等相关经验、文档、脚本等资源分享，
-            详见 <a href="LICENSE.md#Professional_Edition_Introduction">专业版资源摘要</a>
+            详见 <a href="LICENSE.md#professional_edition_introduction">专业版资源摘要</a>
         </td>
     </tr>
     <tr>
@@ -135,7 +135,7 @@ EMail: xautlx@hotmail.com 或 QQ: 2414521719 ，由于个人精力有限，专�
 
 目前只接受微信或支付宝一次性转账支付方式，建立最基本的信任基础之上，不至于说付款后卷款跑路，因为知识的价值无论付款与否都在那里摆着并且无形可以无限次复用。
 
-### Professional_Edition_Introduction
+###professional_edition_introduction
 
 ### 专业版资源摘要
 
