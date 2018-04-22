@@ -152,6 +152,13 @@ public class Account extends BaseNativeEntity {
             public String getLabel() {
                 return "前端用户";
             }
+        },
+
+        weixin {
+            @Override
+            public String getLabel() {
+                return "微信用户";
+            }
         }
     }
 
