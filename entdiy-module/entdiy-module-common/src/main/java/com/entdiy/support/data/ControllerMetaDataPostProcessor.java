@@ -111,7 +111,7 @@ public class ControllerMetaDataPostProcessor {
             });
 
             //移除代码定义已不存在的菜单项
-            menuService.deleteAll(menus.stream().filter(one -> !one.isRoot() && !mergedMenus.contains(one.getPath())).collect(Collectors.toSet()));
+            //menuService.deleteAll(menus.stream().filter(one -> !one.isRoot() && !mergedMenus.contains(one.getPath())).collect(Collectors.toSet()));
 
             //追加新增权限定义选项
             mergedPermissions.forEach(code -> {
