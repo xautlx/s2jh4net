@@ -1,6 +1,6 @@
 {
-  "name": "boe",
-  "version": "0.1.0",
+  "name": "hybrid-app",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "animate.css": "3.5.2",
