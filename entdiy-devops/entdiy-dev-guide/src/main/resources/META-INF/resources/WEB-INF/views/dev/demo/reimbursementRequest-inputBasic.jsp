@@ -50,7 +50,7 @@
                             <c:forEach var="item" items="${entity.receiptAttachmentFiles}" varStatus="status">
                                 <li class="list-group-item">
                                     <form:hidden id="" path="receiptAttachmentFiles[${status.index}].id"/>
-                                    <form:hidden id="" path="receiptAttachmentFiles[${status.index}].relativePath"/>
+                                    <form:hidden id="" path="receiptAttachmentFiles[${status.index}].accessUrl"/>
                                     <form:hidden id="" path="receiptAttachmentFiles[${status.index}].fileRealName"/>
                                     <form:hidden id="" path="receiptAttachmentFiles[${status.index}].fileLength"/>
                                 </li>

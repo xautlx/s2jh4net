@@ -1160,7 +1160,7 @@
                                 <ul class="list-group" data-fileuploader="oneFile" data-multiple="false">
                                     <li class="list-group-item">
                                         <form:hidden id="" path="oneFile.id"/>
-                                        <form:hidden id="" path="oneFile.relativePath"/>
+                                        <form:hidden id="" path="oneFile.accessUrl"/>
                                         <form:hidden id="" path="oneFile.fileRealName"/>
                                         <form:hidden id="" path="oneFile.fileLength"/>
                                     </li>
@@ -1186,7 +1186,7 @@
                                     <c:forEach var="item" items="${entity.multiFiles}" varStatus="status">
                                         <li class="list-group-item">
                                             <form:hidden id="" path="multiFiles[${status.index}].id"/>
-                                            <form:hidden id="" path="multiFiles[${status.index}].relativePath"/>
+                                            <form:hidden id="" path="multiFiles[${status.index}].accessUrl"/>
                                             <form:hidden id="" path="multiFiles[${status.index}].fileRealName"/>
                                             <form:hidden id="" path="multiFiles[${status.index}].fileLength"/>
                                         </li>
@@ -1248,7 +1248,7 @@
                             <div class="controls">
                                 <form:select id="" path="oneImage"
                                              class="form-control" data-imageuploader="single">
-                                    <form:option value="${entity.oneImage.id}" label="${entity.oneImage.relativePath}"/>
+                                    <form:option value="${entity.oneImage.id}" label="${entity.oneImage.accessUrl}"/>
                                 </form:select>
                             </div>
                         </div>
@@ -1267,7 +1267,7 @@
                         <div class="form-group">
                             <label class="control-label">多图片上传(集合对象)</label>
                             <div class="controls">
-                                <form:select id="" path="multiImages" items="${entity.multiImages}" itemLabel="relativePath" itemValue="id"
+                                <form:select id="" path="multiImages" items="${entity.multiImages}" itemLabel="accessUrl" itemValue="id"
                                              class="form-control" data-imageuploader="multiple"/>
                             </div>
                         </div>
