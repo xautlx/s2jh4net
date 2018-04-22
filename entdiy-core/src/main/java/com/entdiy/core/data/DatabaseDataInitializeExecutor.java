@@ -17,22 +17,15 @@
  */
 package com.entdiy.core.data;
 
-import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.web.AppContextHolder;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
-import java.sql.DatabaseMetaData;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -46,7 +39,7 @@ public class DatabaseDataInitializeExecutor {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseDataInitializeExecutor.class);
 
     @Autowired
-    private LocalContainerEntityManagerFactoryBean entityManagerFactory;
+    private DatabaseDataInitializeService databaseDataInitializeService;
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -61,20 +54,8 @@ public class DatabaseDataInitializeExecutor {
             entityManager.getEntityManagerFactory().getCache().evictAll();
         }
 
-        {
-            //搜索所有entity对象，并自动进行自增初始化值设
-            for (String managedClassName : entityManagerFactory.getPersistenceUnitInfo().getManagedClassNames()) {
-                try {
-                    Class<?> entityClass = Class.forName(managedClassName);
-                    MetaData metaData = entityClass.getAnnotation(MetaData.class);
-                    if (metaData != null && metaData.autoIncrementInitValue() > 0) {
-                        autoIncrementInitValue(entityClass, metaData);
-                    }
-                } catch (ClassNotFoundException e) {
-                    logger.error("class convert error", e);
-                }
-            }
-        }
+        //对@Table注解的自增扩展属性处理
+        databaseDataInitializeService.autoIncrementInitValue();
 
         CountThread countThread = new CountThread();
         countThread.start();
@@ -90,44 +71,6 @@ public class DatabaseDataInitializeExecutor {
         countThread.shutdown();
         //清空释放所有基础和模拟数据操作缓存
         entityManager.clear();
-    }
-
-    /**
-     * 初始化自增对象起始值
-     */
-    private void autoIncrementInitValue(final Class<?> entity, MetaData metaData) {
-        Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
-        if (Integer.valueOf(String.valueOf(count)) > 0) {
-            logger.debug("Skipped autoIncrementInitValue as exist data: {}", entity.getClass());
-            return;
-        }
-        Session session = entityManager.unwrap(Session.class);
-        session.doWork((connection) -> {
-            Table table = entity.getAnnotation(Table.class);
-            Assert.isTrue(metaData.autoIncrementInitValue() > 1, "Undefined MetaData autoIncrementInitValue for entity: " + entity.getClass());
-
-            DatabaseMetaData databaseMetaData = connection.getMetaData();
-            String name = databaseMetaData.getDatabaseProductName().toLowerCase();
-            //根据不同数据库类型执行不同初始化SQL脚本
-            String sql = null;
-            if (name.indexOf("mysql") > -1) {
-                sql = "ALTER TABLE " + table.name() + " AUTO_INCREMENT =" + metaData.autoIncrementInitValue();
-            } else if (name.indexOf("sql server") > -1) {
-                //DBCC   CHECKIDENT( 'tb ',   RESEED,   20000)
-                sql = "DBCC CHECKIDENT('" + table.name() + "',RESEED," + metaData.autoIncrementInitValue() + ")";
-            } else if (name.indexOf("h2") > -1) {
-                //DO Nothing;
-            } else if (name.indexOf("oracle") > -1) {
-                //DO Nothing;
-            } else {
-                throw new UnsupportedOperationException(name);
-            }
-
-            if (StringUtils.isNotBlank(sql)) {
-                logger.debug("Execute autoIncrementInitValue SQL: {}", sql);
-                entityManager.createNativeQuery(sql).executeUpdate();
-            }
-        });
     }
 }
 
