@@ -18,8 +18,10 @@
 package com.entdiy.core.web.view;
 
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -62,15 +64,19 @@ public class OperationResult<T> {
     }
 
     @ApiModelProperty(value = "处理结果类型", name = "type", allowableValues = "success,failure")
+    @JsonView(JsonViews.Public.class)
     private String type;
 
     @ApiModelProperty(value = "处理结果代码", name = "code", notes = "100000 标识成功，其余为错误代码")
+    @JsonView(JsonViews.Public.class)
     private String code;
 
     @ApiModelProperty(value = "消息文本", name = "message", notes = "一般用于提供failure错误消息")
+    @JsonView(JsonViews.Public.class)
     private String message;
 
     @ApiModelProperty(value = "业务数据", name = "data")
+    @JsonView(JsonViews.Public.class)
     private T data;
 
     /** 标识redirect路径 */

@@ -18,9 +18,11 @@
 package com.entdiy.core.entity;
 
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -49,5 +51,6 @@ public abstract class BaseNativeEntity extends BaseEntity<Long> {
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "native")
     @JsonProperty
+    @JsonView(JsonViews.Public.class)
     private Long id;
 }

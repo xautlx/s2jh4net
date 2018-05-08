@@ -22,6 +22,7 @@ import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
@@ -88,8 +89,8 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<DemoReimbursementRequest> findByPage(@ModelPropertyFilter(DemoReimbursementRequest.class) GroupPropertyFilter filter,
-                                                     @ModelPageableRequest Pageable pageable) {
+    public JsonPage<DemoReimbursementRequest> findByPage(@ModelPropertyFilter(DemoReimbursementRequest.class) GroupPropertyFilter filter,
+                                                         @ModelPageableRequest Pageable pageable) {
         return reimbursementRequestService.findByPage(filter, pageable);
     }
 
