@@ -86,7 +86,7 @@ public class SupportNotifyMessageController {
     @RequestMapping(value = "/admin/profile/notify-message-view/{messageId}", method = RequestMethod.GET)
     public String notifyMessageView(@AuthAccount Account account, @PathVariable("messageId") Long messageId, Model model) {
         User user = userService.findByAccount(account);
-        notifyMessageService.findOne(messageId).ifPresent(one -> {
+        notifyMessageService.findOptionalOne(messageId).ifPresent(one -> {
             notifyMessageService.processUserRead(one, user);
             model.addAttribute("notifyMessage", one);
         });

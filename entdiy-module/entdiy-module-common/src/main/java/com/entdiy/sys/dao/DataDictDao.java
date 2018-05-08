@@ -26,14 +26,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.QueryHint;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface DataDictDao extends BaseDao<DataDict, Long> {
 
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
     @Query("from DataDict where primaryKey=:primaryKey")
-    Optional<DataDict> findByRootPrimaryKey(@Param("primaryKey") String primaryKey);
+    DataDict findByRootPrimaryKey(@Param("primaryKey") String primaryKey);
 
     @Query("from DataDict where parent.id=:parentId and disabled=false order by rgt desc")
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})

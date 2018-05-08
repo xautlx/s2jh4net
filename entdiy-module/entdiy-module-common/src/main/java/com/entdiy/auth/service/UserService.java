@@ -63,7 +63,7 @@ public class UserService extends BaseService<User, Long> {
         if (authUserDetails == null) {
             return null;
         }
-        return userDao.findByAccount(accountService.findOne(authUserDetails.getAccountId()).get());
+        return userDao.findByAccount(accountService.findOne(authUserDetails.getAccountId()));
     }
 
     @Override

@@ -23,6 +23,7 @@ import com.entdiy.core.entity.AbstractPersistableEntity;
 import com.entdiy.core.entity.BaseNativeNestedSetEntity;
 import com.entdiy.core.pagination.ExtPageRequest;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.google.common.collect.Lists;
@@ -121,7 +122,18 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
      * @return
      */
     @Transactional(readOnly = true)
-    public Optional<T> findOne(ID id) {
+    public T findOne(ID id) {
+        return jpaRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * 基于主键查询单一数据对象
+     *
+     * @param id
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public Optional<T> findOptionalOne(ID id) {
         return jpaRepository.findById(id);
     }
 
@@ -243,9 +255,9 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
      * @return
      */
     @Transactional(readOnly = true)
-    public Page<T> findByPage(GroupPropertyFilter groupPropertyFilter, Pageable pageable) {
+    public JsonPage<T> findByPage(GroupPropertyFilter groupPropertyFilter, Pageable pageable) {
         Specification<T> specifications = buildSpecification(groupPropertyFilter);
-        return jpaRepository.findAll(specifications, pageable);
+        return new JsonPage(jpaRepository.findAll(specifications, pageable));
     }
 
     @Getter

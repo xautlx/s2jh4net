@@ -105,7 +105,7 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
 
         //计算用户有访问权限的菜单列表
         for (Menu navMenuVO : menus) {
-            Menu menu = findOne(navMenuVO.getId()).get();
+            Menu menu = findOne(navMenuVO.getId());
             if (StringUtils.isNotBlank(menu.getUrl())) {
                 Method mappingMethod = menu.getMappingMethod();
                 if (mappingMethod != null) {
