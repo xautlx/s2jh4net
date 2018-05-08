@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>EntDIY Javascript Document Namespace: ExtAjaxBootstrapTabs</title>
+	<title>EntDIY Javascript Document Namespace: ExtMultiLocale</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -69,13 +69,13 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: ExtAjaxBootstrapTabs</h1>
+	<h1 class="page-title">Namespace: ExtMultiLocale</h1>
 <section>
 
 <header>
     
         <h2>
-        ExtAjaxBootstrapTabs
+        ExtMultiLocale
         </h2>
         
     
@@ -86,7 +86,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>绑定构造扩展支持AJAX特性的TAB组件: .tabbable &gt; .nav &gt; [data-toggle=&quot;tab&quot;]<br>默认tabbable是一个没有边框的tab样式，tabbable-custom会额外加边框并活动红色标记样式</p></div>
+            <div class="description"><p>多语言属性数据编辑组件：ul[data-multilocale]</p></div>
         
 
         
@@ -119,10 +119,16 @@
 
         <tr>
             
-                <td class="name"><code>href</code></td>
+                <td class="name"><code>data-property</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
             
             </td>
 
@@ -130,43 +136,7 @@
 
             
 
-            <td class="description last"><p>三种参数模式：#abc 基本的bootstrap tab定位模式; #auto 自动基于内容区域div顺序匹配定位; url链接形式则表示点击AJAX异步加载</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>data-tab-disabled</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>主要用在添加数据时控制只有第一个标签项可用其余禁用，在第一个标签项保存后自动刷新整个Tab其余标签项可用。</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>data-active</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>指定活动标签项的顺序编号，默认可设定固定值：$&#123;param._tab_active} 由服务器端基于表单处理动态控制</p></td>
+            <td class="description last"><p>属性定义</p></td>
         </tr>
 
     
@@ -229,13 +199,7 @@
         
             <h3>Example</h3>
             
-    <pre class="sunlight-highlight-javascript">&lt;div class=&quot;tabbable tabbable-custom&quot;&gt;
- &lt;ul class=&quot;nav nav-tabs&quot; data-active=&quot;${param._tab_active}&quot;&gt;
- &lt;li class=&quot;tools pull-right&quot;&gt;&lt;a href=&quot;javascript:;&quot; class=&quot;btn default reload&quot;&gt;&lt;i class=&quot;fa fa-refresh&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
- &lt;li&gt;&lt;a data-toggle=&quot;tab&quot; href=&quot;admin/auth/role/edit?id=${id}&quot;&gt;基本信息&lt;/a&gt;&lt;/li&gt;
- &lt;li&gt;&lt;a data-toggle=&quot;tab&quot; href=&quot;admin/auth/role/privileges?id=${id}&quot; data-tab-disabled=&quot;${entity.isNew()}&quot;&gt;权限关联&lt;/a&gt;&lt;/li&gt;
- &lt;/ul&gt;
- &lt;/div&gt;</pre>
+    <pre class="sunlight-highlight-javascript">&lt;form:input path=&quot;text&quot; class=&quot;form-control&quot; data-property=&quot;test&quot; /&gt;</pre>
 
 
         
