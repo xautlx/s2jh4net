@@ -183,6 +183,12 @@ public class SourceCodeBuilder {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setListFixed(true);
                     entityCodeField.setListAlign("center");
+                } else if (fieldType.getSimpleName() == "LocalizedLabel") {
+                    entityCodeField = new EntityCodeField();
+                    entityCodeField.setListFixed(true);
+                    //根据Json注解设定合理的列宽
+                    entityCodeField.setListWidth(150);
+                    entityCodeField.setListAlign("center");
                 } else if (AbstractPersistableEntity.class.isAssignableFrom(fieldType)) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setFieldType("Entity");
@@ -230,7 +236,6 @@ public class SourceCodeBuilder {
 
                     //根据Json注解设定合理的列宽
                     entityCodeField.setListWidth(90);
-                    entityCodeField.setFieldType("LocalDate");
                     entityCodeField.setListAlign("center");
                 } else if (fieldType == LocalDateTime.class) {
                     entityCodeField = new EntityCodeField();
@@ -238,7 +243,6 @@ public class SourceCodeBuilder {
 
                     //根据Json注解设定合理的列宽
                     entityCodeField.setListWidth(150);
-                    entityCodeField.setFieldType("LocalDateTime");
                     entityCodeField.setListAlign("center");
                 } else if (fieldType == Date.class) {
                     throw new RuntimeException("Not support, please use LocalDate type.");
@@ -250,9 +254,8 @@ public class SourceCodeBuilder {
                     }
                     if (StringUtils.isBlank(entityCodeField.getFieldType())) {
                         entityCodeField.setFieldType(fieldType.getSimpleName());
-                    } else {
-                        entityCodeField.setFieldType(String.class.getSimpleName());
                     }
+
                     entityCodeField.setFieldName(field.getName());
                     entityCodeField.setTitle(field.getName());
                     entityCodeField.setOrder(cnt++);

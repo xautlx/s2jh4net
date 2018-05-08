@@ -34,8 +34,8 @@
                        name: "id",
                        hidden: true
                    <#list entityFields as entityField>
-                       <#if entityField.list>
-                           <#if entityField.enumField>
+                   <#if entityField.list>
+                       <#if entityField.enumField>
                        }, {
                            label: "${entityField.title}",
                            name: "${entityField.fieldName}",
@@ -48,6 +48,11 @@
                            label: "${entityField.title}",
                            name: "${entityField.fieldName}.display",
                            index: "${entityField.fieldName}",
+                       <#elseif entityField.fieldType=="LocalizedLabel">
+                       }, {
+                           label: "${entityField.title}",
+                           name: "${entityField.fieldName}.zhCN",
+                           index: "${entityField.fieldName}.zhCN",
                        <#else>
                        }, {
                            label: "${entityField.title}",
@@ -76,7 +81,7 @@
                            align: "${entityField.listAlign}",
                        </#if>
                            editable: true
-                       </#if>
+                   </#if>
                    </#list>
                    }],
                    <#if fetchJoinFields?exists>
