@@ -102,7 +102,12 @@ public class AccountService extends BaseService<Account, Long> {
     }
 
     public String encodeUserPasswd(Account account, String rawPassword) {
-        return passwordService.entryptPassword(rawPassword, account.getSalt());
+        String salt = account.getSalt();
+        if (StringUtils.isBlank(salt)) {
+            account.setSalt(UidUtils.buildUID());
+            salt = account.getSalt();
+        }
+        return passwordService.entryptPassword(rawPassword, salt);
     }
 
     public Account save(Account entity, String rawPassword) {

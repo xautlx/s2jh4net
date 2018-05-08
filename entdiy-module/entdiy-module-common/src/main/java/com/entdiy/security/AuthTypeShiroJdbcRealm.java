@@ -35,7 +35,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Optional;
 
 public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
 
@@ -62,6 +61,11 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
         String username = token.getUsername();
         Account account = accountService.findByUsername(token.getAuthType(), username);
         if (account == null) {
+            throw new UnknownAccountException("登录账号或密码不正确");
+        }
+
+        //未设置密码用户（OAuth认证用户），不允许常规密码登录
+        if (StringUtils.isBlank(account.getPassword())) {
             throw new UnknownAccountException("登录账号或密码不正确");
         }
 
@@ -92,10 +96,10 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
         DefaultAuthUserDetails authUserDetails = (DefaultAuthUserDetails) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
-        Optional<Account> account = accountService.findOne(authUserDetails.getAccountId());
-        account.ifPresent(one -> {
-            if (Account.AuthTypeEnum.admin.equals(one.getAuthType())) { //管理端类型用户添加角色权限处理
-                User user = userService.findByAccount(one);
+        Account account = accountService.findOne(authUserDetails.getAccountId());
+        if (account != null) {
+            if (Account.AuthTypeEnum.admin.equals(account.getAuthType())) { //管理端类型用户添加角色权限处理
+                User user = userService.findByAccount(account);
 
                 //追加默认角色
                 info.addRole(DefaultAuthUserDetails.ROLE_MGMT_USER);
@@ -120,11 +124,11 @@ public class AuthTypeShiroJdbcRealm extends AuthorizingRealm {
                 for (Privilege privilege : privileges) {
                     info.addStringPermission(privilege.getCode());
                 }
-            } else if (Account.AuthTypeEnum.site.equals(one.getAuthType())) { //前端站点/APP类型用户添加角色权限处理
+            } else if (Account.AuthTypeEnum.site.equals(account.getAuthType())) { //前端站点/APP类型用户添加角色权限处理
                 //追加默认角色
                 info.addRole(DefaultAuthUserDetails.ROLE_SITE_USER);
             }
-        });
+        }
         return info;
     }
 

@@ -68,13 +68,14 @@ public class Account extends BaseNativeEntity {
     @ApiModelProperty(hidden = true)
     private LocalDateTime signupTime;
 
-    @MetaData(value = "密码加密盐值")
-    @Column(length = 128, nullable = false)
+    @MetaData(value = "密码加密盐值", comments = "对于OAuth自动创建的账号无需密码处理")
+    @Column(length = 128, nullable = true)
     @JsonIgnore
     @ApiModelProperty(hidden = true)
     private String salt;
 
     @MetaData(value = "用户密码", comments = "加密算法：MD5({salt}+原始密码)")
+    @Column(length = 128, nullable = true)
     @JsonIgnore
     @ApiModelProperty(hidden = true)
     private String password;
@@ -151,13 +152,6 @@ public class Account extends BaseNativeEntity {
             @Override
             public String getLabel() {
                 return "前端用户";
-            }
-        },
-
-        weixin {
-            @Override
-            public String getLabel() {
-                return "微信用户";
             }
         }
     }
