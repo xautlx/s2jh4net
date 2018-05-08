@@ -59,10 +59,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -70,6 +67,7 @@ import javax.persistence.Entity;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -165,8 +163,8 @@ public class DemoAllInOneController {
             if (CollectionUtils.isNotEmpty(products)) {
                 DemoProduct product = products.get(0);
                 attachmentFileService.injectToSourceEntity(product, "mainImage", "introImages");
-                entity.setImagePath(product.getMainImage().getRelativePath());
-                entity.setImagePaths(product.getIntroImages().stream().map(one -> one.getRelativePath()).collect(Collectors.joining(",")));
+                entity.setImagePath(product.getMainImage().getAccessUrl());
+                entity.setImagePaths(product.getIntroImages().stream().map(one -> one.getAccessUrl()).collect(Collectors.joining(",")));
             }
         }
 
@@ -268,6 +266,17 @@ public class DemoAllInOneController {
         //所有数据校验通过，调用业务处理逻辑
 
         return OperationResult.buildSuccessResult("模拟POST数据处理成功");
+    }
+
+    @GetMapping(value = "/validation-remote")
+    @ResponseBody
+    public String validationRemote(@RequestParam("startDate") LocalDate startDate) {
+        //模拟业务校验：检查当前发货计划，发现只有10天以后可以安排发货，因此校验startDate必须是当前10天以后的日期
+        LocalDate validStartDate = LocalDate.now().plusDays(10);
+        if (startDate.isBefore(validStartDate)) {
+            return "最早发货日期需在 " + validStartDate + " 之后";
+        }
+        return String.valueOf(true);
     }
 
     @Getter

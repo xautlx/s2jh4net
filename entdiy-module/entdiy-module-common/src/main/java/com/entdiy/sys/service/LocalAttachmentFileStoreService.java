@@ -1,8 +1,5 @@
 /**
  * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
- *
- * Site: https://www.entdiy.com, E-Mail: xautlx@hotmail.com
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.core.util;
+package com.entdiy.sys.service;
 
+import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.AppContextHolder;
-import lombok.Getter;
+import com.entdiy.sys.entity.AttachmentFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,20 +26,17 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class FileUtils {
+/**
+ * 基于应用本地的文件存储服务，一般相对于CDN网络存储形式。
+ * 基于应用属性配置参数，形如：file.write.dir=/etc/entdiy/data
+ * 注意在集群部署模式下，要对file.write.dir对应路径做相关共享存储配置，如NFS
+ */
+public class LocalAttachmentFileStoreService implements AttachmentFileStoreService {
 
-    private final static Logger logger = LoggerFactory.getLogger(FileUtils.class);
+    private final static Logger logger = LoggerFactory.getLogger(LocalAttachmentFileStoreService.class);
 
-    public final static String SUB_DIR_FILES = File.separator + "upload" + File.separator + "files";
-    public final static String SUB_DIR_TEMP = File.separator + "upload" + File.separator + "temp";
-    public final static String SUB_DIR_IMAGES = File.separator + "upload" + File.separator + "images";
-
-    /**
-     * 获取文件上传根目录：优先取 file.write.dir 参数值，如果没有定义则取webapp解包部署目录，然后追加 /upload
-     *
-     * @return 返回图片访问相对路径
-     */
-    public static FileInfo writeFile(InputStream fis, String subDir, String fileName, long fileLength) {
+    @Override
+    public AttachmentFile storeFileData(InputStream fis, String subDir, String fileName, String contentType, long fileLength) {
         StringBuilder pathData = new StringBuilder();
         pathData.append(subDir);
 
@@ -71,25 +66,22 @@ public class FileUtils {
         pathData.append(File.separator + id);
 
         String relativePath = pathData + File.separator + fileName;
-        String absolutePath = AppContextHolder.getFileWriteRootDir() + relativePath;
+        String storePrefix = AppContextHolder.getFileWriteRootDir();
+        String absolutePath = storePrefix + relativePath;
         logger.debug("Saving upload file: {}, size: {}", absolutePath, fileLength);
         try {
             org.apache.commons.io.FileUtils.copyInputStreamToFile(fis, new File(absolutePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new FileInfo(relativePath, absolutePath);
-    }
 
-    public static class FileInfo {
-        @Getter
-        private String relativePath;
-        @Getter
-        private String absolutePath;
-
-        public FileInfo(String relativePath, String absolutePath) {
-            this.relativePath = relativePath;
-            this.absolutePath = absolutePath;
-        }
+        AttachmentFile attachmentFile = new AttachmentFile();
+        attachmentFile.setRelativePath(relativePath);
+        attachmentFile.setStorePrefix(storePrefix);
+        attachmentFile.setStoreCdnMode(false);
+        attachmentFile.setFileRealName(fileName);
+        attachmentFile.setFileLength(fileLength);
+        attachmentFile.setFileContentType(contentType);
+        return attachmentFile;
     }
 }

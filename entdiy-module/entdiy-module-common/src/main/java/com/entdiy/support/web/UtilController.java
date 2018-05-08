@@ -26,7 +26,6 @@ import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.Exceptions;
 import com.entdiy.core.util.ExtStringUtils;
-import com.entdiy.core.util.FileUtils;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.view.OperationResult;
@@ -35,6 +34,7 @@ import com.entdiy.support.service.SmsService;
 import com.entdiy.support.service.SmsService.SmsMessageTypeEnum;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.service.AttachmentFileService;
+import com.entdiy.sys.service.AttachmentFileStoreService;
 import com.entdiy.sys.service.SmsVerifyCodeService;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.IOUtils;
@@ -81,6 +81,9 @@ public class UtilController {
 
     @Autowired
     private AttachmentFileService attachmentFileService;
+
+    @Autowired
+    private AttachmentFileStoreService attachmentFileStoreService;
 
     @Autowired(required = false)
     private SmsService smsService;
@@ -306,55 +309,50 @@ public class UtilController {
     public Map<String, Object> imageUpload(HttpServletRequest request, @RequestParam("imgFile") CommonsMultipartFile fileUpload) {
         Map<String, Object> retMap = Maps.newHashMap();
         try {
-            if (fileUpload != null && !fileUpload.isEmpty()) {
-                String fileName = fileUpload.getOriginalFilename();
-                long fileLength = fileUpload.getSize();
-
-                //写入磁盘文件
-                FileUtils.FileInfo fileInfo = FileUtils.writeFile(fileUpload.getInputStream(), FileUtils.SUB_DIR_FILES, fileName, fileLength);
-
-                //创建附件记录
-                AttachmentFile attachmentFile = new AttachmentFile();
-                attachmentFile.setFileRealName(fileName);
-                attachmentFile.setFileLength(fileLength);
-                attachmentFile.setFileContentType(fileUpload.getContentType());
-                attachmentFile.setRelativePath(fileInfo.getRelativePath());
-                attachmentFile.setAbsolutePath(fileInfo.getAbsolutePath());
-                attachmentFileService.save(attachmentFile);
-
-                //以下两个属性用于kindeditor显示之用
-                retMap.put("error", 0);
-                retMap.put("url", request.getContextPath() + attachmentFile.getAccessUrl());
-
-                //业务使用属性
-                retMap.put("id", attachmentFile.getId());
-                retMap.put("accessUrl", attachmentFile.getAccessUrl());
-                retMap.put("fileRealName", attachmentFile.getFileRealName());
-                retMap.put("fileLength", attachmentFile.getFileLength());
+            if (fileUpload == null || fileUpload.isEmpty()) {
+                retMap.put("error", 1);
+                retMap.put("message", "上传文件为空");
                 return retMap;
             }
-        } catch (IOException e) {
-            throw new WebException("Upload file error", e);
+
+            //创建附件记录
+            AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                    fileUpload, AttachmentFileStoreService.SUB_DIR_FILES);
+            attachmentFileService.save(attachmentFile);
+
+            String accessUrl = attachmentFile.getAccessUrl();
+            if (attachmentFile.getStoreCdnMode()) {
+                accessUrl = request.getContextPath() + accessUrl;
+            }
+
+            //以下两个属性用于kindeditor显示之用
+            retMap.put("error", 0);
+            retMap.put("url", accessUrl);
+
+            //业务使用属性
+            retMap.put("id", attachmentFile.getId());
+            retMap.put("accessUrl", accessUrl);
+            retMap.put("fileRealName", attachmentFile.getFileRealName());
+            retMap.put("fileLength", attachmentFile.getFileLength());
+            return retMap;
+        } catch (Exception e) {
+            retMap.put("error", 1);
+            retMap.put("message", "图片处理失败");
+            return retMap;
         }
-        retMap.put("error", 1);
-        retMap.put("message", "图片处理失败");
-        return retMap;
     }
 
-    @RequestMapping(value = "/pub/file/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public void fileDownload(@PathVariable("id") String id, HttpServletResponse response) {
-        attachmentFileService.findOne(id).ifPresent(attachmentFile -> {
+    private void fileProcess(HttpServletResponse response, String id, String type) {
+        attachmentFileService.findOptionalOne(id).ifPresent(attachmentFile -> {
             try {
-                String absolutePath = attachmentFile.getAbsolutePath();
-                if (absolutePath.startsWith("http://") || absolutePath.startsWith("https://")) {
-                    response.sendRedirect(absolutePath);
+                if (attachmentFile.getStoreCdnMode()) {
+                    response.sendRedirect(attachmentFile.getAccessUrl());
                 } else {
                     String fileName = URLEncoder.encode(attachmentFile.getFileRealName(), "UTF-8");
-                    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                    response.setHeader("Content-Disposition", type + "; filename=\"" + fileName + "\"");
                     response.addHeader("Content-Length", "" + attachmentFile.getFileLength());
                     response.setContentType(attachmentFile.getFileContentType());
-                    InputStream in = new FileInputStream(new File(absolutePath));
+                    InputStream in = new FileInputStream(new File(attachmentFile.getStorePrefix() + attachmentFile.getRelativePath()));
                     OutputStream out = response.getOutputStream();
                     IOUtils.copy(in, out);
                     IOUtils.closeQuietly(in);
@@ -364,5 +362,17 @@ public class UtilController {
                 logger.error("File download error", e);
             }
         });
+    }
+
+    @RequestMapping(value = "/pub/file/view/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public void fileView(@PathVariable("id") String id, HttpServletResponse response) {
+        fileProcess(response, id, "inline");
+    }
+
+    @RequestMapping(value = "/pub/file/download/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public void fileDownload(@PathVariable("id") String id, HttpServletResponse response) {
+        fileProcess(response, id, "attachment");
     }
 }

@@ -80,12 +80,24 @@ public class AttachmentFile extends BaseUuidEntity {
     @Column(length = 512, nullable = false)
     private String relativePath;
 
-    @MetaData(value = "存储绝对路径")
-    @Column(length = 512, nullable = true)
-    private String absolutePath;
+    @MetaData(value = "存储路径前缀", comments = "如果是应用本地存储则存放文件所在磁盘路径前缀；如果是CDN网上存储则存放HTTP访问前缀")
+    @Column(length = 512, nullable = false)
+    private String storePrefix;
+
+    @MetaData(value = "是否CDN存储模式")
+    @Column(length = 512, nullable = false)
+    private Boolean storeCdnMode;
 
     @Transient
     public String getAccessUrl() {
-        return "/pub/file/" + getId();
+        if (this.isNew()) {
+            return null;
+        }
+        //假如是以外部CDN形式存取文件，则组装CDN访问路径；否则本地应用存储形式，返回应用访问地址
+        if (storeCdnMode) {
+            return storePrefix + relativePath;
+        } else {
+            return "/pub/file/view/" + getId();
+        }
     }
 }

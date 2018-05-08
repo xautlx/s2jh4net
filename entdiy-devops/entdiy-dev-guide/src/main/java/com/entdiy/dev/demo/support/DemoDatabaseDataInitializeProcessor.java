@@ -30,17 +30,18 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.MockEntityUtils;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.json.LocalDateTimeSerializer;
+import com.entdiy.dev.demo.entity.*;
+import com.entdiy.dev.demo.service.DemoOrderService;
+import com.entdiy.dev.demo.service.DemoProductService;
+import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
+import com.entdiy.dev.demo.service.DemoSiteUserService;
 import com.entdiy.sys.entity.AccountMessage;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.entity.NotifyMessage;
-import com.entdiy.sys.service.AccountMessageService;
-import com.entdiy.sys.service.AttachmentFileService;
-import com.entdiy.sys.service.DataDictService;
-import com.entdiy.sys.service.NotifyMessageService;
+import com.entdiy.sys.service.*;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +50,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
-import com.entdiy.dev.demo.entity.*;
-import com.entdiy.dev.demo.service.DemoOrderService;
-import com.entdiy.dev.demo.service.DemoProductService;
-import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
-import com.entdiy.dev.demo.service.DemoSiteUserService;
 
-import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -98,10 +94,27 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
     private AttachmentFileService attachmentFileService;
 
     @Autowired
+    private AttachmentFileStoreService attachmentFileStoreService;
+
+    @Autowired
     private DemoOrderService orderService;
 
     @Autowired
     private DemoSiteUserService siteUserService;
+
+    private AttachmentFile buildImageAttachmentFile(Resource resource) throws IOException {
+        AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                resource.getInputStream(), AttachmentFileStoreService.SUB_DIR_IMAGES,
+                resource.getFilename(), "image/jpg", resource.contentLength());
+        return attachmentFileService.save(attachmentFile);
+    }
+
+    private AttachmentFile buildMarkdownAttachmentFile(Resource resource) throws IOException {
+        AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                resource.getInputStream(), AttachmentFileStoreService.SUB_DIR_FILES,
+                resource.getFilename(), "plain/txt", resource.contentLength());
+        return attachmentFileService.save(attachmentFile);
+    }
 
     @Override
     public void initializeInternal() throws Exception {
@@ -195,7 +208,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
 
                 {
-                    DataDict entity = dataDictService.findByRootPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE).get();
+                    DataDict entity = dataDictService.findByRootPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE);
 
                     DataDict item = new DataDict();
                     item.setPrimaryKey("normal");
@@ -285,7 +298,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
 
             //数据字典项初始化
-            if (!dataDictService.findByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType).isPresent()) {
+            if (dataDictService.findByRootPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType) == null) {
                 DataDict entity = new DataDict();
                 entity.setPrimaryKey(DemoConstant.DataDict_Demo_ReimbursementRequest_UseType);
                 entity.setPrimaryValue("报销申请:记账类型");
@@ -313,7 +326,6 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             Resource[] imageResources = resolver.getResources("classpath*:/META-INF/resources/assets/images/*.jpg");
-            Resource[] avatarResources = resolver.getResources("classpath*:/META-INF/resources/assets/avatar/*.jpg");
             Resource[] fileResources = resolver.getResources("classpath*:/META-INF/resources/dev/docs/markdown/*.md");
 
             if (isEmptyTable(DemoSiteUser.class)) {
@@ -363,7 +375,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     //随机部分订单支付
                     if (MockEntityUtils.randomBoolean()) {
                         //新事务中重新查询加载对象
-                        order = orderService.findOne(order.getId()).get();
+                        order = orderService.findOne(order.getId());
                         //设置付款时间为当前订单的下单时间之后的随机1到8小时的时间点
                         LocalDateTime randomTime = order.getSubmitTime().plusHours(MockEntityUtils.randomInt(1, 8));
                         DateUtils.setCurrentDateTime(randomTime);
@@ -387,28 +399,14 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     int randomInt = MockEntityUtils.randomInt(2, 4);
                     for (int j = 0; j < randomInt; j++) {
                         Resource resource = MockEntityUtils.randomCandidates(imageResources);
-                        File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
-                        FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
-                        AttachmentFile attachmentFile = new AttachmentFile();
-                        attachmentFile.setFileRealName(file.getName());
-                        attachmentFile.setFileLength(file.length());
-                        attachmentFile.setFileContentType("image/jpg");
-                        attachmentFile.setRelativePath("/assets/images/" + file.getName());
-                        attachmentFile.setAbsolutePath("jar:/assets/images/" + file.getName());
+                        AttachmentFile attachmentFile = this.buildImageAttachmentFile(resource);
                         attachmentFiles.add(attachmentFile);
                     }
                     //先提前上传保存附件
                     attachmentFileService.saveAll(attachmentFiles);
 
                     Resource resource = MockEntityUtils.randomCandidates(imageResources);
-                    File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
-                    FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
-                    AttachmentFile attachmentFile = new AttachmentFile();
-                    attachmentFile.setFileRealName(file.getName());
-                    attachmentFile.setFileLength(file.length());
-                    attachmentFile.setFileContentType("image/jpg");
-                    attachmentFile.setRelativePath("/assets/images/" + file.getName());
-                    attachmentFile.setAbsolutePath("jar:/assets/images/" + file.getName());
+                    AttachmentFile attachmentFile = this.buildImageAttachmentFile(resource);
                     attachmentFiles.add(attachmentFile);
                     attachmentFileService.save(attachmentFile);
 
@@ -450,27 +448,13 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     for (int j = 0; j < randomInt; j++) {
                         {
                             Resource resource = MockEntityUtils.randomCandidates(fileResources);
-                            File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
-                            FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
-                            AttachmentFile attachmentFile = new AttachmentFile();
-                            attachmentFile.setFileRealName(file.getName());
-                            attachmentFile.setFileLength(file.length());
-                            attachmentFile.setFileContentType("plain/txt");
-                            attachmentFile.setRelativePath("/dev/docs/markdown/" + file.getName());
-                            attachmentFile.setAbsolutePath("jar:/dev/docs/markdown/" + file.getName());
+                            AttachmentFile attachmentFile = this.buildMarkdownAttachmentFile(resource);
                             attachmentFiles.add(attachmentFile);
                         }
 
                         {
                             Resource resource = MockEntityUtils.randomCandidates(imageResources);
-                            File file = new File(FileUtils.getTempDirectoryPath() + File.separator + resource.getFilename());
-                            FileUtils.copyInputStreamToFile(resource.getInputStream(), file);
-                            AttachmentFile attachmentFile = new AttachmentFile();
-                            attachmentFile.setFileRealName(file.getName());
-                            attachmentFile.setFileLength(file.length());
-                            attachmentFile.setFileContentType("image/jpg");
-                            attachmentFile.setRelativePath("/assets/images/" + file.getName());
-                            attachmentFile.setAbsolutePath("jar:/assets/images/" + file.getName());
+                            AttachmentFile attachmentFile = this.buildImageAttachmentFile(resource);
                             attachmentFiles.add(attachmentFile);
                         }
                     }

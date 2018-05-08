@@ -116,6 +116,10 @@ public class AttachmentFileService extends BaseService<AttachmentFile, String> {
                     }
                     for (int i = 0; i < attachmentFiles.size(); i++) {
                         AttachmentFile one = attachmentFiles.get(i);
+                        if (one.getStoreCdnMode() == null) {
+                            String storePrefix = one.getStorePrefix().toLowerCase();
+                            one.setStoreCdnMode(storePrefix.startsWith("http://") || storePrefix.startsWith("https://"));
+                        }
                         one.setSourceType(sourceType);
                         one.setSourceId(sourceId);
                         one.setSourceCategory(propertyName);
