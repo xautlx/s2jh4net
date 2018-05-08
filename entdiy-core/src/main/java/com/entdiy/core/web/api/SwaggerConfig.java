@@ -53,6 +53,10 @@ public class SwaggerConfig {
             ParameterBuilder accessToken = new ParameterBuilder();
             accessToken.name(GlobalConstant.APP_AUTH_ACCESS_TOKEN).description("登录接口返回的accessToken").modelRef(new ModelRef("string")).parameterType("header").required(false);
             pars.add(accessToken.build());
+
+            ParameterBuilder locale = new ParameterBuilder();
+            locale.name(GlobalConstant.APP_LOCALE).description("标识APP端语言选项，形如en-US|zh-CN|zh-TW|ja-JP等，用于服务端必要的国际化处理").modelRef(new ModelRef("string")).parameterType("header").required(false);
+            pars.add(locale.build());
         }
 
         return new Docket(DocumentationType.SWAGGER_2)

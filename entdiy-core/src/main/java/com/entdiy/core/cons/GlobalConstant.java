@@ -29,7 +29,7 @@ public class GlobalConstant {
     public static final String DEFAULT_VALUE = "default";
     public static final String NONE_VALUE = "none";
 
-    public static final String API_MAPPING_PREFIX="/api";
+    public static final String API_MAPPING_PREFIX = "/api";
 
     /**
      * 对于一些复杂处理逻辑需要基于提交数据服务器校验后有提示警告信息需要用户二次确认
@@ -70,6 +70,9 @@ public class GlobalConstant {
 
     @MetaData("类似OAuth的APP认证AccessToken请求Header名称")
     public final static String APP_AUTH_ACCESS_TOKEN = "ACCESS-TOKEN";
+
+    @MetaData("标识APP端语言选项，形如en-US|zh-CN|zh-TW|ja-JP等，用于服务端必要的国际化处理")
+    public final static String APP_LOCALE = "APP-LOCALE";
 
     @MetaData("ConfigProperty:是否全局禁用开放手机号短信发送功能")
     public final static String CFG_SMS_DISABLED = "SMS_DISABLED";

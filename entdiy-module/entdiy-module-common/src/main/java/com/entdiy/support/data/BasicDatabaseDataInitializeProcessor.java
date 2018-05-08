@@ -24,6 +24,7 @@ import com.entdiy.auth.service.RoleService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.data.AbstractDatabaseDataInitializeProcessor;
+import com.entdiy.locale.entity.LocalizedData;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.entity.DataDict;
@@ -164,12 +165,49 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
         }
 
         //数据字典项初始化
-        if (!dataDictService.findByRootPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE).isPresent()) {
+        if (dataDictService.findByRootPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE) == null) {
             DataDict entity = new DataDict();
             entity.setPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE);
             entity.setPrimaryValue("消息类型");
             entity.setParent(dataDictService.findRoot());
             dataDictService.save(entity);
+        }
+
+        //数据字典项初始化
+        if (dataDictService.findByRootPrimaryKey(LocalizedData.DataDict_Locales) == null) {
+            DataDict entity = new DataDict();
+            entity.setPrimaryKey(LocalizedData.DataDict_Locales);
+            entity.setPrimaryValue("国际语言列表");
+            entity.setParent(dataDictService.findRoot());
+            dataDictService.save(entity);
+
+            DataDict item = new DataDict();
+            item.setPrimaryKey("ja-JP");
+            item.setPrimaryValue("日本語");
+            item.setDisabled(true);
+            item.setParent(entity);
+            dataDictService.save(item);
+
+            item = new DataDict();
+            item.setPrimaryKey("zh-TW");
+            item.setPrimaryValue("繁體中文");
+            item.setDisabled(true);
+            item.setParent(entity);
+            dataDictService.save(item);
+
+            item = new DataDict();
+            item.setPrimaryKey("en-US");
+            item.setPrimaryValue("English");
+            item.setDisabled(false);
+            item.setParent(entity);
+            dataDictService.save(item);
+
+            item = new DataDict();
+            item.setPrimaryKey("zh-CN");
+            item.setPrimaryValue("简体中文");
+            item.setDisabled(false);
+            item.setParent(entity);
+            dataDictService.save(item);
         }
     }
 }
