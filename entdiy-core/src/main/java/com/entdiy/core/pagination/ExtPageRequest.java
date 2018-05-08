@@ -17,6 +17,7 @@
  */
 package com.entdiy.core.pagination;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,7 @@ import java.util.List;
  * 扩展Spring Data定义的分页对象，添加精确的offset控制属性。
  * @see {@link PropertyFilter#buildPageableFromHttpRequest(javax.servlet.http.HttpServletRequest)}
  */
+@JsonIgnoreProperties(value = {"sort", "pageable"}, ignoreUnknown = true)
 public class ExtPageRequest extends PageRequest {
 
     private static final long serialVersionUID = 7944779254954509445L;
@@ -58,7 +60,7 @@ public class ExtPageRequest extends PageRequest {
      * @return 转换封装的Page分页结构对象
      */
     public static <S> Page<S> buildPageResultFromList(List<S> list) {
-        Page<S> page = new PageImpl<S>(list);
+        Page<S> page = new PageImpl(list);
         return page;
     }
 }
