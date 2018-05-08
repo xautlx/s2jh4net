@@ -18,11 +18,14 @@
 package com.entdiy.dev.demo.web.action;
 
 import com.entdiy.auth.service.UserService;
-import com.entdiy.core.util.FileUtils;
 import com.entdiy.core.util.ImageUtils;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.view.OperationResult;
+import com.entdiy.dev.demo.entity.DemoSiteUser;
+import com.entdiy.dev.demo.service.DemoSiteUserService;
+import com.entdiy.sys.entity.AttachmentFile;
+import com.entdiy.sys.service.AttachmentFileStoreService;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +37,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import com.entdiy.dev.demo.entity.DemoSiteUser;
-import com.entdiy.dev.demo.service.DemoSiteUserService;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +52,10 @@ public class DemoSiteIndexController extends BaseController<DemoSiteUser, Long> 
     private final Logger logger = LoggerFactory.getLogger(DemoSiteIndexController.class);
 
     @Autowired
-    private UserService userService;
+    private UserService userServic;
+
+    @Autowired
+    private AttachmentFileStoreService attachmentFileStoreService;
 
     @Autowired
     private DemoSiteUserService siteUserService;
@@ -73,17 +77,16 @@ public class DemoSiteIndexController extends BaseController<DemoSiteUser, Long> 
         if (photo != null && !photo.isEmpty()) {
             try {
                 //写入文件到临时目录，以备后续处理
-                FileUtils.FileInfo fileInfo = FileUtils.writeFile(photo.getInputStream(), FileUtils.SUB_DIR_TEMP, photo.getName(), photo.getSize());
-
+                AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(photo, AttachmentFileStoreService.SUB_DIR_TEMP);
                 //获取原图高宽
-                BufferedImage bi = ImageIO.read(new File(fileInfo.getAbsolutePath()));
+                BufferedImage bi = ImageIO.read(new File(attachmentFile.getStorePrefix() + attachmentFile.getRelativePath()));
                 int srcWidth = bi.getWidth();
                 int srcHeight = bi.getHeight();
 
                 Map<String, Object> userdata = Maps.newHashMap();
                 userdata.put("width", srcWidth);
                 userdata.put("height", srcHeight);
-                userdata.put("src", fileInfo.getRelativePath());
+                userdata.put("src", attachmentFile.getAccessUrl());
                 return OperationResult.buildSuccessResult("图片上传成功", userdata);
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
@@ -111,8 +114,10 @@ public class DemoSiteIndexController extends BaseController<DemoSiteUser, Long> 
                 }
             }
             File photoFile = new File(bigImagePath);
-            FileUtils.FileInfo fileInfo = FileUtils.writeFile(new FileInputStream(photoFile), FileUtils.SUB_DIR_IMAGES, photoFile.getName(), photoFile.length());
-            return OperationResult.buildSuccessResult("图片提交成功", fileInfo.getRelativePath());
+            AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                    new FileInputStream(photoFile), AttachmentFileStoreService.SUB_DIR_IMAGES,
+                    photoFile.getName(), "image/*", photoFile.length());
+            return OperationResult.buildSuccessResult("图片提交成功", attachmentFile.getRelativePath());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
