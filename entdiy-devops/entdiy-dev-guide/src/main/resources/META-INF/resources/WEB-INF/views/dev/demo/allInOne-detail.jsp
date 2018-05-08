@@ -224,8 +224,9 @@
                             <div class="controls">
                                 <input type="text" class="form-control" name="startDate" required="true"
                                        data-rule-dateLT="endDate" data-tooltips="开始日期应早于结束日期"
+                                       data-rule-remoteUrl="dev/demo/all-in-one/validation-remote"
                                        data-picker="date">
-                                <span class="help-block">日期前后关系关联校验</span>
+                                <span class="help-block">日期前后关系关联校验; Remote校验：选取当前日期10天以内的日期</span>
                             </div>
                         </div>
                         <div class="form-group">
