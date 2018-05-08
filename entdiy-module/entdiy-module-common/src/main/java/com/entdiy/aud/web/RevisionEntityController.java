@@ -27,6 +27,7 @@ import com.entdiy.core.entity.BaseEntity;
 import com.entdiy.core.exception.WebException;
 import com.entdiy.core.pagination.ExtPageRequest;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
@@ -91,7 +92,7 @@ public class RevisionEntityController extends BaseController<ExtDefaultRevisionE
     @RequestMapping(value = "/user/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<ExtDefaultRevisionEntity> findByPage(
+    public JsonPage<ExtDefaultRevisionEntity> findByPage(
             @ModelPropertyFilter(ExtDefaultRevisionEntity.class) GroupPropertyFilter filter,
             @ModelPageableRequest Pageable pageable) {
         return revisionEntityService.findByPage(filter, pageable);

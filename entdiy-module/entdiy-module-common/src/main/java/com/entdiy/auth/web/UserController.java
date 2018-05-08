@@ -26,6 +26,7 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cache.EntityCacheService;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.service.Validation;
@@ -44,7 +45,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -87,8 +87,8 @@ public class UserController extends BaseController<User, Long> {
     @RequiresPermissions(value = {"配置管理:权限管理:后台用户管理"}, logical = Logical.OR)
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<User> findByPage(@ModelPropertyFilter(User.class) GroupPropertyFilter filter,
-                                 @ModelPageableRequest Pageable pageable) {
+    public JsonPage<User> findByPage(@ModelPropertyFilter(User.class) GroupPropertyFilter filter,
+                                     @ModelPageableRequest Pageable pageable) {
         return userService.findByPage(filter, pageable);
     }
 

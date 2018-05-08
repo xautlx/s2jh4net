@@ -19,6 +19,7 @@ package com.entdiy.schedule.web;
 
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
@@ -26,7 +27,6 @@ import com.entdiy.schedule.entity.JobRunHist;
 import com.entdiy.schedule.service.JobRunHistService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,8 +50,8 @@ public class JobRunHistController extends BaseController<JobRunHist, Long> {
     @RequiresPermissions("配置管理:计划任务管理:任务运行记录")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<JobRunHist> findByPage(@ModelPropertyFilter(JobRunHist.class) GroupPropertyFilter filter,
-                                       @ModelPageableRequest Pageable pageable) {
+    public JsonPage<JobRunHist> findByPage(@ModelPropertyFilter(JobRunHist.class) GroupPropertyFilter filter,
+                                           @ModelPageableRequest Pageable pageable) {
         return jobRunHistService.findByPage(filter, pageable);
     }
 

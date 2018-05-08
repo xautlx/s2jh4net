@@ -20,6 +20,7 @@ package com.entdiy.sys.web;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.web.BaseController;
@@ -31,7 +32,6 @@ import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.service.DataDictService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,8 +61,8 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<DataDict> findByPage(@ModelPropertyFilter(DataDict.class) GroupPropertyFilter filter,
-                                     @ModelPageableRequest Pageable pageable) {
+    public JsonPage<DataDict> findByPage(@ModelPropertyFilter(DataDict.class) GroupPropertyFilter filter,
+                                         @ModelPageableRequest Pageable pageable) {
         //如果没有业务查询参数，则限制只查询业务根节点数据
         if (filter.isEmptySearch()) {
             filter.forceAnd(new PropertyFilter(MatchType.EQ, "depth", 1));

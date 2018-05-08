@@ -20,6 +20,7 @@ package com.entdiy.sys.web;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
@@ -29,7 +30,6 @@ import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.service.ConfigPropertyService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,8 +57,8 @@ public class ConfigPropertyController extends BaseController<ConfigProperty, Lon
     @RequiresPermissions("配置管理:系统管理:参数配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<ConfigProperty> findByPage(@ModelPropertyFilter(ConfigProperty.class) GroupPropertyFilter filter,
-                                           @ModelPageableRequest Pageable pageable) {
+    public JsonPage<ConfigProperty> findByPage(@ModelPropertyFilter(ConfigProperty.class) GroupPropertyFilter filter,
+                                               @ModelPageableRequest Pageable pageable) {
         return configPropertyService.findByPage(filter, pageable);
     }
 

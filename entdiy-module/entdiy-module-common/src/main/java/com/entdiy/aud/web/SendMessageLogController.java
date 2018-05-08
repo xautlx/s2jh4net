@@ -23,6 +23,7 @@ import com.entdiy.aud.service.SendMessageLogService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
@@ -33,7 +34,6 @@ import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,8 +61,8 @@ public class SendMessageLogController extends BaseController<SendMessageLog, Lon
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<SendMessageLog> findByPage(@ModelPropertyFilter(SendMessageLog.class) GroupPropertyFilter filter,
-                                         @ModelPageableRequest Pageable pageable) {
+    public JsonPage<SendMessageLog> findByPage(@ModelPropertyFilter(SendMessageLog.class) GroupPropertyFilter filter,
+                                               @ModelPageableRequest Pageable pageable) {
         return sendMessageLogService.findByPage(filter, pageable);
     }
 

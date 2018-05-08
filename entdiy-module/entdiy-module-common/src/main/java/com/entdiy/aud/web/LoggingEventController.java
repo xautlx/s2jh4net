@@ -23,6 +23,7 @@ import com.entdiy.aud.service.LoggingEventService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.util.JsonUtils;
 import com.entdiy.core.web.BaseController;
@@ -34,7 +35,6 @@ import com.entdiy.core.web.view.OperationResult;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,8 +62,8 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<LoggingEvent> findByPage(@ModelPropertyFilter(LoggingEvent.class) GroupPropertyFilter filter,
-                                         @ModelPageableRequest Pageable pageable) {
+    public JsonPage<LoggingEvent> findByPage(@ModelPropertyFilter(LoggingEvent.class) GroupPropertyFilter filter,
+                                             @ModelPageableRequest Pageable pageable) {
         return loggingEventService.findByPage(filter, pageable);
     }
 

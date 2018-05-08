@@ -19,6 +19,7 @@ package com.entdiy.sys.web;
 
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.web.BaseController;
@@ -33,7 +34,6 @@ import com.google.common.collect.Lists;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,8 +62,8 @@ public class MenuController extends BaseController<Menu, Long> {
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<Menu> findByPage(@ModelPropertyFilter(Menu.class) GroupPropertyFilter filter,
-                                 @ModelPageableRequest Pageable pageable) {
+    public JsonPage<Menu> findByPage(@ModelPropertyFilter(Menu.class) GroupPropertyFilter filter,
+                                     @ModelPageableRequest Pageable pageable) {
         //如果没有业务查询参数，则限制只查询业务根节点数据
         if (filter.isEmptySearch()) {
             filter.forceAnd(new PropertyFilter(MatchType.EQ, "depth", 1));

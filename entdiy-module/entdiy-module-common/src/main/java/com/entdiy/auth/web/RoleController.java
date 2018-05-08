@@ -23,6 +23,7 @@ import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
@@ -33,7 +34,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,8 +66,8 @@ public class RoleController extends BaseController<Role, Long> {
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<Role> findByPage(@ModelPropertyFilter(Role.class) GroupPropertyFilter filter,
-                                 @ModelPageableRequest Pageable pageable) {
+    public JsonPage<Role> findByPage(@ModelPropertyFilter(Role.class) GroupPropertyFilter filter,
+                                     @ModelPageableRequest Pageable pageable) {
         return roleService.findByPage(filter, pageable);
     }
 

@@ -22,6 +22,7 @@ import com.entdiy.aud.service.AccountLogonLogService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
@@ -30,7 +31,6 @@ import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,8 +57,8 @@ public class AccountLogonLogController extends BaseController<AccountLogonLog, L
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<AccountLogonLog> findByPage(@ModelPropertyFilter(AccountLogonLog.class) GroupPropertyFilter filter,
-                                            @ModelPageableRequest Pageable pageable) {
+    public JsonPage<AccountLogonLog> findByPage(@ModelPropertyFilter(AccountLogonLog.class) GroupPropertyFilter filter,
+                                                @ModelPageableRequest Pageable pageable) {
         return accountLogonLogService.findByPage(filter, pageable);
     }
 

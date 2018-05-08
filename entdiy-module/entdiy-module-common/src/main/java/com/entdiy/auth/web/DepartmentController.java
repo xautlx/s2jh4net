@@ -21,6 +21,7 @@ import com.entdiy.auth.entity.Department;
 import com.entdiy.auth.service.DepartmentService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter.MatchType;
 import com.entdiy.core.web.BaseController;
@@ -32,7 +33,6 @@ import com.entdiy.core.web.view.OperationResult;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
@@ -63,8 +63,8 @@ public class DepartmentController extends BaseController<Department, Long> {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<Department> findByPage(@ModelPropertyFilter(Department.class) GroupPropertyFilter filter,
-                                       @ModelPageableRequest Pageable pageable) {
+    public JsonPage<Department> findByPage(@ModelPropertyFilter(Department.class) GroupPropertyFilter filter,
+                                           @ModelPageableRequest Pageable pageable) {
         //如果没有业务查询参数，则限制只查询业务根节点数据
         if (filter.isEmptySearch()) {
             filter.forceAnd(new PropertyFilter(MatchType.EQ, "depth", 1));

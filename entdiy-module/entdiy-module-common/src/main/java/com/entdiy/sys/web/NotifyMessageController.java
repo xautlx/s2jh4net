@@ -20,6 +20,7 @@ package com.entdiy.sys.web;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.util.EnumUtils;
 import com.entdiy.core.web.BaseController;
@@ -35,7 +36,6 @@ import com.entdiy.sys.service.NotifyMessageReadService;
 import com.entdiy.sys.service.NotifyMessageService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,8 +69,8 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<NotifyMessage> findByPage(@ModelPropertyFilter(NotifyMessage.class) GroupPropertyFilter filter,
-                                          @ModelPageableRequest Pageable pageable) {
+    public JsonPage<NotifyMessage> findByPage(@ModelPropertyFilter(NotifyMessage.class) GroupPropertyFilter filter,
+                                              @ModelPageableRequest Pageable pageable) {
         return notifyMessageService.findByPage(filter, pageable);
     }
 
@@ -99,7 +99,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/read-list", method = RequestMethod.GET)
     @ResponseBody
-    public Page<NotifyMessageRead> readList(HttpServletRequest request) {
+    public JsonPage<NotifyMessageRead> readList(HttpServletRequest request) {
         Pageable pageable = PropertyFilter.buildPageableFromHttpRequest(request);
         GroupPropertyFilter groupFilter = GroupPropertyFilter.buildFromHttpRequest(NotifyMessageRead.class, request);
         return notifyMessageReadService.findByPage(groupFilter, pageable);

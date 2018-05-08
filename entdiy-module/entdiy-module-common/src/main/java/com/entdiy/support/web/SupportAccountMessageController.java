@@ -22,6 +22,7 @@ import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
@@ -32,7 +33,6 @@ import com.entdiy.sys.service.AccountMessageService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,7 +81,7 @@ public class SupportAccountMessageController {
                 filter.append(new PropertyFilter(PropertyFilter.MatchType.NU, "firstReadTime", Boolean.TRUE));
             }
         }
-        Page<AccountMessage> pageData = accountMessageService.findByPage(filter, pageable);
+        JsonPage<AccountMessage> pageData = accountMessageService.findByPage(filter, pageable);
         model.addAttribute("pageData", pageData);
         return "admin/profile/accountMessage-list";
     }
@@ -89,7 +89,8 @@ public class SupportAccountMessageController {
     @MetaData("个人消息读取")
     @RequestMapping(value = "/admin/profile/account-message-view/{messageId}", method = RequestMethod.GET)
     public String accountMessageView(@AuthAccount Account account, @PathVariable("messageId") Long messageId, Model model) {
-        accountMessageService.findOne(messageId).ifPresent(one -> {
+
+        accountMessageService.findOptionalOne(messageId).ifPresent(one -> {
             accountMessageService.processUserRead(one);
             model.addAttribute("accountMessage", one);
         });
