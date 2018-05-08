@@ -35,7 +35,7 @@ public interface AttachmentFileStoreService {
      */
     default AttachmentFile storeFileData(CommonsMultipartFile fileUpload, String subDir) {
         try {
-            return storeFileData(fileUpload.getInputStream(), subDir, fileUpload.getName(), fileUpload.getContentType(), fileUpload.getSize());
+            return storeFileData(fileUpload.getInputStream(), subDir, fileUpload.getOriginalFilename(), fileUpload.getContentType(), fileUpload.getSize());
         } catch (IOException e) {
             throw new ServiceException("File process error", e);
         }
