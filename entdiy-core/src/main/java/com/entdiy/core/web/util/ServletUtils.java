@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Persistable;
@@ -511,9 +512,12 @@ public class ServletUtils {
     }
 
     public static void addCookie(HttpServletRequest request, HttpServletResponse response, String key, String value) {
-        Cookie cookie = new Cookie(key, Encodes.urlEncode(value));
-        cookie.setPath(request.getContextPath());
-        response.addCookie(cookie);
+        org.apache.shiro.web.servlet.Cookie cookie = new SimpleCookie(key);
+        cookie.setHttpOnly(false);
+        cookie.setMaxAge(org.apache.shiro.web.servlet.Cookie.ONE_YEAR);
+        cookie.setValue(Encodes.urlEncode(value));
+        cookie.saveTo(request, response);
+
         // 补偿记录到request属性，便于后续逻辑能立即获取值
         request.setAttribute(key, value);
     }
