@@ -20,6 +20,7 @@ package ${root_package}.web.admin;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.web.BaseController;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
@@ -30,7 +31,6 @@ import com.entdiy.core.web.json.JsonViews;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +43,7 @@ import ${root_package}.service.${entity_name}Service;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-@MetaData("${model_title}管理")
+@MetaData("业务管理:${model_title}管理")
 @Controller
 @RequestMapping(value = "/admin${model_path}/${entity_name_field_line}")
 public class ${entity_name}Controller extends BaseController<${entity_name},${id_type}> {
@@ -51,18 +51,18 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
     @Autowired
     private ${entity_name}Service ${entity_name_uncapitalize}Service;
 
-    @MenuData("${model_title}管理")
-    @RequiresPermissions("${model_title}")
+    @MenuData("业务管理:${model_title}管理")
+    @RequiresPermissions("业务管理:${model_title}列表")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(@ModelEntity ${entity_name} entity) {
         return "admin${model_path}/${entity_name_uncapitalize}-index";
     }   
     
-    @RequiresPermissions("${model_title}管理")
+    @RequiresPermissions("业务管理:${model_title}管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
-    public Page<${entity_name}> findByPage(@ModelPropertyFilter(${entity_name}.class) GroupPropertyFilter filter,
+    public JsonPage<${entity_name}> findByPage(@ModelPropertyFilter(${entity_name}.class) GroupPropertyFilter filter,
                                            @ModelPageableRequest Pageable pageable) {
         return ${entity_name_uncapitalize}Service.findByPage(filter,pageable);
     }
@@ -72,20 +72,20 @@ public class ${entity_name}Controller extends BaseController<${entity_name},${id
         return "admin${model_path}/${entity_name_uncapitalize}-inputTabs";
     }
 
-    @RequiresPermissions("${model_title}编辑")
+    @RequiresPermissions("业务管理:${model_title}编辑")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(@ModelEntity ${entity_name} entity) {
         return "admin${model_path}/${entity_name_uncapitalize}-inputBasic";
     }
 
-    @RequiresPermissions("${model_title}编辑")
+    @RequiresPermissions("业务管理:${model_title}编辑")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@ModelEntity ${entity_name} entity) {
         return super.editSave(${entity_name_uncapitalize}Service, entity);
     }
 
-    @RequiresPermissions("${model_title}删除")
+    @RequiresPermissions("业务管理:${model_title}删除")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult delete(@RequestParam("ids") Long... ids) {
