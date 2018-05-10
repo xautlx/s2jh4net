@@ -27,6 +27,7 @@ import com.entdiy.dev.demo.service.DemoSiteUserService;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.service.AttachmentFileStoreService;
 import com.google.common.collect.Maps;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +111,7 @@ public class DemoSiteIndexController extends BaseController<DemoSiteUser, Long> 
                 ImageUtils.cutImage(bigImagePath, bigImagePath, x, y, w, h);
                 if (size != null) {
                     //缩放到统一大小
-                    ImageUtils.zoomImage(bigImagePath, bigImagePath, size, size);
+                    ImageUtils.zoomImage(FileUtils.openInputStream(new File(bigImagePath)), bigImagePath, size, size);
                 }
             }
             File photoFile = new File(bigImagePath);

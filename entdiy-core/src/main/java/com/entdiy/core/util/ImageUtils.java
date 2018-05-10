@@ -39,7 +39,7 @@ import java.util.Iterator;
 
 public class ImageUtils {
 
-    /** 
+    /**
      * 旋转图像
      */
     public static void autoRotateImage(final String src, String dest) throws Exception {
@@ -63,40 +63,40 @@ public class ImageUtils {
             AffineTransform affineTransform = new AffineTransform();
 
             switch (orientation) {
-            case 1:
-                return;
-            case 2: // Flip X
-                affineTransform.scale(-1.0, 1.0);
-                affineTransform.translate(-width, 0);
-                break;
-            case 3: // PI rotation
-                affineTransform.translate(width, height);
-                affineTransform.rotate(Math.PI);
-                break;
-            case 4: // Flip Y
-                affineTransform.scale(1.0, -1.0);
-                affineTransform.translate(0, -height);
-                break;
-            case 5: // - PI/2 and Flip X
-                affineTransform.rotate(-Math.PI / 2);
-                affineTransform.scale(-1.0, 1.0);
-                break;
-            case 6: // -PI/2 and -width
-                affineTransform.translate(height, 0);
-                affineTransform.rotate(Math.PI / 2);
-                break;
-            case 7: // PI/2 and Flip
-                affineTransform.scale(-1.0, 1.0);
-                affineTransform.translate(-height, 0);
-                affineTransform.translate(0, width);
-                affineTransform.rotate(3 * Math.PI / 2);
-                break;
-            case 8: // PI / 2
-                affineTransform.translate(0, width);
-                affineTransform.rotate(3 * Math.PI / 2);
-                break;
-            default:
-                break;
+                case 1:
+                    return;
+                case 2: // Flip X
+                    affineTransform.scale(-1.0, 1.0);
+                    affineTransform.translate(-width, 0);
+                    break;
+                case 3: // PI rotation
+                    affineTransform.translate(width, height);
+                    affineTransform.rotate(Math.PI);
+                    break;
+                case 4: // Flip Y
+                    affineTransform.scale(1.0, -1.0);
+                    affineTransform.translate(0, -height);
+                    break;
+                case 5: // - PI/2 and Flip X
+                    affineTransform.rotate(-Math.PI / 2);
+                    affineTransform.scale(-1.0, 1.0);
+                    break;
+                case 6: // -PI/2 and -width
+                    affineTransform.translate(height, 0);
+                    affineTransform.rotate(Math.PI / 2);
+                    break;
+                case 7: // PI/2 and Flip
+                    affineTransform.scale(-1.0, 1.0);
+                    affineTransform.translate(-height, 0);
+                    affineTransform.translate(0, width);
+                    affineTransform.rotate(3 * Math.PI / 2);
+                    break;
+                case 8: // PI / 2
+                    affineTransform.translate(0, width);
+                    affineTransform.rotate(3 * Math.PI / 2);
+                    break;
+                default:
+                    break;
             }
 
             AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
@@ -108,8 +108,8 @@ public class ImageUtils {
         }
     }
 
-    /** 
-     * 根据尺寸图片居中裁剪 
+    /**
+     * 根据尺寸图片居中裁剪
      */
     public static void cutCenterImage(String src, String dest, int w, int h) throws IOException {
         String format = StringUtils.substringAfterLast(src, ".");
@@ -127,8 +127,8 @@ public class ImageUtils {
 
     }
 
-    /** 
-     * 图片裁剪二分之一 
+    /**
+     * 图片裁剪二分之一
      */
     public static void cutHalfImage(String src, String dest) throws IOException {
         String format = StringUtils.substringAfterLast(src, ".");
@@ -147,8 +147,8 @@ public class ImageUtils {
         ImageIO.write(bi, format, new File(dest));
     }
 
-    /** 
-     * 图片裁剪通用接口 
+    /**
+     * 图片裁剪通用接口
      */
 
     public static void cutImage(String src, String dest, int x, int y, int w, int h) throws IOException {
@@ -166,19 +166,36 @@ public class ImageUtils {
 
     }
 
-    /** 
-     * 图片缩放 
+    /**
+     * @param is     输入流
+     * @param dest   输出文件路径字符串
+     * @param width
+     * @param height
+     * @throws IOException
      */
-    public static void zoomImage(String src, String dest, int w, int h) throws IOException {
-        double wr = 0, hr = 0;
-        File srcFile = new File(src);
+    public static void zoomImage(InputStream is, String dest, int width, int height) throws IOException {
         File destFile = new File(dest);
-        BufferedImage bufImg = ImageIO.read(srcFile);
-        Image itemp = bufImg.getScaledInstance(w, h, BufferedImage.SCALE_SMOOTH);
-        wr = w * 1.0 / bufImg.getWidth();
-        hr = h * 1.0 / bufImg.getHeight();
-        AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(wr, hr), null);
-        itemp = ato.filter(bufImg, null);
+        BufferedImage bufImg = ImageIO.read(is);
+        if (width <= 0) {
+            width = bufImg.getWidth();
+        }
+        if (height <= 0) {
+            height = bufImg.getHeight();
+        }
+        Image itemp = bufImg.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
+        double ratio; // 缩放比例
+        if ((bufImg.getHeight() > height) || (bufImg.getWidth() > width)) {
+            double ratioHeight = (new Integer(height)).doubleValue() / bufImg.getHeight();
+            double ratioWhidth = (new Integer(width)).doubleValue() / bufImg.getWidth();
+            if (ratioHeight > ratioWhidth) {
+                ratio = ratioHeight;
+            } else {
+                ratio = ratioWhidth;
+            }
+            AffineTransformOp op = new AffineTransformOp(AffineTransform//仿射转换
+                    .getScaleInstance(ratio, ratio), null);//返回表示剪切变换的变换
+            itemp = op.filter(bufImg, null);//转换源 BufferedImage 并将结果存储在目标 BufferedImage 中。
+        }
         ImageIO.write((BufferedImage) itemp, dest.substring(dest.lastIndexOf(".") + 1), destFile);
     }
 }
