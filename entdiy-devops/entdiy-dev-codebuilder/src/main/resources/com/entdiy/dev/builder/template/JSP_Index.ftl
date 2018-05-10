@@ -36,51 +36,51 @@
                    <#list entityFields as entityField>
                    <#if entityField.list>
                        <#if entityField.enumField>
-                       }, {
-                           label: "${entityField.title}",
-                           name: "${entityField.fieldName}",
-                           formatter: "select",
-                           searchoptions: {
-                               valueJsonString: "<tags:json value="${r"${"}${entityField.fieldName}Map${r"}"}"/>"
-                           },
+                   }, {
+                       label: "${entityField.title}",
+                       name: "${entityField.fieldName}",
+                       formatter: "select",
+                       searchoptions: {
+                           valueJson: ${r"${"}${entityField.fieldName}Json${r"}"}
+                       },
                        <#elseif entityField.fieldType=="Entity">
-                       }, {
-                           label: "${entityField.title}",
-                           name: "${entityField.fieldName}.display",
-                           index: "${entityField.fieldName}",
+                   }, {
+                       label: "${entityField.title}",
+                       name: "${entityField.fieldName}.display",
+                       index: "${entityField.fieldName}",
                        <#elseif entityField.fieldType=="LocalizedLabel">
-                       }, {
-                           label: "${entityField.title}",
-                           name: "${entityField.fieldName}.zhCN",
-                           index: "${entityField.fieldName}.zhCN",
+                   }, {
+                       label: "${entityField.title}",
+                       name: "${entityField.fieldName}.zhCN",
+                       index: "${entityField.fieldName}.zhCN",
                        <#else>
-                       }, {
-                           label: "${entityField.title}",
-                           name: "${entityField.fieldName}",
+                   }, {
+                       label: "${entityField.title}",
+                       name: "${entityField.fieldName}",
                        </#if>
                        <#if entityField.listHidden>
-                           hidden: true,
+                       hidden: true,
                        </#if>
                        <#if entityField.fieldType=="Boolean">
-                           formatter: "checkbox",
+                       formatter: "checkbox",
                        </#if>
                        <#if entityField.fieldType=="LocalDate">
-                           formatter: "date",
+                       formatter: "date",
                        </#if>
                        <#if entityField.fieldType=="LocalDateTime">
-                           formatter: "timestamp",
+                       formatter: "timestamp",
                        </#if>
                        <#if entityField.fieldType=="Integer">
-                           formatter: "integer",
+                       formatter: "integer",
                        </#if>
                        <#if entityField.fieldType=="BigDecimal">
-                           formatter: "number",
+                       formatter: "number",
                        </#if>
                        <#if entityField.fieldType=="String">
-                           width: ${entityField.listWidth},
-                           align: "${entityField.listAlign}",
+                       width: ${entityField.listWidth},
+                       align: "${entityField.listAlign}",
                        </#if>
-                           editable: true
+                       editable: true
                    </#if>
                    </#list>
                    }],

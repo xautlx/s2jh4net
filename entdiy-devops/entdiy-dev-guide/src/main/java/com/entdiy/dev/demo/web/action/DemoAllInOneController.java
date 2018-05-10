@@ -31,13 +31,13 @@ import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.util.DateUtils;
-import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.dev.demo.entity.DemoProduct;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
 import com.entdiy.dev.demo.service.DemoProductService;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
 import com.entdiy.security.DefaultAuthUserDetails;
+import com.entdiy.support.web.filter.RequestContextFilter;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.service.AttachmentFileService;
 import com.google.common.collect.Lists;
@@ -185,7 +185,7 @@ public class DemoAllInOneController {
         model.addAttribute("initSelectOption", initSelectOption);
 
         //二维码组件使用
-        model.addAttribute("webContextFullUrl", ServletUtils.getRequestFullContextURL(request));
+        model.addAttribute("webContextFullUrl", RequestContextFilter.getFullContextURL());
 
         model.addAttribute("user", userService.findByAccount(accountService.findByUsername(Account.AuthTypeEnum.admin, "manager")));
 

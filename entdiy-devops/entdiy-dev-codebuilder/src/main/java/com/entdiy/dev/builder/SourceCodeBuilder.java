@@ -183,12 +183,15 @@ public class SourceCodeBuilder {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setListFixed(true);
                     entityCodeField.setListAlign("center");
-                } else if (fieldType.getSimpleName() == "LocalizedLabel") {
+                } else if ("LocalizedLabel".equals(fieldType.getSimpleName())) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setListFixed(true);
                     //根据Json注解设定合理的列宽
                     entityCodeField.setListWidth(150);
                     entityCodeField.setListAlign("center");
+                }else if ("LocalizedText".equals(fieldType.getSimpleName())) {
+                    entityCodeField = new EntityCodeField();
+                    entityCodeField.setList(false);
                 } else if (AbstractPersistableEntity.class.isAssignableFrom(fieldType)) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setFieldType("Entity");

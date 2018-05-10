@@ -20,7 +20,10 @@ package com.entdiy.sys.entity;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.entity.BaseUuidEntity;
+import com.entdiy.core.web.json.JsonViews;
+import com.entdiy.support.web.filter.RequestContextFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -41,22 +44,27 @@ public class AttachmentFile extends BaseUuidEntity {
 
     @MetaData(value = "所属对象Class")
     @Column(length = 512, nullable = true)
+    @JsonView(JsonViews.Admin.class)
     private String sourceType;
 
     @MetaData(value = "所属对象ID")
     @Column(length = 64, nullable = true)
+    @JsonView(JsonViews.Admin.class)
     private String sourceId;
 
     @MetaData(value = "所属分类", comments = "同一个对象类型下面，附件分类，如产品图片，参考文档等")
     @Column(length = 256, nullable = true)
+    @JsonView(JsonViews.Admin.class)
     private String sourceCategory = GlobalConstant.DEFAULT_VALUE;
 
     @MetaData(value = "显示排序号", tooltips = "相对排序号，取集合索引下标，数字越大越靠后显示")
     @Column(nullable = true)
+    @JsonView(JsonViews.Admin.class)
     private Integer orderIndex = 0;
 
     @MetaData(value = "附件上传文件名称")
     @Column(length = 512, nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private String fileRealName;
 
     @MetaData(value = "文件描述")
@@ -66,26 +74,32 @@ public class AttachmentFile extends BaseUuidEntity {
 
     @MetaData(value = "附件扩展名")
     @Column(length = 32, nullable = true)
+    @JsonView(JsonViews.Admin.class)
     private String fileExtension;
 
     @MetaData(value = "附件大小")
     @Column(nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private Long fileLength;
 
     @MetaData(value = "附件MIME类型")
     @Column(length = 256, nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private String fileContentType;
 
     @MetaData(value = "相对存储路径")
     @Column(length = 512, nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private String relativePath;
 
     @MetaData(value = "存储路径前缀", comments = "如果是应用本地存储则存放文件所在磁盘路径前缀；如果是CDN网上存储则存放HTTP访问前缀")
     @Column(length = 512, nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private String storePrefix;
 
     @MetaData(value = "是否CDN存储模式")
     @Column(length = 512, nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private Boolean storeCdnMode;
 
     @Transient
@@ -97,7 +111,7 @@ public class AttachmentFile extends BaseUuidEntity {
         if (storeCdnMode) {
             return storePrefix + relativePath;
         } else {
-            return "/pub/file/view/" + getId();
+            return RequestContextFilter.getFullContextURL() + "/pub/file/view/" + getId();
         }
     }
 }

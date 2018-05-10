@@ -29,6 +29,7 @@ import com.entdiy.security.PasswordService;
 import com.entdiy.support.service.DynamicConfigService;
 import com.entdiy.support.service.FreemarkerService;
 import com.entdiy.support.service.MailService;
+import com.entdiy.support.web.filter.RequestContextFilter;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,22 +137,22 @@ public class AccountService extends BaseService<Account, Long> {
         return entity;
     }
 
-    public void requestResetPassword(String webContextUrl, Account account) {
+    public void requestResetPassword(Account account) {
         String email = account.getEmail();
         Assert.isTrue(StringUtils.isNotBlank(email), "User email required");
         String suject = dynamicConfigService.getString("cfg.account.reset.password.notify.email.title", "申请重置密码邮件");
         account.setRandomCode(UidUtils.buildUID());
         accountDao.save(account);
 
-        webContextUrl += ("/admin/pub/password/reset?email=" + email + "&code=" + account.getRandomCode());
+        String url = RequestContextFilter.getFullContextURL() + ("/admin/pub/password/reset?email=" + email + "&code=" + account.getRandomCode());
         if (freemarkerService != null) {
             Map<String, Object> params = Maps.newHashMap();
             params.put("account", account);
-            params.put("resetPasswordLink", webContextUrl.toString());
+            params.put("resetPasswordLink", url);
             String contents = freemarkerService.processTemplateByFileName("PASSWORD_RESET_NOTIFY_EMAIL", params);
             mailService.sendHtmlMail(suject, contents, true, email);
         } else {
-            mailService.sendHtmlMail(suject, webContextUrl.toString(), true, email);
+            mailService.sendHtmlMail(suject, url, true, email);
         }
     }
 //

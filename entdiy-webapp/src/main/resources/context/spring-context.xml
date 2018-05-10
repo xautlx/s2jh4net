@@ -40,4 +40,6 @@
     <!-- 建议只定义@Async注解使用，尽量不用@Scheduled而改用后面的Quartz方式便于文本定义调整定时策略 -->
     <task:annotation-driven executor="handlingAsyncTaskExecutor" scheduler="springScheduler"/>
 
+    <!-- 框架默认实现应用本地存储附件，可根据项目情况调整为特定CDN存储实现 -->
+    <bean id="attachmentFileStoreService" class="com.entdiy.sys.service.LocalAttachmentFileStoreService"/>
 </beans>

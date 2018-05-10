@@ -15,7 +15,7 @@
     <div class="form-body">
     <#list entityFields as entityField>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label">${entityField.title}</label>
                     <div class="controls">
@@ -35,6 +35,22 @@
                         <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
                         <#elseif (entityField.fieldType=='String' && entityField.listWidth gt 255)>
                         <form:textarea path="${entityField.fieldName}" rows="3" class="form-control"/>
+                        <#elseif entityField.fieldType=='LocalizedLabel'>
+                        <ul class="list-group" data-multilocale="true">
+                            <c:forEach var="item" items="${r"${entity."}${entityField.fieldName}${r".items}"}" varStatus="status">
+                                <li class="list-group-item">
+                                    <input type="text" class="form-control" name="${entityField.fieldName}${r".${item.key}"}" value="${r"${item.value}"}" title="${r"${item.name}"}"/>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                        <#elseif entityField.fieldType=='LocalizedText'>
+                        <ul class="list-group" data-multilocale="true">
+                            <c:forEach var="item" items="${r"${entity."}${entityField.fieldName}${r".items}"}" varStatus="status">
+                                <li class="list-group-item">
+                                    <textarea rows="3" class="form-control" name="${entityField.fieldName}${r".${item.key}"}" value="${r"${item.value}"}" title="${r"${item.name}"}"/>
+                                </li>
+                            </c:forEach>
+                        </ul>
                         <#else>
                         <form:input path="${entityField.fieldName}" class="form-control"/>
                         </#if>
@@ -58,6 +74,22 @@
                                 <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
                                 <#elseif (entityField.fieldType=='String' && entityField.listWidth gt 255)>
                                 <form:textarea path="${entityField.fieldName}" rows="3" class="form-control"/>
+                                <#elseif entityField.fieldType=='LocalizedLabel'>
+                                <ul class="list-group" data-multilocale="true">
+                                    <c:forEach var="item" items="${r"${entity."}${entityField.fieldName}${r".items}"}" varStatus="status">
+                                        <li class="list-group-item">
+                                            <input type="text" class="form-control" name="${entityField.fieldName}${r".${item.key}"}" value="${r"${item.value}"}" title="${r"${item.name}"}"/>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                                <#elseif entityField.fieldType=='LocalizedText'>
+                                <ul class="list-group" data-multilocale="true">
+                                    <c:forEach var="item" items="${r"${entity."}${entityField.fieldName}${r".items}"}" varStatus="status">
+                                        <li class="list-group-item">
+                                            <textarea rows="3" class="form-control" name="${entityField.fieldName}${r".${item.key}"}" value="${r"${item.value}"}" title="${r"${item.name}"}"/>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
                                 <#else>
                                 <form:input path="${entityField.fieldName}" class="form-control"/>
                                 </#if>

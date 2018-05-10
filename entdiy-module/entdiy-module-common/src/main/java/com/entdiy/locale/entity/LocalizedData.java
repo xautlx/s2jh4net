@@ -18,10 +18,11 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.context.SpringContextHolder;
 import com.entdiy.core.util.reflection.ReflectionUtils;
 import com.entdiy.core.web.json.JsonViews;
-import com.entdiy.locale.web.RequestLocaleHolder;
+import com.entdiy.support.web.filter.RequestContextFilter;
 import com.entdiy.sys.entity.DataDict;
 import com.entdiy.sys.service.DataDictService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -34,15 +35,15 @@ import java.util.List;
  * 对于一些需要从数据层面支持国际化的应用，以嵌套属性的形式对属性值进行多国语言设置处理
  * 并基于前端传入的国际化标识，返回对应国际化数据值
  *
- * @see com.entdiy.locale.web.RequestLocaleHolder
- * @see com.entdiy.support.web.RequestContextFilter
+ * @see RequestContextFilter
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 public class LocalizedData {
 
     public final static String DataDict_Locales = "DataDict_Locales";
 
-    @MetaData("简体中文")
+    @MetaData(value = "简体中文", comments = "此属性为必填属性，确保至少会返回有值")
     private String zhCN;
 
     @MetaData("繁体中文")
@@ -55,15 +56,24 @@ public class LocalizedData {
     private String jaJP;
 
     @JsonView(JsonViews.App.class)
-    public String getLocalizedLabel() {
+    public String getLocalizedText() {
         //从Request请求获取指定的语言属性
-        String locale = RequestLocaleHolder.getRequestLocale();
+        String locale = RequestContextFilter.getRequestLocale();
         //如果未指定，默认取启用语言的第一个
         locale = StringUtils.isBlank(locale) ? "zh-CN" : locale;
         //移除中横线以匹配对应属性名称
         locale = StringUtils.remove(locale, "-");
         Object val = ReflectionUtils.invokeGetterMethod(this, locale);
-        return val == null ? null : val.toString();
+        //容错处理，如果指定语言未配置数据，则返回默认的中文数据
+        if (val == null) {
+            return getZhCN();
+        }
+        String str = val.toString();
+        if (StringUtils.isBlank(str)) {
+            return getZhCN();
+        } else {
+            return str;
+        }
     }
 
     @JsonIgnore

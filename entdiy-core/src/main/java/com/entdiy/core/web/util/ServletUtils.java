@@ -522,19 +522,6 @@ public class ServletUtils {
         request.setAttribute(key, value);
     }
 
-    private static String REQUEST_FULL_CONTEXT_URL;
-
-    public static String getRequestFullContextURL(HttpServletRequest request) {
-        if (REQUEST_FULL_CONTEXT_URL == null) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(request.getScheme()).append("://").append(request.getServerName());
-            sb.append(request.getServerPort() == 80 ? "" : ":" + request.getServerPort());
-            sb.append(request.getContextPath());
-            REQUEST_FULL_CONTEXT_URL = sb.toString();
-        }
-        return REQUEST_FULL_CONTEXT_URL;
-    }
-
     /**
      * 从HTTP请求提取AccessTkoen
      *

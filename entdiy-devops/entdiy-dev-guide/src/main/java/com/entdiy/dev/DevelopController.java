@@ -19,9 +19,9 @@ package com.entdiy.dev;
 
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.web.AppContextHolder;
-import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.api.ClientValidationAuthenticationFilter;
+import com.entdiy.support.web.filter.RequestContextFilter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.vladsch.flexmark.ast.Node;
@@ -144,7 +144,7 @@ public class DevelopController {
     @ResponseBody
     public void apiSmokeTest(HttpServletRequest httpServletRequest,
                              HttpServletResponse httpServletResponse) throws Exception {
-        String url = ServletUtils.getRequestFullContextURL(httpServletRequest);
+        String url = RequestContextFilter.getFullContextURL();
         RestTemplate restTemplate = new RestTemplate();
         List<String> responseList = Lists.newArrayList();
 

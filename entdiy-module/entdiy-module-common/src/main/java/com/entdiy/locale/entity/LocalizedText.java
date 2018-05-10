@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
 
@@ -30,6 +31,7 @@ import javax.persistence.Lob;
 public class LocalizedText extends LocalizedData {
 
     @Lob
+    @Column(nullable = false)
     @JsonIgnore
     private String zhCN;
 

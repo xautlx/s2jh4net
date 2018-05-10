@@ -15,6 +15,7 @@
 package com.entdiy.locale.entity;
 
 import com.entdiy.core.web.json.JsonViews;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,12 +26,13 @@ import javax.persistence.Embeddable;
 /**
  * 短文本类型国际化数据
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Getter
 @Setter
 @Embeddable
 public class LocalizedLabel extends LocalizedData {
 
-    @Column(length = 256, nullable = true)
+    @Column(length = 256, nullable = false)
     @JsonView(JsonViews.Admin.class)
     private String zhCN;
 

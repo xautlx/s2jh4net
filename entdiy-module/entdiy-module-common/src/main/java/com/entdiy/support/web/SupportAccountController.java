@@ -22,7 +22,6 @@ import com.entdiy.auth.service.AccountService;
 import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.captcha.CaptchaUtils;
-import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.annotation.AuthAccount;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +56,7 @@ public class SupportAccountController {
             return OperationResult.buildFailureResult("当前账号未设定注册邮箱，请联系管理员先设置邮箱后再进行此操作");
         }
 
-        accountService.requestResetPassword(ServletUtils.getRequestFullContextURL(request), account);
+        accountService.requestResetPassword(account);
         return OperationResult.buildSuccessResult("找回密码请求处理成功。重置密码邮件已发送至：" + email);
     }
 
