@@ -32,7 +32,7 @@ case "$1" in
                 -v $config_dir:/etc/entdiy/config \
                 -e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWD} \
                 -e TZ="Asia/Shanghai" \
-                -d mysql:5.7.20
+                -d mysql:5.7.20 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
     echo docker started for $docker_name.
     ;;
