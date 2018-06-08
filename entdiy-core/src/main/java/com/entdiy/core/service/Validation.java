@@ -38,6 +38,12 @@ public class Validation {
         }
     }
 
+    public static void assertAuthDataAccess(boolean expression) {
+        if (!expression) {
+            throw new ValidationException("数据访问未授权");
+        }
+    }
+
     public static void notNull(Object object, String message) {
         if (object == null) {
             throw new ValidationException(message);

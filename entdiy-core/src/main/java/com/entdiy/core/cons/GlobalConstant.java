@@ -21,6 +21,7 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.EnumKeyLabelPair;
 import com.google.common.collect.Maps;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class GlobalConstant {
@@ -69,14 +70,19 @@ public class GlobalConstant {
     }
 
     @MetaData("类似OAuth的APP认证AccessToken请求Header名称")
-    public final static String APP_AUTH_ACCESS_TOKEN = "ACCESS-TOKEN";
+    public final static String APP_AUTH_ACCESS_TOKEN = "Access-Token";
 
     @MetaData("标识APP端语言选项，形如en-US|zh-CN|zh-TW|ja-JP等，用于服务端必要的国际化处理")
-    public final static String APP_LOCALE = "APP-LOCALE";
+    public final static String APP_LOCALE = "App-Locale";
 
     @MetaData("ConfigProperty:是否全局禁用开放手机号短信发送功能")
     public final static String CFG_SMS_DISABLED = "SMS_DISABLED";
 
     @MetaData("DataDict:消息类型")
     public final static String DATADICT_MESSAGE_TYPE = "MESSAGE_TYPE";
+
+    /**
+     * 兼容MySQL的最大时间值。直接用LocalDateTime.MAX会导致MySQL存储异常。
+     */
+    public final static LocalDateTime MAX_LOCAL_DATE_TIME = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
 }

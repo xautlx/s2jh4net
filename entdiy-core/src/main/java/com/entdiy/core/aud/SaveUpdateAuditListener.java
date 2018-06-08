@@ -40,6 +40,8 @@ public class SaveUpdateAuditListener {
         DefaultAuditable auditable = (DefaultAuditable) target;
         if (auditable.getCreateDate() == null) {
             auditable.setCreateDate(DateUtils.currentDateTime());
+            //设置初始更新时间为创建时间，便于有些业务按照更新时间降序排列的需求
+            auditable.setUpdateDate(auditable.getCreateDate());
         }
 
         AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();

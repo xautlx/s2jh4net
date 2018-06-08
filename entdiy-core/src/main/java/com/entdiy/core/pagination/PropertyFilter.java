@@ -576,7 +576,7 @@ public class PropertyFilter {
      */
     public static Sort buildSortFromHttpRequest(HttpServletRequest request) {
         String sidx = StringUtils.isBlank(request.getParameter("sidx")) ? "id" : request.getParameter("sidx");
-        Direction sord = "desc".equalsIgnoreCase(request.getParameter("sord")) ? Direction.DESC : Direction.ASC;
+        Direction sord = "asc".equalsIgnoreCase(request.getParameter("sord")) ? Direction.ASC : Direction.DESC;
         Sort sort = null;
 
         //按照逗号切分支持多属性排序
@@ -607,9 +607,9 @@ public class PropertyFilter {
                     //排序属性后面空格跟随排序方向定义
                     String sortorder = sidxItemWithOrder[1];
                     if (sort == null) {
-                        sort = new Sort("desc".equalsIgnoreCase(sortorder) ? Direction.DESC : Direction.ASC, sortname);
+                        sort = new Sort("asc".equalsIgnoreCase(sortorder) ? Direction.ASC : Direction.DESC, sortname);
                     } else {
-                        sort = sort.and(new Sort("desc".equalsIgnoreCase(sortorder) ? Direction.DESC : Direction.ASC, sortname));
+                        sort = sort.and(new Sort("asc".equalsIgnoreCase(sortorder) ? Direction.ASC : Direction.DESC, sortname));
                     }
                 }
             }

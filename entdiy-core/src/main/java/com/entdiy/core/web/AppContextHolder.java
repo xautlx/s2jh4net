@@ -28,6 +28,9 @@ import org.springframework.util.Assert;
 import javax.servlet.ServletContext;
 import java.io.File;
 
+/**
+ * 参数初始化入口： @see com.entdiy.core.context.SpringPropertiesHolder
+ */
 public class AppContextHolder {
 
     private static Logger logger = LoggerFactory.getLogger(AppContextHolder.class);

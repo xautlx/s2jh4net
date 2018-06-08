@@ -210,7 +210,7 @@ public class DateUtils {
     private static LocalDateTime currentDateTime;
 
     public static void setCurrentDateTime(LocalDateTime localDateTime) {
-        Validation.isTrue(AppContextHolder.isDevMode(), "当前操作只能在开发测试运行模式才可用");
+        Validation.isTrue(AppContextHolder.isDevMode() || AppContextHolder.isDemoMode(), "当前操作只能在开发演示运行模式才可用");
         if (localDateTime == null) {
             currentDateTime = null;
         } else {
@@ -228,7 +228,7 @@ public class DateUtils {
         if (currentDateTime == null) {
             return LocalDateTime.now();
         }
-        if (AppContextHolder.isDevMode()) {
+        if (AppContextHolder.isDevMode() || AppContextHolder.isDemoMode()) {
             return currentDateTime;
         } else {
             return LocalDateTime.now();

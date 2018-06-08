@@ -21,6 +21,7 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
@@ -36,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.UUID;
 
 public class ImageUtils {
 
@@ -168,12 +170,16 @@ public class ImageUtils {
 
     /**
      * @param is     输入流
-     * @param dest   输出文件路径字符串
-     * @param width
-     * @param height
+     * @param dest   输出文件路径字符串，如果为null则写入临时文件
+     * @param width  缩小宽度，如果为-1则表示不做设置
+     * @param height 缩小高度，如果为-1则表示不做设置
+     * @return 缩小后的图片File对象
      * @throws IOException
      */
-    public static void zoomImage(InputStream is, String dest, int width, int height) throws IOException {
+    public static File zoomImage(InputStream is, String dest, int width, int height) throws IOException {
+        if (StringUtils.isBlank(dest)) {
+            dest = FileUtils.getTempDirectoryPath() + File.separator + "IMAGE_TEMP_" + UUID.randomUUID();
+        }
         File destFile = new File(dest);
         BufferedImage bufImg = ImageIO.read(is);
         if (width <= 0) {
@@ -197,5 +203,6 @@ public class ImageUtils {
             itemp = op.filter(bufImg, null);//转换源 BufferedImage 并将结果存储在目标 BufferedImage 中。
         }
         ImageIO.write((BufferedImage) itemp, dest.substring(dest.lastIndexOf(".") + 1), destFile);
+        return destFile;
     }
 }
