@@ -18,8 +18,11 @@
 package com.entdiy.auth.entity;
 
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.entity.BaseNativeEntity;
+import com.entdiy.core.entity.BaseEntity;
+import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,9 +46,13 @@ import java.util.stream.Collectors;
 @MetaData(value = "管理端账号信息")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Audited
-public class User extends BaseNativeEntity {
+public class User extends BaseEntity<Long> {
 
-    private static final long serialVersionUID = 8728775138491827366L;
+    @MetaData("主键")
+    @Id
+    @JsonProperty
+    @JsonView(JsonViews.Public.class)
+    private Long id;
 
     @MetaData(value = "登录账户对象")
     @OneToOne(cascade = CascadeType.ALL)

@@ -54,7 +54,7 @@ public class UserService extends BaseService<User, Long> {
 
     @Transactional(readOnly = true)
     public User findByAccount(Account account) {
-        return userDao.findByAccount(account);
+        return findOne(account.getId());
     }
 
     @Transactional(readOnly = true)
@@ -63,11 +63,14 @@ public class UserService extends BaseService<User, Long> {
         if (authUserDetails == null) {
             return null;
         }
-        return userDao.findByAccount(accountService.findOne(authUserDetails.getAccountId()));
+        return findOne(authUserDetails.getAccountId());
     }
 
     @Override
     public User save(User entity) {
+        if (entity.isNew()) {
+            entity.setId(entity.getAccount().getId());
+        }
         return super.save(entity);
     }
 

@@ -18,8 +18,8 @@ import com.entdiy.auth.entity.Account;
 import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.security.AuthUserDetails;
 import com.entdiy.security.annotation.AuthAccount;
+import org.apache.shiro.authz.UnauthenticatedException;
 import org.springframework.core.MethodParameter;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -59,12 +59,15 @@ public class AuthAccountMethodProcessor implements HandlerMethodArgumentResolver
         AuthAccount ann = parameter.getParameterAnnotation(AuthAccount.class);
 
         AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
+        if (ann.required() && authUserDetails == null) {
+            throw new UnauthenticatedException();
+        }
         if (authUserDetails == null) {
             return null;
         }
         Account account = entityManager.find(Account.class, authUserDetails.getAccountId());
-        if (ann.required()) {
-            Assert.notNull(account, "Auth account required.");
+        if (ann.required() && account == null) {
+            throw new UnauthenticatedException();
         }
         if (account != null) {
             entityManager.detach(account);

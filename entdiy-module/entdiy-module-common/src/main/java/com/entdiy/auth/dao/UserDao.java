@@ -17,16 +17,11 @@
  */
 package com.entdiy.auth.dao;
 
-import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.User;
 import com.entdiy.core.dao.jpa.BaseDao;
-import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.QueryHint;
 
 @Repository
 public interface UserDao extends BaseDao<User, Long> {
-    @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    User findByAccount(Account account);
+
 }

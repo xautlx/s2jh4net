@@ -21,6 +21,8 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.entity.EnumKeyLabelPair;
 import com.entdiy.core.web.json.JsonViews;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -43,7 +45,8 @@ public class OauthAccount extends BaseNativeEntity {
 
     @MetaData(value = "绑定关联账户对象")
     @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "account_id", nullable = true)
+    @JsonIgnore
     private Account account;
 
     @MetaData(value = "账户类型")
@@ -57,20 +60,138 @@ public class OauthAccount extends BaseNativeEntity {
     @Column(length = 64, nullable = false)
     private String oauthOpenId;
 
+    @JsonView(JsonViews.Admin.class)
+    @Embedded
+    private OauthAccessToken oauthAccessToken;
+
+    @JsonView(JsonViews.App.class)
+    @Embedded
+    private OauthUserinfo oauthUserinfo;
+
+
     public enum OauthTypeEnum implements EnumKeyLabelPair {
-        weixin {
+        WECHAT {
             @Override
             public String getLabel() {
                 return "微信";
             }
         },
 
-        alipay {
+        ALIPAY {
             @Override
             public String getLabel() {
                 return "支付宝";
             }
         }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Getter
+    @Setter
+    @Embeddable
+    public static class OauthAccessToken {
+
+        @JsonView(JsonViews.App.class)
+        private String accessToken;
+
+        @JsonView(JsonViews.Admin.class)
+        private int expiresIn = -1;
+
+        @JsonIgnore
+        private String refreshToken;
+
+        @JsonView(JsonViews.Admin.class)
+        private String scope;
+
+        /**
+         * https://mp.weixin.qq.com/cgi-bin/announce?action=getannouncement&announce_id=11513156443eZYea&version=&lang=zh_CN.
+         * 本接口在scope参数为snsapi_base时不再提供unionID字段。
+         */
+        @JsonView(JsonViews.Admin.class)
+        private String unionId;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Getter
+    @Setter
+    @Embeddable
+    public static class OauthUserinfo {
+
+        /**
+         * 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息，只有openid和UnionID（在该公众号绑定到了微信开放平台账号时才有）
+         */
+        @JsonView(JsonViews.Admin.class)
+        private Boolean subscribe;
+
+        @JsonView(JsonViews.Admin.class)
+        private String openId;
+
+        @JsonView(JsonViews.App.class)
+        private String nickname;
+
+        /**
+         * 性别描述信息：男、女、未知等.
+         */
+        @JsonView(JsonViews.App.class)
+        private String sexDesc;
+
+        /**
+         * 性别表示：1，2等数字.
+         */
+        @JsonView(JsonViews.Admin.class)
+        private Integer sex;
+
+        /**
+         * 用户的语言，简体中文为zh_CN
+         */
+        @JsonView(JsonViews.Admin.class)
+        private String language;
+
+        @JsonView(JsonViews.Admin.class)
+        private String city;
+
+        @JsonView(JsonViews.Admin.class)
+        private String province;
+
+        @JsonView(JsonViews.Admin.class)
+        private String country;
+
+        @Column(length = 1024)
+        @JsonView(JsonViews.App.class)
+        private String headImgUrl;
+
+        /**
+         * 用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
+         */
+        @JsonView(JsonViews.Admin.class)
+        private Long subscribeTime;
+        /**
+         * https://mp.weixin.qq.com/cgi-bin/announce?action=getannouncement&announce_id=11513156443eZYea&version=&lang=zh_CN
+         * <pre>
+         * 只有在将公众号绑定到微信开放平台帐号后，才会出现该字段。
+         * 另外，在用户未关注公众号时，将不返回用户unionID信息。
+         * 已关注的用户，开发者可使用“获取用户基本信息接口”获取unionID；
+         * 未关注用户，开发者可使用“微信授权登录接口”并将scope参数设置为snsapi_userinfo，获取用户unionID
+         * </pre>
+         */
+        @JsonView(JsonViews.Admin.class)
+        private String unionId;
+
+        @JsonView(JsonViews.Admin.class)
+        private String remark;
+
+        @JsonView(JsonViews.Admin.class)
+        private Integer groupId;
+
+        /** 逗号分隔 */
+        @JsonView(JsonViews.Admin.class)
+        private String tagIds;
+
+        /**
+         * 用户特权信息，json 数组，如微信沃卡用户为（chinaunicom）.
+         */
+        @JsonView(JsonViews.Admin.class)
+        private String privileges;
     }
 
     @Override

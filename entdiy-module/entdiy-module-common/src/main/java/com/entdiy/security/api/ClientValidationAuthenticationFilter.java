@@ -40,7 +40,7 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientValidationAuthenticationFilter.class);
 
-    public static final String HEADER_NAME_SIGN = "sign";
+    public static final String HEADER_NAME_SIGN = "Sign-Value";
 
     @Getter
     @Setter
@@ -78,10 +78,10 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
                 return true;
             }
 
-            String appkey = getValidationValue(request, "appkey");
-            String timestamp = getValidationValue(request, "timestamp");
+            String appkey = getValidationValue(request, "App-Key");
+            String timestamp = getValidationValue(request, "Sign-Timestamp");
             //客户端提供的此值建议保持足够的随机性，可以考虑使用UUID之类的全局唯一值
-            String nonce = getValidationValue(request, "nonce");
+            String nonce = getValidationValue(request, "Sign-Nonce");
 
 
             String secret = (String) appKeySecrets.get(appkey);
@@ -96,9 +96,10 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
             return true;
         } catch (ValidationException e) {
             message = e.getMessage();
+            logger.debug(message, e);
         } catch (Exception e) {
             message = "API Client Validation Error";
-            logger.error(message, e);
+            logger.warn(message, e);
         }
 
         HttpServletResponse httpResponse = WebUtils.toHttp(response);
