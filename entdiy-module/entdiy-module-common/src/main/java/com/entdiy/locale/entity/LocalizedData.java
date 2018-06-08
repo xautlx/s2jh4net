@@ -43,7 +43,7 @@ public class LocalizedData {
 
     public final static String DataDict_Locales = "DataDict_Locales";
 
-    @MetaData(value = "简体中文", comments = "此属性为必填属性，确保至少会返回有值")
+    @MetaData("简体中文")
     private String zhCN;
 
     @MetaData("繁体中文")
@@ -57,12 +57,7 @@ public class LocalizedData {
 
     @JsonView(JsonViews.App.class)
     public String getLocalizedText() {
-        //从Request请求获取指定的语言属性
-        String locale = RequestContextFilter.getRequestLocale();
-        //如果未指定，默认取启用语言的第一个
-        locale = StringUtils.isBlank(locale) ? "zh-CN" : locale;
-        //移除中横线以匹配对应属性名称
-        locale = StringUtils.remove(locale, "-");
+        String locale = RequestContextFilter.getRequestLocalePropName();
         Object val = ReflectionUtils.invokeGetterMethod(this, locale);
         //容错处理，如果指定语言未配置数据，则返回默认的中文数据
         if (val == null) {
@@ -88,6 +83,8 @@ public class LocalizedData {
             LocalizedDataItem item = new LocalizedDataItem();
             item.setKey(key);
             item.setName(locale.getPrimaryValue());
+            String required = locale.getSecondaryValue();
+            item.setRequired(StringUtils.isNotBlank(required) ? required : "false");
             item.setValue(val == null ? null : val.toString());
             items.add(item);
         }
@@ -100,5 +97,6 @@ public class LocalizedData {
         private String key;
         private String name;
         private String value;
+        private String required;
     }
 }

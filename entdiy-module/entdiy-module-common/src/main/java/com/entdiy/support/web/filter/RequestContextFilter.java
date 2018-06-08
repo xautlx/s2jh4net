@@ -15,6 +15,8 @@
 package com.entdiy.support.web.filter;
 
 import com.entdiy.core.cons.GlobalConstant;
+import com.entdiy.core.context.SpringPropertiesHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NamedThreadLocal;
@@ -26,7 +28,7 @@ import java.io.IOException;
 
 public class RequestContextFilter implements Filter {
 
-    private final Logger logger = LoggerFactory.getLogger(RequestContextFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestContextFilter.class);
 
     @Override
     public void init(FilterConfig arg0) {
@@ -41,15 +43,41 @@ public class RequestContextFilter implements Filter {
     /** 标识APP端语言选项，形如en-US|zh-CN|zh-TW|ja-JP等，用于服务端必要的国际化处理 */
     private static ThreadLocal<String> requestLocale = new NamedThreadLocal("RequestLocale");
 
+    /**
+     * 返回形如en-US|zh-CN|zh-TW|ja-JP的当前国际化标识
+     *
+     * @return
+     */
     public static String getRequestLocale() {
-        return requestLocale.get();
+        String locale = requestLocale.get();
+        //如果未指定，默认取不为空约束的中文属性值
+        locale = StringUtils.isBlank(locale) ? "zh-CN" : locale;
+        return locale;
+    }
+
+    /**
+     * 返回形如enUS|zhCN|zhTW|jaJP的当前国际化对应Java属性名称
+     *
+     * @return
+     */
+    public static String getRequestLocalePropName() {
+        String locale = getRequestLocale();
+        //移除中横线以匹配对应属性名称
+        locale = StringUtils.remove(locale, "-");
+        return locale;
     }
 
     /** 前期通过过滤器把完整URL前缀组装好，以便在后续业务层使用 */
-    private static String REQUEST_FULL_CONTEXT_URL;
+    private static String WEB_CONTEXT_URI = null;
 
-    public static String getFullContextURL() {
-        return REQUEST_FULL_CONTEXT_URL;
+    public static String getWebContextUri() {
+        if (WEB_CONTEXT_URI == null) {
+            WEB_CONTEXT_URI = SpringPropertiesHolder.getProperty("web.context.uri");
+            if (logger.isInfoEnabled() && StringUtils.isNotBlank(WEB_CONTEXT_URI)) {
+                logger.info("Init WEB_CONTEXT_URI: {}", WEB_CONTEXT_URI);
+            }
+        }
+        return WEB_CONTEXT_URI;
     }
 
     @Override
@@ -59,13 +87,18 @@ public class RequestContextFilter implements Filter {
             requestLocale.set(req.getHeader(GlobalConstant.APP_LOCALE));
         }
 
-        if (REQUEST_FULL_CONTEXT_URL == null) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(req.getScheme()).append("://").append(req.getServerName());
-            sb.append(req.getServerPort() == 80 ? "" : ":" + req.getServerPort());
-            sb.append(req.getContextPath());
-            REQUEST_FULL_CONTEXT_URL = sb.toString();
-            logger.info("Init REQUEST_FULL_CONTEXT_URL: {}", REQUEST_FULL_CONTEXT_URL);
+        if (WEB_CONTEXT_URI == null) {
+            //优先取配置参数
+            String WEB_CONTEXT_URI = SpringPropertiesHolder.getProperty("web.context.uri");
+            //没有配置则动态基于HTTP请求计算
+            if (StringUtils.isBlank(WEB_CONTEXT_URI)) {
+                StringBuffer sb = new StringBuffer();
+                sb.append(req.getScheme()).append("://").append(req.getServerName());
+                sb.append(req.getServerPort() == 80 ? "" : ":" + req.getServerPort());
+                sb.append(req.getContextPath());
+                WEB_CONTEXT_URI = sb.toString();
+            }
+            logger.info("Init WEB_CONTEXT_URI: {}", WEB_CONTEXT_URI);
         }
 
         chain.doFilter(request, reponse);

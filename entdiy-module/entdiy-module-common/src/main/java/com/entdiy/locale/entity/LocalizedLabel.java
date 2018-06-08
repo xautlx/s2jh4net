@@ -32,7 +32,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class LocalizedLabel extends LocalizedData {
 
-    @Column(length = 256, nullable = false)
+    @Column(length = 256, nullable = true)
     @JsonView(JsonViews.Admin.class)
     private String zhCN;
 

@@ -31,7 +31,7 @@ import javax.persistence.Lob;
 public class LocalizedText extends LocalizedData {
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonIgnore
     private String zhCN;
 
