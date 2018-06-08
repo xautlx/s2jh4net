@@ -142,9 +142,8 @@ public class DevelopController {
     @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
     @RequestMapping(value = "/api/smoke-test", method = RequestMethod.GET)
     @ResponseBody
-    public void apiSmokeTest(HttpServletRequest httpServletRequest,
-                             HttpServletResponse httpServletResponse) throws Exception {
-        String url = RequestContextFilter.getFullContextURL();
+    public void apiSmokeTest(HttpServletResponse httpServletResponse) throws Exception {
+        String url = RequestContextFilter.getWebContextUri();
         RestTemplate restTemplate = new RestTemplate();
         List<String> responseList = Lists.newArrayList();
 

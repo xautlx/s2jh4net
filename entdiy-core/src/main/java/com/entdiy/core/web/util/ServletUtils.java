@@ -20,7 +20,6 @@ package com.entdiy.core.web.util;
 import ch.qos.logback.classic.ClassicConstants;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
-import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.entity.BaseEntity;
 import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.security.AuthUserDetails;
@@ -360,22 +359,6 @@ public class ServletUtils {
         return dataMap;
     }
 
-
-    /**
-     * 将URL进行解析处理，如果http打头直接返回，否则添加文件访问路径前缀
-     *
-     * @return
-     */
-    public static String parseReadFileUrl(HttpServletRequest request, String url) {
-        if (StringUtils.isBlank(url)) {
-            return null;
-        }
-        if (url.startsWith("http") || url.startsWith("itms-services://")) {
-            return url;
-        }
-        return getReadFileUrlPrefix(request) + url;
-    }
-
     /**
      * 将URL基于/切分，把路径中的中文部分做UTF8编码后再组装返回
      *
@@ -399,28 +382,6 @@ public class ServletUtils {
             logger.error(e.getMessage(), e);
         }
         return StringUtils.join(urls, "/");
-    }
-
-
-    private static String READ_FILE_URL_PREFIX;
-
-    /**
-     * 文件访问URL前缀：优先取 file.read.url.prefix 参数值，如果没有定义则取应用上下文
-     *
-     * @return
-     */
-    public static String getReadFileUrlPrefix(HttpServletRequest request) {
-        if (READ_FILE_URL_PREFIX == null) {
-            READ_FILE_URL_PREFIX = SpringPropertiesHolder.getProperty("file.read.url.prefix");
-            if (StringUtils.isBlank(READ_FILE_URL_PREFIX)) {
-                READ_FILE_URL_PREFIX = request.getContextPath();
-            }
-            if (READ_FILE_URL_PREFIX.endsWith(File.separator)) {
-                READ_FILE_URL_PREFIX = READ_FILE_URL_PREFIX.substring(0, READ_FILE_URL_PREFIX.length() - 1);
-            }
-            logger.info("Using READ_FILE_URL_PREFIX: {}", READ_FILE_URL_PREFIX);
-        }
-        return READ_FILE_URL_PREFIX;
     }
 
     public static boolean isMobileAndroidClient(HttpServletRequest request) {

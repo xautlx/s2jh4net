@@ -144,7 +144,7 @@ public class AccountService extends BaseService<Account, Long> {
         account.setRandomCode(UidUtils.buildUID());
         accountDao.save(account);
 
-        String url = RequestContextFilter.getFullContextURL() + ("/admin/pub/password/reset?email=" + email + "&code=" + account.getRandomCode());
+        String url = RequestContextFilter.getWebContextUri() + ("/admin/pub/password/reset?email=" + email + "&code=" + account.getRandomCode());
         if (freemarkerService != null) {
             Map<String, Object> params = Maps.newHashMap();
             params.put("account", account);

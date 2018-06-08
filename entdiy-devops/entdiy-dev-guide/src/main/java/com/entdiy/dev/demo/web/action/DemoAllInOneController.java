@@ -185,7 +185,7 @@ public class DemoAllInOneController {
         model.addAttribute("initSelectOption", initSelectOption);
 
         //二维码组件使用
-        model.addAttribute("webContextFullUrl", RequestContextFilter.getFullContextURL());
+        model.addAttribute("webContextFullUrl", RequestContextFilter.getWebContextUri());
 
         model.addAttribute("user", userService.findByAccount(accountService.findByUsername(Account.AuthTypeEnum.admin, "manager")));
 
