@@ -29,12 +29,15 @@ import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.admin.AdminFormAuthenticationFilter;
 import com.entdiy.security.annotation.AuthAccount;
+import com.entdiy.sys.entity.DistrictData;
 import com.entdiy.sys.service.AccountMessageService;
+import com.entdiy.sys.service.DistrictDataService;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -44,6 +47,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,6 +61,9 @@ public class ApiController {
 
     @Autowired
     private AccountMessageService accountMessageService;
+
+    @Autowired
+    private DistrictDataService districtDataService;
 
     @ApiOperation("验证API接口服务状态及获取基本信息")
     @GetMapping("/pub/ping")
@@ -138,7 +145,8 @@ public class ApiController {
 
     @RequestMapping(value = "/user/password", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult modifyPasswordSave(@AuthAccount Account account, @RequestParam("oldpasswd") String oldpasswd,
+    public OperationResult modifyPasswordSave(@ApiIgnore @AuthAccount Account account,
+                                              @RequestParam("oldpasswd") String oldpasswd,
                                               @RequestParam("newpasswd") String newpasswd) {
         Validation.notDemoMode();
         String encodedPasswd = accountService.encodeUserPasswd(account, oldpasswd);
@@ -150,5 +158,18 @@ public class ApiController {
             accountService.save(account, newpasswd);
             return OperationResult.buildSuccessResult("密码修改成功");
         }
+    }
+
+    @ApiOperation("行政区域数据")
+    @RequestMapping(value = "/district-data/list", method = RequestMethod.GET)
+    @ResponseBody
+    public OperationResult districtDataList(@RequestParam(value = "prefix", required = false) String prefix) {
+        List<DistrictData> districtDataList;
+        if (StringUtils.isBlank(prefix)) {
+            districtDataList = districtDataService.findAll();
+        } else {
+            districtDataList = districtDataService.findByIdStartsWith(StringUtils.split(prefix, ","));
+        }
+        return OperationResult.buildSuccessResult(districtDataList);
     }
 }
