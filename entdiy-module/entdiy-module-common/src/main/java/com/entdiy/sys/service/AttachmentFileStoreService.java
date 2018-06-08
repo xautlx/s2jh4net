@@ -29,6 +29,8 @@ public interface AttachmentFileStoreService {
     String SUB_DIR_IMAGES = File.separator + "upload" + File.separator + "images";
 
     /**
+     * 用于Spring MVC Controller层直接传入附件对象的便捷调用接口
+     *
      * @param fileUpload Spring MVC文件上传绑定对象
      * @param subDir     存储子目录，一般是文件类型大致分类路径
      * @return
@@ -42,6 +44,8 @@ public interface AttachmentFileStoreService {
     }
 
     /**
+     * 基于文件流进行文件存储
+     *
      * @param fis         文件输入流
      * @param subDir      存储子目录，一般是文件类型大致分类路径
      * @param fileName    文件名称

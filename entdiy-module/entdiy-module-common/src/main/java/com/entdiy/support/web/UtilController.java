@@ -321,9 +321,6 @@ public class UtilController {
             attachmentFileService.save(attachmentFile);
 
             String accessUrl = attachmentFile.getAccessUrl();
-            if (attachmentFile.getStoreCdnMode()) {
-                accessUrl = request.getContextPath() + accessUrl;
-            }
 
             //以下两个属性用于kindeditor显示之用
             retMap.put("error", 0);
@@ -345,19 +342,15 @@ public class UtilController {
     private void fileProcess(HttpServletResponse response, String id, String type) {
         attachmentFileService.findOptionalOne(id).ifPresent(attachmentFile -> {
             try {
-                if (attachmentFile.getStoreCdnMode()) {
-                    response.sendRedirect(attachmentFile.getAccessUrl());
-                } else {
-                    String fileName = URLEncoder.encode(attachmentFile.getFileRealName(), "UTF-8");
-                    response.setHeader("Content-Disposition", type + "; filename=\"" + fileName + "\"");
-                    response.addHeader("Content-Length", "" + attachmentFile.getFileLength());
-                    response.setContentType(attachmentFile.getFileContentType());
-                    InputStream in = new FileInputStream(new File(attachmentFile.getStorePrefix() + attachmentFile.getRelativePath()));
-                    OutputStream out = response.getOutputStream();
-                    IOUtils.copy(in, out);
-                    IOUtils.closeQuietly(in);
-                    IOUtils.closeQuietly(out);
-                }
+                String fileName = URLEncoder.encode(attachmentFile.getFileRealName(), "UTF-8");
+                response.setHeader("Content-Disposition", type + "; filename=\"" + fileName + "\"");
+                response.addHeader("Content-Length", "" + attachmentFile.getFileLength());
+                response.setContentType(attachmentFile.getFileContentType());
+                InputStream in = new FileInputStream(new File(attachmentFile.getStorePrefix() + attachmentFile.getRelativePath()));
+                OutputStream out = response.getOutputStream();
+                IOUtils.copy(in, out);
+                IOUtils.closeQuietly(in);
+                IOUtils.closeQuietly(out);
             } catch (Exception e) {
                 logger.error("File download error", e);
             }

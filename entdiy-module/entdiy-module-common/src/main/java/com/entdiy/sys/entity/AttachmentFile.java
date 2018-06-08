@@ -20,10 +20,13 @@ package com.entdiy.sys.entity;
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.entity.BaseUuidEntity;
+import com.entdiy.core.entity.EnumKeyLabelPair;
+import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.support.web.filter.RequestContextFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -97,10 +100,53 @@ public class AttachmentFile extends BaseUuidEntity {
     @JsonView(JsonViews.Admin.class)
     private String storePrefix;
 
-    @MetaData(value = "是否CDN存储模式")
-    @Column(length = 512, nullable = false)
+    @MetaData(value = "文件访问模式")
+    @Column(length = 16, nullable = false)
+    @Enumerated(EnumType.STRING)
     @JsonView(JsonViews.Admin.class)
-    private Boolean storeCdnMode;
+    @ApiModelProperty(hidden = true)
+    private AccessModeEnum accessMode;
+
+    public enum AccessModeEnum implements EnumKeyLabelPair {
+        /**
+         * 适用于对权限检查严格的文件访问，限制无法通过开放地址直接访问到文件
+         * 文件读取由本地java服务器处理，对IO和CPU资源占用损耗，除非文件访问有严格限制，建议尽量不采用此方式
+         * 对外访问地址形如：http://local.app.com/contextpath/pub/file/XXXX
+         */
+        @MetaData(value = "直接从本地文件系统IO读取返回响应", comments = "")
+        LOCAL_READ {
+            @Override
+            public String getLabel() {
+                return "应用本地读取";
+            }
+        },
+
+        /**
+         * 适用于开放式文件类型访问，诸如图片，应用服务器上传文件目录与Nginx配置共享目录，
+         * 应用上传的文件转换为由Nginx proxy_pass代理地址，提高文件访问效率
+         * 对外访问地址形如：http://local.app.com/contextpath/upload/XXX
+         */
+        @MetaData(value = "对外返回静态资源服务器代理地址")
+        LOCAL_PROXY {
+            @Override
+            public String getLabel() {
+                return "本地代理访问";
+            }
+        },
+
+        /**
+         * 适用于开放式文件类型访问，诸如图片，直接调用第三方的CDN服务接口上传文件，
+         * 对于诸如开放图片之类的访问，在有条件的情况下尽可能采用此方式
+         * 对外访问地址形如：http://cdn.server.com/app/upload/XXX
+         */
+        @MetaData(value = "CDN内容分发绝对URL地址")
+        CDN {
+            @Override
+            public String getLabel() {
+                return "CDN内容分发";
+            }
+        }
+    }
 
     @Transient
     public String getAccessUrl() {
@@ -108,10 +154,24 @@ public class AttachmentFile extends BaseUuidEntity {
             return null;
         }
         //假如是以外部CDN形式存取文件，则组装CDN访问路径；否则本地应用存储形式，返回应用访问地址
-        if (storeCdnMode) {
+        if (AccessModeEnum.CDN.equals(this.accessMode)) {
             return storePrefix + relativePath;
         } else {
-            return RequestContextFilter.getFullContextURL() + "/pub/file/view/" + getId();
+            String uri = RequestContextFilter.getWebContextUri();
+
+            //兼容处理通过Nginx+Ngrok多层穿透代理无法正确获取上下文URL，直接返回相对路径
+            if (AppContextHolder.isDevMode() || AppContextHolder.isDemoMode()) {
+                if (uri.indexOf("localhost") > -1) {
+                    return "/pub/file/view/" + getId();
+                }
+            }
+
+            if (AccessModeEnum.LOCAL_PROXY.equals(this.accessMode)) {
+                return uri + relativePath;
+            } else {
+                //正常情况返回绝对路径，方便API接口使用
+                return uri + "/pub/file/view/" + getId();
+            }
         }
     }
 }

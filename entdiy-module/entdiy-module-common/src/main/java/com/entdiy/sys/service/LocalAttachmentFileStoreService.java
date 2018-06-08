@@ -17,6 +17,7 @@ package com.entdiy.sys.service;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.sys.entity.AttachmentFile;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,9 @@ import java.util.UUID;
 public class LocalAttachmentFileStoreService implements AttachmentFileStoreService {
 
     private final static Logger logger = LoggerFactory.getLogger(LocalAttachmentFileStoreService.class);
+
+    @Setter
+    private AttachmentFile.AccessModeEnum accessMode = AttachmentFile.AccessModeEnum.LOCAL_READ;
 
     @Override
     public AttachmentFile storeFileData(InputStream fis, String subDir, String fileName, String contentType, long fileLength) {
@@ -78,7 +82,7 @@ public class LocalAttachmentFileStoreService implements AttachmentFileStoreServi
         AttachmentFile attachmentFile = new AttachmentFile();
         attachmentFile.setRelativePath(relativePath);
         attachmentFile.setStorePrefix(storePrefix);
-        attachmentFile.setStoreCdnMode(false);
+        attachmentFile.setAccessMode(accessMode);
         attachmentFile.setFileRealName(fileName);
         attachmentFile.setFileLength(fileLength);
         attachmentFile.setFileContentType(contentType);
