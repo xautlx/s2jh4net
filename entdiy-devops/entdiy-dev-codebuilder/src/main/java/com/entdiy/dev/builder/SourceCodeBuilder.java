@@ -43,6 +43,7 @@ import javax.persistence.Lob;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -189,7 +190,7 @@ public class SourceCodeBuilder {
                     //根据Json注解设定合理的列宽
                     entityCodeField.setListWidth(150);
                     entityCodeField.setListAlign("center");
-                }else if ("LocalizedText".equals(fieldType.getSimpleName())) {
+                } else if ("LocalizedText".equals(fieldType.getSimpleName())) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setList(false);
                 } else if (AbstractPersistableEntity.class.isAssignableFrom(fieldType)) {
@@ -240,7 +241,7 @@ public class SourceCodeBuilder {
                     //根据Json注解设定合理的列宽
                     entityCodeField.setListWidth(90);
                     entityCodeField.setListAlign("center");
-                } else if (fieldType == LocalDateTime.class) {
+                } else if (fieldType == LocalDateTime.class || fieldType == Instant.class) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setListFixed(true);
 

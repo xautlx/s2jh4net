@@ -24,14 +24,16 @@
                         <form:input path="${entityField.fieldName}" class="form-control"/>
                         <#elseif entityField.fieldType=='Entity'>
                         <form:hidden path="${entityField.fieldName}.id" class="form-control" data-select2-type="remote"
-                                     data-url="${r"ctx"}/admin/path/to/list" data-display="${r"${"}${entityField.fieldName}${r".display"}"
+                                     data-url="${r"ctx"}/admin/path/to/list" data-display="${r"${"}${entityField.fieldName}${r".display}"}"
                                      data-query="search[CN_abc_OR_xyz_OR_abc.xyz]" />
                         <form:input path="${entityField.fieldName}.id" class="form-control"/>
                         <#elseif entityField.enumField>
                         <form:input path="${entityField.fieldName}" class="form-control"/>
-                        <#elseif entityField.fieldType=='Date'>
+                        <#elseif entityField.fieldType=='LocalDate'>
                         <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datepicker"/>
-                        <#elseif entityField.fieldType=='Timestamp'>
+                        <#elseif entityField.fieldType=='LocalDateTime'>
+                        <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
+                        <#elseif entityField.fieldType=='Instant'>
                         <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
                         <#elseif (entityField.fieldType=='String' && entityField.listWidth gt 255)>
                         <form:textarea path="${entityField.fieldName}" rows="3" class="form-control"/>
@@ -39,7 +41,8 @@
                         <ul class="list-group" data-multilocale="true">
                             <c:forEach var="item" items="${r"${entity."}${entityField.fieldName}${r".items}"}" varStatus="status">
                                 <li class="list-group-item">
-                                    <input type="text" class="form-control" name="${entityField.fieldName}${r".${item.key}"}" value="${r"${item.value}"}" title="${r"${item.name}"}"/>
+                                    <input type="text" class="form-control" name="${entityField.fieldName}${r".${item.key}"}"
+                                           value="${r"${item.value}"}" title="${r"${item.name}"}" data-rule-required="${r"${item.required}"}"/>
                                 </li>
                             </c:forEach>
                         </ul>
@@ -47,7 +50,10 @@
                         <ul class="list-group" data-multilocale="true">
                             <c:forEach var="item" items="${r"${entity."}${entityField.fieldName}${r".items}"}" varStatus="status">
                                 <li class="list-group-item">
-                                    <textarea rows="3" class="form-control" name="${entityField.fieldName}${r".${item.key}"}" value="${r"${item.value}"}" title="${r"${item.name}"}"/>
+                                    <textarea rows="3" class="form-control" name="${entityField.fieldName}${r".${item.key}"}"
+                                              title="${r"${item.name}"}" data-rule-required="${r"${item.required}"}">
+                                        ${r"${item.value}"}
+                                    </textarea>
                                 </li>
                             </c:forEach>
                         </ul>
@@ -68,9 +74,11 @@
                                              data-query="search[CN_abc_OR_xyz_OR_abc.xyz]" />
                                 <#elseif entityField.enumField>
                                 <form:input path="${entityField.fieldName}" class="form-control"/>
-                                <#elseif entityField.fieldType=='Date'>
+                                <#elseif entityField.fieldType=='LocalDate'>
                                 <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datepicker"/>
-                                <#elseif entityField.fieldType=='Timestamp'>
+                                        <#elseif entityField.fieldType=='LocalDateTime'>
+                                <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
+                                        <#elseif entityField.fieldType=='Instant'>
                                 <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
                                 <#elseif (entityField.fieldType=='String' && entityField.listWidth gt 255)>
                                 <form:textarea path="${entityField.fieldName}" rows="3" class="form-control"/>

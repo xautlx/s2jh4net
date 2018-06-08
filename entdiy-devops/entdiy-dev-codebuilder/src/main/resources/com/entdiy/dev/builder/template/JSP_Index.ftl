@@ -70,6 +70,9 @@
                        <#if entityField.fieldType=="LocalDateTime">
                        formatter: "timestamp",
                        </#if>
+                       <#if entityField.fieldType=="Instant">
+                       formatter: "timestamp",
+                       </#if>
                        <#if entityField.fieldType=="Integer">
                        formatter: "integer",
                        </#if>
