@@ -28,6 +28,7 @@ import com.entdiy.locale.entity.LocalizedData;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.ConfigProperty;
 import com.entdiy.sys.entity.DataDict;
+import com.entdiy.sys.entity.DistrictData;
 import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.ConfigPropertyService;
 import com.entdiy.sys.service.DataDictService;
@@ -38,7 +39,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * 数据库基础数据初始化处理器
@@ -50,6 +57,9 @@ import org.springframework.stereotype.Component;
 public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataInitializeProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractDatabaseDataInitializeProcessor.class);
+
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private RoleService roleService;
@@ -75,6 +85,30 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
     @Override
     public void initializeInternal() {
         logger.info("Running " + this.getClass().getName());
+
+        //行政区域数据初始化
+        if (isEmptyTable(DistrictData.class)) {
+            Connection connection = null;
+            try {
+                connection = dataSource.getConnection();
+                String sqlFile = "/data/DistrictData.sql";
+                ClassPathResource resource = new ClassPathResource(sqlFile);
+                ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(resource);
+                logger.info("Executing SQL Scripts: {}", sqlFile);
+                resourceDatabasePopulator.populate(connection);
+                connection.commit();
+            } catch (SQLException e) {
+                logger.error(e.getMessage(), e);
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException e) {
+                        logger.error(e.getMessage(), e);
+                    }
+                }
+            }
+        }
 
         //角色、用户等数据初始化,默认密码为:123456
         if (isEmptyTable(User.class)) {
@@ -196,15 +230,17 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             dataDictService.save(item);
 
             item = new DataDict();
-            item.setPrimaryKey("en-US");
-            item.setPrimaryValue("English");
+            item.setPrimaryKey("zh-CN");
+            item.setPrimaryValue("简体中文");
             item.setDisabled(false);
             item.setParent(entity);
             dataDictService.save(item);
 
             item = new DataDict();
-            item.setPrimaryKey("zh-CN");
-            item.setPrimaryValue("简体中文");
+            item.setPrimaryKey("en-US");
+            item.setPrimaryValue("English");
+            //必填项设置，注意把必填项放置在后面追加以便在排序时靠前显示
+            item.setSecondaryValue("true");
             item.setDisabled(false);
             item.setParent(entity);
             dataDictService.save(item);
