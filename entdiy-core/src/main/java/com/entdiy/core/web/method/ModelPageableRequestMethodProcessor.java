@@ -16,7 +16,9 @@ package com.entdiy.core.web.method;
 
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -52,6 +54,11 @@ public class ModelPageableRequestMethodProcessor implements HandlerMethodArgumen
     @Override
     @Nullable
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        return PropertyFilter.buildPageableFromHttpRequest((HttpServletRequest) webRequest.getNativeRequest());
+        ModelPageableRequest ann = parameter.getParameterAnnotation(ModelPageableRequest.class);
+        Sort sort = null;
+        if (StringUtils.isNotBlank(ann.sortProperty())) {
+            sort = Sort.by(ann.sortDirection(), ann.sortProperty());
+        }
+        return PropertyFilter.buildPageableFromHttpRequest((HttpServletRequest) webRequest.getNativeRequest(), sort, ann.rows());
     }
 }

@@ -17,6 +17,8 @@
  */
 package com.entdiy.core.web.annotation;
 
+import org.springframework.data.domain.Sort;
+
 import java.lang.annotation.*;
 
 /**
@@ -28,5 +30,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ModelPageableRequest {
-    
+
+    int rows() default 5;
+
+    String sortProperty() default "";
+
+    Sort.Direction sortDirection() default Sort.Direction.DESC;
 }

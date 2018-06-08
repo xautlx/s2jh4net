@@ -16,14 +16,17 @@ package com.entdiy.core.web.method;
 
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.exception.ServiceException;
+import com.entdiy.core.util.reflection.ReflectionUtils;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.util.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Persistable;
+import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
@@ -37,11 +40,15 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.persistence.Embedded;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -132,11 +139,17 @@ public class ModelEntityMethodProcessor implements HandlerMethodArgumentResolver
                 attribute = entity;
             } else {
                 attribute = BeanUtils.instantiateClass(clazz);
+
+                //对Embedded嵌入对象属性初始化空对象
+                List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, Embedded.class);
+                for (Field field : fields) {
+                    ReflectionUtils.invokeSetterMethod(attribute, field.getName(), BeanUtils.instantiateClass(field.getType()));
+                }
             }
 
             //对于GET类型请求，追加校验规则JSON字符串属性
-            //if (HttpMethod.GET.name().equalsIgnoreCase(request.getMethod()))
-            if (!GlobalConstant.NONE_VALUE.equals(ann.validateRules())) {
+            HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+            if (HttpMethod.GET.name().equalsIgnoreCase(request.getMethod()) && !GlobalConstant.NONE_VALUE.equals(ann.validateRules())) {
                 mavContainer.getModel().addAttribute(ann.validateRules(), ServletUtils.buildValidateRules(clazz));
             }
         }
