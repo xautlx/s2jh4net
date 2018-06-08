@@ -19,8 +19,11 @@ package com.entdiy.core.cache;
 
 import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.web.AppContextHolder;
+import org.hibernate.cache.CacheException;
 import org.hibernate.cache.redis.hibernate52.SingletonRedisRegionFactory;
+import org.hibernate.cache.redis.hibernate52.regions.RedisQueryResultsRegion;
 import org.hibernate.cache.redis.util.Timestamper;
+import org.hibernate.cache.spi.QueryResultsRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,5 +48,16 @@ public class ReloadableSingletonRedisRegionFactory extends SingletonRedisRegionF
             cacheTimestamper = new Timestamper();
         }
         return cacheTimestamper.next();
+    }
+
+    @Override
+    public QueryResultsRegion buildQueryResultsRegion(String regionName,
+                                                      Properties properties) throws CacheException {
+        return new RedisQueryResultsRegion(accessStrategyFactory,
+                redis,
+                this,
+                //追加前缀以便版本滚动更新时互补干扰
+                properties.get("hibernate.cache.region_prefix") + regionName,
+                properties);
     }
 }
