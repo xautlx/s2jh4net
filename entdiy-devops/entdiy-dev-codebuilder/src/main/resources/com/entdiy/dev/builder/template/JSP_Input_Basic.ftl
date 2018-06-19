@@ -29,11 +29,14 @@
                                      data-query="search[CN_abc_OR_xyz_OR_abc.xyz]" />
                         <form:input path="${entityField.fieldName}.id" class="form-control"/>
                         <#elseif entityField.enumField>
-                        <form:select path="state" class="form-control" items="${r"${"}${entityField.fieldName}${r"Map}"}" multiple="false"/>
+                        <form:select path="${entityField.fieldName}" class="form-control"
+                                     items="${r"${"}${entityField.fieldName}${r"Map}"}" multiple="false"/>
                         <#elseif entityField.fieldType=='AttachmentImage'>
-                        <form:hidden path="${entityField.fieldName}" class="form-control" data-imageuploader="single"/>
+                        <form:hidden path="${entityField.fieldName}" class="form-control"
+                                     data-imageuploader="single" data-width="120px" data-height="120px"/>
                         <#elseif entityField.fieldType=='AttachmentImageList'>
-                        <form:hidden path="${entityField.fieldName}" class="form-control" data-imageuploader="multiple"/>
+                        <form:hidden path="${entityField.fieldName}" class="form-control"
+                                     data-imageuploader="multiple" data-width="120px" data-height="120px"/>
                         <#elseif entityField.fieldType=='AttachmentFile'>
                         <ul class="list-group" data-fileuploader="${entityField.fieldName}" data-multiple="false">
                             <li class="list-group-item">

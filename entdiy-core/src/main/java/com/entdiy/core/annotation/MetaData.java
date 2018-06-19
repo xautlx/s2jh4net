@@ -50,6 +50,11 @@ public @interface MetaData {
     boolean comparable() default true;
 
     /**
+     * 标识属性是否在index页面生成列表项
+     */
+    boolean listable() default true;
+
+    /**
      * 标识属性是否在代码生成项可编辑
      */
     boolean editable() default true;

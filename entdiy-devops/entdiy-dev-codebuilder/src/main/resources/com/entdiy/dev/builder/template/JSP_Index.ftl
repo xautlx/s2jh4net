@@ -40,6 +40,7 @@
                        label: "${entityField.title}",
                        name: "${entityField.fieldName}",
                        formatter: "select",
+                       width: ${entityField.listWidth},
                        searchoptions: {
                            valueJson: ${r"${"}${entityField.fieldName}Json${r"}"}
                        },
@@ -81,8 +82,8 @@
                        </#if>
                        <#if entityField.fieldType=="String">
                        width: ${entityField.listWidth},
-                       align: "${entityField.listAlign}",
                        </#if>
+                       align: "${entityField.listAlign}",
                        editable: true
                    </#if>
                    </#list>

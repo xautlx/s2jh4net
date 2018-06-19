@@ -256,6 +256,7 @@ public class SourceCodeBuilder {
                             }
                         }
                         entityCodeField.setListWidth(length);
+                        entityCodeField.setListAlign("left");
                     }
                     Lob fieldLob = field.getAnnotation(Lob.class);
                     if (fieldLob != null) {
@@ -286,6 +287,10 @@ public class SourceCodeBuilder {
                     }
                     if (StringUtils.isBlank(entityCodeField.getFieldType())) {
                         entityCodeField.setFieldType(fieldType.getSimpleName());
+                    }
+
+                    if (fieldMetaData != null && !fieldMetaData.listable()) {
+                        entityCodeField.setList(false);
                     }
 
                     entityCodeField.setFieldName(field.getName());
@@ -417,7 +422,7 @@ public class SourceCodeBuilder {
         /** 在生成代码中属性的相对顺序 */
         private Integer order = Integer.MAX_VALUE;
         /** 属性在列表jqGrid中定义的对齐方式：left，right，center */
-        private String listAlign = "center";
+        private String listAlign = "left";
         /** 属性在列表jqGrid中定义的宽度固定模式 */
         private boolean listFixed = false;
         /** 属性在列表jqGrid中定义的默认不显示模式 */
