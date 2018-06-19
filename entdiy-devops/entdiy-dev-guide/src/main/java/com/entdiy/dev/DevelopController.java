@@ -21,7 +21,6 @@ import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.api.ClientValidationAuthenticationFilter;
-import com.entdiy.support.web.filter.RequestContextFilter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.vladsch.flexmark.ast.Node;
@@ -73,12 +72,12 @@ public class DevelopController {
     @Autowired
     private ClientValidationAuthenticationFilter apiClientAuthenticationFilter;
 
-    private String appkey = "default";
-    private String appsecret;
+    private String clientKey = "default";
+    private String clientSecret;
 
     @PostConstruct
     public void init() {
-        appsecret = apiClientAuthenticationFilter.getAppKeySecrets().getProperty(appkey);
+        clientSecret = apiClientAuthenticationFilter.getClientKeySecrets().getProperty(clientKey);
     }
 
     @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
@@ -143,7 +142,7 @@ public class DevelopController {
     @RequestMapping(value = "/api/smoke-test", method = RequestMethod.GET)
     @ResponseBody
     public void apiSmokeTest(HttpServletResponse httpServletResponse) throws Exception {
-        String url = RequestContextFilter.getWebContextUri();
+        String url = AppContextHolder.getWebContextUri();
         RestTemplate restTemplate = new RestTemplate();
         List<String> responseList = Lists.newArrayList();
 
@@ -278,12 +277,12 @@ public class DevelopController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        headers.add("appkey", appkey);
+        headers.add("Client-Key", clientKey);
         String timestamp = String.valueOf(System.currentTimeMillis());
         headers.add("timestamp", timestamp);
         String nonce = RandomStringUtils.randomAlphanumeric(10);
         headers.add("nonce", nonce);
-        String str = "{" + appsecret + "}timestamp=" + timestamp + "&nonce=" + nonce;
+        String str = "{" + clientSecret + "}timestamp=" + timestamp + "&nonce=" + nonce;
         String sign = DigestUtils.sha1Hex(str);
         headers.add("sign", sign);
         return headers;

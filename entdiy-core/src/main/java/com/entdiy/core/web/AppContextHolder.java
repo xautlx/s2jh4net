@@ -29,7 +29,10 @@ import javax.servlet.ServletContext;
 import java.io.File;
 
 /**
- * 参数初始化入口： @see com.entdiy.core.context.SpringPropertiesHolder
+ * 参数初始化入口：
+ *
+ * @see com.entdiy.core.context.SpringPropertiesHolder
+ * @see com.entdiy.core.web.listener.AppServletContextListener
  */
 public class AppContextHolder {
 
@@ -42,9 +45,18 @@ public class AppContextHolder {
      */
     private static String WEB_CONTEXT_REAL_PATH;
 
+    /**
+     * 应用上下文URI，如 http://demo.entdiy.com/entdiy
+     */
+    private static String WEB_CONTEXT_URI;
+
+    /**
+     * @param sc ServletContext
+     * @see com.entdiy.core.web.listener.AppServletContextListener
+     */
     public static void init(ServletContext sc) {
         logger.debug("AppContextHolder init...");
-        WEB_CONTEXT_REAL_PATH = sc.getContextPath();
+        WEB_CONTEXT_REAL_PATH = sc.getRealPath("/");
     }
 
     @MetaData(value = "开发模式", comments = "更宽松的权限控制，更多的日志信息。详见application.properties配置参数定义")
@@ -102,6 +114,13 @@ public class AppContextHolder {
         logger.info("System name={}", SYSTEM_NAME);
     }
 
+    public static void setWebContextUri(String webContextUri) {
+        if (StringUtils.isNotBlank(webContextUri)) {
+            WEB_CONTEXT_URI = webContextUri;
+            logger.info("Init web context uri: {}", WEB_CONTEXT_URI);
+        }
+    }
+
     public static String getFileWriteRootDir() {
         if (FILE_WRITE_ROOT_DIR == null) {
             //从配置属性读取附件读写路径
@@ -124,5 +143,9 @@ public class AppContextHolder {
 
     public static String getWebContextRealPath() {
         return WEB_CONTEXT_REAL_PATH;
+    }
+
+    public static String getWebContextUri() {
+        return WEB_CONTEXT_URI;
     }
 }

@@ -28,7 +28,7 @@
         <div class="col-md-12">
             <table class="search-group-target"
                    grid-options='{
-                   url: "/admin${model_path}/${entity_name_field_line}/list",
+                   url: "/admin${convert_model_path}/${entity_name_field_line}/list",
                    colModel: [{
                        label: "流水号",
                        name: "id",
@@ -91,12 +91,13 @@
                    postData: {
                    <#list fetchJoinFields?keys as key>
                            "search[FETCH_${key}]": "${fetchJoinFields[key]}"<#if (key_has_next)>,</#if>
-                       </#list>},
+                   </#list>
+                   },
                    </#if>
-                   editurl: "/admin${model_path}/${entity_name_field_line}/edit",
+                   editurl: "/admin${convert_model_path}/${entity_name_field_line}/edit",
                    editvalidation: ${r"${validationRules}"},
-                   delurl: "/admin${model_path}/${entity_name_field_line}/delete",
-                   fullediturl: "/admin${model_path}/${entity_name_field_line}/edit-tabs"
+                   delurl: "/admin${convert_model_path}/${entity_name_field_line}/delete",
+                   fullediturl: "/admin${convert_model_path}/${entity_name_field_line}/edit-tabs"
                 }'>
             </table>
         </div>

@@ -29,7 +29,6 @@ import com.entdiy.security.PasswordService;
 import com.entdiy.support.service.DynamicConfigService;
 import com.entdiy.support.service.FreemarkerService;
 import com.entdiy.support.service.MailService;
-import com.entdiy.support.web.filter.RequestContextFilter;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,7 +143,7 @@ public class AccountService extends BaseService<Account, Long> {
         account.setRandomCode(UidUtils.buildUID());
         accountDao.save(account);
 
-        String url = RequestContextFilter.getWebContextUri() + ("/admin/pub/password/reset?email=" + email + "&code=" + account.getRandomCode());
+        String url = AppContextHolder.getWebContextUri() + ("/admin/pub/password/reset?email=" + email + "&code=" + account.getRandomCode());
         if (freemarkerService != null) {
             Map<String, Object> params = Maps.newHashMap();
             params.put("account", account);

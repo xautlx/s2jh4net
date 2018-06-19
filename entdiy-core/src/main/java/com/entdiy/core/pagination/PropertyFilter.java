@@ -358,7 +358,9 @@ public class PropertyFilter {
             }
         }
 
-        if (values.length == 1) {
+        if (matchType.equals(MatchType.FETCH)) {
+            this.matchValue = values[0];
+        } else if (values.length == 1) {
             this.matchValue = parseMatchValueByClassType(propertyClass, values[0]);
         } else {
             Object[] matchValues = new Object[values.length];

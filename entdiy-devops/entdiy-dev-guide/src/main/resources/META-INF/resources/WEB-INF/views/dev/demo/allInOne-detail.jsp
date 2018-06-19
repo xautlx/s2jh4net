@@ -1208,7 +1208,7 @@
                 <div class="row">
                     <div class="col-md-11">
                         <div class="form-group">
-                            <label class="control-label">单图片上传(单一文本)</label>
+                            <label class="control-label">单图片上传</label>
                             <div class="controls">
                                 <form:hidden id="" path="imagePath" class="form-control" data-imageuploader="single"/>
                             </div>
@@ -1226,7 +1226,7 @@
                 <div class="row">
                     <div class="col-md-11">
                         <div class="form-group">
-                            <label class="control-label">多图片上传(逗号文本)</label>
+                            <label class="control-label">多图片上传</label>
                             <div class="controls">
                                 <form:hidden id="" path="imagePaths" class="form-control" data-imageuploader="multiple"/>
                             </div>
@@ -1241,48 +1241,6 @@
                         </span>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-11">
-                        <div class="form-group">
-                            <label class="control-label">单图片上传(单一对象)</label>
-                            <div class="controls">
-                                <form:select id="" path="oneImage"
-                                             class="form-control" data-imageuploader="single">
-                                    <form:option value="${entity.oneImage.id}" label="${entity.oneImage.accessUrl}"/>
-                                </form:select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-1 visible-md visible-lg">
-                        <span class="help-block">
-                            <a href="dev/docs/jsdoc/ExtImageUploader.html" target="_blank"
-                               class="btn btn-icon-only green btn-dev-demo-info">
-                                <i class="fa fa-info"></i>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-11">
-                        <div class="form-group">
-                            <label class="control-label">多图片上传(集合对象)</label>
-                            <div class="controls">
-                                <form:select id="" path="multiImages" items="${entity.multiImages}" itemLabel="accessUrl" itemValue="id"
-                                             class="form-control" data-imageuploader="multiple"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-1 visible-md visible-lg">
-                        <span class="help-block">
-                            <a href="dev/docs/jsdoc/ExtImageUploader.html" target="_blank"
-                               class="btn btn-icon-only green btn-dev-demo-info">
-                                <i class="fa fa-info"></i>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-
                 <div class="row">
                     <div class="col-md-11">
                         <div class="form-group">

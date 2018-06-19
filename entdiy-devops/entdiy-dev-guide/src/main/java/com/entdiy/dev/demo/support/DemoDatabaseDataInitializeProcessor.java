@@ -42,6 +42,7 @@ import com.entdiy.sys.entity.NotifyMessage;
 import com.entdiy.sys.service.*;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -391,29 +392,18 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     DemoProduct product = new DemoProduct();
                     product.setCode("P0" + (10 + i));
                     product.setName("商品" + product.getCode());
-                    demoProductService.save(product);
 
                     //附件处理
-                    //创建附件记录
-                    List<AttachmentFile> attachmentFiles = Lists.newArrayList();
+                    List<String> attachmentFileUrls = Lists.newArrayList();
                     int randomInt = MockEntityUtils.randomInt(2, 4);
                     for (int j = 0; j < randomInt; j++) {
                         Resource resource = MockEntityUtils.randomCandidates(imageResources);
                         AttachmentFile attachmentFile = this.buildImageAttachmentFile(resource);
-                        attachmentFiles.add(attachmentFile);
+                        attachmentFileUrls.add(attachmentFile.getAccessUrl());
                     }
-                    //先提前上传保存附件
-                    attachmentFileService.saveAll(attachmentFiles);
+                    product.setCommaPreviewImageUrls(StringUtils.join(attachmentFileUrls, ","));
 
-                    Resource resource = MockEntityUtils.randomCandidates(imageResources);
-                    AttachmentFile attachmentFile = this.buildImageAttachmentFile(resource);
-                    attachmentFiles.add(attachmentFile);
-                    attachmentFileService.save(attachmentFile);
-
-                    //然后和当前主对象关联
-                    product.setIntroImages(attachmentFiles);
-                    product.setMainImage(attachmentFile);
-                    attachmentFileService.saveBySourceEntity(product, "introImages", "mainImage");
+                    demoProductService.save(product);
                 }
             }
 

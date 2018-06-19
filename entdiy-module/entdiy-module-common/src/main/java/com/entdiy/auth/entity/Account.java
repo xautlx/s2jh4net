@@ -60,6 +60,7 @@ public class Account extends BaseNativeEntity {
 
     @MetaData(value = "账号类型所对应唯一标识")
     @Column(length = 64, nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private String authUid;
 
     @MetaData(value = "注册时间")
@@ -83,11 +84,13 @@ public class Account extends BaseNativeEntity {
     @MetaData(value = "电子邮件", tooltips = "请仔细填写，可用于系统通知邮件发送，找回密码等功能")
     @Email
     @Column(unique = true, nullable = true)
+    @JsonView(JsonViews.App.class)
     private String email;
 
     @MetaData(value = "移动电话", tooltips = "请仔细填写，可用于系统通知短信发送，找回密码等功能")
     @Column(unique = true, nullable = true)
     @Size(min = 11, max = 18)
+    @JsonView(JsonViews.App.class)
     private String mobile;
 
     @MetaData(value = "账户未锁定标志", tooltips = "账号锁定后无法登录")
@@ -133,11 +136,13 @@ public class Account extends BaseNativeEntity {
     @MetaData(value = "REST访问Token")
     @Column(unique = true)
     @ApiModelProperty(hidden = true)
+    @JsonIgnore
     private String accessToken;
 
     @MetaData(value = "随机数", comments = "用于找回密码设定的随机UUID字符串")
     @JsonIgnore
     @ApiModelProperty(hidden = true)
+    @JsonView(JsonViews.Admin.class)
     private String randomCode;
 
     public enum AuthTypeEnum implements EnumKeyLabelPair {

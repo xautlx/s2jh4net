@@ -19,17 +19,17 @@ package com.entdiy.dev.demo.entity;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.BaseNativeEntity;
-import com.entdiy.sys.entity.AttachmentFile;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.entdiy.core.web.json.JsonViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
@@ -50,13 +50,22 @@ public class DemoProduct extends BaseNativeEntity {
     @Column(length = 256, nullable = false)
     private String name;
 
-    @Transient
-    @JsonIgnore
-    private AttachmentFile mainImage;
+    @MetaData(value = "预览图片列表，逗号分隔URL", image = true, multiple = true)
+    @Column(length = 2000, nullable = false)
+    @JsonView(JsonViews.Admin.class)
+    private String commaPreviewImageUrls;
 
     @Transient
-    @JsonIgnore
-    private List<AttachmentFile> introImages;
+    @JsonView(JsonViews.AppDetail.class)
+    public String[] getPreviewImageUrls() {
+        return StringUtils.split(commaPreviewImageUrls, ",");
+    }
+
+    @Transient
+    @JsonView(JsonViews.AppList.class)
+    public String getMainImage() {
+        return getPreviewImageUrls()[0];
+    }
 
 
 }

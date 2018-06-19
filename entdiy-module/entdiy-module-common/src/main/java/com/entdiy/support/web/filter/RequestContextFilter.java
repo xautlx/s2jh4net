@@ -15,7 +15,7 @@
 package com.entdiy.support.web.filter;
 
 import com.entdiy.core.cons.GlobalConstant;
-import com.entdiy.core.context.SpringPropertiesHolder;
+import com.entdiy.core.web.AppContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,19 +67,6 @@ public class RequestContextFilter implements Filter {
         return locale;
     }
 
-    /** 前期通过过滤器把完整URL前缀组装好，以便在后续业务层使用 */
-    private static String WEB_CONTEXT_URI = null;
-
-    public static String getWebContextUri() {
-        if (WEB_CONTEXT_URI == null) {
-            WEB_CONTEXT_URI = SpringPropertiesHolder.getProperty("web.context.uri");
-            if (logger.isInfoEnabled() && StringUtils.isNotBlank(WEB_CONTEXT_URI)) {
-                logger.info("Init WEB_CONTEXT_URI: {}", WEB_CONTEXT_URI);
-            }
-        }
-        return WEB_CONTEXT_URI;
-    }
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse reponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
@@ -87,18 +74,14 @@ public class RequestContextFilter implements Filter {
             requestLocale.set(req.getHeader(GlobalConstant.APP_LOCALE));
         }
 
-        if (WEB_CONTEXT_URI == null) {
-            //优先取配置参数
-            String WEB_CONTEXT_URI = SpringPropertiesHolder.getProperty("web.context.uri");
-            //没有配置则动态基于HTTP请求计算
-            if (StringUtils.isBlank(WEB_CONTEXT_URI)) {
-                StringBuffer sb = new StringBuffer();
-                sb.append(req.getScheme()).append("://").append(req.getServerName());
-                sb.append(req.getServerPort() == 80 ? "" : ":" + req.getServerPort());
-                sb.append(req.getContextPath());
-                WEB_CONTEXT_URI = sb.toString();
-            }
-            logger.info("Init WEB_CONTEXT_URI: {}", WEB_CONTEXT_URI);
+        String webContextUri = AppContextHolder.getWebContextUri();
+        if (webContextUri == null) {
+            StringBuffer sb = new StringBuffer();
+            sb.append(req.getScheme()).append("://").append(req.getServerName());
+            sb.append(req.getServerPort() == 80 ? "" : ":" + req.getServerPort());
+            sb.append(req.getContextPath());
+            webContextUri = sb.toString();
+            AppContextHolder.setWebContextUri(webContextUri);
         }
 
         chain.doFilter(request, reponse);

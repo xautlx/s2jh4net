@@ -139,7 +139,7 @@
 
             
 
-            <td class="description last"><p>图片上传组件标识，同时表示单图或多图处理模式，同时结合表单元素类型组合数据处理方式：<br>                                        'single' + input = 返回单一文件相对路径字符串到文本元素,<br>                                        'multiple' + input =返回多个文件相对路径组装为逗号风格字符串到文本元素,<br>                                        'single' + select =基于 AttachmentFile 单一关联对象,<br>                                        'multiple' + select =基于List<AttachmentFile> 多个关联对象集合</p></td>
+            <td class="description last"><p>图片上传组件标识，同时表示单图或多图处理模式，同时结合表单元素类型组合数据处理方式：<br>                                        'single' + input:hidden = 返回单一文件相对路径字符串到文本元素,<br>                                        'multiple' + input:hidden =返回多个文件相对路径组装为逗号风格字符串到文本元素</p></td>
         </tr>
 
     
@@ -202,7 +202,8 @@
         
             <h3>Example</h3>
             
-    <pre class="sunlight-highlight-javascript">&lt;form:input path=&quot;text&quot; class=&quot;form-control&quot; data-property=&quot;test&quot; /&gt;</pre>
+    <pre class="sunlight-highlight-javascript">&lt;form:hidden path=&quot;imagePath&quot; class=&quot;form-control&quot; data-imageuploader=&quot;single&quot;/&gt;
+&lt;form:hidden path=&quot;imagePaths&quot; class=&quot;form-control&quot; data-imageuploader=&quot;multiple&quot;/&gt;</pre>
 
 
         

@@ -64,4 +64,14 @@ public @interface MetaData {
      * 一般用于业务对象如订单直接用ID作为订单号，希望编号能对齐，则直接把自增初始化值为较长位数数字，如1000000000
      */
     long autoIncrementInitValue() default 0;
+
+    /**
+     * 对于String类型的属性，追加标识按照image图像处理数据
+     */
+    boolean image() default false;
+
+    /**
+     * 对于String类型的属性，追加标识按照image图像处理数据，标识是单图模式还是多图模式
+     */
+    boolean multiple() default true;
 }

@@ -31,13 +31,13 @@ import com.entdiy.core.entity.BaseNativeEntity;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.PropertyFilter;
 import com.entdiy.core.util.DateUtils;
+import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.dev.demo.entity.DemoProduct;
 import com.entdiy.dev.demo.entity.DemoReimbursementRequest;
 import com.entdiy.dev.demo.service.DemoProductService;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
 import com.entdiy.security.DefaultAuthUserDetails;
-import com.entdiy.support.web.filter.RequestContextFilter;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.service.AttachmentFileService;
 import com.google.common.collect.Lists;
@@ -70,7 +70,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/dev/demo/all-in-one")
@@ -148,23 +147,13 @@ public class DemoAllInOneController {
         entity.setDepartment(departmentService.findByCode("YF02").get());
         entity.setDepartments(Lists.newArrayList(departmentService.findByCode("YF02").get(),
                 departmentService.findByCode("SC03").get()));
-        {
-            List<DemoProduct> products = productService.findAll(1L, 2L, 3L, 4L);
-            if (CollectionUtils.isNotEmpty(products)) {
-                DemoProduct product = products.get(0);
-                attachmentFileService.injectToSourceEntity(product, "mainImage", "introImages");
-                entity.setOneImage(product.getMainImage());
-                entity.setMultiImages(product.getIntroImages());
-            }
-        }
 
         {
             List<DemoProduct> products = productService.findAll(5L, 6L, 6L, 7L);
             if (CollectionUtils.isNotEmpty(products)) {
                 DemoProduct product = products.get(0);
-                attachmentFileService.injectToSourceEntity(product, "mainImage", "introImages");
-                entity.setImagePath(product.getMainImage().getAccessUrl());
-                entity.setImagePaths(product.getIntroImages().stream().map(one -> one.getAccessUrl()).collect(Collectors.joining(",")));
+                entity.setImagePath(product.getMainImage());
+                entity.setImagePaths(product.getCommaPreviewImageUrls());
             }
         }
 
@@ -185,7 +174,7 @@ public class DemoAllInOneController {
         model.addAttribute("initSelectOption", initSelectOption);
 
         //二维码组件使用
-        model.addAttribute("webContextFullUrl", RequestContextFilter.getWebContextUri());
+        model.addAttribute("webContextFullUrl", AppContextHolder.getWebContextUri());
 
         model.addAttribute("user", userService.findByAccount(accountService.findByUsername(Account.AuthTypeEnum.admin, "manager")));
 
@@ -321,10 +310,6 @@ public class DemoAllInOneController {
         private String imagePath;
 
         private String imagePaths;
-
-        private AttachmentFile oneImage;
-
-        private List<AttachmentFile> multiImages;
 
         private BigDecimal quantity;
 

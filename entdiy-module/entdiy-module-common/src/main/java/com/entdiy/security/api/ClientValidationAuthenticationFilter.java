@@ -44,7 +44,7 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
 
     @Getter
     @Setter
-    private Properties appKeySecrets = new Properties();
+    private Properties clientKeySecrets = new Properties();
 
     /**
      * 从Request请求从参数或Header中提取参数值
@@ -78,14 +78,14 @@ public class ClientValidationAuthenticationFilter extends PathMatchingFilter {
                 return true;
             }
 
-            String appkey = getValidationValue(request, "App-Key");
+            String clientkey = getValidationValue(request, "Client-Key");
             String timestamp = getValidationValue(request, "Sign-Timestamp");
             //客户端提供的此值建议保持足够的随机性，可以考虑使用UUID之类的全局唯一值
             String nonce = getValidationValue(request, "Sign-Nonce");
 
 
-            String secret = (String) appKeySecrets.get(appkey);
-            Validation.notBlank(secret, "Invalid appkey: " + appkey);
+            String secret = (String) clientKeySecrets.get(clientkey);
+            Validation.notBlank(secret, "Invalid Client-Key: " + clientkey);
 
             //加密签名规则，主要客户端需要与此规则保持完全一致
             String str = "{" + secret + "}timestamp=" + timestamp + "&nonce=" + nonce;

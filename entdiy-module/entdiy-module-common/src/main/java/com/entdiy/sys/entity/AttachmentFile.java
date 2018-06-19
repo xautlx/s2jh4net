@@ -19,11 +19,10 @@ package com.entdiy.sys.entity;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
-import com.entdiy.core.entity.BaseUuidEntity;
+import com.entdiy.core.entity.BaseAttachmentFile;
 import com.entdiy.core.entity.EnumKeyLabelPair;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.json.JsonViews;
-import com.entdiy.support.web.filter.RequestContextFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,7 +42,7 @@ import javax.persistence.*;
 @Table(name = "sys_AttachmentFile")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "上传文件")
-public class AttachmentFile extends BaseUuidEntity {
+public class AttachmentFile extends BaseAttachmentFile {
 
     @MetaData(value = "所属对象Class")
     @Column(length = 512, nullable = true)
@@ -150,14 +149,11 @@ public class AttachmentFile extends BaseUuidEntity {
 
     @Transient
     public String getAccessUrl() {
-        if (this.isNew()) {
-            return null;
-        }
         //假如是以外部CDN形式存取文件，则组装CDN访问路径；否则本地应用存储形式，返回应用访问地址
         if (AccessModeEnum.CDN.equals(this.accessMode)) {
             return storePrefix + relativePath;
         } else {
-            String uri = RequestContextFilter.getWebContextUri();
+            String uri = AppContextHolder.getWebContextUri();
 
             //兼容处理通过Nginx+Ngrok多层穿透代理无法正确获取上下文URL，直接返回相对路径
             if (AppContextHolder.isDevMode() || AppContextHolder.isDemoMode()) {

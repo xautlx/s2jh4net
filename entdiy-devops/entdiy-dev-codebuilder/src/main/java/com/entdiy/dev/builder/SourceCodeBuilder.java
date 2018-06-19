@@ -19,8 +19,10 @@ package com.entdiy.dev.builder;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.AbstractPersistableEntity;
+import com.entdiy.core.entity.BaseAttachmentFile;
 import com.entdiy.core.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import freemarker.template.Configuration;
@@ -43,6 +45,7 @@ import javax.persistence.Lob;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -64,7 +67,7 @@ public class SourceCodeBuilder {
         cfg.setClassForTemplateLoading(SourceCodeBuilder.class, "/com/entdiy/dev/builder/template");
         cfg.setDefaultEncoding("UTF-8");
 
-        Set<String> entityNames = new HashSet<String>();
+        Set<String> entityNames = new HashSet();
 
         //扫码所有@Entity注解实体类
         debug("Scanning Entity list...");
@@ -107,15 +110,22 @@ public class SourceCodeBuilder {
             String classFullName = entityName;
 
             String modelName = StringUtils.substringBetween(entityName, rootPackage + ".", ".entity");
+
+            //将模块名称第一部分替换为biz使命名更具有通用性
+            String[] modelNames = StringUtils.split(modelName, ".");
+            modelNames[0] = "biz";
+            String convertedModelName = StringUtils.join(modelNames, ".");
+
             String modelPath = StringUtils.replace(modelName, ".", "/");
             modelPath = "/" + modelPath;
             String modelPackagePath = StringUtils.replace(modelName, ".", File.separator);
             modelPackagePath = File.separator + modelPackagePath;
 
-            Map<String, Object> root = new HashMap<String, Object>();
+            Map<String, Object> root = Maps.newHashMap();
             String nameField = StringUtils.uncapitalize(className);
             root.put("model_name", modelName);
             root.put("model_path", modelPath);
+            root.put("convert_model_path", "/" + StringUtils.replace(convertedModelName, ".", "/"));
             root.put("entity_name", className);
             root.put("entity_name_uncapitalize", StringUtils.uncapitalize(className));
             root.put("entity_name_field", nameField);
@@ -164,7 +174,7 @@ public class SourceCodeBuilder {
             Map<String, String> searchOrFields = Maps.newLinkedHashMap();
             //定义用于OneToOne关联对象的Fetch参数
             Map<String, String> fetchJoinFields = Maps.newLinkedHashMap();
-            List<EntityCodeField> entityFields = new ArrayList<EntityCodeField>();
+            List<EntityCodeField> entityFields = Lists.newArrayList();
             int cnt = 1;
             for (Field field : fields) {
                 if ((field.getModifiers() & Modifier.FINAL) != 0 || "id".equals(field.getName())) {
@@ -172,13 +182,14 @@ public class SourceCodeBuilder {
                 }
                 debug(" - Field=" + field);
                 Class fieldType = field.getType();
+                MetaData fieldMetaData = field.getAnnotation(MetaData.class);
 
                 EntityCodeField entityCodeField = null;
                 if (fieldType.isEnum()) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setListFixed(true);
                     entityCodeField.setListWidth(80);
-                    entityCodeField.setFieldType(StringUtils.uncapitalize(fieldType.getName()));
+                    entityCodeField.setFieldType(className + "." + fieldType.getSimpleName());
                     entityCodeField.setListAlign("center");
                 } else if (fieldType == Boolean.class) {
                     entityCodeField = new EntityCodeField();
@@ -193,10 +204,28 @@ public class SourceCodeBuilder {
                 } else if ("LocalizedText".equals(fieldType.getSimpleName())) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setList(false);
+                } else if (fieldMetaData != null && fieldMetaData.image() && !fieldMetaData.multiple()) {
+                    entityCodeField = new EntityCodeField();
+                    entityCodeField.setFieldType("AttachmentImage");
+                } else if (fieldMetaData != null && fieldMetaData.image() && fieldMetaData.multiple()) {
+                    entityCodeField = new EntityCodeField();
+                    entityCodeField.setFieldType("AttachmentImageList");
+                } else if (BaseAttachmentFile.class.isAssignableFrom(fieldType)) {
+                    entityCodeField = new EntityCodeField();
+                    entityCodeField.setFieldType("AttachmentFile");
+                } else if (field.getGenericType() instanceof ParameterizedType) {
+                    ParameterizedType pt = (ParameterizedType) field.getGenericType();
+                    //判断具体类的类型
+                    if (pt.getRawType().equals(List.class)) {
+                        // 判断泛型类的类型
+                        if (BaseAttachmentFile.class.isAssignableFrom((Class) pt.getActualTypeArguments()[0])) {
+                            entityCodeField = new EntityCodeField();
+                            entityCodeField.setFieldType("AttachmentFileList");
+                        }
+                    }
                 } else if (AbstractPersistableEntity.class.isAssignableFrom(fieldType)) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setFieldType("Entity");
-
                 } else if (Number.class.isAssignableFrom(fieldType)) {
                     entityCodeField = new EntityCodeField();
                     entityCodeField.setListFixed(true);
@@ -214,7 +243,6 @@ public class SourceCodeBuilder {
                             entityCodeField.setList(false);
                         } else {
                             if (searchOrFields.size() < 3) {
-                                MetaData fieldMetaData = field.getAnnotation(MetaData.class);
                                 if (fieldMetaData != null) {
                                     searchOrFields.put(field.getName(), fieldMetaData.value());
                                 } else {
@@ -271,12 +299,9 @@ public class SourceCodeBuilder {
                         entityCodeField.setTitle(apiModelProperty.value());
                     }
 
-                    MetaData entityMetaData = field.getAnnotation(MetaData.class);
-                    if (entityMetaData != null) {
-                        entityCodeField.setTitle(entityMetaData.value());
-                        if (entityEditable) {
-                            entityCodeField.setEdit(entityMetaData.editable());
-                        }
+                    if (fieldMetaData != null) {
+                        entityCodeField.setTitle(fieldMetaData.value());
+                        entityCodeField.setEdit(fieldMetaData.editable());
                     }
 
                     JsonProperty fieldJsonProperty = field.getAnnotation(JsonProperty.class);
@@ -375,23 +400,6 @@ public class SourceCodeBuilder {
             }
         }
         return sb.toString().toUpperCase();
-    }
-
-    public static class DemoEntity {
-
-        private TestEnum testEnum;
-
-        public enum TestEnum {
-            Abc, Xyz
-        }
-
-        public TestEnum getTestEnum() {
-            return testEnum;
-        }
-
-        public void setTestEnum(TestEnum testEnum) {
-            this.testEnum = testEnum;
-        }
     }
 
     /**

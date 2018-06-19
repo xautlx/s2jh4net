@@ -5,6 +5,11 @@ echo "Using SHELL_DIR: ${SHELL_DIR}"
 
 echo Rebuild root project...
 cd ${SHELL_DIR}/../../..
+
+cd entdiy-core
+mvn clean install
+
+cd ../entdiy-devops/entdiy-dev-codebuilder
 mvn clean install
 
 echo Generate template files...

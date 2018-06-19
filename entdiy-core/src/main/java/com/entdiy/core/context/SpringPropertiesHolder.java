@@ -53,6 +53,7 @@ public class SpringPropertiesHolder extends PropertySourcesPlaceholderConfigurer
         AppContextHolder.setDemoMode(propertyResolver.getProperty("demo.mode"));
         AppContextHolder.setDevMode(propertyResolver.getProperty("dev.mode"));
         AppContextHolder.setSystemName(propertyResolver.getProperty("system.name"));
+        AppContextHolder.setWebContextUri(propertyResolver.getProperty("web.context.uri"));
     }
 
     public static String getProperty(String name) {

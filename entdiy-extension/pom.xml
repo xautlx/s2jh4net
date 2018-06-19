@@ -14,6 +14,7 @@
 
     <modules>
         <module>entdiy-dao-mongodb</module>
+        <module>entdiy-support-weixin</module>
     </modules>
 
 </project>

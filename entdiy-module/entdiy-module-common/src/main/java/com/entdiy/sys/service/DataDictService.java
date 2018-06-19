@@ -97,12 +97,14 @@ public class DataDictService extends BaseNestedSetService<DataDict, Long> {
 
     private List<DataDict> findChildrens(DataDict parent, boolean withFlatChildren) {
         List<DataDict> dataDicts = Lists.newArrayList();
-        List<DataDict> roots = dataDictDao.findEnabledChildrenByParentId(parent.getId());
-        dataDicts.addAll(roots);
-        if (withFlatChildren) {
-            for (DataDict dataDict : roots) {
-                List<DataDict> chidren = dataDictDao.findEnabledChildrenByParentId(dataDict.getId());
-                dataDicts.addAll(chidren);
+        if (parent != null) {
+            List<DataDict> roots = dataDictDao.findEnabledChildrenByParentId(parent.getId());
+            dataDicts.addAll(roots);
+            if (withFlatChildren) {
+                for (DataDict dataDict : roots) {
+                    List<DataDict> chidren = dataDictDao.findEnabledChildrenByParentId(dataDict.getId());
+                    dataDicts.addAll(chidren);
+                }
             }
         }
         return dataDicts;
