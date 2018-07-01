@@ -132,7 +132,7 @@ public class GroupPropertyFilter {
 
     public static GroupPropertyFilter buildDefaultOrGroupFilter(PropertyFilter... filters) {
         GroupPropertyFilter dpf = new GroupPropertyFilter();
-        dpf.setGroupType(GroupOperationEnum.AND);
+        dpf.setGroupType(GroupOperationEnum.OR);
         if (filters != null && filters.length > 0) {
             dpf.setFilters(Lists.newArrayList(filters));
         }
