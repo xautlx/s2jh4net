@@ -26,6 +26,7 @@ import com.entdiy.core.service.Validation;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.Exceptions;
 import com.entdiy.core.util.ExtStringUtils;
+import com.entdiy.core.util.reflection.ConvertUtils;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.view.OperationResult;
@@ -39,6 +40,7 @@ import com.entdiy.sys.service.SmsVerifyCodeService;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -198,7 +200,7 @@ public class UtilController {
             query.setParameter("additionalValue", additionalValue);
         } else {
             query = entityManager.createQuery(jql);
-            query.setParameter("value", value);
+            query.setParameter("value", ConvertUtils.convertStringToObject(value, FieldUtils.getDeclaredField(entityClass, element, true).getType()));
         }
 
         List<?> entities = query.getResultList();
