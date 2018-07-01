@@ -47,7 +47,7 @@ public class SwaggerConfig {
         //开发模式，全局追加一个默认值为dev的sign头参数
         if (AppContextHolder.isDevMode()) {
             ParameterBuilder sign = new ParameterBuilder();
-            sign.name("sign").description("客户端鉴权签名参数").modelRef(new ModelRef("string")).parameterType("header").required(true).defaultValue("dev");
+            sign.name("Sign-Value").description("客户端鉴权签名参数").modelRef(new ModelRef("string")).parameterType("header").required(true).defaultValue("dev");
             pars.add(sign.build());
 
             ParameterBuilder accessToken = new ParameterBuilder();
