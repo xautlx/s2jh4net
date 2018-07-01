@@ -36,6 +36,7 @@
         <entdiy.version>1.0.0</entdiy.version>
         <spring.version>5.0.2.RELEASE</spring.version>
         <hibernate.version>5.2.12.Final</hibernate.version>
+        <hibernate-search.version>5.9.2.Final</hibernate-search.version>
         <hibernate-redis.version>2.4.0</hibernate-redis.version>
         <mybatis.version>3.4.5</mybatis.version>
         <spring-data-jpa.version>2.0.2.RELEASE</spring-data-jpa.version>
@@ -339,6 +340,17 @@
                 <version>4.0.30.Final</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-search-orm</artifactId>
+                <version>${hibernate-search.version}</version>
+            </dependency>
+            <!-- IK中文分词器 -->
+            <dependency>
+                <groupId>cn.bestwu</groupId>
+                <artifactId>ik-analyzers</artifactId>
+                <version>5.1.0</version>
+            </dependency>
             <!-- spring data jpa -->
             <dependency>
                 <groupId>org.springframework.data</groupId>
