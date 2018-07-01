@@ -52,7 +52,6 @@ import javax.persistence.criteria.CriteriaBuilder.Case;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -602,10 +601,15 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
             case EQ:
                 // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
                 // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
-                if (matchValue instanceof LocalDate) {
-                    LocalDate date = (LocalDate) matchValue;
-                    predicate = builder.and(builder.greaterThanOrEqualTo(expression, date),
-                            builder.lessThan(expression, date.plusDays(1)));
+                if (matchValue instanceof LocalDateTime) {
+                    LocalDateTime date = (LocalDateTime) matchValue;
+                    // 带时分秒数据直接追加对应条件
+                    if (date.getHour() != 0 || date.getMinute() != 0 || date.getSecond() != 0) {
+                        predicate = builder.equal(expression, date);
+                    } else {
+                        predicate = builder.and(builder.greaterThanOrEqualTo(expression, date),
+                                builder.lessThan(expression, date.plusDays(1)));
+                    }
                 } else {
                     predicate = builder.equal(expression, matchValue);
                 }
@@ -613,10 +617,15 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
             case NE:
                 // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
                 // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
-                if (matchValue instanceof LocalDate) {
-                    LocalDate date = (LocalDate) matchValue;
-                    predicate = builder.or(builder.lessThan(expression, date),
-                            builder.greaterThanOrEqualTo(expression, date.plusDays(1)));
+                if (matchValue instanceof LocalDateTime) {
+                    LocalDateTime date = (LocalDateTime) matchValue;
+                    // 带时分秒数据直接追加对应条件
+                    if (date.getHour() != 0 || date.getMinute() != 0 || date.getSecond() != 0) {
+                        predicate = builder.notEqual(expression, date);
+                    } else {
+                        predicate = builder.or(builder.lessThan(expression, date),
+                                builder.greaterThanOrEqualTo(expression, date.plusDays(1)));
+                    }
                 } else {
                     predicate = builder.notEqual(expression, matchValue);
                 }
@@ -664,14 +673,19 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
                 Object[] matchValues = (Object[]) matchValue;
                 Assert.isTrue(matchValues.length == 2, "Match value must have two value");
                 if (matchValues[0] instanceof LocalDateTime) {
-                    // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
-                    // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
-                    LocalDateTime dateTo = ((LocalDateTime) matchValues[1]).plusDays(1);
-
-                    return builder.and(builder.greaterThanOrEqualTo(expression, (LocalDateTime) matchValues[0]),
-                            builder.lessThan(expression, dateTo));
+                    LocalDateTime dateTo = (LocalDateTime) matchValue;
+                    // 带时分秒数据直接追加对应条件
+                    if (dateTo.getHour() != 0 || dateTo.getMinute() != 0 || dateTo.getSecond() != 0) {
+                        predicate = builder.between(expression, (Comparable) matchValues[0], (Comparable) matchValues[1]);
+                    } else {
+                        // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
+                        // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
+                        dateTo = dateTo.plusDays(1);
+                        predicate = builder.and(builder.greaterThanOrEqualTo(expression, (LocalDateTime) matchValues[0]),
+                                builder.lessThan(expression, dateTo));
+                    }
                 } else {
-                    return builder.between(expression, (Comparable) matchValues[0], (Comparable) matchValues[1]);
+                    predicate = builder.between(expression, (Comparable) matchValues[0], (Comparable) matchValues[1]);
                 }
             case GT:
                 predicate = builder.greaterThan(expression, (Comparable) matchValue);
@@ -684,11 +698,16 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
                 break;
             case LE:
                 if (matchValue instanceof LocalDateTime) {
-                    // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
-                    // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
-                    LocalDateTime dateTo = ((LocalDateTime) matchValue).plusDays(1);
-
-                    predicate = builder.lessThan(expression, dateTo);
+                    LocalDateTime date = (LocalDateTime) matchValue;
+                    // 带时分秒数据直接追加对应条件
+                    if (date.getHour() != 0 || date.getMinute() != 0 || date.getSecond() != 0) {
+                        predicate = builder.lessThanOrEqualTo(expression, date);
+                    } else {
+                        // 对日期特殊处理：一般用于区间日期的结束时间查询,如查询2012-01-01之前,一般需要显示2010-01-01当天及以前的数据,
+                        // 而数据库一般存有时分秒,因此需要特殊处理把当前日期+1天,转换为<2012-01-02进行查询
+                        date = date.plusDays(1);
+                        predicate = builder.lessThan(expression, date);
+                    }
                 } else {
                     predicate = builder.lessThanOrEqualTo(expression, (Comparable) matchValue);
                 }
