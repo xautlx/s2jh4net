@@ -30,8 +30,11 @@ import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.core.web.json.JsonViews;
 import com.entdiy.sys.service.AttachmentFileService;
+import com.entdiy.sys.service.DataDictService;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.data.domain.Pageable;
@@ -51,11 +54,16 @@ import com.fasterxml.jackson.annotation.JsonView;
 @RequestMapping(value = "/admin${convert_model_path}/${entity_name_field_line}")
 public class ${entity_name}Controller extends BaseController<${entity_name}, ${id_type}> {
 
+    private static final Logger logger = LoggerFactory.getLogger(${entity_name}Controller.class);
+
     @Autowired
     private ${entity_name}Service ${entity_name_uncapitalize}Service;
 
     @Autowired
     private AttachmentFileService attachmentFileService;
+
+    @Autowired
+    private DataDictService dataDictService;
 
     @MenuData("业务管理:${model_title}管理")
     @RequiresPermissions("业务管理:${model_title}列表")
@@ -65,6 +73,9 @@ public class ${entity_name}Controller extends BaseController<${entity_name}, ${i
     <#if entityField.edit>
         <#if entityField.enumField>
         model.addAttribute("${entityField.fieldName}Json", JsonUtils.writeValueAsString(EnumUtils.getEnumDataMap(${entityField.fieldType}.class)));
+        <#elseif entityField.fieldType=='DataDict'>
+        model.addAttribute("${entityField.fieldName}Json",
+                JsonUtils.writeValueAsString(dataDictService.findMapDataByRootPrimaryKey(${entityField.dataDictKey})));
         </#if>
     </#if>
 </#list>
@@ -92,6 +103,8 @@ public class ${entity_name}Controller extends BaseController<${entity_name}, ${i
     <#if entityField.edit>
         <#if entityField.enumField>
         model.addAttribute("${entityField.fieldName}Map", EnumUtils.getEnumDataMap(${entityField.fieldType}.class));
+        <#elseif entityField.fieldType=='DataDict'>
+        model.addAttribute("${entityField.fieldName}Map",dataDictService.findMapDataByRootPrimaryKey(${entityField.dataDictKey}));
         <#elseif (entityField.fieldType=='AttachmentFile'||entityField.fieldType=='AttachmentFileList')>
         attachmentFileService.injectToSourceEntity(entity, "${entityField.fieldName}");
         </#if>

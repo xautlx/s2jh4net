@@ -24,11 +24,13 @@
                         <form:radiobuttons path="${entityField.fieldName}" class="form-control" required="true"
                                            items="${r"${"}applicationScope.cons.booleanLabelMap${r"}"}"/>
                         <#elseif entityField.fieldType=='Entity'>
-                        <form:hidden path="${entityField.fieldName}.id" class="form-control" data-select2-type="remote"
-                                     data-url="${r"ctx"}/admin/path/to/list" data-display="${r"${"}${entityField.fieldName}${r".display}"}"
-                                     data-query="search[CN_abc_OR_xyz_OR_abc.xyz]" />
-                        <form:input path="${entityField.fieldName}.id" class="form-control"/>
-                        <#elseif entityField.enumField>
+                        <form:select path="${entityField.fieldName}.id" class="form-control"
+                                     data-url="admin/biz/${entityField.fieldName}/list"
+                                     data-term-query="search[CN_code_OR_name]"
+                                     multiple="false">
+                            <form:option value="${r"${entity."}${entityField.fieldName}${r".id}"}" label="${r"${entity."}${entityField.fieldName}${r".display}"}"/>
+                        </form:select>
+                        <#elseif (entityField.enumField || entityField.fieldType=="DataDict")>
                         <form:select path="${entityField.fieldName}" class="form-control"
                                      items="${r"${"}${entityField.fieldName}${r"Map}"}" multiple="false"/>
                         <#elseif entityField.fieldType=='AttachmentImage'>
@@ -58,13 +60,14 @@
                             </c:forEach>
                         </ul>
                         <#elseif entityField.fieldType=='LocalDate'>
-                        <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datepicker"/>
+                        <form:input path="${entityField.fieldName}" class="form-control" data-picker="date"/>
                         <#elseif entityField.fieldType=='LocalDateTime'>
-                        <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
+                        <form:input path="${entityField.fieldName}" class="form-control" data-picker="date-time"/>
                         <#elseif entityField.fieldType=='Instant'>
-                        <form:input path="${entityField.fieldName}" class="form-control" data-toggle="datetimepicker"/>
+                        <form:input path="${entityField.fieldName}" class="form-control" data-picker="date-time"/>
                         <#elseif (entityField.fieldType=='String' && entityField.listWidth gt 1024)>
-                        <form:textarea path="${entityField.fieldName}" rows="3" class="form-control"/>
+                        <form:textarea path="${entityField.fieldName}" class="form-control"
+                                       data-htmleditor="kindeditor" rows="3" data-height="400"/>
                         <#elseif entityField.fieldType=='LocalizedLabel'>
                         <ul class="list-group" data-multilocale="true">
                             <c:forEach var="item" items="${r"${entity."}${entityField.fieldName}${r".items}"}" varStatus="status">

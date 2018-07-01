@@ -62,6 +62,9 @@ public class DatabaseDataInitializeService {
      * 初始化自增对象起始值
      */
     private void autoIncrementInitValue(final Class<?> entity, MetaData metaData) {
+        if (metaData.autoIncrementInitValue() <= 1) {
+            return;
+        }
         Object count = entityManager.createQuery("select count(1) from " + entity.getSimpleName()).getSingleResult();
         if (Integer.valueOf(String.valueOf(count)) > 0) {
             logger.debug("Skipped autoIncrementInitValue as exist data: {}", entity.getClass());

@@ -35,7 +35,7 @@
                        hidden: true
                    <#list entityFields as entityField>
                    <#if entityField.list>
-                       <#if entityField.enumField>
+                       <#if (entityField.enumField || entityField.fieldType=="DataDict")>
                    }, {
                        label: "${entityField.title}",
                        name: "${entityField.fieldName}",
@@ -49,6 +49,7 @@
                        label: "${entityField.title}",
                        name: "${entityField.fieldName}.display",
                        index: "${entityField.fieldName}",
+                       width: ${entityField.listWidth},
                        <#elseif entityField.fieldType=="LocalizedLabel">
                    }, {
                        label: "${entityField.title}",
@@ -67,6 +68,9 @@
                        </#if>
                        <#if entityField.fieldType=="LocalDate">
                        formatter: "date",
+                       </#if>
+                       <#if entityField.fieldType=="AttachmentImage">
+                       formatter: "image",
                        </#if>
                        <#if entityField.fieldType=="LocalDateTime">
                        formatter: "timestamp",

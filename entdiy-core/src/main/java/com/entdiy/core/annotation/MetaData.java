@@ -43,6 +43,11 @@ public @interface MetaData {
     String comments() default "";
 
     /**
+     * 对于一些没有Column注解的属性，如OneToMany关联集合，则可以设置此属性标识为必填关联数据项
+     */
+    boolean required() default false;
+
+    /**
      * 标识属性是否出现在版本比较列表
      *
      * @see com.entdiy.aud.web.RevisionEntityController#getRevisionFields
@@ -53,6 +58,11 @@ public @interface MetaData {
      * 标识属性是否在index页面生成列表项
      */
     boolean listable() default true;
+
+    /**
+     * 标识属性是否在index页面生成列表项但是默认为hidden不显示
+     */
+    boolean listHidden() default false;
 
     /**
      * 标识属性是否在代码生成项可编辑
@@ -68,7 +78,7 @@ public @interface MetaData {
      * 对于自增类型实体设置AUTO_INCREMENT初始值
      * 一般用于业务对象如订单直接用ID作为订单号，希望编号能对齐，则直接把自增初始化值为较长位数数字，如1000000000
      */
-    long autoIncrementInitValue() default 0;
+    long autoIncrementInitValue() default 1;
 
     /**
      * 对于String类型的属性，追加标识按照image图像处理数据
@@ -79,4 +89,9 @@ public @interface MetaData {
      * 对于String类型的属性，追加标识按照image图像处理数据，标识是单图模式还是多图模式
      */
     boolean multiple() default true;
+
+    /**
+     * 标识此属性数据源为数据字典，对应数据字典的key值
+     */
+    String dataDictKey() default "";
 }

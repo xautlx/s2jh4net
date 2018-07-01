@@ -95,6 +95,12 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractPersis
     @ApiModelProperty(hidden = true)
     private String dataDomain = GlobalConstant.DEFAULT_VALUE;
 
+    @MetaData(value = "系统备注说明", comments = "预留一个通用的系统备注字段，业务根据需要合理使用")
+    @Column(name = "_systemRemark", length = 1000, updatable = true)
+    @JsonView(JsonViews.Admin.class)
+    @ApiModelProperty(hidden = true)
+    private String systemRemark;
+
     private static final String[] PROPERTY_LIST = new String[]{"id", "version"};
 
     public String[] retriveCommonProperties() {

@@ -7,10 +7,16 @@ echo Rebuild root project...
 cd ${SHELL_DIR}/../../..
 
 cd entdiy-core
-mvn clean install
+mvn install
+cd ..
 
-cd ../entdiy-devops/entdiy-dev-codebuilder
-mvn clean install
+cd  entdiy-module/entdiy-module-common
+mvn install
+cd ../..
+
+cd  entdiy-devops/entdiy-dev-codebuilder
+mvn install
+cd ../..
 
 echo Generate template files...
 cd ${1}
