@@ -22,6 +22,7 @@ import com.entdiy.sys.dao.DataDictDao;
 import com.entdiy.sys.entity.DataDict;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -93,6 +95,22 @@ public class DataDictService extends BaseNestedSetService<DataDict, Long> {
     @Transactional(readOnly = true)
     public List<DataDict> findChildrenByRootPrimaryKey(String primaryKey, boolean withFlatChildren) {
         return findChildrens(dataDictDao.findByRootPrimaryKey(primaryKey), withFlatChildren);
+    }
+
+    /**
+     * 直接基于根节点primaryKey返回对应的数据字典value集合，一般用于tags类型属性选取输入
+     *
+     * @param primaryKey 根节点primaryKey
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public Set<String> findValuesByRootPrimaryKey(String primaryKey) {
+        List<DataDict> dataDicts = findChildrens(dataDictDao.findByRootPrimaryKey(primaryKey), false);
+        Set<String> values = Sets.newLinkedHashSet();
+        for (DataDict dataDict : dataDicts) {
+            values.add(dataDict.getPrimaryValue());
+        }
+        return values;
     }
 
     private List<DataDict> findChildrens(DataDict parent, boolean withFlatChildren) {
@@ -170,5 +188,16 @@ public class DataDictService extends BaseNestedSetService<DataDict, Long> {
             logger.warn("Undefined DataDict for primaryKey: {}", primaryKey);
         }
         return dataMap;
+    }
+
+    @Override
+    public DataDict save(DataDict entity) {
+        if (entity.isNew()) {
+            //如果为提供特定的key则直接取数据值为key
+            if (entity.getPrimaryKey() == null) {
+                entity.setPrimaryKey(entity.getPrimaryValue());
+            }
+        }
+        return super.save(entity);
     }
 }

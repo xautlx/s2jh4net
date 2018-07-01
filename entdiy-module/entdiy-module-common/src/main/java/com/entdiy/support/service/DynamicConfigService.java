@@ -53,7 +53,7 @@ public class DynamicConfigService {
         String val = null;
         //cfg打头参数，首先从数据库取值
         if (key.startsWith("cfg")) {
-            val = configPropertyService.findByPropKey(key).map(one -> one.getSimpleValue()).orElse(null);
+            val = configPropertyService.findValueByPropKey(key);
         }
 
         //从环境变量获取

@@ -35,5 +35,5 @@ public interface ConfigPropertyDao extends BaseDao<ConfigProperty, Long> {
     List<ConfigProperty> findAllCached();
 
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    Optional<ConfigProperty> findByPropKey(String propKey);
+    ConfigProperty findByPropKey(String propKey);
 }

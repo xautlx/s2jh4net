@@ -147,7 +147,7 @@ public class UserController extends BaseController<User, Long> {
     @ResponseBody
     public OperationResult rolesSave(@ModelEntity(preFectchLazyFields = {"userR2Roles"}) User entity, Model model) {
         userService.save(entity);
-        return OperationResult.buildSuccessResult("角色关联处理完成", entity);
+        return OperationResult.buildSuccessResult("角色关联处理完成");
     }
 
     @MetaData(value = "汇总用户关联权限集合")

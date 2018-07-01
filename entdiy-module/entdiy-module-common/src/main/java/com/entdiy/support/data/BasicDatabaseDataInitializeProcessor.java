@@ -189,7 +189,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             dataDictService.save(root);
         }
 
-        if (!configPropertyService.findByPropKey(GlobalConstant.CFG_SMS_DISABLED).isPresent()) {
+        if (configPropertyService.findByPropKey(GlobalConstant.CFG_SMS_DISABLED) == null) {
             ConfigProperty entity = new ConfigProperty();
             entity.setPropKey(GlobalConstant.CFG_SMS_DISABLED);
             entity.setPropName("是否全局禁用短信发送功能");

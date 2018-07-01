@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -39,17 +38,19 @@ public class ConfigPropertyService extends BaseService<ConfigProperty, Long> {
     }
 
     @Transactional(readOnly = true)
-    public Optional<ConfigProperty> findByPropKey(String propKey) {
+    public ConfigProperty findByPropKey(String propKey) {
         return configPropertyDao.findByPropKey(propKey);
     }
 
     @Transactional(readOnly = true)
     public String findValueByPropKey(String propKey) {
-        return configPropertyDao.findByPropKey(propKey).map(one -> one.getSimpleValue()).orElse(null);
+        ConfigProperty configProperty = configPropertyDao.findByPropKey(propKey);
+        return configProperty != null ? configProperty.getSimpleValue() : null;
     }
 
     @Transactional(readOnly = true)
     public String findHtmlByPropKey(String propKey) {
-        return configPropertyDao.findByPropKey(propKey).map(one -> one.getHtmlValue()).orElse(null);
+        ConfigProperty configProperty = configPropertyDao.findByPropKey(propKey);
+        return configProperty != null ? configProperty.getHtmlValue() : null;
     }
 }
