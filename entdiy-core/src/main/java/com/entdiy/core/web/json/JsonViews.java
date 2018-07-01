@@ -43,6 +43,12 @@ public class JsonViews {
     public interface Admin extends App, List {
     }
 
+    public interface AdminList extends Admin, List {
+    }
+
+    public interface AdminDetail extends Admin, Detail {
+    }
+
     public interface Tree extends Admin, App, List {
     }
 }

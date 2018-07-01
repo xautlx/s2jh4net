@@ -21,7 +21,6 @@ import com.entdiy.aud.entity.SendMessageLog;
 import com.entdiy.aud.entity.SendMessageLog.SendMessageTypeEnum;
 import com.entdiy.aud.service.SendMessageLogService;
 import com.entdiy.core.annotation.MetaData;
-import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.util.DateUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -127,19 +126,19 @@ public class MailService {
                     javaMailSender.send(message);
                 }
             }
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
 
-        //消息历史记录
-        SendMessageLog sml = new SendMessageLog();
-        sml.setMessageType(SendMessageTypeEnum.EMAIL);
-        sml.setTargets(StringUtils.join(toAddrs));
-        sml.setTitle(subject);
-        sml.setMessage(text);
-        sml.setMessageFrom(mailFrom);
-        sml.setSendTime(DateUtils.currentDateTime());
-        sendMessageLogService.asyncSave(sml);
+            //消息历史记录
+            SendMessageLog sml = new SendMessageLog();
+            sml.setMessageType(SendMessageTypeEnum.EMAIL);
+            sml.setTargets(StringUtils.join(toAddrs));
+            sml.setTitle(subject);
+            sml.setMessage(text);
+            sml.setMessageFrom(mailFrom);
+            sml.setSendTime(DateUtils.currentDateTime());
+            sendMessageLogService.asyncSave(sml);
+        } catch (Exception e) {
+            logger.error("Mail send error", e);
+        }
     }
 
     private static class MailMessage {

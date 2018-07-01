@@ -585,8 +585,9 @@
                         <div class="form-group">
                             <label class="control-label">基于Select2多选并可自由输入组件</label>
                             <div class="controls">
-                                <form:select id="" path="splitTexts" items="${multiSelectTags}"
-                                             multiple="true" data-tags="true" class="form-control"/>
+                                <form:select id="" path="splitTexts" class="form-control"
+                                             items="${multiSelectTags}"
+                                             multiple="true" data-tags="true"/>
                             </div>
                         </div>
                     </div>
