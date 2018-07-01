@@ -5,7 +5,7 @@ MYSQL_PASSWD="mysqlP@sswd123"
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 BASE_DIR=${SHELL_DIR}/..
 
-app_name="mysql"
+app_name="entdiy-mysql"
 port="3306"
 
 while getopts p:c: opt

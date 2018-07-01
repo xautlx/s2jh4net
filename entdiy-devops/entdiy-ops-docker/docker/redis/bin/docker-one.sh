@@ -5,7 +5,7 @@ REDIS_PASSWD="redisP@sswd123"
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 BASE_DIR=${SHELL_DIR}/..
 
-APP_NAME="redis"
+APP_NAME="entdiy-redis"
 PORT="6379"
 
 while getopts p:c: opt

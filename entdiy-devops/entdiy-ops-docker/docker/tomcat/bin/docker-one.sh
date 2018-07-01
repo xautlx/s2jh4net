@@ -3,7 +3,7 @@
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 BASE_DIR=${SHELL_DIR}/..
 
-app_name="entdiy"
+app_name="entdiy-tomcat"
 port="8080"
 
 while getopts p: opt
@@ -28,9 +28,9 @@ case "$1" in
     echo docker run ${docker_name}...
     mkdir -p ${app_dir} ; mkdir -p ${data_dir}/upload; mkdir -p ${config_dir}; mkdir -p ${log_dir}
     deploy_dir="/usr/local/tomcat/webapps"
-    docker run --name ${docker_name} -p $port:8080 --restart=always --privileged=true \
-               --link redis:redis-server \
-               --link mysql:mysql-server \
+    docker run --name ${docker_name} --restart=always --privileged=true \
+               --link entdiy-redis:redis-server \
+               --link entdiy-mysql:mysql-server \
                 -v $app_dir:$deploy_dir \
                 -v $log_dir:/usr/local/tomcat/logs \
                 -v $config_dir/app:/etc/entdiy/config \
