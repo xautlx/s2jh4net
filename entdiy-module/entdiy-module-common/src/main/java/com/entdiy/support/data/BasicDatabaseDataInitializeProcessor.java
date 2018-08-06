@@ -23,6 +23,7 @@ import com.entdiy.auth.service.DepartmentService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.cons.GlobalConstant;
+import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.data.AbstractDatabaseDataInitializeProcessor;
 import com.entdiy.locale.entity.LocalizedData;
 import com.entdiy.security.DefaultAuthUserDetails;
@@ -34,6 +35,7 @@ import com.entdiy.sys.service.ConfigPropertyService;
 import com.entdiy.sys.service.DataDictService;
 import com.entdiy.sys.service.MenuService;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +89,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
         logger.info("Running " + this.getClass().getName());
 
         //行政区域数据初始化
-        if (isEmptyTable(DistrictData.class)) {
+        if (isEmptyTable(DistrictData.class) && BooleanUtils.toBoolean(SpringPropertiesHolder.getProperty("auto.import.district.data"))) {
             Connection connection = null;
             try {
                 connection = dataSource.getConnection();

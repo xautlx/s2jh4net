@@ -258,11 +258,6 @@
 <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
 
-<script type="text/javascript">
-    //KindEditor文件操作涉及到Flash集成，因此需要在upload URL追加JSESSIONID参数以进行登录用户标识传递
-    Config.setFileUploadUrl("/pub/file-upload/kind-editor.json;JSESSIONID=${pageContext.session.id}");
-</script>
-
 <script src="assets/apps/plugins/JSPinyin.js" type="text/javascript"></script>
 <script src="assets/apps/scripts/component/dynamic-edit-table.js?_=${buildVersion}" type="text/javascript"></script>
 <script src="assets/apps/scripts/component/double-multi-select.js?_=${buildVersion}" type="text/javascript"></script>

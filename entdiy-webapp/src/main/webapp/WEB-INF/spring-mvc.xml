@@ -78,7 +78,7 @@
 
     <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
         <mvc:argument-resolvers>
-            <bean class="com.entdiy.security.method.AuthAccountMethodProcessor"/>
+            <bean class="com.entdiy.support.web.method.AuthAccountMethodProcessor"/>
             <bean class="com.entdiy.core.web.method.ModelEntityMethodProcessor"/>
             <bean class="com.entdiy.core.web.method.ModelPropertyFilterMethodProcessor"/>
             <bean class="com.entdiy.core.web.method.ModelPageableRequestMethodProcessor"/>

@@ -26,7 +26,6 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.support.service.MailService;
 import com.entdiy.support.service.MessagePushService;
 import com.entdiy.support.service.SmsService;
-import com.entdiy.support.service.SmsService.SmsMessageTypeEnum;
 import com.entdiy.sys.dao.AccountMessageDao;
 import com.entdiy.sys.entity.AccountMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -95,22 +94,6 @@ public class AccountMessageService extends BaseService<AccountMessage, Long> {
                 mailService.sendHtmlMail(entity.getTitle(), entity.getMessage(), true, email);
                 entity.setEmailPushTime(DateUtils.currentDateTime());
             }
-        }
-
-        //短信推送处理
-        if (entity.getSmsPush() && entity.getSmsPushTime() == null) {
-            if (smsService != null) {
-                String mobileNum = targetAccount.getMobile();
-                if (StringUtils.isNotBlank(mobileNum)) {
-                    String errorMessage = smsService.sendSMS(entity.getNotification(), mobileNum, SmsMessageTypeEnum.Default);
-                    if (StringUtils.isBlank(errorMessage)) {
-                        entity.setSmsPushTime(DateUtils.currentDateTime());
-                    }
-                }
-            } else {
-                logger.warn("SmsService implement NOT found.");
-            }
-
         }
 
         //APP推送

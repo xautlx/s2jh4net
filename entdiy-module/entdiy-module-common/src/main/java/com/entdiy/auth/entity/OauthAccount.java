@@ -70,6 +70,13 @@ public class OauthAccount extends BaseNativeEntity {
 
 
     public enum OauthTypeEnum implements EnumKeyLabelPair {
+        MOCK {
+            @Override
+            public String getLabel() {
+                return "模拟";
+            }
+        },
+
         WECHAT {
             @Override
             public String getLabel() {

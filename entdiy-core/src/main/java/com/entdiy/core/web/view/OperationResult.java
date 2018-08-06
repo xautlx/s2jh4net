@@ -94,8 +94,12 @@ public class OperationResult<T> {
         return new OperationResult(OPERATION_RESULT_TYPE.success, message).setCode(SUCCESS);
     }
 
+    public static OperationResult buildSuccessData(String message) {
+        return new OperationResult(OPERATION_RESULT_TYPE.success, "操作成功", message).setCode(SUCCESS);
+    }
+
     public static <X> OperationResult<X> buildSuccessResult(X data) {
-        return new OperationResult(OPERATION_RESULT_TYPE.success, "success", data).setCode(SUCCESS);
+        return new OperationResult(OPERATION_RESULT_TYPE.success, "操作成功", data).setCode(SUCCESS);
     }
 
     public static <X> OperationResult<X> buildWarningResult(String message, X data) {

@@ -3,7 +3,7 @@
 REDIS_PASSWD="redisP@sswd123"
 
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
-BASE_DIR=${SHELL_DIR}/..
+BASE_DIR="$( cd "$SHELL_DIR/.." && pwd  )"
 
 APP_NAME="entdiy-redis"
 PORT="6379"

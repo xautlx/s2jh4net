@@ -99,13 +99,13 @@ public class DemoAllInOneController {
     private AttachmentFileService attachmentFileService;
 
     @MenuData("演示样例:UI组件集合")
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(Model model) {
         return "dev/demo/allInOne-index";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String detail(HttpServletRequest request, Model model) {
         Map<String, String> clazzMapping = Maps.newHashMap();
@@ -144,9 +144,9 @@ public class DemoAllInOneController {
         entity.setSelectedIds(new Long[]{2L, 3L});
         entity.setTextContent("分类DDD");
         entity.setSplitText("标签AAA,选项CCC");
-        entity.setDepartment(departmentService.findByCode("YF02").get());
-        entity.setDepartments(Lists.newArrayList(departmentService.findByCode("YF02").get(),
-                departmentService.findByCode("SC03").get()));
+        entity.setDepartment(departmentService.findByCode("YF02"));
+        entity.setDepartments(Lists.newArrayList(departmentService.findByCode("YF02"),
+                departmentService.findByCode("SC03")));
 
         {
             List<DemoProduct> products = productService.findAll(5L, 6L, 6L, 7L);

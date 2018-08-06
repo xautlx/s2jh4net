@@ -125,8 +125,8 @@ public class UserController extends BaseController<User, Long> {
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(userService, ids);
+    public OperationResult delete(@ModelEntity User... entities) {
+        return super.delete(userService, entities);
     }
 
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
@@ -171,7 +171,8 @@ public class UserController extends BaseController<User, Long> {
             }
         } else {
             for (UserR2Role userR2Role : userR2Roles) {
-                List<RoleR2Privilege> roleR2Privileges = userR2Role.getRole().getRoleR2Privileges();
+                Role role = roleService.findOne(userR2Role.getRole().getId());
+                List<RoleR2Privilege> roleR2Privileges = role.getRoleR2Privileges();
                 for (RoleR2Privilege roleR2Privilege : roleR2Privileges) {
                     r2PrivilegeIds.add(roleR2Privilege.getPrivilege().getId());
                 }

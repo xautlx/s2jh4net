@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.core.web.method;
+package com.entdiy.support.web.method;
 
-import com.entdiy.core.pagination.PropertyFilter;
-import com.entdiy.core.web.annotation.ModelPageableRequest;
-import org.apache.commons.lang3.StringUtils;
+import com.entdiy.auth.entity.Account;
+import com.entdiy.core.security.AuthContextHolder;
+import com.entdiy.core.security.AuthUserDetails;
+import com.entdiy.security.annotation.AuthAccount;
+import org.apache.shiro.authz.UnauthenticatedException;
 import org.springframework.core.MethodParameter;
-import org.springframework.data.domain.Sort;
-import org.springframework.lang.Nullable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -27,18 +27,21 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
- * 定制对 {@link com.entdiy.core.web.annotation.ModelPageableRequest} 注解参数处理，基于request请求构建分页排序参数对象
- *
+ * @see AuthAccount
  * @see org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor
  */
-public class ModelPageableRequestMethodProcessor implements HandlerMethodArgumentResolver {
+public class AuthAccountMethodProcessor implements HandlerMethodArgumentResolver {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return (parameter.hasParameterAnnotation(ModelPageableRequest.class));
+        return (parameter.hasParameterAnnotation(AuthAccount.class));
     }
 
     /**
@@ -52,13 +55,23 @@ public class ModelPageableRequestMethodProcessor implements HandlerMethodArgumen
      * @throws Exception     if WebDataBinder initialization fails
      */
     @Override
-    @Nullable
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        ModelPageableRequest ann = parameter.getParameterAnnotation(ModelPageableRequest.class);
-        Sort sort = null;
-        if (StringUtils.isNotBlank(ann.sortProperty())) {
-            sort = Sort.by(ann.sortDirection(), ann.sortProperty());
+        AuthAccount ann = parameter.getParameterAnnotation(AuthAccount.class);
+
+        AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
+        if (ann.required() && authUserDetails == null) {
+            throw new UnauthenticatedException();
         }
-        return PropertyFilter.buildPageableFromHttpRequest((HttpServletRequest) webRequest.getNativeRequest(), sort, ann.rows());
+        if (authUserDetails == null) {
+            return null;
+        }
+        Account account = entityManager.find(Account.class, authUserDetails.getAccountId());
+        if (ann.required() && account == null) {
+            throw new UnauthenticatedException();
+        }
+        if (account != null) {
+            entityManager.detach(account);
+        }
+        return account;
     }
 }

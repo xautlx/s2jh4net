@@ -34,7 +34,8 @@ public interface AttachmentFileDao extends BaseDao<AttachmentFile, String> {
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
     List<AttachmentFile> findBySourceTypeAndSourceIdAndSourceCategoryOrderByOrderIndexAsc(String sourceType, String sourceId, String sourceCategory);
 
-    @Modifying
+    /** clearAutomatically=false 不自动清除一级缓存，注意确保后续逻辑没有AttachmentFile对象访问 */
+    @Modifying(clearAutomatically = false)
     @Query("update AttachmentFile set sourceType=:sourceType , sourceId=:sourceId, sourceCategory=:sourceCategory, orderIndex=:orderIndex where id=:id")
     void updateSource(@Param("sourceType") String sourceType,
                       @Param("sourceId") String sourceId,

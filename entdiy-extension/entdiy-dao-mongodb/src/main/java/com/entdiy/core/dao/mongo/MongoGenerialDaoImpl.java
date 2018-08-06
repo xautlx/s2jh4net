@@ -158,13 +158,13 @@ public class MongoGenerialDaoImpl implements MongoDao {
                             queryItem.put(propertyName, new BasicDBObject("$gt", matchValue));
                             break;
                         case GE:
-                            queryItem.put(propertyName, new BasicDBObject("$ge", matchValue));
+                            queryItem.put(propertyName, new BasicDBObject("$gte", matchValue));
                             break;
                         case LT:
                             queryItem.put(propertyName, new BasicDBObject("$lt", matchValue));
                             break;
                         case LE:
-                            queryItem.put(propertyName, new BasicDBObject("$le", matchValue));
+                            queryItem.put(propertyName, new BasicDBObject("$lte", matchValue));
                             break;
                         case IN:
                             queryItem.put(propertyName, new BasicDBObject("$in", matchValue));

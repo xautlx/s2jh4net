@@ -30,7 +30,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,16 +44,15 @@ public abstract class BaseController<T extends AbstractPersistableEntity, ID ext
         return OperationResult.buildSuccessResult("数据保存处理完成", result);
     }
 
-    protected OperationResult delete(BaseService baseService, ID... ids) {
-        Assert.notNull(ids, "ids参数不能为空");
-        return delete(baseService, ids, null);
+    protected OperationResult delete(BaseService baseService, T... entities) {
+        Assert.notNull(entities, "ids参数不能为空");
+        return delete(baseService, entities, null);
     }
 
-    protected OperationResult delete(BaseService baseService, ID[] ids, EntityProcessCallbackHandler<T> handler) {
+    protected OperationResult delete(BaseService baseService, T[] entities, EntityProcessCallbackHandler<T> handler) {
         //删除失败的id和对应消息以Map结构返回，可用于前端批量显示错误提示和计算表格组件更新删除行项
         Map<Object, String> errorMessageMap = Maps.newLinkedHashMap();
         Set<T> enableDeleteEntities = Sets.newHashSet();
-        Collection<T> entities = baseService.findAll(ids);
 
         for (T entity : entities) {
             String msg = null;
@@ -103,12 +101,12 @@ public abstract class BaseController<T extends AbstractPersistableEntity, ID ext
 
         int rejectSize = errorMessageMap.size();
         if (rejectSize == 0) {
-            return OperationResult.buildSuccessResult("成功删除所有选取记录:" + entities.size() + "条");
+            return OperationResult.buildSuccessResult("成功删除所有选取记录:" + entities.length + "条");
         } else {
-            if (rejectSize == entities.size()) {
+            if (rejectSize == entities.length) {
                 return OperationResult.buildFailureResult("所有选取记录删除操作失败", errorMessageMap);
             } else {
-                return OperationResult.buildWarningResult("删除操作已处理. 成功:" + (entities.size() - rejectSize) + "条" + ",失败:" + rejectSize + "条",
+                return OperationResult.buildWarningResult("删除操作已处理. 成功:" + (entities.length - rejectSize) + "条" + ",失败:" + rejectSize + "条",
                         errorMessageMap);
             }
         }

@@ -692,7 +692,7 @@ public class PropertyFilter {
         return defaultView;
     }
 
-    private static Map<String, String[]> getParametersStartingWith(ServletRequest request, String prefix, String suffix) {
+    public static Map<String, String[]> getParametersStartingWith(ServletRequest request, String prefix, String suffix) {
         Assert.notNull(request, "Request must not be null");
         Enumeration paramNames = request.getParameterNames();
         Map<String, String[]> params = Maps.newTreeMap();
@@ -714,6 +714,26 @@ public class PropertyFilter {
                 } else {
                     params.put(unprefixed, new String[]{values[0]});
                 }
+            }
+        }
+        return params;
+    }
+
+    public static Map<String, String> getParameterStartingWith(ServletRequest request, String prefix, String suffix) {
+        Assert.notNull(request, "Request must not be null");
+        Enumeration paramNames = request.getParameterNames();
+        Map<String, String> params = Maps.newTreeMap();
+        if (prefix == null) {
+            prefix = "";
+        }
+        if (suffix == null) {
+            suffix = "";
+        }
+        while (paramNames != null && paramNames.hasMoreElements()) {
+            String paramName = (String) paramNames.nextElement();
+            if (("".equals(prefix) || paramName.startsWith(prefix)) && ("".equals(suffix) || paramName.endsWith(suffix))) {
+                String unprefixed = paramName.substring(prefix.length(), paramName.length() - suffix.length());
+                params.put(unprefixed, request.getParameter(paramName));
             }
         }
         return params;

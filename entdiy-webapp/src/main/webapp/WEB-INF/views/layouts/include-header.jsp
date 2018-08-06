@@ -30,6 +30,11 @@
 <script src="assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <script src="assets/apps/scripts/config.js?_=${buildVersion}" type="text/javascript"></script>
 <script type="text/javascript">
-    Config.setContextPath("${applicationScope.ctx}");
-    Config.setDevMode("${applicationScope.devMode}")
+    Config.set({
+        contextPath: "${applicationScope.ctx}",
+        devMode: "${applicationScope.devMode}",
+        //KindEditor文件操作涉及到Flash集成，因此需要在upload URL追加JSESSIONID参数以进行登录用户标识传递
+        fileUploadUrl: "/pub/upload/kind-editor.json;JSESSIONID=${pageContext.session.id}",
+        uploadPublicResourceUri: "${uploadPublicResourceUri}"
+    })
 </script>

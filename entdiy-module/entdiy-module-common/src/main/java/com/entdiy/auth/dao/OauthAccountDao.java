@@ -24,7 +24,6 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.QueryHint;
-import java.util.List;
 
 @Repository
 public interface OauthAccountDao extends BaseDao<OauthAccount, Long> {
@@ -32,5 +31,5 @@ public interface OauthAccountDao extends BaseDao<OauthAccount, Long> {
     OauthAccount findByOauthTypeAndOauthOpenId(OauthAccount.OauthTypeEnum oauthType, String oauthOpenId);
 
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    List<OauthAccount> findByAccount(Account account);
+    OauthAccount findByAccountAndOauthType(Account account,OauthAccount.OauthTypeEnum oauthType);
 }

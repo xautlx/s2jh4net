@@ -26,9 +26,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 /**
  * 数据库数据初始化处理器触发器
@@ -44,9 +41,6 @@ public class DatabaseDataInitializeExecutor {
     @PersistenceContext
     protected EntityManager entityManager;
 
-    @Autowired
-    private List<AbstractDatabaseDataInitializeProcessor> initializeProcessors;
-
     @PostConstruct
     public void initialize() {
         //先清空缓存数据
@@ -57,55 +51,7 @@ public class DatabaseDataInitializeExecutor {
         //对@Table注解的自增扩展属性处理
         databaseDataInitializeService.autoIncrementInitValue();
 
-        CountThread countThread = new CountThread();
-        countThread.start();
-
-        for (AbstractDatabaseDataInitializeProcessor initializeProcessor : initializeProcessors) {
-            logger.debug("Invoking data initialize for {}", initializeProcessor);
-            countThread.update(initializeProcessor.getClass());
-
-            initializeProcessor.initialize();
-        }
-
-        //停止计数线程
-        countThread.shutdown();
         //清空释放所有基础和模拟数据操作缓存
         entityManager.clear();
-    }
-}
-
-class CountThread extends Thread {
-
-    private static final Logger logger = LoggerFactory.getLogger(CountThread.class);
-
-    private Class<?> runnerClass;
-    private boolean running = true;
-    private LocalDateTime start = LocalDateTime.now();
-
-    @Override
-    public void run() {
-        while (running) {
-            try {
-                if (runnerClass != null) {
-                    LocalDateTime now = LocalDateTime.now();
-                    logger.info("Running at " + runnerClass.getName() + ". Total passed time "
-                            + ChronoUnit.SECONDS.between(start, now) + " seconds at Thread: "
-                            + Thread.currentThread().getId());
-                }
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                break;
-            }
-        }
-        super.run();
-    }
-
-    public void update(Class<?> runnerClass) {
-        this.runnerClass = runnerClass;
-    }
-
-    public void shutdown() {
-        logger.info("Shutdowning DatabaseDataInitializeTrigger CountThread: " + Thread.currentThread().getId());
-        running = false;
     }
 }

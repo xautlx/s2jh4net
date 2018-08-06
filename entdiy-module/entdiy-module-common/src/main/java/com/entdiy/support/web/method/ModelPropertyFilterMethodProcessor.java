@@ -12,10 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.core.web.method;
+package com.entdiy.support.web.method;
 
 import com.entdiy.core.pagination.GroupPropertyFilter;
+import com.entdiy.core.pagination.PropertyFilter;
+import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindException;
@@ -28,7 +31,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 定制对 {@link com.entdiy.core.web.annotation.ModelPropertyFilter} 注解参数处理，基于request请求构建查询参数对象
+ * 定制对 {@link ModelPropertyFilter} 注解参数处理，基于request请求构建查询参数对象
  *
  * @see org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor
  */
@@ -55,6 +58,12 @@ public class ModelPropertyFilterMethodProcessor implements HandlerMethodArgument
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         ModelPropertyFilter ann = parameter.getParameterAnnotation(ModelPropertyFilter.class);
         Class<?> clazz = ann.value();
-        return GroupPropertyFilter.buildFromHttpRequest(clazz, (HttpServletRequest) webRequest.getNativeRequest());
+        GroupPropertyFilter groupPropertyFilter = GroupPropertyFilter.buildFromHttpRequest(clazz, (HttpServletRequest) webRequest.getNativeRequest());
+        String dataAccessControl = ann.dataAccessControl();
+        if (StringUtils.isNotBlank(dataAccessControl)) {
+            String loginAccountDataDomain = AuthContextHolder.getAuthUserDetails().getDataDomain();
+            groupPropertyFilter.forceAnd(new PropertyFilter(PropertyFilter.MatchType.EQ, dataAccessControl, loginAccountDataDomain));
+        }
+        return groupPropertyFilter;
     }
 }

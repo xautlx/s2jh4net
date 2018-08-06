@@ -41,7 +41,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,8 +91,8 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(notifyMessageService, ids, (entity) -> notifyMessageReadService.countByNotifyMessage(entity) > 0 ? "公告[" + entity.getTitle() + "]已经被阅读，不能被删除" : null);
+    public OperationResult delete(@ModelEntity NotifyMessage... entities) {
+        return super.delete(notifyMessageService, entities, (entity) -> notifyMessageReadService.countByNotifyMessage(entity) > 0 ? "公告[" + entity.getTitle() + "]已经被阅读，不能被删除" : null);
     }
 
     @RequiresPermissions("配置管理:系统管理:公告管理")

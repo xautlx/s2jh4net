@@ -39,7 +39,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -81,8 +80,8 @@ public class MenuController extends BaseController<Menu, Long> {
     @RequiresPermissions("配置管理:系统管理:菜单配置")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@RequestParam("id") Long... id) {
-        return super.delete(menuService, id);
+    public OperationResult delete(@ModelEntity Menu... entities) {
+        return super.delete(menuService, entities);
     }
 
     @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)

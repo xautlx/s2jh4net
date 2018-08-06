@@ -24,11 +24,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.QueryHint;
-import java.util.Optional;
 
 @Repository
 public interface DepartmentDao extends BaseDao<Department, Long> {
 
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    Optional<Department> findByCode(@Param("code") String code);
+    Department findByCode(@Param("code") String code);
 }

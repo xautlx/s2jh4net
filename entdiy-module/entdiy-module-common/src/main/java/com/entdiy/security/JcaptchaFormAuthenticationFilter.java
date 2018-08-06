@@ -22,6 +22,8 @@ import com.entdiy.aud.service.AccountLogonLogService;
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.service.AccountService;
 import com.entdiy.core.cons.GlobalConstant;
+import com.entdiy.core.security.AuthContextHolder;
+import com.entdiy.core.security.AuthUserDetails;
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.IPAddrFetcher;
 import com.entdiy.core.web.captcha.CaptchaUtils;
@@ -99,6 +101,24 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
             authType = Account.AuthTypeEnum.valueOf(authTypeParam);
         }
         return new AuthTypeUsernamePasswordToken(authType, username, password, rememberMe, host);
+    }
+
+    @Override
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        if (isLoginRequest(request, response)) {
+            if (isLoginSubmission(request, response)) {
+                //本次用户登陆账号
+                String username = this.getUsername(request);
+                Subject subject = this.getSubject(request, response);
+                //之前登陆的用户
+                AuthUserDetails preAuthUserDetails = AuthContextHolder.getAuthUserDetails();
+                //如果两次登陆的用户不一样，则先退出之前登陆的用户
+                if (username != null && preAuthUserDetails != null && !username.equals(preAuthUserDetails.getUsername())) {
+                    subject.logout();
+                }
+            }
+        }
+        return super.isAccessAllowed(request, response, mappedValue);
     }
 
     @Override
@@ -276,8 +296,9 @@ public class JcaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
     /**
      * 判断是否是API形式请求登录，以便以JSON格式响应而不是转向登录界面
      * 规则：对于API请求从设计上要求提供Client鉴权信息，详见：ClientValidationAuthenticationFilter，
-     *      因此一个判断是请求头是否包含名称为sign的Header值，并且在 开发模式 此值可以固定传入 dev 直接放行校验以便开发调试；
-     *      另一个判断是对于AJAX请求 X-Requested-With=XMLHttpRequest 也作为API形式请求
+     * 因此一个判断是请求头是否包含名称为sign的Header值，并且在 开发模式 此值可以固定传入 dev 直接放行校验以便开发调试；
+     * 另一个判断是对于AJAX请求 X-Requested-With=XMLHttpRequest 也作为API形式请求
+     *
      * @param request
      * @return
      */

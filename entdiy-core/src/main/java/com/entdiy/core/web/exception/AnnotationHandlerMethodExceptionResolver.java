@@ -155,7 +155,8 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
                 ValidationException ex = parseSpecException(e, ValidationException.class);
                 if (ex != null) {
                     continueProcess = false;
-                    httpStatus = HttpStatus.BAD_REQUEST;
+                    //返回400，500等状态码会导致API接口不响应输出JSON信息，因此改为直接200响应，在客户端注意判断json中type属性
+                    httpStatus = HttpStatus.OK;
                     errorMessage = ex.getMessage();
                     skipLog = true;
                 }

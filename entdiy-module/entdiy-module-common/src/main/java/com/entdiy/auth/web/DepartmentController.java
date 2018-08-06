@@ -39,7 +39,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,7 +94,7 @@ public class DepartmentController extends BaseController<Department, Long> {
     @RequiresPermissions("配置管理:权限管理:部门配置")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(departmentService, ids);
+    public OperationResult delete(@ModelEntity Department... entities) {
+        return super.delete(departmentService, entities);
     }
 }

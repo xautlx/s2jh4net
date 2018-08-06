@@ -224,7 +224,7 @@ public class ServletUtils {
                         rules.put("number", true);
                     } else if (retType == Integer.class || retType == Long.class) {
                         //for jquery validation
-                        rules.put("digits", true);
+                        rules.put("number", true);
                         //for jqGrid
                         rules.put("integer", true);
                     }

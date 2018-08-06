@@ -71,13 +71,16 @@ public class AppContextHolder {
     @MetaData(value = "系统名称")
     private static String SYSTEM_NAME;
 
-
     public static boolean isDemoMode() {
         return DEMO_MODE;
     }
 
     public static boolean isDevMode() {
         return DEV_MODE;
+    }
+
+    public static boolean noneProductionMode() {
+        return DEV_MODE || DEMO_MODE;
     }
 
     public static String getBuildVersion() {

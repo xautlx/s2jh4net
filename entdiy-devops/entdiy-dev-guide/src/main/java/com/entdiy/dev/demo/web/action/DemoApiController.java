@@ -123,7 +123,7 @@ public class DemoApiController {
                                          @ApiIgnore @ModelEntity(value = "siteUser", allowedFields = {"headPhoto"}) DemoSiteUser siteUser,
                                          @RequestParam("myfile") CommonsMultipartFile fileUpload) {
         //创建附件记录
-        AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(fileUpload, AttachmentFileStoreService.SUB_DIR_FILES);
+        AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(fileUpload, "photo");
         attachmentFileService.save(attachmentFile);
 
         siteUser.setHeadPhoto(attachmentFile);

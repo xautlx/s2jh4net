@@ -27,11 +27,12 @@ public class ApiCorsFilter extends CorsFilter {
     private static UrlBasedCorsConfigurationSource configurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
+        //默认允许所有来源，如果出于安全考虑可以明确指定允许的来源
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }

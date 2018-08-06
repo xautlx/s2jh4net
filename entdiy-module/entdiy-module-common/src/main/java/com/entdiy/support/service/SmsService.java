@@ -17,27 +17,63 @@
  */
 package com.entdiy.support.service;
 
-import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.cons.GlobalConstant;
+import com.entdiy.core.exception.ServiceException;
+import com.entdiy.core.service.Validation;
+import com.entdiy.core.web.AppContextHolder;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
-public interface SmsService {
+import java.util.Map;
+
+public abstract class SmsService {
+
+    Logger logger = LoggerFactory.getLogger(SmsService.class);
+
+    @Autowired
+    private DynamicConfigService dynamicConfigService;
+
+
+    @Value("${sms.signature:}")
+    private String defaultSignature = "";
+
     /**
      * 短信发送接口
-     * @param smsContent 短信内容
-     * @param mobileNum 手机号码
      *
+     * @param signature      短信签名，如果签名为空则取默认签名配置
+     * @param templateCode   短信模板代码
+     * @param templateParams 模板替换参数
+     * @param mobileNums     手机号，视不同短信服务商一般限制最大个数，如阿里云不超过100
      * @return 如果成功则返回null；否则失败返回异常消息
      */
-    String sendSMS(String smsContent, String mobileNum, SmsMessageTypeEnum smsType);
+    public String sendSMS(String signature, String templateCode, Map<String, Object> templateParams, String... mobileNums) {
+        if (dynamicConfigService.getBoolean(GlobalConstant.CFG_SMS_DISABLED, false)) {
+            throw new ServiceException("短信发送功能已暂停");
+        }
 
-    enum SmsMessageTypeEnum {
-        @MetaData(value = "缺省", comments = "一般是程序触发，不做限制的短信发送")
-        Default,
+        if (StringUtils.isBlank(signature)) {
+            signature = defaultSignature;
+        }
+        Validation.isTrue(StringUtils.isNotBlank(templateCode), "短信模板代码必须");
+        Validation.isTrue(ArrayUtils.isNotEmpty(mobileNums), "短信号码必须");
 
-        @MetaData(value = "注册", comments = "用于注册时发送短信，限制条件为 间隔不能小于一分钟，一个小时内不能超过10次")
-        Signup,
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending SMS:");
+            logger.debug(" - signature: {}", signature);
+            logger.debug(" - templateCode: {}", templateCode);
+            //出于安全考虑，不在生产环境控制台输出敏感信息，如验证码等
+            if (AppContextHolder.isDevMode() || AppContextHolder.isDemoMode()) {
+                logger.warn(" - templateParams: {}", templateParams);
+            }
+            logger.debug(" - mobileNums: {}", mobileNums);
+        }
 
-        @MetaData(value = "验证码", comments = "用于发送短信验证码，限制条件为 间隔不能小于一分钟，一个小时内不能超过10次")
-        VerifyCode;
-
+        return sendSMSByVendor(signature, templateCode, templateParams, mobileNums);
     }
+
+    protected abstract String sendSMSByVendor(String signature, String templateCode, Map<String, Object> templateParams, String... mobileNums);
 }

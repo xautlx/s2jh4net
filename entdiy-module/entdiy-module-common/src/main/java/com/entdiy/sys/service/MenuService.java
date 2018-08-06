@@ -17,6 +17,7 @@
  */
 package com.entdiy.sys.service;
 
+import com.entdiy.auth.dao.RoleDao;
 import com.entdiy.auth.entity.Role;
 import com.entdiy.auth.entity.RoleR2Privilege;
 import com.entdiy.auth.entity.User;
@@ -31,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
 
     @Autowired
     private MenuDao menuDao;
+
+    @Autowired
+    private RoleDao roleDao;
 
     @Transactional(readOnly = true)
     public List<Menu> findAllCached() {
@@ -78,6 +83,7 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
      *
      * @return
      */
+    @Transactional(readOnly = true)
     public List<Menu> processUserMenu(User user) {
         //获取所有有效的菜单集合
         List<Menu> menus = findAvailableMenus();
@@ -86,7 +92,7 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
         Set<String> userPrivileges = Sets.newHashSet();
         if (userR2Roles != null) {
             for (UserR2Role userR2Role : userR2Roles) {
-                Role role = userR2Role.getRole();
+                Role role = roleDao.getOne(userR2Role.getRole().getId());
                 //如果是超级管理员直接返回所有有效菜单
                 if (role.getCode().equals(DefaultAuthUserDetails.ROLE_SUPER_USER)) {
                     return menus;
@@ -118,7 +124,7 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
                             for (String permission : permissions) {
                                 boolean grantedOne = false;
                                 for (String userPrivilege : userPrivileges) {
-                                    if (userPrivilege.equals(permission)) {
+                                    if (new WildcardPermission(userPrivilege).implies(new WildcardPermission(permission))) {
                                         grantedOne = true;
                                         break;
                                     }
@@ -133,7 +139,7 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
                             for (String permission : permissions) {
                                 boolean grantedOne = false;
                                 for (String userPrivilege : userPrivileges) {
-                                    if (userPrivilege.equals(permission)) {
+                                    if (new WildcardPermission(userPrivilege).implies(new WildcardPermission(permission))) {
                                         grantedOne = true;
                                         break;
                                     }
@@ -195,7 +201,7 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
         }
 
         //移除没有子项的父项
-        //removeEmptyParentItem(userMenus);
+        removeEmptyParentItem(userMenus);
 
         if (logger.isDebugEnabled()) {
             logger.debug("User Menu list: {}", user.getDisplay());
@@ -205,5 +211,27 @@ public class MenuService extends BaseNestedSetService<Menu, Long> {
         }
 
         return userMenus;
+    }
+
+    private void removeEmptyParentItem(List<Menu> userMenus) {
+        List<Menu> toRemoves = Lists.newArrayList();
+        for (Menu vo : userMenus) {
+            if (StringUtils.isBlank(vo.getUrl())) {
+                boolean toRemove = true;
+                for (Menu item : userMenus) {
+                    if (vo.getId().equals(item.getParent().getId())) {
+                        toRemove = false;
+                        break;
+                    }
+                }
+                if (toRemove) {
+                    toRemoves.add(vo);
+                }
+            }
+        }
+        if (toRemoves.size() > 0) {
+            userMenus.removeAll(toRemoves);
+            removeEmptyParentItem(userMenus);
+        }
     }
 }

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.core.web.method;
+package com.entdiy.support.web.method;
 
 import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.web.json.LocalDateSerializer;

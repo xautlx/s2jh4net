@@ -59,7 +59,7 @@ public class ControllerMetaDataPostProcessor {
         if (AppContextHolder.isDevMode() || CollectionUtils.isEmpty(menus) || CollectionUtils.isEmpty(privileges)) {
             logger.debug("Rebuilding menu and privilege data ...");
             //合并所有类中所有RequiresPermissions定义信息
-            Set<String> mergedPermissions = Sets.newHashSet();
+            Set<String> mergedPermissions = Sets.newLinkedHashSet();
             //合并所有类中所有RequiresPermissions定义信息
             Set<String> mergedMenus = Sets.newHashSet();
 
@@ -105,6 +105,7 @@ public class ControllerMetaDataPostProcessor {
                 if (rp != null) {
                     String[] perms = rp.value();
                     for (String perm : perms) {
+                        mergedPermissions.add(StringUtils.substringBeforeLast(perm, ":") + ":*");
                         mergedPermissions.add(perm);
                     }
                 }

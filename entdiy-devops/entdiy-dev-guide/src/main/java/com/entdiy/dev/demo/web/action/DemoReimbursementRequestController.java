@@ -51,7 +51,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,7 +76,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
     private AttachmentFileService attachmentFileService;
 
     @MenuData("演示样例:报销申请")
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(@ModelEntity DemoReimbursementRequest entity, Model model) {
         model.addAttribute("useTypeJson",
@@ -85,7 +84,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return "dev/demo/reimbursementRequest-index";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -99,7 +98,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return "dev/demo/reimbursementRequest-inputTabs";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editShow(@AuthAccount Account account, @ModelEntity(preFectchLazyFields = {"reimbursementRequestItems"}) DemoReimbursementRequest entity,
                            Model model) {
@@ -129,7 +128,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return "dev/demo/reimbursementRequest-inputBasic";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public OperationResult editSave(@AuthAccount Account account,
@@ -166,21 +165,21 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return result;
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(reimbursementRequestService, ids);
+    public OperationResult delete(@ModelEntity DemoReimbursementRequest... entities) {
+        return super.delete(reimbursementRequestService, entities);
     }
 
     @MenuData("演示样例:报销申请统计")
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat", method = RequestMethod.GET)
     public String statIndex() {
         return "dev/demo/reimbursementRequest-statIndex";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat/use-type", method = RequestMethod.GET)
     public String statUseType(Model model) {
         model.addAttribute("useTypeJson",
@@ -188,7 +187,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return "dev/demo/reimbursementRequest-statUseType";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat/use-type/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -197,13 +196,13 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
         return reimbursementRequestService.findByGroupAggregate(filter, pageable, "useType", "sum(totalInvoiceAmount) as totalInvoiceAmount");
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat/submit-date", method = RequestMethod.GET)
     public String statSubmitDate(Model model) {
         return "dev/demo/reimbursementRequest-statSubmitDate";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat/submit-date/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -214,7 +213,7 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
                 "sum(totalInvoiceAmount) as totalInvoiceAmount");
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat/submit-user/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)
@@ -225,13 +224,13 @@ public class DemoReimbursementRequestController extends BaseController<DemoReimb
                 "sum(totalInvoiceAmount) as totalInvoiceAmount");
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat/department", method = RequestMethod.GET)
     public String statDepartment(Model model) {
         return "dev/demo/reimbursementRequest-statDepartment";
     }
 
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
+    @RequiresRoles(DefaultAuthUserDetails.ROLE_SUPER_USER)
     @RequestMapping(value = "/stat/department/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Admin.class)

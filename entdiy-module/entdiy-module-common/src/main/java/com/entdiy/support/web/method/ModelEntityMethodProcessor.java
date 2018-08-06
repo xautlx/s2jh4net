@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.entdiy.core.web.method;
+package com.entdiy.support.web.method;
 
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.exception.ServiceException;
+import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.util.reflection.ReflectionUtils;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.util.ServletUtils;
@@ -46,13 +47,14 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 定制对  {@link com.entdiy.core.web.annotation.ModelEntity}  注解参数处理，基于id参数组从数据库查询对象
+ * 定制对  {@link ModelEntity}  注解参数处理，基于id参数组从数据库查询对象
  *
  * @see org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor
  */
@@ -64,6 +66,36 @@ public class ModelEntityMethodProcessor implements HandlerMethodArgumentResolver
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return (parameter.hasParameterAnnotation(ModelEntity.class));
+    }
+
+    private Object findEntityById(Class<?> entityClazz, Class<?> entityIdClass, String id) {
+        Object convertedId;
+        if (String.class.equals(entityIdClass)) {
+            convertedId = id;
+        } else if (Long.class.equals(entityIdClass)) {
+            convertedId = Long.valueOf(id);
+        } else if (Integer.class.equals(entityIdClass)) {
+            convertedId = Integer.valueOf(id);
+        } else {
+            throw new IllegalStateException("Unsupported entity ID class: " + entityIdClass);
+        }
+
+        //查询实体对象
+        return entityManager.find(entityClazz, convertedId);
+    }
+
+    private void dataAccessControl(ModelEntity ann, Object entity) {
+        String propertyName = ann.dataAccessControl();
+        if (StringUtils.isNotBlank(propertyName)) {
+            Object target = entity;
+            String[] props = StringUtils.split(propertyName, ".");
+            for (String prop : props) {
+                target = ReflectionUtils.invokeGetterMethod(target, prop);
+            }
+            String bizDataDomain = (String) target;
+            String loginAccountDataDomain = AuthContextHolder.getAuthUserDetails().getDataDomain();
+            Assert.isTrue(bizDataDomain.equals(loginAccountDataDomain), "Invalid data access");
+        }
     }
 
     /**
@@ -84,6 +116,10 @@ public class ModelEntityMethodProcessor implements HandlerMethodArgumentResolver
 
         MethodParameter nestedParameter = parameter.nestedIfOptional();
         Class<?> clazz = nestedParameter.getNestedParameterType();
+        boolean arrayType = clazz.isArray();
+        if (arrayType) {
+            clazz = clazz.getComponentType();
+        }
         Assert.isTrue(Persistable.class.isAssignableFrom(clazz), "@ModelEntity method parameter should extends from Persistable.class");
 
 
@@ -97,92 +133,102 @@ public class ModelEntityMethodProcessor implements HandlerMethodArgumentResolver
         if (mavContainer.containsAttribute(name)) {
             attribute = mavContainer.getModel().get(name);
         } else {
-            String id = webRequest.getParameter("id");
-            if (StringUtils.isNotBlank(id)) {
-                mavContainer.getModel().addAttribute("id", id);
-                Class<?> entityIdClass = MethodUtils.getAccessibleMethod(clazz, "getId").getReturnType();
+            if (arrayType) {
+                String paramIds = webRequest.getParameter("ids");
+                Object[] entities = null;
+                if (StringUtils.isNotBlank(paramIds)) {
+                    String[] ids = paramIds.split(",");
 
-                Object convertedId;
-                if (String.class.equals(entityIdClass)) {
-                    convertedId = id;
-                } else if (Long.class.equals(entityIdClass)) {
-                    convertedId = Long.valueOf(id);
-                } else if (Integer.class.equals(entityIdClass)) {
-                    convertedId = Integer.valueOf(id);
-                } else {
-                    throw new IllegalStateException("Unsupported entity ID class: " + entityIdClass);
+                    Class<?> entityIdClass = MethodUtils.getAccessibleMethod(clazz, "getId").getReturnType();
+                    entities = (Object[]) Array.newInstance(clazz, ids.length);
+                    for (int i = 0; i < ids.length; i++) {
+                        String cur = ids[i].trim();
+                        Object entity = findEntityById(clazz, entityIdClass, cur);
+                        dataAccessControl(ann, entity);
+                        entities[i] = entity;
+                    }
                 }
+                attribute = entities;
+            } else {
+                String id = webRequest.getParameter("id");
+                if (StringUtils.isNotBlank(id)) {
+                    mavContainer.getModel().addAttribute("id", id);
+                    Class<?> entityIdClass = MethodUtils.getAccessibleMethod(clazz, "getId").getReturnType();
+                    //查询实体对象
+                    Object entity = findEntityById(clazz, entityIdClass, id);
+                    dataAccessControl(ann, entity);
 
-                //查询实体对象
-                Object entity = entityManager.find(clazz, convertedId);
-
-                //对后续需要使用的懒加载属性做方法调用，触发关联对象加载，为后续detach做属性数据准备
-                if (ann.preFectchLazyFields().length > 0) {
-                    for (String prop : ann.preFectchLazyFields()) {
-                        try {
-                            Object propValue = MethodUtils.invokeMethod(entity, "get" + StringUtils.capitalize(prop));
-                            //Hibernate.initialize(propValue);
-                            if (propValue != null && propValue instanceof Collection<?>) {
-                                ((Collection<?>) propValue).size();
-                            } else if (propValue != null && propValue instanceof Persistable<?>) {
-                                ((Persistable<?>) propValue).getId();
+                    //对后续需要使用的懒加载属性做方法调用，触发关联对象加载，为后续detach做属性数据准备
+                    if (ann.preFectchLazyFields().length > 0) {
+                        for (String prop : ann.preFectchLazyFields()) {
+                            try {
+                                Object propValue = MethodUtils.invokeMethod(entity, "get" + StringUtils.capitalize(prop));
+                                //Hibernate.initialize(propValue);
+                                if (propValue != null && propValue instanceof Collection<?>) {
+                                    ((Collection<?>) propValue).size();
+                                } else if (propValue != null && propValue instanceof Persistable<?>) {
+                                    ((Persistable<?>) propValue).getId();
+                                }
+                            } catch (Exception e) {
+                                throw new ServiceException("error.init.detached.entity", e);
                             }
-                        } catch (Exception e) {
-                            throw new ServiceException("error.init.detached.entity", e);
                         }
+                    }
+
+                    //转换为游离态，用于后续数据绑定
+                    entityManager.detach(entity);
+
+                    attribute = entity;
+                } else {
+                    attribute = BeanUtils.instantiateClass(clazz);
+
+                    //对Embedded嵌入对象属性初始化空对象
+                    List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, Embedded.class);
+                    for (Field field : fields) {
+                        ReflectionUtils.invokeSetterMethod(attribute, field.getName(), BeanUtils.instantiateClass(field.getType()));
                     }
                 }
 
-                //转换为游离态，用于后续数据绑定
-                entityManager.detach(entity);
-
-                attribute = entity;
-            } else {
-                attribute = BeanUtils.instantiateClass(clazz);
-
-                //对Embedded嵌入对象属性初始化空对象
-                List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, Embedded.class);
-                for (Field field : fields) {
-                    ReflectionUtils.invokeSetterMethod(attribute, field.getName(), BeanUtils.instantiateClass(field.getType()));
+                //对于GET类型请求，追加校验规则JSON字符串属性
+                HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+                if (HttpMethod.GET.name().equalsIgnoreCase(request.getMethod()) && !GlobalConstant.NONE_VALUE.equals(ann.validateRules())) {
+                    mavContainer.getModel().addAttribute(ann.validateRules(), ServletUtils.buildValidateRules(clazz));
                 }
-            }
-
-            //对于GET类型请求，追加校验规则JSON字符串属性
-            HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-            if (HttpMethod.GET.name().equalsIgnoreCase(request.getMethod()) && !GlobalConstant.NONE_VALUE.equals(ann.validateRules())) {
-                mavContainer.getModel().addAttribute(ann.validateRules(), ServletUtils.buildValidateRules(clazz));
             }
         }
 
-        if (bindingResult == null) {
-            // Bean property binding and validation;
-            // skipped in case of binding failure on construction.
-            WebDataBinder binder = binderFactory.createBinder(webRequest, attribute, name);
+        //非数组类型参数做数据绑定
+        if (!arrayType) {
+            if (bindingResult == null) {
+                // Bean property binding and validation;
+                // skipped in case of binding failure on construction.
+                WebDataBinder binder = binderFactory.createBinder(webRequest, attribute, name);
 
-            //传入绑定控制属性
-            binder.setAllowedFields(ann.allowedFields());
-            binder.setDisallowedFields(ann.disallowedFields());
+                //传入绑定控制属性
+                binder.setAllowedFields(ann.allowedFields());
+                binder.setDisallowedFields(ann.disallowedFields());
 
-            if (binder.getTarget() != null) {
-                if (!mavContainer.isBindingDisabled(name)) {
-                    bindRequestParameters(binder, webRequest);
+                if (binder.getTarget() != null) {
+                    if (!mavContainer.isBindingDisabled(name)) {
+                        bindRequestParameters(binder, webRequest);
+                    }
+                    validateIfApplicable(binder, parameter);
+                    if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {
+                        throw new BindException(binder.getBindingResult());
+                    }
                 }
-                validateIfApplicable(binder, parameter);
-                if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {
-                    throw new BindException(binder.getBindingResult());
+                // Value type adaptation, also covering java.util.Optional
+                if (!parameter.getParameterType().isInstance(attribute)) {
+                    attribute = binder.convertIfNecessary(binder.getTarget(), parameter.getParameterType(), parameter);
                 }
+                bindingResult = binder.getBindingResult();
             }
-            // Value type adaptation, also covering java.util.Optional
-            if (!parameter.getParameterType().isInstance(attribute)) {
-                attribute = binder.convertIfNecessary(binder.getTarget(), parameter.getParameterType(), parameter);
-            }
-            bindingResult = binder.getBindingResult();
+
+            // Add resolved attribute and BindingResult at the end of the model
+            Map<String, Object> bindingResultModel = bindingResult.getModel();
+            mavContainer.removeAttributes(bindingResultModel);
+            mavContainer.addAllAttributes(bindingResultModel);
         }
-
-        // Add resolved attribute and BindingResult at the end of the model
-        Map<String, Object> bindingResultModel = bindingResult.getModel();
-        mavContainer.removeAttributes(bindingResultModel);
-        mavContainer.addAllAttributes(bindingResultModel);
 
         return attribute;
     }
@@ -202,7 +248,7 @@ public class ModelEntityMethodProcessor implements HandlerMethodArgumentResolver
     /**
      * Validate the model attribute if applicable.
      * <p>The default implementation checks for {@code @javax.validation.Valid},
-     * Spring's {@link org.springframework.validation.annotation.Validated},
+     * Spring's {@link Validated},
      * and custom annotations whose name starts with "Valid".
      *
      * @param binder    the DataBinder to be used

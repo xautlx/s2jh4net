@@ -19,9 +19,9 @@ package com.entdiy.sys.entity;
 
 import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.cons.GlobalConstant;
+import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.entity.BaseAttachmentFile;
 import com.entdiy.core.entity.EnumKeyLabelPair;
-import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -29,6 +29,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.random.RandomDataGenerator;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -113,61 +115,47 @@ public class AttachmentFile extends BaseAttachmentFile {
          * 对外访问地址形如：http://local.app.com/contextpath/pub/file/XXXX
          */
         @MetaData(value = "直接从本地文件系统IO读取返回响应", comments = "")
-        LOCAL_READ {
+        PRIVATE {
             @Override
             public String getLabel() {
-                return "应用本地读取";
+                return "受限访问资源";
             }
         },
 
         /**
-         * 适用于开放式文件类型访问，诸如图片，应用服务器上传文件目录与Nginx配置共享目录，
-         * 应用上传的文件转换为由Nginx proxy_pass代理地址，提高文件访问效率
-         * 对外访问地址形如：http://local.app.com/contextpath/upload/XXX
-         */
-        @MetaData(value = "对外返回静态资源服务器代理地址")
-        LOCAL_PROXY {
-            @Override
-            public String getLabel() {
-                return "本地代理访问";
-            }
-        },
-
-        /**
-         * 适用于开放式文件类型访问，诸如图片，直接调用第三方的CDN服务接口上传文件，
-         * 对于诸如开放图片之类的访问，在有条件的情况下尽可能采用此方式
+         * 适用于开放式文件类型访问，诸如图片，Nginx配置共享访问目录或直接调用第三方的CDN服务接口上传文件
          * 对外访问地址形如：http://cdn.server.com/app/upload/XXX
          */
         @MetaData(value = "CDN内容分发绝对URL地址")
-        CDN {
+        PUBLIC {
             @Override
             public String getLabel() {
-                return "CDN内容分发";
+                return "开放访问资源";
             }
         }
     }
 
+    private static RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
+
     @Transient
     public String getAccessUrl() {
-        //假如是以外部CDN形式存取文件，则组装CDN访问路径；否则本地应用存储形式，返回应用访问地址
-        if (AccessModeEnum.CDN.equals(this.accessMode)) {
-            return storePrefix + relativePath;
+        if (AccessModeEnum.PRIVATE.equals(this.accessMode)) {
+            return "/pub/file/view/" + getId();
         } else {
-            String uri = AppContextHolder.getWebContextUri();
-
-            //兼容处理通过Nginx+Ngrok多层穿透代理无法正确获取上下文URL，直接返回相对路径
-            if (AppContextHolder.isDevMode() || AppContextHolder.isDemoMode()) {
-                if (uri.indexOf("localhost") > -1) {
-                    return "/pub/file/view/" + getId();
-                }
-            }
-
-            if (AccessModeEnum.LOCAL_PROXY.equals(this.accessMode)) {
-                return uri + relativePath;
-            } else {
-                //正常情况返回绝对路径，方便API接口使用
-                return uri + "/pub/file/view/" + getId();
-            }
+            return getAccessUrl(relativePath);
         }
+    }
+
+    /**
+     * 基于当前相对URI，返回其开放访问地址网址URL
+     *
+     * @param relativePath
+     * @return
+     */
+    public static String getAccessUrl(String relativePath) {
+        String uriProps = SpringPropertiesHolder.getProperty(GlobalConstant.CFG_UPLOAD_PUBLIC_RESOURCE_URI);
+        String[] uris = StringUtils.split(uriProps, ",");
+        String uri = uris.length > 1 ? uris[randomDataGenerator.nextInt(0, uris.length - 1)] : uris[0];
+        return uri + relativePath;
     }
 }

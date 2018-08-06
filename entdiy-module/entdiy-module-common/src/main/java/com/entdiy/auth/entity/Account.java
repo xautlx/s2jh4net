@@ -134,7 +134,7 @@ public class Account extends BaseNativeEntity {
     private LocalDateTime lastLogonSuccessTime;
 
     @MetaData(value = "REST访问Token")
-    @Column(unique = true)
+    @Column(length = 128, unique = true)
     @ApiModelProperty(hidden = true)
     @JsonIgnore
     private String accessToken;

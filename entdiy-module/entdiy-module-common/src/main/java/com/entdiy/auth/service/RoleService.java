@@ -42,6 +42,11 @@ public class RoleService extends BaseService<Role, Long> {
     }
 
     @Transactional(readOnly = true)
+    public Role findByCode(String code) {
+        return roleDao.findByCode(code);
+    }
+
+    @Transactional(readOnly = true)
     public List<User> findUsersByRole(String roleCode) {
         Role role = roleDao.findByCode(roleCode);
         List<User> users = Lists.newArrayList();

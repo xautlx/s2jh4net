@@ -18,6 +18,7 @@
 package com.entdiy.core.web.captcha;
 
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.web.view.OperationResult;
 import com.octo.captcha.service.multitype.GenericManageableCaptchaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,8 +65,9 @@ public class CaptchaController {
         // return a jpeg
         response.setContentType("image/jpeg");
 
-        String captchaId=CaptchaUtils.getCaptchaID(request);
-        logger.trace("Generatin captch image for: {}", captchaId);
+        String captchaId = CaptchaUtils.getCaptchaID(request);
+        logger.debug("Generatin captch image for: {}", captchaId);
+
 
         // create the image with the text
         BufferedImage bi = captchaService.getImageChallengeForID(captchaId);
@@ -85,5 +87,17 @@ public class CaptchaController {
     @ResponseBody
     public Boolean touchValidateCaptcha(HttpServletRequest request, HttpServletResponse response) {
         return CaptchaUtils.touchValidateCaptchaCode(request, "captcha");
+    }
+
+    /**
+     * 供APP端统一结构返回调用
+     *
+     * @see DoubleCheckableCaptchaService#touchValidateResponseForID(String, Object)
+     */
+    @MetaData(value = "预校验验证码")
+    @RequestMapping(value = "/api/pub/captcha/touch-validate", method = RequestMethod.GET)
+    @ResponseBody
+    public OperationResult touchValidateCaptchaApi(HttpServletRequest request, HttpServletResponse response) {
+        return OperationResult.buildSuccessResult(CaptchaUtils.touchValidateCaptchaCode(request, "captcha"));
     }
 }

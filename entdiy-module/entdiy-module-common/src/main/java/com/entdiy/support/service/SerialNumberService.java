@@ -14,6 +14,7 @@
  */
 package com.entdiy.support.service;
 
+import com.entdiy.core.web.AppContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +100,11 @@ public class SerialNumberService {
      */
     public String generate(String bizCode, int serialNumLength) {
         Assert.isTrue(StringUtils.isNotBlank(bizCode), "流水号业务类型不能为空");
+
+        //开发模式直接返回当前时间戳，以避免反复重建数据库导致的业务号重复
+        if (AppContextHolder.isDevMode()) {
+            return bizCode + System.currentTimeMillis();
+        }
 
         LocalDate now = LocalDate.now();
         //获取当前时间,返回格式如yyyyMMdd

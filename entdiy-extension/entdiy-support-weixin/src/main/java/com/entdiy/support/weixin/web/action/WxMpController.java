@@ -14,6 +14,10 @@
  */
 package com.entdiy.support.weixin.web.action;
 
+import com.entdiy.auth.entity.Account;
+import com.entdiy.auth.entity.OauthAccount;
+import com.entdiy.auth.service.AccountService;
+import com.entdiy.auth.service.OauthAccountService;
 import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.view.OperationResult;
@@ -47,6 +51,11 @@ public class WxMpController {
     @Autowired
     private WxMpService wxMpService;
 
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private OauthAccountService oauthAccountService;
 
     @GetMapping("/echostr")
     public void wechatCore(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -72,12 +81,25 @@ public class WxMpController {
 
     @GetMapping("/goto-app")
     public String weixinGotoApp(
+            HttpServletRequest request,
             @RequestParam(value = "to", required = false) String to) {
         DefaultAuthUserDetails defaultAuthUserDetails = (DefaultAuthUserDetails) AuthContextHolder.getAuthUserDetails();
+        String token = defaultAuthUserDetails.getAccessToken();
+        if (AppContextHolder.isDevMode()) {
+            String mock = request.getParameter("mock");
+            if (StringUtils.isNotBlank(mock) && !mock.equals(defaultAuthUserDetails.getUsername())) {
+                OauthAccount oauthAccount = oauthAccountService.findByOauthTypeAndOauthOpenId(OauthAccount.OauthTypeEnum.MOCK, mock);
+                if (oauthAccount != null) {
+                    Account account = oauthAccount.getAccount();
+                    token = account.getAccessToken();
+                }
+            }
+        }
+
         String loginUrl = userAppUri + "/login？";
         String url = StringUtils.isNotBlank(to) ? loginUrl + "to=" + to : loginUrl;
         StringBuilder redirectURL = new StringBuilder(url);
-        redirectURL.append("&token=" + defaultAuthUserDetails.getAccessToken());
+        redirectURL.append("&token=" + token);
         redirectURL.append("&buildVersion=" + AppContextHolder.getBuildVersion());
         return "redirect:" + redirectURL;
     }

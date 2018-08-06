@@ -46,7 +46,7 @@
         <hibernate-validator.version>6.0.7.Final</hibernate-validator.version>
         <jackson.version>2.9.3</jackson.version>
         <swagger.version>2.8.0</swagger.version>
-        <slf4j.version>1.7.7</slf4j.version>
+        <slf4j.version>1.7.12</slf4j.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-io.version>2.5</commons-io.version>
         <guava.version>24.0-jre</guava.version>
@@ -418,6 +418,18 @@
                 <version>1.1.1</version>
             </dependency>
 
+            <!-- SMS -->
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>aliyun-java-sdk-core</artifactId>
+                <version>3.7.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+                <version>1.1.0</version>
+            </dependency>
+
             <!-- JSR303 Bean Validator -->
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -597,44 +609,25 @@
 
             <!-- Excel Support -->
             <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi</artifactId>
-                <version>3.9</version>
-                <scope>compile</scope>
+                <groupId>org.jxls</groupId>
+                <artifactId>jxls</artifactId>
+                <version>2.4.5</version>
             </dependency>
             <dependency>
-                <groupId>net.sf.jxls</groupId>
-                <artifactId>jxls-core</artifactId>
-                <version>1.0.6</version>
-                <type>jar</type>
-                <scope>compile</scope>
+                <groupId>org.jxls</groupId>
+                <artifactId>jxls-reader</artifactId>
+                <version>2.0.3</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>stax</groupId>
-                        <artifactId>stax-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-                        <groupId>org.apache.geronimo.specs</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>poi-ooxml-schemas</artifactId>
-                        <groupId>org.apache.poi</groupId>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-digester3</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>net.sf.jxls</groupId>
-                <artifactId>jxls-reader</artifactId>
-                <version>1.0.6</version>
-                <type>jar</type>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.sourceforge.jexcelapi</groupId>
-                <artifactId>jxl</artifactId>
-                <version>2.6</version>
-                <scope>compile</scope>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-digester3</artifactId>
+                <version>3.2</version>
             </dependency>
 
             <!-- LOGGING begin -->
@@ -647,7 +640,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.0.7</version>
+                <version>1.1.3</version>
             </dependency>
             <!-- https://github.com/alexvictoor/web-logback -->
             <dependency>

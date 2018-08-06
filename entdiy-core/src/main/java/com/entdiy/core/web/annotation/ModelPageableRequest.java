@@ -24,7 +24,7 @@ import java.lang.annotation.*;
 /**
  * 注解参数对象自动基于request请求构建分页排序参数对象
  *
- * @see com.entdiy.core.web.method.ModelPageableRequestMethodProcessor
+ * @see ModelPageableRequestMethodProcessor
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

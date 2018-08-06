@@ -17,6 +17,7 @@
  */
 package com.entdiy.core.aud;
 
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.security.AuthUserDetails;
 import com.entdiy.core.util.DateUtils;
@@ -47,8 +48,14 @@ public class SaveUpdateAuditListener {
         AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
         if (authUserDetails != null) {
             auditable.setCreateUserName(authUserDetails.getUsername());
-            auditable.setDataDomain(authUserDetails.getDataDomain());
             auditable.setCreateAccountId(authUserDetails.getAccountId());
+            if (auditable.getDataDomain() == null) {
+                auditable.setDataDomain(authUserDetails.getDataDomain());
+            }
+        } else {
+            if (auditable.getDataDomain() == null) {
+                auditable.setDataDomain(GlobalConstant.DEFAULT_VALUE);
+            }
         }
     }
 

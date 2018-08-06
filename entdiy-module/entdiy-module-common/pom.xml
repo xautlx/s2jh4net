@@ -62,6 +62,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- https://blog.csdn.net/wuhenzhangxing/article/details/51777175 -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.8</version>
+        </dependency>
+
         <!-- http://projectlombok.org/ -->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Transactional
 public class DepartmentService extends BaseNestedSetService<Department, Long> {
@@ -34,7 +32,7 @@ public class DepartmentService extends BaseNestedSetService<Department, Long> {
     private DepartmentDao departmentDao;
 
     @Transactional(readOnly = true)
-    public Optional<Department> findByCode(String code) {
+    public Department findByCode(String code) {
         return departmentDao.findByCode(code);
     }
 }

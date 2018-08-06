@@ -50,11 +50,8 @@ public class DynamicConfigService {
      * 根据key获取对应动态参数值，如果没有则返回defaultValue
      */
     public String getString(String key, String defaultValue) {
-        String val = null;
-        //cfg打头参数，首先从数据库取值
-        if (key.startsWith("cfg")) {
-            val = configPropertyService.findValueByPropKey(key);
-        }
+        //首先从数据库取值
+        String val = configPropertyService.findValueByPropKey(key);
 
         //从环境变量获取
         if (val == null) {

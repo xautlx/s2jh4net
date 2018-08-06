@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
@@ -30,8 +30,7 @@ import javax.persistence.Table;
 import javax.transaction.Transactional;
 import java.sql.DatabaseMetaData;
 
-@Service
-@Transactional
+@Component
 public class DatabaseDataInitializeService {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseDataInitializeExecutor.class);
@@ -42,7 +41,9 @@ public class DatabaseDataInitializeService {
     @PersistenceContext
     protected EntityManager entityManager;
 
+    @Transactional
     public void autoIncrementInitValue() {
+        logger.debug("Invoking autoIncrementInitValue...");
         //搜索所有entity对象，并自动进行自增初始化值设
         for (String managedClassName : entityManagerFactory.getPersistenceUnitInfo().getManagedClassNames()) {
             try {

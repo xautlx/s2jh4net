@@ -23,7 +23,12 @@ import com.entdiy.core.web.AppContextHolder;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
@@ -39,8 +44,21 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * 定义依赖属性，使其优先执行
+     */
+    @Autowired
+    private DatabaseDataInitializeExecutor databaseDataInitializeExecutor;
+
+    private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
+    @PostConstruct
     public void initialize() {
         logger.debug("Invoking data process for {}", this);
+        //先清空缓存数据
+        if (AppContextHolder.isDevMode()) {
+            entityManager.getEntityManagerFactory().getCache().evictAll();
+        }
         try {
             initializeInternal();
         } catch (Exception e) {
@@ -50,6 +68,8 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
             //重置恢复模拟数据设置的临时时间
             DateUtils.setCurrentDateTime(null);
         }
+        //清空释放所有基础和模拟数据操作缓存
+        entityManager.clear();
     }
 
     /**
@@ -80,6 +100,23 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
         } else {
             return false;
         }
+    }
+
+    protected Resource[] getPathMatchingResources(String patternPath) {
+        try {
+            return resolver.getResources(patternPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    protected Resource getPathMatchingResource(String patternPath) {
+        Resource[] resources = getPathMatchingResources(patternPath);
+        if (resources == null || resources.length == 0) {
+            return null;
+        }
+        return resources[0];
     }
 
     /**

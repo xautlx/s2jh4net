@@ -1,7 +1,7 @@
 #!/bin/sh
 
 SHELL_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
-BASE_DIR=${SHELL_DIR}/..
+BASE_DIR="$( cd "$SHELL_DIR/.." && pwd  )"
 
 app_name="entdiy-tomcat"
 port="8080"

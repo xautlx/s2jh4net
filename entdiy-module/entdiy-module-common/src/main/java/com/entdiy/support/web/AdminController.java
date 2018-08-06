@@ -20,6 +20,7 @@ package com.entdiy.support.web;
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.UserService;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.security.DefaultAuthUserDetails;
@@ -57,6 +58,7 @@ public class AdminController {
     @RequestMapping(value = {"/admin", "/admin/"}, method = RequestMethod.GET)
     public String adminIndex(HttpServletRequest request, Model model) {
         model.addAttribute("baiduMapAppkey", SpringPropertiesHolder.getProperty("baidu.map.appkey"));
+        model.addAttribute("uploadPublicResourceUri", SpringPropertiesHolder.getProperty(GlobalConstant.CFG_UPLOAD_PUBLIC_RESOURCE_URI));
         return "admin/index";
     }
 
@@ -82,13 +84,6 @@ public class AdminController {
         } else {
             return "redirect:/admin";
         }
-    }
-
-    @RequiresRoles(DefaultAuthUserDetails.ROLE_MGMT_USER)
-    @RequestMapping(value = "/admin/dashboard", method = RequestMethod.GET)
-    public String dashboard(Model model) {
-        model.addAttribute("devMode", AppContextHolder.isDevMode());
-        return "admin/dashboard";
     }
 
     /**

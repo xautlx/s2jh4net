@@ -27,6 +27,8 @@ public interface DefaultAuditable {
 
     void setDataDomain(String dataDomain);
 
+    String getDataDomain();
+
     void setCreateDate(LocalDateTime createDate);
 
     LocalDateTime getCreateDate();

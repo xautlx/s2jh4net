@@ -23,6 +23,13 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="control-label">数据域</label>
+                            <div class="controls">
+                                <form:input path="account.dataDomain" class="form-control"/>
+                                <span class="help-block">用于数据访问控制，请仔细填写或保留默认值，创建之后不可变更</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label">设置密码</label>
                             <div class="controls">
                                 <input type="password" class="form-control" name="rawPassword"
@@ -59,6 +66,12 @@
                                         登录账号管理
                                     </a>
                                 </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">数据域</label>
+                            <div class="controls">
+                                <p class="form-control-static">${entity.account.dataDomain}</p>
                             </div>
                         </div>
                     </c:otherwise>

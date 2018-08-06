@@ -6,7 +6,7 @@
 <body>
 <h2>401 - 未登录验证</h2>
 <p>
-    <a href="${applicationScope.ctx}/login">登录</a>
+    <a href="${applicationScope.ctx}/admin/login">登录</a>
 </p>
 </body>
 </html>

@@ -20,7 +20,7 @@ package com.entdiy.core.web.captcha;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.context.SpringContextHolder;
 import com.entdiy.core.exception.ServiceException;
-import com.octo.captcha.service.CaptchaServiceException;
+import com.entdiy.core.service.Validation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +39,7 @@ public class CaptchaUtils {
 
     /**
      * 获取请求对应的验证码存储标识ID
+     *
      * @param request
      * @return
      */
@@ -49,6 +50,10 @@ public class CaptchaUtils {
 
             //兼容APP请求，基于AccessToken作为验证码标识，否则就按照标准的Session标识
             captchaId = httpServletRequest.getHeader(GlobalConstant.APP_AUTH_ACCESS_TOKEN);
+            //从参数提前captchaId，主要用于APP客户端在显示验证码img图片src追加参数提供AccessToken
+            if (StringUtils.isBlank(captchaId)) {
+                captchaId = httpServletRequest.getParameter(GlobalConstant.APP_AUTH_ACCESS_TOKEN);
+            }
             if (StringUtils.isBlank(captchaId)) {
                 captchaId = httpServletRequest.getSession().getId();
             }
@@ -59,7 +64,7 @@ public class CaptchaUtils {
     }
 
     /**
-     * 预校验验证码正确性（不会移除当前验证码）
+     * 预校验验证码正确性（不会移除当前验证码），一般用于表单实时校验提示之用
      *
      * @param request          HTTP请求
      * @param captchaParamName 验证码参数名称
@@ -77,9 +82,7 @@ public class CaptchaUtils {
      * @throws CaptchaValidationException
      */
     public static void assetValidateCaptchaCode(ServletRequest request, String captchaParamName) {
-        if (!validateCaptchaCode(request, captchaParamName, false)) {
-            throw new CaptchaValidationException("Asset captcha code failure");
-        }
+        Validation.isTrue(validateCaptchaCode(request, captchaParamName, false), "验证码不正确，请重新输入");
     }
 
     /**
@@ -91,26 +94,18 @@ public class CaptchaUtils {
      * @retur
      */
     private static boolean validateCaptchaCode(ServletRequest request, String captchaParamName, boolean justTouch) {
-        try {
-            String captcha = request.getParameter(captchaParamName);
-            if (StringUtils.isBlank(captcha)) {
-                throw new ServiceException("captcha required");
-            }
-            captcha = captcha.toUpperCase();
-
-
-            captchaService = captchaService == null ? SpringContextHolder.getBean(DoubleCheckableCaptchaService.class) : captchaService;
-            logger.debug("Validating captcha code: {}", captcha);
-
-            String captchaId=CaptchaUtils.getCaptchaID(request);
-            if (justTouch) {
-                return captchaService.touchValidateResponseForID(captchaId, captcha);
-            } else {
-                return captchaService.validateResponseForID(captchaId, captcha);
-            }
-        } catch (CaptchaServiceException e) {
-            logger.warn("captcha validate error", e);
-            return false;
+        String captcha = request.getParameter(captchaParamName);
+        if (StringUtils.isBlank(captcha)) {
+            throw new ServiceException("captcha required");
+        }
+        //转换为大写匹配
+        captcha = captcha.toUpperCase();
+        captchaService = captchaService == null ? SpringContextHolder.getBean(DoubleCheckableCaptchaService.class) : captchaService;
+        String captchaId = CaptchaUtils.getCaptchaID(request);
+        if (justTouch) {
+            return captchaService.touchValidateResponseForID(captchaId, captcha);
+        } else {
+            return captchaService.validateResponseForID(captchaId, captcha);
         }
     }
 }

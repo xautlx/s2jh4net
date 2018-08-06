@@ -27,16 +27,14 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.Exceptions;
 import com.entdiy.core.util.ExtStringUtils;
 import com.entdiy.core.util.reflection.ConvertUtils;
-import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.support.service.SmsService;
-import com.entdiy.support.service.SmsService.SmsMessageTypeEnum;
+import com.entdiy.support.service.SmsVerifyCodeService;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.service.AttachmentFileService;
 import com.entdiy.sys.service.AttachmentFileStoreService;
-import com.entdiy.sys.service.SmsVerifyCodeService;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -119,18 +117,10 @@ public class UtilController {
         //二次校验验证码避免绕过表单校验的恶意请求
         CaptchaUtils.assetValidateCaptchaCode(request, "captcha");
 
-        String code = smsVerifyCodeService.generateSmsCode(request, mobile, false);
-        String msg = "您的操作验证码为：" + code + "。请勿向任何人提供您收到的短信验证码。如非本人操作，请忽略本信息。";
-        String errorMessage = smsService.sendSMS(msg, mobile, SmsMessageTypeEnum.VerifyCode);
-        if (StringUtils.isBlank(errorMessage)) {
-            OperationResult result = OperationResult.buildSuccessResult();
-            //如果是开发模式直接把短信内容返回给页面显示方便开发调试
-            if (AppContextHolder.isDevMode()) {
-                result.setMessage("开发模式信息：" + msg);
-            }
-            return result;
+        if (smsVerifyCodeService.sendSmsCode(null, mobile)) {
+            return OperationResult.buildSuccessResult();
         } else {
-            return OperationResult.buildFailureResult(errorMessage);
+            return OperationResult.buildFailureResult("短信服务异常");
         }
     }
 
@@ -305,38 +295,54 @@ public class UtilController {
         return OperationResult.buildSuccessResult("系统时间临时调整已恢复为当前系统时间：" + DateUtils.currentDateTime());
     }
 
-
-    @RequestMapping(value = "/pub/file-upload/kind-editor", method = RequestMethod.POST)
+    @RequestMapping(value = "/pub/upload/kind-editor", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> imageUpload(HttpServletRequest request, @RequestParam("imgFile") CommonsMultipartFile fileUpload) {
+    public Map<String, Object> imageUpload(HttpServletRequest request,
+                                           @RequestParam("imgFile") CommonsMultipartFile uploadFile,
+                                           @RequestParam("dir") String dir) {
         Map<String, Object> retMap = Maps.newHashMap();
+        if (uploadFile == null || uploadFile.isEmpty()) {
+            retMap.put("error", 1);
+            retMap.put("message", "上传文件为空");
+            return retMap;
+        }
+
         try {
-            if (fileUpload == null || fileUpload.isEmpty()) {
-                retMap.put("error", 1);
-                retMap.put("message", "上传文件为空");
+            if ("image".equals(dir)) {
+                //创建附件记录
+                AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                        uploadFile, dir);
+
+                //以下两个属性用于kindeditor显示之用
+                retMap.put("error", 0);
+                retMap.put("url", AttachmentFile.getAccessUrl(attachmentFile.getRelativePath()));
+
+                //业务使用属性
+                retMap.put("relativePath", attachmentFile.getRelativePath());
+                return retMap;
+            } else {
+                //创建附件记录
+                AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                        uploadFile, dir);
+                attachmentFileService.save(attachmentFile);
+
+                String accessUrl = attachmentFile.getAccessUrl();
+
+                //以下两个属性用于kindeditor显示之用
+                retMap.put("error", 0);
+                retMap.put("url", accessUrl);
+
+                //业务使用属性
+                retMap.put("id", attachmentFile.getId());
+                retMap.put("accessUrl", accessUrl);
+                retMap.put("fileRealName", attachmentFile.getFileRealName());
+                retMap.put("fileLength", attachmentFile.getFileLength());
                 return retMap;
             }
-
-            //创建附件记录
-            AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                    fileUpload, AttachmentFileStoreService.SUB_DIR_FILES);
-            attachmentFileService.save(attachmentFile);
-
-            String accessUrl = attachmentFile.getAccessUrl();
-
-            //以下两个属性用于kindeditor显示之用
-            retMap.put("error", 0);
-            retMap.put("url", accessUrl);
-
-            //业务使用属性
-            retMap.put("id", attachmentFile.getId());
-            retMap.put("accessUrl", accessUrl);
-            retMap.put("fileRealName", attachmentFile.getFileRealName());
-            retMap.put("fileLength", attachmentFile.getFileLength());
-            return retMap;
         } catch (Exception e) {
+            logger.error("File upload error", e);
             retMap.put("error", 1);
-            retMap.put("message", "图片处理失败");
+            retMap.put("message", "文件上传处理失败");
             return retMap;
         }
     }

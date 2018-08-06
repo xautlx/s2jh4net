@@ -87,14 +87,6 @@ public class AccountMessage extends BaseNativeEntity {
     @JsonView(JsonViews.Admin.class)
     private LocalDateTime emailPushTime;
 
-    @MetaData(value = "短信推送消息")
-    @JsonView(JsonViews.Admin.class)
-    private Boolean smsPush = Boolean.FALSE;
-
-    @MetaData(value = "短信推送消息时间", comments = "为空表示尚未推送过")
-    @JsonView(JsonViews.Admin.class)
-    private LocalDateTime smsPushTime;
-
     @MetaData(value = "APP推送消息")
     @JsonView(JsonViews.Admin.class)
     private Boolean appPush = Boolean.FALSE;

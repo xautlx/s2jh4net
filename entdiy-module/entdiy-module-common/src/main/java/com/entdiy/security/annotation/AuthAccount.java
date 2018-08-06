@@ -17,12 +17,14 @@
  */
 package com.entdiy.security.annotation;
 
+import com.entdiy.support.web.method.AuthAccountMethodProcessor;
+
 import java.lang.annotation.*;
 
 /**
  * 基于当前 Shiro 登录会话自动注入当前登录账号对象
  *
- * @see com.entdiy.security.method.AuthAccountMethodProcessor
+ * @see AuthAccountMethodProcessor
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

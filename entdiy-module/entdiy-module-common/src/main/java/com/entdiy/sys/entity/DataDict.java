@@ -52,7 +52,7 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
      */
     @MetaData(value = "主标识")
     @Column(length = 128, nullable = false)
-    @JsonView(JsonViews.List.class)
+    @JsonView(JsonViews.App.class)
     private String primaryKey;
 
     /**
@@ -60,7 +60,7 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
      */
     @MetaData(value = "次标识")
     @Column(length = 128)
-    @JsonView(JsonViews.List.class)
+    @JsonView(JsonViews.App.class)
     private String secondaryKey;
 
     /**
@@ -69,7 +69,7 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
      * 然后通过{@link DataDictService#findMapDataByRootPrimaryKey(String)}即可快速返回key-value形式的Map数据
      */
     @MetaData(value = "主要数据")
-    @JsonView(JsonViews.List.class)
+    @JsonView(JsonViews.App.class)
     private String primaryValue;
 
     /**
@@ -78,7 +78,7 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
      * 对于返回的数据，根据实际业务定制化使用即可
      */
     @MetaData(value = "次要数据")
-    @JsonView(JsonViews.List.class)
+    @JsonView(JsonViews.App.class)
     private String secondaryValue;
 
     /**
@@ -88,7 +88,7 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
      */
     @MetaData(value = "大文本数据", tooltips = "以CLOB大文本方式存储用于特定的大文本数据配置")
     @Lob
-    @JsonView(JsonViews.Detail.class)
+    @JsonView(JsonViews.App.class)
     private String richTextValue;
 
     @Override

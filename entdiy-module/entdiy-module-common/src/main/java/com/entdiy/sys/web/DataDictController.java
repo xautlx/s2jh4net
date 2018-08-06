@@ -86,8 +86,8 @@ public class DataDictController extends BaseController<DataDict, Long> {
     @RequiresPermissions("配置管理:系统管理:数据字典")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(dataDictService, ids);
+    public OperationResult delete(@ModelEntity DataDict... entities) {
+        return super.delete(dataDictService, entities);
     }
 
     @MetaData(value = "级联子数据集合")

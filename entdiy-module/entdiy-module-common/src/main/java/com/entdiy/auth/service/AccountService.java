@@ -60,12 +60,12 @@ public class AccountService extends BaseService<Account, Long> {
     /**
      * 基于登录界面输入的单一username参数值进行转换处理查询用户对象
      *
-     * @param username
+     * @param username 登录名称，支持域账户形式(如 admin\\user1, admin\\user2 )，前面部分会转换为dataDomain属性匹配
      * @return
      */
     public Account findByUsername(Account.AuthTypeEnum authType, String username) {
-        //对用户输入登录信息以域账户形式进行切分，如果没有提供域信息则置为默认域
-        String[] splits = username.split("/");
+        //对用户输入登录信息以域账户形式(如 admin\\user1, admin\\user2 )进行切分，如果没有提供域信息则置为默认域
+        String[] splits = username.indexOf("\\") > -1 ? StringUtils.split(username, "\\") : StringUtils.split(username, "/");
         String dataDomain, uname;
         if (splits.length == 2) {
             dataDomain = splits[0];

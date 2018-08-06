@@ -88,7 +88,7 @@ public class DepartmentServiceTest extends SpringTransactionalTestCase {
 
         Assert.assertTrue(d0102.getLft().equals(5));
 
-        departmentService.delete(departmentService.findByCode("d0101").get());
+        departmentService.delete(departmentService.findByCode("d0101"));
         //清空缓存，避免同会话缓存数据干扰
         entityManager.flush();
         entityManager.clear();
@@ -97,23 +97,23 @@ public class DepartmentServiceTest extends SpringTransactionalTestCase {
         Assert.assertTrue(departmentService.findRoot().getRgt().equals(8));
 
 
-        departmentService.delete(departmentService.findByCode("d0102").get());
+        departmentService.delete(departmentService.findByCode("d0102"));
         //清空缓存，避免同会话缓存数据干扰
         entityManager.flush();
         entityManager.clear();
         assertNestedSetModel();
 
         Assert.assertTrue(departmentService.findRoot().getRgt().equals(6));
-        Assert.assertTrue(departmentService.findByCode("d02").get().getRgt().equals(5));
+        Assert.assertTrue(departmentService.findByCode("d02").getRgt().equals(5));
 
-        departmentService.delete(departmentService.findByCode("d01").get());
+        departmentService.delete(departmentService.findByCode("d01"));
         //清空缓存，避免同会话缓存数据干扰
         entityManager.flush();
         entityManager.clear();
         assertNestedSetModel();
 
         Assert.assertTrue(departmentService.findRoot().getRgt().equals(4));
-        Assert.assertTrue(departmentService.findByCode("d02").get().getRgt().equals(3));
+        Assert.assertTrue(departmentService.findByCode("d02").getRgt().equals(3));
     }
 
     private void assertNestedSetModel() {

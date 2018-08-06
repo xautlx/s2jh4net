@@ -6,6 +6,9 @@ echo "Using SHELL_DIR: ${SHELL_DIR}"
 echo Rebuild root project...
 cd ${SHELL_DIR}/../../..
 
+#忽略子模块只构建parent
+mvn install -N
+
 cd entdiy-core
 mvn install
 cd ..

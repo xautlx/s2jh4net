@@ -15,6 +15,8 @@
     <modules>
         <module>entdiy-dao-mongodb</module>
         <module>entdiy-support-weixin</module>
+        <module>entdiy-support-aliyun-sms</module>
+        <module>entdiy-support-aliyun-oss</module>
     </modules>
 
 </project>

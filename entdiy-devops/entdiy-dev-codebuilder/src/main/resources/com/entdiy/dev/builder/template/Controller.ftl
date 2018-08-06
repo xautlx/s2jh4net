@@ -132,7 +132,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name}, ${i
     @RequiresPermissions("业务管理:${model_title}删除")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult delete(@RequestParam("ids") Long... ids) {
-        return super.delete(${entity_name_uncapitalize}Service, ids);
+    public OperationResult delete(@ModelEntity ${entity_name}... entities) {
+        return super.delete(${entity_name_uncapitalize}Service, entities);
     }
 }

@@ -22,7 +22,6 @@ import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,12 +58,15 @@ public abstract class BaseNativeNestedSetEntity<T extends BaseNativeNestedSetEnt
     private T parent;
 
     @Column(name = "lft", nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private Integer lft = 0;
 
     @Column(name = "rgt", nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private Integer rgt = 0;
 
     @Column(name = "depth", nullable = false)
+    @JsonView(JsonViews.Admin.class)
     private Integer depth = 0;
 
     @MetaData(value = "禁用标识", tooltips = "禁用项目用户端不显示")
@@ -89,11 +91,12 @@ public abstract class BaseNativeNestedSetEntity<T extends BaseNativeNestedSetEnt
         this.setDepth(0);
     }
 
+    @JsonView(JsonViews.Admin.class)
     public boolean isRoot() {
         return this.getDepth() == 0;
     }
 
-    @JsonProperty
+    @JsonView(JsonViews.Admin.class)
     public Boolean hasChildren() {
         return (this.getRgt() - this.getLft()) > 1;
     }

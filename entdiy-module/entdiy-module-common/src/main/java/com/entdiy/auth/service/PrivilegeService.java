@@ -75,4 +75,9 @@ public class PrivilegeService extends BaseService<Privilege, Long> {
     public List<RoleR2Privilege> findRelatedRoleR2PrivilegesForPrivilege(String privilegeId) {
         return roleR2PrivilegeDao.findByPrivilegeId(privilegeId);
     }
+
+    @Transactional(readOnly = true)
+    public Privilege findByCode(String code) {
+        return privilegeDao.findByCode(code);
+    }
 }

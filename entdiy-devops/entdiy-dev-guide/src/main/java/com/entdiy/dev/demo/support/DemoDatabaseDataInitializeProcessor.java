@@ -35,6 +35,7 @@ import com.entdiy.dev.demo.service.DemoOrderService;
 import com.entdiy.dev.demo.service.DemoProductService;
 import com.entdiy.dev.demo.service.DemoReimbursementRequestService;
 import com.entdiy.dev.demo.service.DemoSiteUserService;
+import com.entdiy.support.data.BasicDatabaseDataInitializeProcessor;
 import com.entdiy.sys.entity.AccountMessage;
 import com.entdiy.sys.entity.AttachmentFile;
 import com.entdiy.sys.entity.DataDict;
@@ -46,7 +47,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -62,10 +62,13 @@ import java.util.stream.Collectors;
  * 演示数据初始化处理器
  */
 @Component
-@Order
 public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataInitializeProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractDatabaseDataInitializeProcessor.class);
+
+    /** 注意保留此未使用依赖，使其依赖对象优先执行以准备当前所需基础数据 */
+    @Autowired
+    private BasicDatabaseDataInitializeProcessor basicDatabaseDataInitializeProcessor;
 
     @Autowired
     private DataDictService dataDictService;
@@ -105,14 +108,16 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
 
     private AttachmentFile buildImageAttachmentFile(Resource resource) throws IOException {
         AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                resource.getInputStream(), AttachmentFileStoreService.SUB_DIR_IMAGES,
+                AttachmentFile.AccessModeEnum.PUBLIC,
+                resource.getInputStream(), "images",
                 resource.getFilename(), "image/jpg", resource.contentLength());
         return attachmentFileService.save(attachmentFile);
     }
 
     private AttachmentFile buildMarkdownAttachmentFile(Resource resource) throws IOException {
         AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                resource.getInputStream(), AttachmentFileStoreService.SUB_DIR_FILES,
+                AttachmentFile.AccessModeEnum.PUBLIC,
+                resource.getInputStream(), "files",
                 resource.getFilename(), "plain/txt", resource.contentLength());
         return attachmentFileService.save(attachmentFile);
     }
@@ -121,7 +126,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
     public void initializeInternal() throws Exception {
         logger.info("Running " + this.getClass().getName());
 
-        if (AppContextHolder.isDemoMode() || AppContextHolder.isDevMode()) {
+        if (AppContextHolder.noneProductionMode()) {
             LocalDateTime now = DateUtils.currentDateTime();
             String prefix = "demo";
 
@@ -399,7 +404,7 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
                     for (int j = 0; j < randomInt; j++) {
                         Resource resource = MockEntityUtils.randomCandidates(imageResources);
                         AttachmentFile attachmentFile = this.buildImageAttachmentFile(resource);
-                        attachmentFileUrls.add(attachmentFile.getAccessUrl());
+                        attachmentFileUrls.add(attachmentFile.getRelativePath());
                     }
                     product.setCommaPreviewImageUrls(StringUtils.join(attachmentFileUrls, ","));
 

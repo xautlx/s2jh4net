@@ -28,8 +28,5 @@
             </c:forEach>
             </tbody>
         </table>
-        <!-- TODO
-        <tags:pagination page="${pageData}"/>
-        -->
     </div>
 </div>

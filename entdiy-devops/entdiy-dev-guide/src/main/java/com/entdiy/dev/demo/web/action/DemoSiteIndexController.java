@@ -78,7 +78,7 @@ public class DemoSiteIndexController extends BaseController<DemoSiteUser, Long> 
         if (photo != null && !photo.isEmpty()) {
             try {
                 //写入文件到临时目录，以备后续处理
-                AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(photo, AttachmentFileStoreService.SUB_DIR_TEMP);
+                AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(photo, "temp");
                 //获取原图高宽
                 BufferedImage bi = ImageIO.read(new File(attachmentFile.getStorePrefix() + attachmentFile.getRelativePath()));
                 int srcWidth = bi.getWidth();
@@ -116,7 +116,8 @@ public class DemoSiteIndexController extends BaseController<DemoSiteUser, Long> 
             }
             File photoFile = new File(bigImagePath);
             AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                    new FileInputStream(photoFile), AttachmentFileStoreService.SUB_DIR_IMAGES,
+                    AttachmentFile.AccessModeEnum.PUBLIC,
+                    new FileInputStream(photoFile), "images",
                     photoFile.getName(), "image/*", photoFile.length());
             return OperationResult.buildSuccessResult("图片提交成功", attachmentFile.getRelativePath());
         } catch (Exception e) {

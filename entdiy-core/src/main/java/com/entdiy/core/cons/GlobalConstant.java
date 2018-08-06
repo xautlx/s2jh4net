@@ -76,7 +76,10 @@ public class GlobalConstant {
     public final static String APP_LOCALE = "App-Locale";
 
     @MetaData("ConfigProperty:是否全局禁用开放手机号短信发送功能")
-    public final static String CFG_SMS_DISABLED = "SMS_DISABLED";
+    public final static String CFG_SMS_DISABLED = "sms.disabled";
+
+    @MetaData("ConfigProperty:静态资源访问URI前缀列表，多个以逗号分隔")
+    public static final String CFG_UPLOAD_PUBLIC_RESOURCE_URI = "upload.public.resource.uri";
 
     @MetaData("DataDict:消息类型")
     public final static String DATADICT_MESSAGE_TYPE = "MESSAGE_TYPE";
