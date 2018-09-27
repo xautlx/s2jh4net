@@ -34,11 +34,11 @@ public interface DataDictDao extends BaseDao<DataDict, Long> {
     @Query("from DataDict where primaryKey=:primaryKey")
     DataDict findByRootPrimaryKey(@Param("primaryKey") String primaryKey);
 
-    @Query("from DataDict where parent.id=:parentId and disabled=false order by rgt desc")
+    @Query("from DataDict where parent.id=:parentId and disabled=false order by rgt asc")
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
     List<DataDict> findEnabledChildrenByParentId(@Param("parentId") Long parentId);
 
-    @Query("from DataDict order by rgt desc")
+    @Query("from DataDict order by rgt asc")
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
     List<DataDict> findAllCached();
 }

@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class EnumUtils {
 
-    private static Map<Class<?>, Map<Enum<?>, String>> enumDatasContainer = Maps.newHashMap();
+    private static Map<Class<?>, Map<Enum<?>, String>> enumDatasContainer = Maps.newLinkedHashMap();
 
     /**
      * 基于Enum类返回对应的key-value Map构建对象

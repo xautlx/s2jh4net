@@ -412,11 +412,8 @@ public class PropertyFilter {
      * Java程序层直接构造过滤器对象, 如filters.add(new PropertyFilter(MatchType.LIKE, new
      * String[]{"code","name"}, value));
      *
-     * @param matchType
-     * @param propertyNames
-     * @param matchValue
      */
-    public PropertyFilter(final MatchType matchType, final String[] propertyNames, final Object matchValue) {
+    public PropertyFilter() {
         this.matchType = matchType;
         this.propertyNames = propertyNames;
         this.matchValue = matchValue;

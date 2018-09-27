@@ -20,6 +20,8 @@ import com.entdiy.core.security.AuthContextHolder;
 import com.entdiy.core.util.reflection.ReflectionUtils;
 import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.util.ServletUtils;
+import com.google.common.collect.Sets;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -52,6 +54,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 定制对  {@link ModelEntity}  注解参数处理，基于id参数组从数据库查询对象
@@ -134,21 +137,23 @@ public class ModelEntityMethodProcessor implements HandlerMethodArgumentResolver
             attribute = mavContainer.getModel().get(name);
         } else {
             if (arrayType) {
-                String paramIds = webRequest.getParameter("ids");
-                Object[] entities = null;
-                if (StringUtils.isNotBlank(paramIds)) {
-                    String[] ids = paramIds.split(",");
-
-                    Class<?> entityIdClass = MethodUtils.getAccessibleMethod(clazz, "getId").getReturnType();
-                    entities = (Object[]) Array.newInstance(clazz, ids.length);
-                    for (int i = 0; i < ids.length; i++) {
-                        String cur = ids[i].trim();
-                        Object entity = findEntityById(clazz, entityIdClass, cur);
-                        dataAccessControl(ann, entity);
-                        entities[i] = entity;
+                String[] paramIds = webRequest.getParameterValues("ids");
+                Set entities = Sets.newHashSet();
+                if (ArrayUtils.isNotEmpty(paramIds)) {
+                    for (String paramId : paramIds) {
+                        if (StringUtils.isNotBlank(paramId)) {
+                            String[] ids = paramId.split(",");
+                            Class<?> entityIdClass = MethodUtils.getAccessibleMethod(clazz, "getId").getReturnType();
+                            for (int i = 0; i < ids.length; i++) {
+                                String cur = ids[i].trim();
+                                Object entity = findEntityById(clazz, entityIdClass, cur);
+                                dataAccessControl(ann, entity);
+                                entities.add(entity);
+                            }
+                        }
                     }
                 }
-                attribute = entities;
+                attribute = entities.toArray((Object[]) Array.newInstance(clazz, entities.size()));
             } else {
                 String id = webRequest.getParameter("id");
                 if (StringUtils.isNotBlank(id)) {

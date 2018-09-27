@@ -63,6 +63,7 @@ public class SmsVerifyCodeService {
         ops.set(mobileNum, random, smsCodeExpireSeconds, TimeUnit.SECONDS);//5分钟过期
         Map<String, Object> data = Maps.newHashMap();
         data.put("code", random);
+        data.put("minutes", Integer.valueOf(smsCodeExpireSeconds / 60));
 
         String result = smsService.sendSMS(null, templateCode, data, mobileNum);
         return StringUtils.isBlank(result);

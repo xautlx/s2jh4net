@@ -120,7 +120,7 @@ public class AppContextHolder {
     public static void setWebContextUri(String webContextUri) {
         if (StringUtils.isNotBlank(webContextUri)) {
             WEB_CONTEXT_URI = webContextUri;
-            logger.info("Init web context uri: {}", WEB_CONTEXT_URI);
+            logger.info("Using web context uri: {}", WEB_CONTEXT_URI);
         }
     }
 
@@ -129,16 +129,16 @@ public class AppContextHolder {
             //从配置属性读取附件读写路径
             FILE_WRITE_ROOT_DIR = SpringPropertiesHolder.getProperty("file.write.dir");
             Assert.isTrue(StringUtils.isNotBlank(FILE_WRITE_ROOT_DIR), "file.write.dir config error");
-            //对斜杠做容错处理
-            if (FILE_WRITE_ROOT_DIR.endsWith(File.separator)) {
-                FILE_WRITE_ROOT_DIR = FILE_WRITE_ROOT_DIR.substring(0, FILE_WRITE_ROOT_DIR.length() - 1);
+            //对斜杠做容错处理：没有则追加
+            if (!FILE_WRITE_ROOT_DIR.endsWith(File.separator)) {
+                FILE_WRITE_ROOT_DIR = FILE_WRITE_ROOT_DIR + File.separator;
             }
             //做初始化创建容错处理
             File rootDir = new File(FILE_WRITE_ROOT_DIR);
             if (!rootDir.exists()) {
                 rootDir.mkdirs();
             }
-            logger.info("Init file write root dir: {}", FILE_WRITE_ROOT_DIR);
+            logger.info("Using file write root dir: {}", FILE_WRITE_ROOT_DIR);
 
         }
         return FILE_WRITE_ROOT_DIR;

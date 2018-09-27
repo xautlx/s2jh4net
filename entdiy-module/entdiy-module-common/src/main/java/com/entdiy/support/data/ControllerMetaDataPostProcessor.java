@@ -17,16 +17,17 @@ package com.entdiy.support.data;
 import com.entdiy.auth.entity.Privilege;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.core.annotation.MenuData;
-import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.MenuService;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.annotation.PostConstruct;
@@ -51,12 +52,15 @@ public class ControllerMetaDataPostProcessor {
     @Autowired
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
+    @Value("${metadata.rebuild:true}")
+    private String metadataRebuild;
+
     @PostConstruct
     public void initialize() {
         List<Menu> menus = menuService.findAllCached();
         List<Privilege> privileges = privilegeService.findAllCached();
         //只有在开发模式或者菜单数据为空，才执行菜单数据重建处理，以提高启动运效率
-        if (AppContextHolder.isDevMode() || CollectionUtils.isEmpty(menus) || CollectionUtils.isEmpty(privileges)) {
+        if (BooleanUtils.toBoolean(metadataRebuild) || CollectionUtils.isEmpty(menus) || CollectionUtils.isEmpty(privileges)) {
             logger.debug("Rebuilding menu and privilege data ...");
             //合并所有类中所有RequiresPermissions定义信息
             Set<String> mergedPermissions = Sets.newLinkedHashSet();

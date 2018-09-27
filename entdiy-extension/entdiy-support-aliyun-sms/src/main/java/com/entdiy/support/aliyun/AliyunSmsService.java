@@ -44,10 +44,10 @@ public class AliyunSmsService extends SmsService {
     @Value("${sms.signature:}")
     private String smsSignature = "";
 
-    @Value("${sms.aliyun.access.key.id}")
+    @Value("${sms.aliyun.access.key.id:}")
     private String accessKeyId;
 
-    @Value("${sms.aliyun.access.key.secret}")
+    @Value("${sms.aliyun.access.key.secret:}")
     private String accessKeySecret;
 
     private static IAcsClient acsClient;

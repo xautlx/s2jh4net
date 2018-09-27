@@ -32,7 +32,7 @@ import java.util.Map;
 
 public abstract class SmsService {
 
-    Logger logger = LoggerFactory.getLogger(SmsService.class);
+    private static final Logger logger = LoggerFactory.getLogger(SmsService.class);
 
     @Autowired
     private DynamicConfigService dynamicConfigService;
