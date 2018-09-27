@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div class="form-group search-group-btn">
-                        <button class="btn green" type="submmit">
+                        <button class="btn green" type="submit">
                             <i class="m-icon-swapright m-icon-white"></i>&nbsp; 查&nbsp;询
                         </button>
                         <button class="btn default" type="reset">
