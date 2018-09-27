@@ -30,6 +30,16 @@
             <artifactId>entdiy-module-schedule</artifactId>
             <version>${entdiy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.entdiy</groupId>
+            <artifactId>entdiy-support-aliyun-sms</artifactId>
+            <version>${entdiy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.entdiy</groupId>
+            <artifactId>entdiy-support-aliyun-oss</artifactId>
+            <version>${entdiy.version}</version>
+        </dependency>
         <!-- 开发依赖：代码生成组件，定义scope=test用于exec-maven-plugin限定使用 -->
         <dependency>
             <groupId>com.entdiy</groupId>

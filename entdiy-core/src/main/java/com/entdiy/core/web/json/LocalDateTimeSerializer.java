@@ -57,4 +57,8 @@ public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
     public Class<LocalDateTime> handledType() {
         return LocalDateTime.class;
     }
+
+    public static void main(String[] args) {
+        System.out.println(LocalDateTime.parse("2018-05-01 12:23:34", LocalDateTimeSerializer.LOCAL_DATE_TIME_FORMATTER));
+    }
 }

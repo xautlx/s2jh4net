@@ -75,7 +75,7 @@
     </bean>
 
     <bean id="apiClientAuthenticationFilter" class="com.entdiy.security.api.ClientValidationAuthenticationFilter">
-        <property name="appKeySecrets">
+        <property name="clientKeySecrets">
             <props>
                 <!-- default: -->
                 <prop key="default">${auth.api.default}</prop>

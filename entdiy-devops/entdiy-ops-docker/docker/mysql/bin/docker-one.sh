@@ -71,7 +71,7 @@ case "$1" in
     init)
     SQL="CREATE DATABASE entdiy DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
     echo Execute: ${SQL}
-    docker exec -i mysql mysql -h localhost -u root -pmysqlP@sswd123 <<< "${SQL}"
+    docker exec -i ${app_name} mysql -h localhost -u root -pmysqlP@sswd123 <<< "${SQL}"
     ;;
     *)
     echo "Usage: $0 {start|stop|restart|init|status}"

@@ -37,7 +37,7 @@ public class HttpRequestLogFilter implements Filter {
     private final Logger logger = LoggerFactory.getLogger(HttpRequestLogFilter.class);
 
     @Override
-    public void init(FilterConfig arg0) throws ServletException {
+    public void init(FilterConfig arg0) {
         logger.debug("Invoking HttpRequestLogFilter init method...");
     }
 
@@ -48,7 +48,7 @@ public class HttpRequestLogFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse reponse, FilterChain chain) throws IOException, ServletException {
-        if (logger.isInfoEnabled()) {
+        if (logger.isDebugEnabled()) {
             HttpServletRequest req = (HttpServletRequest) request;
 
             String uri = req.getRequestURI();
@@ -67,7 +67,7 @@ public class HttpRequestLogFilter implements Filter {
             for (Map.Entry<String, String> me : dataMap.entrySet()) {
                 sb.append(StringUtils.rightPad("\n" + me.getKey(), 50) + " : " + me.getValue());
             }
-            logger.info(sb.toString());
+            logger.debug(sb.toString());
         }
         chain.doFilter(request, reponse);
     }

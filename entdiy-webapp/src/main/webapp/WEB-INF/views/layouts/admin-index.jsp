@@ -106,7 +106,7 @@
                            data-hover="dropdown"
                            data-close-others="true">
                             <span class="username">
-                                <shiro:principal property="username"/>
+                                <shiro:principal property="nickname"/>
                             </span>
                             <i class="fa fa-angle-down"></i> </a>
                         <ul class="dropdown-menu dropdown-menu-default">
