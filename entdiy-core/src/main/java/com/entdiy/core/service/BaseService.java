@@ -201,6 +201,17 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
         return jpaRepository.count(spec);
     }
 
+
+    /**
+     * count总记录数据
+     *
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public long count() {
+        return jpaRepository.count();
+    }
+
     /**
      * 基于动态组合条件对象查询数据集合
      *
@@ -673,7 +684,7 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
                 Object[] matchValues = (Object[]) matchValue;
                 Assert.isTrue(matchValues.length == 2, "Match value must have two value");
                 if (matchValues[0] instanceof LocalDateTime) {
-                    LocalDateTime dateTo = (LocalDateTime) matchValue;
+                    LocalDateTime dateTo = (LocalDateTime) matchValues[1];
                     // 带时分秒数据直接追加对应条件
                     if (dateTo.getHour() != 0 || dateTo.getMinute() != 0 || dateTo.getSecond() != 0) {
                         predicate = builder.between(expression, (Comparable) matchValues[0], (Comparable) matchValues[1]);
@@ -687,6 +698,7 @@ public abstract class BaseService<T extends AbstractPersistableEntity, ID extend
                 } else {
                     predicate = builder.between(expression, (Comparable) matchValues[0], (Comparable) matchValues[1]);
                 }
+                break;
             case GT:
                 predicate = builder.greaterThan(expression, (Comparable) matchValue);
                 break;
