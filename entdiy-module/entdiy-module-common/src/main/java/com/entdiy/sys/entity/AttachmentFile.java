@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
@@ -160,6 +161,7 @@ public class AttachmentFile extends BaseAttachmentFile {
             return relativePath;
         }
         String uriProps = SpringPropertiesHolder.getProperty(GlobalConstant.CFG_UPLOAD_PUBLIC_RESOURCE_URI);
+        Assert.isTrue(uriProps != null, "Application properties NOT defined: " + GlobalConstant.CFG_UPLOAD_PUBLIC_RESOURCE_URI);
         String[] uris = StringUtils.split(uriProps, ",");
         String uri = uris.length > 1 ? uris[randomDataGenerator.nextInt(0, uris.length - 1)] : uris[0];
         return uri + relativePath;

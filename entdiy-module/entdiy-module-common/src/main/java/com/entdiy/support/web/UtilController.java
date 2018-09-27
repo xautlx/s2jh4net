@@ -27,6 +27,7 @@ import com.entdiy.core.util.DateUtils;
 import com.entdiy.core.util.Exceptions;
 import com.entdiy.core.util.ExtStringUtils;
 import com.entdiy.core.util.reflection.ConvertUtils;
+import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.captcha.CaptchaUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
@@ -375,5 +376,21 @@ public class UtilController {
     @ResponseBody
     public void fileDownload(@PathVariable("id") String id, HttpServletResponse response) {
         fileProcess(response, id, "attachment");
+    }
+
+    @RequestMapping(value = "/pub/image", method = RequestMethod.GET)
+    @ResponseBody
+    public void imageView(@RequestParam("path") String path, HttpServletResponse response) {
+        try {
+            String storePrefix = AppContextHolder.getFileWriteRootDir();
+            File toFile = new File(storePrefix + path);
+            InputStream in = new FileInputStream(toFile);
+            OutputStream out = response.getOutputStream();
+            IOUtils.copy(in, out);
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(out);
+        } catch (Exception e) {
+            logger.error("File download error", e);
+        }
     }
 }
