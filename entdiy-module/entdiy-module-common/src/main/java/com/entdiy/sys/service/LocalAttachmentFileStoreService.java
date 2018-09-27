@@ -18,14 +18,19 @@ import com.entdiy.core.exception.ServiceException;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.sys.entity.AttachmentFile;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * 基于应用本地的文件存储服务，一般相对于CDN网络存储形式。
@@ -37,40 +42,91 @@ public class LocalAttachmentFileStoreService implements AttachmentFileStoreServi
     private final static Logger logger = LoggerFactory.getLogger(LocalAttachmentFileStoreService.class);
 
     @Override
-    public AttachmentFile storeFileData(AttachmentFile.AccessModeEnum accessMode,
-                                        InputStream fis, String subDir, String fileName, String contentType, long fileLength) {
-
-        String relativePath = buildFileRelativePath(subDir, fileName);
-        String storePrefix = AppContextHolder.getFileWriteRootDir();
-        String absolutePath = storePrefix + relativePath;
-        logger.debug("Saving upload file: {}, size: {}", absolutePath, fileLength);
+    public AttachmentFile storeFileData(Long lastModified, AttachmentFile.AccessModeEnum accessMode,
+                                        InputStream fis, String subDir, String fileName, String contentType, Long fileLength) {
         try {
-            org.apache.commons.io.FileUtils.copyInputStreamToFile(fis, new File(absolutePath));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            File tempFile = new File(FileUtils.getTempDirectoryPath() + File.separator + UUID.randomUUID() + File.separator + fileName);
+            FileUtils.copyInputStreamToFile(fis, tempFile);
+            IOUtils.closeQuietly(fis);
 
-        AttachmentFile attachmentFile = new AttachmentFile();
-        attachmentFile.setRelativePath(relativePath);
-        attachmentFile.setStorePrefix(storePrefix);
-        attachmentFile.setAccessMode(accessMode);
-        attachmentFile.setFileRealName(fileName);
-        attachmentFile.setFileLength(fileLength);
-        attachmentFile.setFileContentType(contentType);
-        return attachmentFile;
+            fis = FileUtils.openInputStream(tempFile);
+            String relativePath = buildFileRelativePath(lastModified, fis, subDir, fileName);
+            String storePrefix = AppContextHolder.getFileWriteRootDir();
+            File toFile = new File(storePrefix + relativePath);
+
+            if (!toFile.exists()) {
+                logger.debug("Process upload Local File: {}", relativePath);
+                FileUtils.forceMkdirParent(toFile);
+                FileUtils.moveFile(tempFile, toFile);
+            } else {
+                logger.debug("Skipped Exist upload Local File: {}", relativePath);
+            }
+
+            AttachmentFile attachmentFile = new AttachmentFile();
+            attachmentFile.setRelativePath(relativePath);
+            attachmentFile.setStorePrefix(storePrefix);
+            attachmentFile.setAccessMode(accessMode);
+            attachmentFile.setFileRealName(fileName);
+            attachmentFile.setFileLength(fileLength);
+            attachmentFile.setFileContentType(contentType);
+            return attachmentFile;
+        } catch (IOException e) {
+            throw new ServiceException("zoom image error", e);
+        } finally {
+            //关闭输入流
+            IOUtils.closeQuietly(fis);
+        }
     }
 
     @Override
-    public String zoomImage(String relativeFilePath, int maxWidth, int maxHeight) {
+    public String imageZoomOut(String relativeFilePath, int maxWidth, int maxHeight) {
         try {
-            String newRelativeFilePath = StringUtils.substringBeforeLast(relativeFilePath, ".") + "_small." + StringUtils.substringAfterLast(relativeFilePath, ".");
             String storePrefix = AppContextHolder.getFileWriteRootDir();
-            File fromFile = new File(storePrefix + relativeFilePath);
+            String newRelativeFilePath = StringUtils.substringBeforeLast(relativeFilePath, ".") + "_small." + StringUtils.substringAfterLast(relativeFilePath, ".");
             File toFile = new File(storePrefix + newRelativeFilePath);
-            Thumbnails.of(FileUtils.openInputStream(fromFile)).size(maxWidth, maxHeight).toFile(toFile);
+            //如果路径文件已存在，直接返回
+            if (toFile.exists()) {
+                logger.debug("Skipped Exist imageZoomOut Local File: {}", newRelativeFilePath);
+                return newRelativeFilePath;
+            }
+
+            logger.debug("Process imageZoomOut Local File from {} to {}", relativeFilePath, newRelativeFilePath);
+            String fromFilePath = storePrefix + relativeFilePath;
+            Thumbnails.of(fromFilePath).size(maxWidth, maxHeight).outputQuality(1).toFile(toFile);
             return newRelativeFilePath;
         } catch (IOException e) {
             throw new ServiceException("zoom image error", e);
+        }
+    }
+
+    @Override
+    public String imageWatermark(String relativeFilePath, BufferedImage watermarkImage) {
+        FileInputStream fis = null;
+        try {
+            String storePrefix = AppContextHolder.getFileWriteRootDir();
+            String fromFilePath = storePrefix + relativeFilePath;
+            File fromFile = new File(fromFilePath);
+            //输出文件路径基于输入文件信息稍作修改并确保规则一致，只要输入文件信息未变更则可以直接返回对应输出文件
+            fis = FileUtils.openInputStream(fromFile);
+            String newRelativeFilePath = buildFileRelativePath(fromFile.lastModified() + 1, fis, IMAGE_SUBDIR, fromFilePath);
+
+            File toFile = new File(storePrefix + newRelativeFilePath);
+            //如果路径文件已存在，直接返回
+            if (toFile.exists()) {
+                logger.debug("Skipped Exist imageWatermark Local File: {}", newRelativeFilePath);
+            } else {
+                logger.debug("Process imageWatermark Local File from {} to {}", relativeFilePath, newRelativeFilePath);
+                FileUtils.forceMkdirParent(toFile);
+                Thumbnails.of(fromFilePath)
+                        .watermark(Positions.BOTTOM_RIGHT, watermarkImage, 0.2f)
+                        .outputQuality(1).scale(1).toFile(toFile);
+            }
+            return newRelativeFilePath;
+        } catch (IOException e) {
+            throw new ServiceException("zoom image error", e);
+        } finally {
+            //关闭输入流
+            IOUtils.closeQuietly(fis);
         }
     }
 }

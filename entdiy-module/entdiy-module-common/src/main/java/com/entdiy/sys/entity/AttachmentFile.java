@@ -82,7 +82,7 @@ public class AttachmentFile extends BaseAttachmentFile {
     private String fileExtension;
 
     @MetaData(value = "附件大小")
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonView(JsonViews.Admin.class)
     private Long fileLength;
 
@@ -153,6 +153,12 @@ public class AttachmentFile extends BaseAttachmentFile {
      * @return
      */
     public static String getAccessUrl(String relativePath) {
+        if (StringUtils.isBlank(relativePath)) {
+            return null;
+        }
+        if (relativePath.startsWith("http")) {
+            return relativePath;
+        }
         String uriProps = SpringPropertiesHolder.getProperty(GlobalConstant.CFG_UPLOAD_PUBLIC_RESOURCE_URI);
         String[] uris = StringUtils.split(uriProps, ",");
         String uri = uris.length > 1 ? uris[randomDataGenerator.nextInt(0, uris.length - 1)] : uris[0];

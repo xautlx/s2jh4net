@@ -43,7 +43,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -115,10 +114,7 @@ public class DemoSiteIndexController extends BaseController<DemoSiteUser, Long> 
                 }
             }
             File photoFile = new File(bigImagePath);
-            AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                    AttachmentFile.AccessModeEnum.PUBLIC,
-                    new FileInputStream(photoFile), "images",
-                    photoFile.getName(), "image/*", photoFile.length());
+            AttachmentFile attachmentFile = attachmentFileStoreService.storePublicImage(photoFile);
             return OperationResult.buildSuccessResult("图片提交成功", attachmentFile.getRelativePath());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

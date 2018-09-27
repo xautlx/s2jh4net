@@ -106,16 +106,14 @@ public class DemoDatabaseDataInitializeProcessor extends AbstractDatabaseDataIni
     @Autowired
     private DemoSiteUserService siteUserService;
 
-    private AttachmentFile buildImageAttachmentFile(Resource resource) throws IOException {
-        AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                AttachmentFile.AccessModeEnum.PUBLIC,
-                resource.getInputStream(), "images",
-                resource.getFilename(), "image/jpg", resource.contentLength());
+    private AttachmentFile buildImageAttachmentFile(Resource resource) {
+        AttachmentFile attachmentFile = attachmentFileStoreService.storePublicImage(resource);
         return attachmentFileService.save(attachmentFile);
     }
 
     private AttachmentFile buildMarkdownAttachmentFile(Resource resource) throws IOException {
         AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                resource.lastModified(),
                 AttachmentFile.AccessModeEnum.PUBLIC,
                 resource.getInputStream(), "files",
                 resource.getFilename(), "plain/txt", resource.contentLength());
