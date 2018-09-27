@@ -18,7 +18,6 @@
 package com.entdiy.auth.web;
 
 import com.entdiy.auth.entity.Role;
-import com.entdiy.auth.entity.RoleR2Privilege;
 import com.entdiy.auth.service.PrivilegeService;
 import com.entdiy.auth.service.RoleService;
 import com.entdiy.core.annotation.MenuData;
@@ -29,8 +28,6 @@ import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.core.web.view.OperationResult;
-import com.google.common.collect.Sets;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +39,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/admin/auth/role")
@@ -101,14 +96,7 @@ public class RoleController extends BaseController<Role, Long> {
     @RequiresPermissions("配置管理:权限管理:角色配置")
     @RequestMapping(value = "/privileges", method = RequestMethod.GET)
     public String privilegesShow(@ModelEntity(preFectchLazyFields = "roleR2Privileges") Role entity, Model model) {
-        Set<Long> r2PrivilegeIds = Sets.newHashSet();
-        List<RoleR2Privilege> r2s = entity.getRoleR2Privileges();
-        if (CollectionUtils.isNotEmpty(r2s)) {
-            for (RoleR2Privilege r2 : r2s) {
-                r2PrivilegeIds.add(r2.getPrivilege().getId());
-            }
-        }
-        model.addAttribute("r2PrivilegeIds", StringUtils.join(r2PrivilegeIds, ","));
+        model.addAttribute("r2PrivilegeIds", StringUtils.join(entity.getPrivilegeIds(), ","));
         return "admin/auth/role-privileges";
     }
 
