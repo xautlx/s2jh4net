@@ -20,6 +20,7 @@ package com.entdiy.support.weixin.security;
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.OauthAccount;
 import com.entdiy.auth.service.OauthAccountService;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.support.weixin.service.WxOAuthAccountService;
 import lombok.Setter;
@@ -36,6 +37,8 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+
+import java.time.LocalDateTime;
 
 public class WeixinOAuthRealm extends AuthorizingRealm {
 
@@ -62,37 +65,45 @@ public class WeixinOAuthRealm extends AuthorizingRealm {
         WeixinOAuthToken token = (WeixinOAuthToken) authcToken;
         String username = token.getUsername();
         logger.debug("WeixinOAuthRealm process for: {}", username);
-        Account account;
 
+
+        Account.AuthTypeEnum authType = token.getAuthType();
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = token.getWxMpOAuth2AccessToken();
         WxMpUser wxMpUser = token.getWxMpUser();
-        OauthAccount oauthAccount = oauthAccountService.findByOauthTypeAndOauthOpenId(OauthAccount.OauthTypeEnum.WECHAT, username);
-        if (oauthAccount == null) {
-            oauthAccount = new OauthAccount();
-            oauthAccount.setOauthType(OauthAccount.OauthTypeEnum.WECHAT);
-            oauthAccount.setOauthOpenId(username);
+        OauthAccount oauthAccount = oauthAccountService.findByOauthOpenIdAndOauthTypeAndAuthType(
+                username, GlobalConstant.OauthTypeEnum.WECHAT, authType);
 
-            OauthAccount.OauthAccessToken oauthAccessToken = new OauthAccount.OauthAccessToken();
-            BeanUtils.copyProperties(wxMpOAuth2AccessToken, oauthAccessToken);
-            oauthAccount.setOauthAccessToken(oauthAccessToken);
-        }
-        if (wxMpUser != null) {
-            OauthAccount.OauthUserinfo oauthUserinfo = oauthAccount.getOauthUserinfo();
-            if (oauthUserinfo == null) {
-                oauthUserinfo = new OauthAccount.OauthUserinfo();
-                oauthAccount.setOauthUserinfo(oauthUserinfo);
+        //对于前端微信登录用户做必要的数据初始化和更新处理
+        if (Account.AuthTypeEnum.site.equals(authType)) {
+            if (oauthAccount == null) {
+                oauthAccount = new OauthAccount();
+                oauthAccount.setOauthType(GlobalConstant.OauthTypeEnum.WECHAT);
+                oauthAccount.setOauthOpenId(username);
+                oauthAccount.setAuthType(Account.AuthTypeEnum.site);
+                oauthAccount.setBindTime(LocalDateTime.now());
+
+                OauthAccount.OauthAccessToken oauthAccessToken = new OauthAccount.OauthAccessToken();
+                BeanUtils.copyProperties(wxMpOAuth2AccessToken, oauthAccessToken);
+                oauthAccount.setOauthAccessToken(oauthAccessToken);
             }
-            BeanUtils.copyProperties(wxMpUser, oauthUserinfo);
+            if (wxMpUser != null) {
+                OauthAccount.OauthUserinfo oauthUserinfo = oauthAccount.getOauthUserinfo();
+                if (oauthUserinfo == null) {
+                    oauthUserinfo = new OauthAccount.OauthUserinfo();
+                    oauthAccount.setOauthUserinfo(oauthUserinfo);
+                }
+                BeanUtils.copyProperties(wxMpUser, oauthUserinfo);
+            }
+            wxOAuthAccountService.saveCasecadeAccount(oauthAccount);
         }
 
-        wxOAuthAccountService.saveCasecadeAccount(oauthAccount);
-        account = oauthAccount.getAccount();
-
+        Account account = oauthAccount.getAccount();
         //构造权限框架认证用户信息对象
         DefaultAuthUserDetails authUserDetails = new DefaultAuthUserDetails();
         authUserDetails.setDataDomain(account.getDataDomain());
         authUserDetails.setAccountId(account.getId());
         authUserDetails.setUsername(username);
+        authUserDetails.setNickname(account.getNickname());
         authUserDetails.setAccessToken(account.getAccessToken());
         authUserDetails.setOauthType(oauthAccount.getOauthType());
         authUserDetails.setOauthOpenId(oauthAccount.getOauthOpenId());

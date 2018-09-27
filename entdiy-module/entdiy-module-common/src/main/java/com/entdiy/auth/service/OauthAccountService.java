@@ -18,11 +18,15 @@
 package com.entdiy.auth.service;
 
 import com.entdiy.auth.dao.OauthAccountDao;
+import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.OauthAccount;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -32,7 +36,22 @@ public class OauthAccountService extends BaseService<OauthAccount, Long> {
     private OauthAccountDao oauthAccountDao;
 
     @Transactional(readOnly = true)
-    public OauthAccount findByOauthTypeAndOauthOpenId(OauthAccount.OauthTypeEnum oauthType, String oauthOpenId) {
-        return oauthAccountDao.findByOauthTypeAndOauthOpenId(oauthType, oauthOpenId);
+    public OauthAccount findByOauthOpenIdAndOauthTypeAndAuthType(String oauthOpenId, GlobalConstant.OauthTypeEnum oauthType, Account.AuthTypeEnum authType) {
+        return oauthAccountDao.findByOauthOpenIdAndOauthTypeAndAuthType(oauthOpenId, oauthType, authType);
+    }
+
+    @Transactional(readOnly = true)
+    public OauthAccount findByOauthOpenIdAndOauthType(String oauthOpenId, GlobalConstant.OauthTypeEnum oauthType) {
+        return findByOauthOpenIdAndOauthTypeAndAuthType(oauthOpenId, oauthType, Account.AuthTypeEnum.site);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OauthAccount> findByAccountAndOauthTypeAndAuthType(Account account, GlobalConstant.OauthTypeEnum oauthType, Account.AuthTypeEnum authType) {
+        return oauthAccountDao.findByAccountAndOauthTypeAndAuthType(account, oauthType, authType);
+    }
+
+    @Transactional(readOnly = true)
+    public OauthAccount findByAccountAndOauthOpenIdAndOauthTypeAndAuthType(Account account, String oauthOpenId, GlobalConstant.OauthTypeEnum oauthType, Account.AuthTypeEnum authType) {
+        return oauthAccountDao.findByAccountAndOauthOpenIdAndOauthTypeAndAuthType(account, oauthOpenId, oauthType, authType);
     }
 }

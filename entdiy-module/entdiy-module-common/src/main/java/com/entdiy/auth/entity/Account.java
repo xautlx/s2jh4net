@@ -63,6 +63,11 @@ public class Account extends BaseNativeEntity {
     @JsonView(JsonViews.Admin.class)
     private String authUid;
 
+    @MetaData(value = "昵称")
+    @Column(length = 128, nullable = true)
+    @JsonView(JsonViews.Admin.class)
+    private String nickname;
+
     @MetaData(value = "注册时间")
     @Column(updatable = false)
     @JsonView(JsonViews.Admin.class)

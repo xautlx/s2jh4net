@@ -42,12 +42,19 @@ public class WxPayService extends WxPayServiceImpl {
     @Value("${weixin.mchKey}")
     private String mchKey;
 
+    /**
+     * 微信商户证书
+     */
+    @Value("${weixin.key.path}")
+    private String keyPath;
+
     @PostConstruct
     public void init() {
         WxPayConfig payConfig = new WxPayConfig();
         payConfig.setAppId(appId);
         payConfig.setMchId(mchId);
         payConfig.setMchKey(mchKey);
+        payConfig.setKeyPath(keyPath);
 
         this.setConfig(payConfig);
     }

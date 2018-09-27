@@ -17,6 +17,7 @@
  */
 package com.entdiy.support.weixin.security;
 
+import com.entdiy.auth.entity.Account;
 import lombok.Getter;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
@@ -30,8 +31,12 @@ public class WeixinOAuthToken extends UsernamePasswordToken {
     @Getter
     private WxMpUser wxMpUser;
 
-    public WeixinOAuthToken(WxMpOAuth2AccessToken wxMpOAuth2AccessToken, WxMpUser wxMpUser, boolean rememberMe, String host) {
+    @Getter
+    private Account.AuthTypeEnum authType;
+
+    public WeixinOAuthToken(Account.AuthTypeEnum authType, WxMpOAuth2AccessToken wxMpOAuth2AccessToken, WxMpUser wxMpUser, boolean rememberMe, String host) {
         super(wxMpOAuth2AccessToken.getOpenId(), wxMpOAuth2AccessToken.getOpenId(), rememberMe, host);
+        this.authType = authType;
         this.wxMpOAuth2AccessToken = wxMpOAuth2AccessToken;
         this.wxMpUser = wxMpUser;
     }

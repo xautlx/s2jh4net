@@ -18,11 +18,14 @@
 package com.entdiy.support.web;
 
 import com.entdiy.auth.entity.Account;
+import com.entdiy.auth.entity.OauthAccount;
 import com.entdiy.auth.entity.User;
 import com.entdiy.auth.service.AccountService;
+import com.entdiy.auth.service.OauthAccountService;
 import com.entdiy.auth.service.UserService;
 import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.annotation.AuthAccount;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class UserProfileController {
@@ -44,6 +48,9 @@ public class UserProfileController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private OauthAccountService oauthAccountService;
 
     @Autowired
     private MailService mailService;
@@ -65,8 +72,11 @@ public class UserProfileController {
     @MenuData("个人信息:个人配置")
     @RequiresUser
     @RequestMapping(value = "/admin/profile/edit", method = RequestMethod.GET)
-    public String accountShow(Model model) {
+    public String accountShow(@AuthAccount Account account, Model model) {
         model.addAttribute("validationRules", ServletUtils.buildValidateRules(Account.class));
+        List<OauthAccount> oauthAccounts = oauthAccountService.findByAccountAndOauthTypeAndAuthType(
+                account, GlobalConstant.OauthTypeEnum.WECHAT, Account.AuthTypeEnum.admin);
+        model.addAttribute("oauthAccounts", oauthAccounts);
         return "admin/profile/profile-edit";
     }
 

@@ -17,6 +17,7 @@
  */
 package com.entdiy.core.security;
 
+import com.entdiy.core.cons.GlobalConstant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -45,4 +46,18 @@ public interface AuthUserDetails {
      */
     @JsonIgnore
     String getDataDomain();
+
+    /**
+     * 记录当前OAuth登录openid
+     *
+     * @return
+     */
+    String getOauthOpenId();
+
+    /**
+     * 记录当前OAuth登录类型
+     *
+     * @return
+     */
+    GlobalConstant.OauthTypeEnum getOauthType();
 }

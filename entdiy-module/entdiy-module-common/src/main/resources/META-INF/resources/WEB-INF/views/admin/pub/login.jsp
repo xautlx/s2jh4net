@@ -4,6 +4,7 @@
 <html>
 <head>
     <title>管理登录</title>
+    <base href="${applicationScope.ctx}/admin"/>
 </head>
 <body class="login">
 <div class="row">
@@ -50,15 +51,6 @@
             </div>
             <hr style="margin: 0px"/>
             <div class="forget-password">
-                <c:if test="${casSupport}">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p class="pull-right">
-                                <a href='<s:property value="casRedirectUrl"/>'>单点登录</a>
-                            </p>
-                        </div>
-                    </div>
-                </c:if>
                 <div class="row">
                     <div class="col-md-12">
                         <p class="pull-right">
@@ -69,40 +61,20 @@
                         </p>
                     </div>
                 </div>
+                <c:if test="${weiXinOAuthUrl!=null}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="pull-right">
+                                <a href='${weiXinOAuthUrl}'>微信登录</a>
+                            </p>
+                        </div>
+                    </div>
+                </c:if>
             </div>
         </form>
         <!-- END LOGIN FORM -->
-
-        <c:if test="${devMode}">
-            <div class="form-info">
-                <p id="devModeTips" style="padding: 10px">
-                    <b> 开发/测试/演示登录快速入口:
-                        <a href="javascript:void(0)" onclick="setupDevUser('root','123456')">
-                            root/123456
-                        </a>
-                        &nbsp;|&nbsp;
-                        <a href="javascript:void(0)" onclick="setupDevUser('manager','123456')">
-                            manager/123456
-                        </a>
-                    </b>
-                </p>
-                <script type="text/javascript">
-                    var $form = $("#login-form");
-
-                    function setupDevUser(user, password) {
-                        $("input[name='username']", $form).val(user);
-                        $("input[name='password']", $form).val(password);
-                        $form.submit();
-                    }
-
-                    jQuery(document).ready(function () {
-                        $("#devModeTips").pulsate({
-                            color: "#bf1c56",
-                            repeat: 10
-                        });
-                    });
-                </script>
-            </div>
+        <c:if test="${noneProductionMode}">
+            <jsp:include page="login-dev.jsp"/>
         </c:if>
     </div>
 </div>

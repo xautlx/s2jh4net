@@ -18,8 +18,8 @@
 package com.entdiy.auth.entity;
 
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.entity.BaseNativeEntity;
-import com.entdiy.core.entity.EnumKeyLabelPair;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -32,12 +32,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Access(AccessType.FIELD)
 @Entity
-@Table(name = "auth_OauthAccount", uniqueConstraints = @UniqueConstraint(columnNames = {"oauthType", "oauthOpenId"}))
+@Table(name = "auth_OauthAccount", uniqueConstraints = {@UniqueConstraint(columnNames = {"oauthType", "oauthOpenId", "authType"})})
 @MetaData(value = "OAuth认证对象")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Audited
@@ -49,16 +50,26 @@ public class OauthAccount extends BaseNativeEntity {
     @JsonIgnore
     private Account account;
 
-    @MetaData(value = "账户类型")
+    @MetaData(value = "OAuth类型")
     @Column(length = 64, nullable = false)
     @Enumerated(EnumType.STRING)
     @JsonView(JsonViews.Admin.class)
     @ApiModelProperty(hidden = true)
-    private OauthTypeEnum oauthType;
+    private GlobalConstant.OauthTypeEnum oauthType;
 
     @MetaData(value = "账号类型所对应唯一标识")
     @Column(length = 64, nullable = false)
     private String oauthOpenId;
+
+    @MetaData(value = "内部账户类型")
+    @Column(length = 64, nullable = true)
+    @Enumerated(EnumType.STRING)
+    @JsonView(JsonViews.Admin.class)
+    private Account.AuthTypeEnum authType;
+
+    @MetaData(value = "绑定时间")
+    @JsonView(JsonViews.Admin.class)
+    private LocalDateTime bindTime;
 
     @JsonView(JsonViews.Admin.class)
     @Embedded
@@ -68,28 +79,12 @@ public class OauthAccount extends BaseNativeEntity {
     @Embedded
     private OauthUserinfo oauthUserinfo;
 
-
-    public enum OauthTypeEnum implements EnumKeyLabelPair {
-        MOCK {
-            @Override
-            public String getLabel() {
-                return "模拟";
-            }
-        },
-
-        WECHAT {
-            @Override
-            public String getLabel() {
-                return "微信";
-            }
-        },
-
-        ALIPAY {
-            @Override
-            public String getLabel() {
-                return "支付宝";
-            }
+    @JsonView(JsonViews.Admin.class)
+    public String getNickname() {
+        if (oauthUserinfo != null) {
+            return oauthUserinfo.getNickname();
         }
+        return GlobalConstant.NONE_VALUE;
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -113,6 +108,12 @@ public class OauthAccount extends BaseNativeEntity {
         /**
          * https://mp.weixin.qq.com/cgi-bin/announce?action=getannouncement&announce_id=11513156443eZYea&version=&lang=zh_CN.
          * 本接口在scope参数为snsapi_base时不再提供unionID字段。
+         * <pre>
+         * 只有在将公众号绑定到微信开放平台帐号后，才会出现该字段。
+         * 另外，在用户未关注公众号时，将不返回用户unionID信息。
+         * 已关注的用户，开发者可使用“获取用户基本信息接口”获取unionID；
+         * 未关注用户，开发者可使用“微信授权登录接口”并将scope参数设置为snsapi_userinfo，获取用户unionID
+         * </pre>
          */
         @JsonView(JsonViews.Admin.class)
         private String unionId;
@@ -172,17 +173,6 @@ public class OauthAccount extends BaseNativeEntity {
          */
         @JsonView(JsonViews.Admin.class)
         private Long subscribeTime;
-        /**
-         * https://mp.weixin.qq.com/cgi-bin/announce?action=getannouncement&announce_id=11513156443eZYea&version=&lang=zh_CN
-         * <pre>
-         * 只有在将公众号绑定到微信开放平台帐号后，才会出现该字段。
-         * 另外，在用户未关注公众号时，将不返回用户unionID信息。
-         * 已关注的用户，开发者可使用“获取用户基本信息接口”获取unionID；
-         * 未关注用户，开发者可使用“微信授权登录接口”并将scope参数设置为snsapi_userinfo，获取用户unionID
-         * </pre>
-         */
-        @JsonView(JsonViews.Admin.class)
-        private String unionId;
 
         @JsonView(JsonViews.Admin.class)
         private String remark;

@@ -14,6 +14,7 @@
  */
 package com.entdiy.support.weixin.service;
 
+import com.entdiy.support.service.WeiXinOAuthService;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
-public class WxMpService extends WxMpServiceImpl {
+public class WxMpService extends WxMpServiceImpl implements WeiXinOAuthService {
 
     @Value("${weixin.token}")
     private String token;

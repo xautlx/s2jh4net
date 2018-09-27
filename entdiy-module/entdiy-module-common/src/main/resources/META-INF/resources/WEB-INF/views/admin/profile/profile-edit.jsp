@@ -56,6 +56,23 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label">微信绑定</label>
+            <div class="controls">
+                <p class="form-control-static">
+                <ul>
+                    <c:forEach items="${oauthAccounts}" var="oauthAccount">
+                        <li>${oauthAccount.bindTime} 已绑定 ${oauthAccount.nickname}
+                            <button class="btn blue btn-post-url" type="button"
+                                    data-url="wx/admin-unbind?openid=${oauthAccount.oauthOpenId}" data-confirm="确认解除微信绑定？">解绑
+                            </button>
+                        </li>
+                    </c:forEach>
+                </ul>
+                <a target="_blank" class="btn blue" href="wx/goto-admin-bind">添加绑定当前微信</a>
+                </p>
+            </div>
+        </div>
     </div>
     <div class="form-actions right">
         <button class="btn blue" type="submit"><i class="fa fa-check"></i> 保存</button>

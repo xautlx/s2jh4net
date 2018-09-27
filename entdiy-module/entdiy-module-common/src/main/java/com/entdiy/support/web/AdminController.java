@@ -23,14 +23,14 @@ import com.entdiy.auth.service.UserService;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.web.AppContextHolder;
-import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.security.annotation.AuthAccount;
 import com.entdiy.support.service.MailService;
+import com.entdiy.support.service.WeiXinOAuthService;
 import com.entdiy.sys.entity.Menu;
 import com.entdiy.sys.service.MenuService;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +55,9 @@ public class AdminController {
     @Autowired
     private MailService mailService;
 
+    @Autowired(required = false)
+    private WeiXinOAuthService weiXinOAuthService;
+
     @RequestMapping(value = {"/admin", "/admin/"}, method = RequestMethod.GET)
     public String adminIndex(HttpServletRequest request, Model model) {
         model.addAttribute("baiduMapAppkey", SpringPropertiesHolder.getProperty("baidu.map.appkey"));
@@ -63,7 +66,17 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(HttpServletRequest request, Model model) {
+        model.addAttribute("devMode", AppContextHolder.isDevMode());
+        model.addAttribute("noneProductionMode", AppContextHolder.noneProductionMode());
+        if (weiXinOAuthService != null) {
+            String url = AppContextHolder.getWebContextUri() + "/wx/admin-login";
+            model.addAttribute("weiXinOAuthUrl", url);
+        }
+        String error = request.getParameter("error");
+        if (StringUtils.isNotBlank(error)) {
+            model.addAttribute("error", error);
+        }
         return "admin/pub/login";
     }
 

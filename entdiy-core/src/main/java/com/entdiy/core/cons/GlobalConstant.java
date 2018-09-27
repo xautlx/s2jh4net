@@ -69,6 +69,30 @@ public class GlobalConstant {
         }
     }
 
+    @MetaData("OAuth认证类型")
+    public enum OauthTypeEnum implements EnumKeyLabelPair {
+        MOCK {
+            @Override
+            public String getLabel() {
+                return "模拟";
+            }
+        },
+
+        WECHAT {
+            @Override
+            public String getLabel() {
+                return "微信";
+            }
+        },
+
+        ALIPAY {
+            @Override
+            public String getLabel() {
+                return "支付宝";
+            }
+        }
+    }
+
     @MetaData("类似OAuth的APP认证AccessToken请求Header名称")
     public final static String APP_AUTH_ACCESS_TOKEN = "Access-Token";
 
@@ -77,6 +101,9 @@ public class GlobalConstant {
 
     @MetaData("ConfigProperty:是否全局禁用开放手机号短信发送功能")
     public final static String CFG_SMS_DISABLED = "sms.disabled";
+
+    @MetaData(value = "ConfigProperty:系统管理员邮箱地址列表", comments = "主要用于接收一些系统层面的重要通知、异常等邮件")
+    public final static String CFG_SYSTEM_EMAILS = "system.emails";
 
     @MetaData("ConfigProperty:静态资源访问URI前缀列表，多个以逗号分隔")
     public static final String CFG_UPLOAD_PUBLIC_RESOURCE_URI = "upload.public.resource.uri";

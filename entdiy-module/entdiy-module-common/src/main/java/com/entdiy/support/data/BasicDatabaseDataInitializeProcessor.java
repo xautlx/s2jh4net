@@ -125,6 +125,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             Account rootAccount = new Account();
             rootAccount.setAuthType(Account.AuthTypeEnum.admin);
             rootAccount.setAuthUid(GlobalConstant.ROOT_VALUE);
+            rootAccount.setNickname(rootAccount.getAuthUid());
             rootAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
             rootAccount.setEmail("xautlx@hotmail.com");
 
@@ -150,6 +151,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             Account managerAccount = new Account();
             managerAccount.setAuthType(Account.AuthTypeEnum.admin);
             managerAccount.setAuthUid("manager");
+            rootAccount.setNickname(rootAccount.getAuthUid());
             managerAccount.setDataDomain(GlobalConstant.DEFAULT_VALUE);
             managerAccount.setEmail("manager@entdiy.com");
 
@@ -220,7 +222,7 @@ public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataIn
             DataDict item = new DataDict();
             item.setPrimaryKey("ja-JP");
             item.setPrimaryValue("日本語");
-            item.setDisabled(true);
+            item.setDisabled(false);
             item.setParent(entity);
             dataDictService.save(item);
 

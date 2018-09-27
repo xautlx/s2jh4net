@@ -19,17 +19,22 @@ package com.entdiy.auth.dao;
 
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.OauthAccount;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.dao.jpa.BaseDao;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.QueryHint;
+import java.util.List;
 
 @Repository
 public interface OauthAccountDao extends BaseDao<OauthAccount, Long> {
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    OauthAccount findByOauthTypeAndOauthOpenId(OauthAccount.OauthTypeEnum oauthType, String oauthOpenId);
+    OauthAccount findByOauthOpenIdAndOauthTypeAndAuthType(String oauthOpenId, GlobalConstant.OauthTypeEnum oauthType, Account.AuthTypeEnum authType);
 
     @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
-    OauthAccount findByAccountAndOauthType(Account account,OauthAccount.OauthTypeEnum oauthType);
+    List<OauthAccount> findByAccountAndOauthTypeAndAuthType(Account account, GlobalConstant.OauthTypeEnum oauthType, Account.AuthTypeEnum authType);
+
+    @QueryHints({@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true")})
+    OauthAccount findByAccountAndOauthOpenIdAndOauthTypeAndAuthType(Account account, String oauthOpenId, GlobalConstant.OauthTypeEnum oauthType, Account.AuthTypeEnum authType);
 }

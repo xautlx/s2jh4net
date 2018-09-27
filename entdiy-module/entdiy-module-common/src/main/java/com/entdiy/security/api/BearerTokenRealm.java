@@ -54,6 +54,7 @@ public class BearerTokenRealm extends AuthorizingRealm {
         //构造权限框架认证用户信息对象
         DefaultAuthUserDetails authUserDetails = new DefaultAuthUserDetails();
         authUserDetails.setUsername(account.getAuthUid());
+        authUserDetails.setNickname(account.getNickname());
         authUserDetails.setAccountId(account.getId());
         authUserDetails.setDataDomain(account.getDataDomain());
         authUserDetails.setAccessToken(accessToken);

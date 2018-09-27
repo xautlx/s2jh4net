@@ -17,8 +17,8 @@
  */
 package com.entdiy.security;
 
-import com.entdiy.auth.entity.OauthAccount;
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.security.AuthUserDetails;
 import com.entdiy.core.web.json.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -52,6 +52,10 @@ public class DefaultAuthUserDetails implements Serializable, AuthUserDetails {
     @JsonView(JsonViews.App.class)
     private String username;
 
+    @MetaData(value = "昵称")
+    @JsonView(JsonViews.App.class)
+    private String nickname;
+
     @MetaData(value = "账号全局唯一标识")
     @JsonView(JsonViews.App.class)
     private Long accountId;
@@ -66,7 +70,7 @@ public class DefaultAuthUserDetails implements Serializable, AuthUserDetails {
 
     @MetaData(value = "Oauth认证类型")
     @JsonView(JsonViews.Admin.class)
-    private OauthAccount.OauthTypeEnum oauthType;
+    private GlobalConstant.OauthTypeEnum oauthType;
 
     @MetaData(value = "Oauth认证标识")
     @JsonView(JsonViews.Admin.class)

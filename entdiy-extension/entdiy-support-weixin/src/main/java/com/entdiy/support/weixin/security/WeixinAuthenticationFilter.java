@@ -17,8 +17,11 @@
  */
 package com.entdiy.support.weixin.security;
 
-import com.entdiy.core.security.AuthContextHolder;
-import com.entdiy.core.security.AuthUserDetails;
+import com.entdiy.auth.entity.Account;
+import com.entdiy.auth.entity.OauthAccount;
+import com.entdiy.auth.service.AccountService;
+import com.entdiy.auth.service.OauthAccountService;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.web.AppContextHolder;
 import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.support.weixin.service.WxMpService;
@@ -40,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
 
 public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
 
@@ -47,6 +51,12 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
 
     @Setter
     private WxMpService wxMpService;
+
+    @Setter
+    private OauthAccountService oauthAccountService;
+
+    @Setter
+    private AccountService accountService;
 
     @Setter
     private String oath2State;
@@ -60,34 +70,31 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
     @Setter
     private String authorizationProxyUrl;
 
-    private String finalAuthorizationUrl;
-
-    @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        if (isLoginRequest(request, response)) {
-            if (isLoginSubmission(request, response)) {
-                //本次用户登陆账号
-                String username = this.getUsername(request);
-                Subject subject = this.getSubject(request, response);
-                //之前登陆的用户
-                AuthUserDetails preAuthUserDetails = AuthContextHolder.getAuthUserDetails();
-                //如果两次登陆的用户不一样，则先退出之前登陆的用户
-                if (username != null && preAuthUserDetails != null && !username.equals(preAuthUserDetails.getUsername())) {
-                    subject.logout();
-                }
-            }
-        }
-        return super.isAccessAllowed(request, response, mappedValue);
-    }
-
-    @Override
-    public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
-        return super.onPreHandle(request, response, mappedValue);
-    }
-
     protected AuthenticationToken createToken(WxMpOAuth2AccessToken wxMpOAuth2AccessToken, WxMpUser wxMpUser, ServletRequest request, ServletResponse response) {
         String host = getHost(request);
-        return new WeixinOAuthToken(wxMpOAuth2AccessToken, wxMpUser, true, host);
+        Account.AuthTypeEnum authType = Account.AuthTypeEnum.site;
+        String authTypeParam = request.getParameter("authType");
+        if (StringUtils.isNotBlank(authTypeParam)) {
+            authType = Account.AuthTypeEnum.valueOf(authTypeParam);
+        }
+        return new WeixinOAuthToken(authType, wxMpOAuth2AccessToken, wxMpUser, true, host);
+    }
+
+    public String oauth2buildAuthorizationUrl(String authorizationUrl, String oauth2Scope, String oath2State) {
+        //https://github.com/HADB/GetWeixinCode
+        //如果配置中转url与当前应用上下文不一致，则采用中转认证URL，否则按照标准的转向认证方式
+        if (StringUtils.isNotBlank(authorizationProxyUrl) && authorizationProxyUrl.indexOf(AppContextHolder.getWebContextUri()) <= -1) {
+            //http://www.abc.com/xxx/get-weixin-code.html?appid=XXXX&scope=snsapi_base&state=hello-world&redirect_uri=http%3A%2F%2Fwww.xyz.com%2Fhello-world.html
+            StringBuilder proxyUrl = new StringBuilder(authorizationProxyUrl);
+            proxyUrl.append("?appid=" + wxMpService.getWxMpConfigStorage().getAppId());
+            proxyUrl.append("&scope=" + oauth2Scope);
+            proxyUrl.append("&state=" + oath2State);
+            proxyUrl.append("&redirect_uri=" + URIUtil.encodeURIComponent(authorizationUrl));
+            authorizationUrl = proxyUrl.toString();
+        }
+        logger.debug("Using authorizationUrl: {}", authorizationUrl);
+
+        return wxMpService.oauth2buildAuthorizationUrl(authorizationUrl, oauth2Scope, oath2State);
     }
 
     @Override
@@ -102,34 +109,21 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
 
             saveRequest(request);
 
-            String redirectURL;
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            String query = httpServletRequest.getQueryString();
+            if (query == null) {
+                query = "";
+            } else {
+                query = "?" + StringUtils.substringBefore(query, "forceLogin=true") + StringUtils.substringAfter(query, "forceLogin=true");
+            }
             //开发模拟openid登录支持
             if (getMockOAuth2AccessToken(request) != null) {
-                HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-                redirectURL = "/wx/authorize?" + httpServletRequest.getQueryString();
+                String redirectURL = "/wx/authorize" + query;
                 logger.debug("redirect to: {}", redirectURL);
                 WebUtils.issueRedirect(request, response, redirectURL);
             } else {
-                if (finalAuthorizationUrl == null) {
-                    String url = AppContextHolder.getWebContextUri() + "/wx/authorize";
-
-                    //https://github.com/HADB/GetWeixinCode
-                    //如果配置中转url与当前应用上下文不一致，则采用中转认证URL，否则按照标准的转向认证方式
-                    if (StringUtils.isNotBlank(authorizationProxyUrl) && authorizationProxyUrl.indexOf(AppContextHolder.getWebContextUri()) <= -1) {
-                        //http://www.abc.com/xxx/get-weixin-code.html?appid=XXXX&scope=snsapi_base&state=hello-world&redirect_uri=http%3A%2F%2Fwww.xyz.com%2Fhello-world.html
-                        StringBuilder proxyUrl = new StringBuilder(authorizationProxyUrl);
-                        proxyUrl.append("?appid=" + wxMpService.getWxMpConfigStorage().getAppId());
-                        proxyUrl.append("&scope=" + oauth2Scope);
-                        proxyUrl.append("&state=" + oath2State);
-                        proxyUrl.append("&redirect_uri=" + URIUtil.encodeURIComponent(url));
-                        url = proxyUrl.toString();
-                    }
-
-                    finalAuthorizationUrl = url;
-                    logger.debug("Using authorizationUrl: {}", finalAuthorizationUrl);
-                }
-
-                redirectURL = wxMpService.oauth2buildAuthorizationUrl(finalAuthorizationUrl, oauth2Scope, oath2State);
+                String authorizationUrl = AppContextHolder.getWebContextUri() + "/wx/authorize" + query;
+                String redirectURL = oauth2buildAuthorizationUrl(authorizationUrl, oauth2Scope, oath2State);
                 logger.debug("redirect to: {}", redirectURL);
                 WebUtils.issueRedirect(request, response, redirectURL, null, false, true);
             }
@@ -169,7 +163,20 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
         }
 
         Subject subject = getSubject(request, response);
-        subject.login(createToken(wxMpOAuth2AccessToken, wxMpUser, request, response));
+
+        WeixinOAuthToken weixinOAuthToken = (WeixinOAuthToken) createToken(wxMpOAuth2AccessToken, wxMpUser, request, response);
+        OauthAccount oauthAccount = oauthAccountService.findByOauthOpenIdAndOauthTypeAndAuthType(
+                weixinOAuthToken.getUsername(), GlobalConstant.OauthTypeEnum.WECHAT, weixinOAuthToken.getAuthType());
+        if (weixinOAuthToken.getAuthType().equals(Account.AuthTypeEnum.admin)) {
+            if (oauthAccount == null) {
+                String msg = "请先使用账号密码登录后台系统进行微信绑定后，才可直接使用微信登录后台系统";
+                String url = "/admin/login?error=" + URLEncoder.encode(msg, "UTF-8");
+                WebUtils.issueRedirect(request, response, url, null, true);
+                return false;
+            }
+        }
+
+        subject.login(weixinOAuthToken);
         issueSuccessRedirect(request, response);
         return false;
     }

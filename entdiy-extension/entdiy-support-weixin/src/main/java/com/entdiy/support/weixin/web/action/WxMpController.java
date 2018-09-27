@@ -18,35 +18,41 @@ import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.OauthAccount;
 import com.entdiy.auth.service.AccountService;
 import com.entdiy.auth.service.OauthAccountService;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.security.AuthContextHolder;
+import com.entdiy.core.security.AuthUserDetails;
 import com.entdiy.core.web.AppContextHolder;
+import com.entdiy.core.web.util.ServletUtils;
 import com.entdiy.core.web.view.OperationResult;
 import com.entdiy.security.DefaultAuthUserDetails;
+import com.entdiy.security.annotation.AuthAccount;
+import com.entdiy.support.weixin.security.WeixinAuthenticationFilter;
 import com.entdiy.support.weixin.service.WxMpService;
+import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping(value = "/wx")
 public class WxMpController {
 
     private final static Logger logger = LoggerFactory.getLogger(WxMpController.class);
-
-    @Value("${user.app.uri}")
-    private String userAppUri;
 
     @Autowired
     private WxMpService wxMpService;
@@ -56,6 +62,9 @@ public class WxMpController {
 
     @Autowired
     private OauthAccountService oauthAccountService;
+
+    @Autowired
+    private WeixinAuthenticationFilter weixinAuthenticationFilter;
 
     @GetMapping("/echostr")
     public void wechatCore(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -82,26 +91,97 @@ public class WxMpController {
     @GetMapping("/goto-app")
     public String weixinGotoApp(
             HttpServletRequest request,
-            @RequestParam(value = "to", required = false) String to) {
+            @RequestParam(value = "to", required = true) String to) {
         DefaultAuthUserDetails defaultAuthUserDetails = (DefaultAuthUserDetails) AuthContextHolder.getAuthUserDetails();
         String token = defaultAuthUserDetails.getAccessToken();
-        if (AppContextHolder.isDevMode()) {
+
+        //查询数据库，如果没有对象说明是重建数据库了，主要用在开发环境反复重建数据库场景，则做一个登录注销动作
+        Account account = accountService.findByAccessToken(token);
+        if (account == null) {
+            Subject subject = SecurityUtils.getSubject();
+            subject.logout();
+            return "redirect:" + to;
+        }
+
+        if (AppContextHolder.isDevMode() && !ServletUtils.isMicroMessengerClient(request)) {
             String mock = request.getParameter("mock");
             if (StringUtils.isNotBlank(mock) && !mock.equals(defaultAuthUserDetails.getUsername())) {
-                OauthAccount oauthAccount = oauthAccountService.findByOauthTypeAndOauthOpenId(OauthAccount.OauthTypeEnum.MOCK, mock);
+                OauthAccount oauthAccount = oauthAccountService.findByOauthOpenIdAndOauthType(mock, GlobalConstant.OauthTypeEnum.MOCK);
                 if (oauthAccount != null) {
-                    Account account = oauthAccount.getAccount();
+                    account = oauthAccount.getAccount();
                     token = account.getAccessToken();
                 }
             }
         }
 
-        String loginUrl = userAppUri + "/login？";
-        String url = StringUtils.isNotBlank(to) ? loginUrl + "to=" + to : loginUrl;
-        StringBuilder redirectURL = new StringBuilder(url);
-        redirectURL.append("&token=" + token);
+        StringBuilder redirectURL = new StringBuilder(to);
+        if (to.indexOf("?") <= -1) {
+            redirectURL.append("?token=" + token);
+        } else {
+            redirectURL.append("&token=" + token);
+        }
         redirectURL.append("&buildVersion=" + AppContextHolder.getBuildVersion());
         return "redirect:" + redirectURL;
+    }
+
+    @GetMapping("/admin-login")
+    public String weixinGotoAdminLogin(HttpServletRequest request, Model model) {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return "redirect:/wx/goto-admin?authType=admin";
+    }
+
+    @GetMapping("/goto-admin")
+    public String weixinGotoAdmin(HttpServletRequest request, Model model) {
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/goto-admin-bind")
+    public String weixinGotoAdminBind(HttpServletRequest request, Model model) {
+        String authorizationUrl = AppContextHolder.getWebContextUri() + "/wx/admin-bind";
+        return "redirect:" + weixinAuthenticationFilter.oauth2buildAuthorizationUrl(authorizationUrl, WxConsts.OAuth2Scope.SNSAPI_USERINFO, "bind");
+    }
+
+    @GetMapping("/admin-bind")
+    public String weixinAdminBind(HttpServletRequest request, Model model) throws Exception {
+        String code = request.getParameter("code");
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+
+        String openid = wxMpOAuth2AccessToken.getOpenId();
+        OauthAccount oauthAccount = oauthAccountService.findByOauthOpenIdAndOauthTypeAndAuthType(
+                openid, GlobalConstant.OauthTypeEnum.WECHAT, Account.AuthTypeEnum.admin);
+        if (oauthAccount == null) {
+            oauthAccount = new OauthAccount();
+            oauthAccount.setOauthType(GlobalConstant.OauthTypeEnum.WECHAT);
+            oauthAccount.setOauthOpenId(openid);
+            oauthAccount.setAuthType(Account.AuthTypeEnum.admin);
+            oauthAccount.setBindTime(LocalDateTime.now());
+
+            OauthAccount.OauthAccessToken oauthAccessToken = new OauthAccount.OauthAccessToken();
+            BeanUtils.copyProperties(wxMpOAuth2AccessToken, oauthAccessToken);
+            oauthAccount.setOauthAccessToken(oauthAccessToken);
+
+            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+            OauthAccount.OauthUserinfo oauthUserinfo = new OauthAccount.OauthUserinfo();
+            BeanUtils.copyProperties(wxMpUser, oauthUserinfo);
+            oauthAccount.setOauthUserinfo(oauthUserinfo);
+
+            AuthUserDetails authUserDetails = AuthContextHolder.getAuthUserDetails();
+            Account account = accountService.findOne(authUserDetails.getAccountId());
+            oauthAccount.setAccount(account);
+
+            oauthAccountService.save(oauthAccount);
+        }
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/admin-unbind")
+    @ResponseBody
+    public OperationResult weixinAdminUnBind(@AuthAccount Account account, String openid) {
+        OauthAccount oauthAccount = oauthAccountService.findByAccountAndOauthOpenIdAndOauthTypeAndAuthType(
+                account, openid, GlobalConstant.OauthTypeEnum.WECHAT, Account.AuthTypeEnum.admin);
+        oauthAccountService.delete(oauthAccount);
+        return OperationResult.buildSuccessResult("微信解绑操作成功");
     }
 
     @GetMapping("/weixin-access-required")
@@ -112,7 +192,12 @@ public class WxMpController {
     @GetMapping("/jsapi-signture")
     @ResponseBody
     public OperationResult weixinJsapiSignture(@RequestParam("url") String url) throws WxErrorException {
-        WxJsapiSignature wxJsapiSignature = wxMpService.createJsapiSignature(url);
-        return OperationResult.buildSuccessResult(wxJsapiSignature);
+        try {
+            WxJsapiSignature wxJsapiSignature = wxMpService.createJsapiSignature(url);
+            return OperationResult.buildSuccessResult(wxJsapiSignature);
+        } catch (WxErrorException e) {
+            logger.error("weixinJsapiSignture error", e);
+            return OperationResult.buildFailureResult("微信接口异常，请联系客服处理");
+        }
     }
 }
