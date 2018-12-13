@@ -37,6 +37,7 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Persistable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -389,7 +390,7 @@ public class ServletUtils {
         if (BooleanUtils.toBoolean(android)) {
             return true;
         }
-        String userAgent = request.getHeader("user-agent");
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (StringUtils.isBlank(userAgent)) {
             return false;
         }
@@ -404,7 +405,7 @@ public class ServletUtils {
         if (BooleanUtils.toBoolean(ios)) {
             return true;
         }
-        String userAgent = request.getHeader("user-agent");
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (StringUtils.isBlank(userAgent)) {
             return false;
         }
@@ -421,7 +422,7 @@ public class ServletUtils {
         if (BooleanUtils.toBoolean(mobile)) {
             return true;
         }
-        String userAgent = request.getHeader("USER-AGENT");
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (null == userAgent) {
             userAgent = "";
         }
@@ -441,7 +442,7 @@ public class ServletUtils {
         if (BooleanUtils.toBoolean(mobile)) {
             return true;
         }
-        String userAgent = request.getHeader("user-agent");
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (StringUtils.isBlank(userAgent)) {
             return false;
         }

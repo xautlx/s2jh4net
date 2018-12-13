@@ -95,7 +95,7 @@
                    <#if fetchJoinFields?exists>
                    postData: {
                    <#list fetchJoinFields?keys as key>
-                           "search[FETCH_${key}]": "${fetchJoinFields[key]}"<#if (key_has_next)>,</#if>
+                       "search[FETCH_${key}]": "${fetchJoinFields[key]}"<#if (key_has_next)>,</#if>
                    </#list>
                    },
                    </#if>

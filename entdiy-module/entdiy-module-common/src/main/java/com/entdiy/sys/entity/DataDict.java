@@ -42,7 +42,7 @@ import javax.persistence.*;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @MetaData(value = "数据字典")
 @Audited
-public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
+public class DataDict extends BaseNativeNestedSetEntity<DataDict> implements Comparable<DataDict> {
 
     private static final long serialVersionUID = 5732022663570063926L;
 
@@ -109,5 +109,10 @@ public class DataDict extends BaseNativeNestedSetEntity<DataDict> {
             sb.append("_" + secondaryKey);
         }
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(DataDict o) {
+        return this.getRgt().compareTo(o.getRgt());
     }
 }

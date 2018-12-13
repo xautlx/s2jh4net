@@ -19,7 +19,6 @@ package com.entdiy.support.weixin.security;
 
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.entity.OauthAccount;
-import com.entdiy.auth.service.AccountService;
 import com.entdiy.auth.service.OauthAccountService;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.web.AppContextHolder;
@@ -54,9 +53,6 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
 
     @Setter
     private OauthAccountService oauthAccountService;
-
-    @Setter
-    private AccountService accountService;
 
     @Setter
     private String oath2State;
@@ -106,10 +102,20 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
                 logger.trace("Attempting to access a path which requires authentication.  Forwarding to the " + "Authentication url ["
                         + getLoginUrl() + "]");
             }
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+
+            boolean microMessengerClient = ServletUtils.isMicroMessengerClient(httpServletRequest);
+            if (!microMessengerClient) {
+                //非微信模式，且在开发模拟模式
+                String mock = request.getParameter("mock");
+                if (!AppContextHolder.isDevMode() || StringUtils.isBlank(mock)) {
+                    WebUtils.issueRedirect(request, response, "/wx/weixin-access-required");
+                    return false;
+                }
+            }
 
             saveRequest(request);
 
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             String query = httpServletRequest.getQueryString();
             if (query == null) {
                 query = "";

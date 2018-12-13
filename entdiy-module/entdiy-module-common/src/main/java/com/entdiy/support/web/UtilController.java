@@ -141,6 +141,8 @@ public class UtilController {
         for (AppCacheService appCacheService : appCacheServices) {
             appCacheService.cacheEvictAll();
         }
+        logger.info("JPA cacheEvict...");
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         return OperationResult.buildSuccessResult("数据缓存刷新操作成功");
     }
 

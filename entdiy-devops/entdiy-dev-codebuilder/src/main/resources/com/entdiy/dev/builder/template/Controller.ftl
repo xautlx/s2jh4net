@@ -85,7 +85,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name}, ${i
     @RequiresPermissions("业务管理:${model_title}管理")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    @JsonView(JsonViews.Admin.class)
+    @JsonView(JsonViews.Super.class)
     public JsonPage<${entity_name}> findByPage(@ModelPropertyFilter(${entity_name}.class) GroupPropertyFilter filter,
                                                @ModelPageableRequest Pageable pageable) {
         return ${entity_name_uncapitalize}Service.findByPage(filter,pageable);

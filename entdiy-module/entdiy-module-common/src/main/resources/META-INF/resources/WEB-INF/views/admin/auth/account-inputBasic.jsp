@@ -34,6 +34,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label">昵称</label>
+                    <div class="controls">
+                        <form:input path="nickname" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label">电子邮件</label>
                     <div class="controls">
                         <form:input path="email" class="form-control"/>

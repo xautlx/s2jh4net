@@ -14,7 +14,6 @@
  */
 package com.entdiy.support.service;
 
-import com.entdiy.core.web.AppContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.SignStyle;
@@ -36,10 +38,13 @@ public class SerialNumberService {
 
     private final Logger logger = LoggerFactory.getLogger(SerialNumberService.class);
 
-    private static final DateTimeFormatter LOCAL_DATE_FORMATTER = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter LOCAL_DATETIME_FORMATTER = new DateTimeFormatterBuilder()
             .appendValue(YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
             .appendValue(MONTH_OF_YEAR, 2)
             .appendValue(DAY_OF_MONTH, 2)
+            .appendValue(HOUR_OF_DAY, 2)
+            .appendValue(MINUTE_OF_HOUR, 2)
+            .appendValue(SECOND_OF_MINUTE, 2)
             .toFormatter();
 
     @Autowired
@@ -51,47 +56,6 @@ public class SerialNumberService {
     private static final String SERIAL_NUMBER = "serial:generator:";
 
     /**
-     * 对业务流水号做必要初始化，一般用于在redis服务需要重启后，当前流水号丢失，需要在业务应用启动时对相关的业务流水号进行初始化
-     *
-     * @param bizCode         业务前缀代码
-     * @param serialNumLength 流水号位数，用于流水号截取计算
-     * @param curMaxVal       当前业务单号最大值
-     */
-    public void init(String bizCode, int serialNumLength, String curMaxVal) {
-        Assert.isTrue(StringUtils.isNotBlank(bizCode), "流水号业务类型不能为空");
-        if (StringUtils.isNotBlank(curMaxVal)) {
-            LocalDate now = LocalDate.now();
-            //获取当前时间,返回格式如yyyyMMdd
-            String date = now.format(LOCAL_DATE_FORMATTER);
-
-            //已有当日流水号
-            if (curMaxVal.indexOf(date) > -1) {
-                int codeLength = curMaxVal.length();
-                String num = StringUtils.substring(curMaxVal, codeLength - serialNumLength, codeLength);
-
-                //构造redis的key
-                String key = SERIAL_NUMBER + date + ":" + bizCode;
-                //判断key是否存在
-                Boolean exists = redisTemplate.hasKey(key);
-                if (!exists) {
-                    //设置当前key的value为数据库业务已有流水号值
-                    long val = Long.valueOf(num);
-                    logger.info("Setting redis serial num: {}={}", key, val);
-                    redisTemplate.opsForValue().increment(key, val);
-                    ZoneId zone = ZoneId.systemDefault();
-
-                    //构造redis过期时间 UnixMillis
-                    //设置过期时间为当天的最后一秒
-                    LocalTime time = LocalTime.of(23, 59, 59);
-                    LocalDateTime expireAt = LocalDateTime.of(now, time);
-                    Instant instant = expireAt.atZone(zone).toInstant();
-                    redisTemplate.expireAt(key, Date.from(instant));
-                }
-            }
-        }
-    }
-
-    /**
      * 生成业务流水单号
      *
      * @param bizCode         业务前缀代码
@@ -100,30 +64,27 @@ public class SerialNumberService {
      */
     public String generate(String bizCode, int serialNumLength) {
         Assert.isTrue(StringUtils.isNotBlank(bizCode), "流水号业务类型不能为空");
-
-        //开发模式直接返回当前时间戳，以避免反复重建数据库导致的业务号重复
-        if (AppContextHolder.isDevMode()) {
-            return bizCode + System.currentTimeMillis();
-        }
-
-        LocalDate now = LocalDate.now();
-        //获取当前时间,返回格式如yyyyMMdd
-        String date = now.format(LOCAL_DATE_FORMATTER);
+        LocalDateTime now = LocalDateTime.now();
 
         //构造redis的key
-        String key = SERIAL_NUMBER + date + ":" + bizCode;
+        String key = SERIAL_NUMBER + ":" + bizCode;
 
         //判断key是否存在
         Boolean exists = redisTemplate.hasKey(key);
 
         Long incr = redisTemplate.opsForValue().increment(key, 1);
+        if (incr <= 0 || incr >= Math.pow(10, serialNumLength)) {
+            logger.debug("Resetting Redis serial number to " + incr + " of " + key);
+            incr = 1L;
+            redisTemplate.opsForValue().set(key, incr);
+        }
 
         //设置过期时间
         if (!exists) {
             //构造redis过期时间 UnixMillis
             //设置过期时间为当天的最后一秒
             LocalTime time = LocalTime.of(23, 59, 59);
-            LocalDateTime expireAt = LocalDateTime.of(now, time);
+            LocalDateTime expireAt = LocalDateTime.of(now.toLocalDate(), time);
             ZoneId zone = ZoneId.systemDefault();
             Instant instant = expireAt.atZone(zone).toInstant();
             redisTemplate.expireAt(key, Date.from(instant));
@@ -132,6 +93,8 @@ public class SerialNumberService {
         //默认编码需要5位，位数不够前面补0
         String formattNum = String.format("%0" + serialNumLength + "d", incr);
         StringBuilder sb = new StringBuilder(20);
+        //获取当前时间,返回格式字符串
+        String date = now.format(LOCAL_DATETIME_FORMATTER);
         //转换成业务需要的格式  bizCode + date + incr
         sb.append(bizCode).append(date).append(formattNum);
 

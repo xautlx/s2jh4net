@@ -53,4 +53,23 @@ public class ConfigPropertyService extends BaseService<ConfigProperty, Long> {
         ConfigProperty configProperty = configPropertyDao.findByPropKey(propKey);
         return configProperty != null ? configProperty.getHtmlValue() : null;
     }
+
+    public String getAndSaveValue(String propKey, String propValue) {
+        String value = null;
+        ConfigProperty configProperty = configPropertyDao.findByPropKey(propKey);
+        if (configProperty == null) {
+            configProperty = new ConfigProperty();
+            configProperty.setPropKey(propKey);
+            configProperty.setPropName(propKey);
+            configProperty.setSimpleValue(propValue);
+            configPropertyDao.save(configProperty);
+        } else {
+            value = configProperty.getSimpleValue();
+            if (!propValue.equals(value)) {
+                configProperty.setSimpleValue(propValue);
+                configPropertyDao.save(configProperty);
+            }
+        }
+        return value;
+    }
 }

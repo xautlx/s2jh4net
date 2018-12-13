@@ -35,7 +35,7 @@ public class EnumUtils {
         Map<Enum<?>, String> enumDataMap = enumDatasContainer.get(enumClass);
         if (enumDataMap == null) {
             Enum[] enums = enumClass.getEnumConstants();
-            enumDataMap = Maps.newHashMap();
+            enumDataMap = Maps.newLinkedHashMap();
             for (Enum item : enums) {
                 if (item instanceof EnumKeyLabelPair) {
                     EnumKeyLabelPair kl = (EnumKeyLabelPair) item;

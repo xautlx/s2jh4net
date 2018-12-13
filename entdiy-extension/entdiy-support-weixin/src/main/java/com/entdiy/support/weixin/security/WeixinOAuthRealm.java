@@ -105,8 +105,8 @@ public class WeixinOAuthRealm extends AuthorizingRealm {
         authUserDetails.setUsername(username);
         authUserDetails.setNickname(account.getNickname());
         authUserDetails.setAccessToken(account.getAccessToken());
-        authUserDetails.setOauthType(oauthAccount.getOauthType());
-        authUserDetails.setOauthOpenId(oauthAccount.getOauthOpenId());
+        authUserDetails.setOauthType(GlobalConstant.OauthTypeEnum.WECHAT);
+        authUserDetails.setOauthOpenId(username);
 
         return new SimpleAuthenticationInfo(authUserDetails, username, "Weixin OAuth Realm");
     }

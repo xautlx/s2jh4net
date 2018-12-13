@@ -19,8 +19,10 @@ package com.entdiy.security.api;
 
 import com.entdiy.auth.entity.Account;
 import com.entdiy.auth.service.AccountService;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.security.DefaultAuthUserDetails;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -58,6 +60,10 @@ public class BearerTokenRealm extends AuthorizingRealm {
         authUserDetails.setAccountId(account.getId());
         authUserDetails.setDataDomain(account.getDataDomain());
         authUserDetails.setAccessToken(accessToken);
+        if (authUserDetails.getUsername().startsWith(GlobalConstant.OauthTypeEnum.WECHAT.name())) {
+            authUserDetails.setOauthType(GlobalConstant.OauthTypeEnum.WECHAT);
+            authUserDetails.setOauthOpenId(StringUtils.substringAfter(authUserDetails.getUsername(), GlobalConstant.OauthTypeEnum.WECHAT + "_"));
+        }
 
         return new SimpleAuthenticationInfo(authUserDetails, accessToken, "Bearer Token Realm");
     }

@@ -49,6 +49,15 @@ public class JsonViews {
     public interface AdminDetail extends Admin, Detail {
     }
 
+    public interface Super extends Admin, List {
+    }
+
+    public interface SuperList extends Super, List {
+    }
+
+    public interface SuperDetail extends Super, Detail {
+    }
+
     public interface Tree extends Admin, App, List {
     }
 }
