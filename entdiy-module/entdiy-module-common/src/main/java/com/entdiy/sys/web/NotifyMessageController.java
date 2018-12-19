@@ -75,7 +75,7 @@ public class NotifyMessageController extends BaseController<NotifyMessage, Long>
 
     @RequiresPermissions("配置管理:系统管理:公告管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow(Model model) {
+    public String editShow(@ModelEntity NotifyMessage entity, Model model) {
         model.addAttribute("platformMap", EnumUtils.getEnumDataMap(NotifyMessagePlatformEnum.class));
         model.addAttribute("messageTypeMap", dataDictService.findMapDataByRootPrimaryKey(GlobalConstant.DATADICT_MESSAGE_TYPE));
         return "admin/sys/notifyMessage-inputBasic";

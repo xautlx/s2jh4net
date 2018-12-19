@@ -69,7 +69,7 @@ public class LoggingEventController extends BaseController<LoggingEvent, Long> {
 
     @RequiresPermissions("配置管理:系统记录:异常日志记录")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow(Model model) {
+    public String editShow(@ModelEntity LoggingEvent entity, Model model) {
         model.addAttribute("stateMap", EnumUtils.getEnumDataMap(LoggingHandleStateEnum.class));
         return "admin/aud/loggingEvent-inputBasic";
     }

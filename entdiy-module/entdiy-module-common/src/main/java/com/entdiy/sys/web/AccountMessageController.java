@@ -59,7 +59,7 @@ public class AccountMessageController extends BaseController<AccountMessage, Lon
 
     @RequiresPermissions("配置管理:系统管理:消息管理")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editShow(Model model) {
+    public String editShow(@ModelEntity AccountMessage entity, Model model) {
         return "admin/sys/accountMessage-inputBasic";
     }
 }
