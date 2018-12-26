@@ -193,7 +193,7 @@ public class UtilController {
             query.setParameter("additionalValue", additionalValue);
         } else {
             query = entityManager.createQuery(jql);
-            query.setParameter("value", ConvertUtils.convertStringToObject(value, FieldUtils.getDeclaredField(entityClass, element, true).getType()));
+            query.setParameter("value", ConvertUtils.convertStringToObject(value, FieldUtils.getField(entityClass, element, true).getType()));
         }
 
         List<?> entities = query.getResultList();
