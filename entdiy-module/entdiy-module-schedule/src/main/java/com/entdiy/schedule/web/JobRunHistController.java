@@ -21,6 +21,7 @@ import com.entdiy.core.annotation.MenuData;
 import com.entdiy.core.pagination.GroupPropertyFilter;
 import com.entdiy.core.pagination.JsonPage;
 import com.entdiy.core.web.BaseController;
+import com.entdiy.core.web.annotation.ModelEntity;
 import com.entdiy.core.web.annotation.ModelPageableRequest;
 import com.entdiy.core.web.annotation.ModelPropertyFilter;
 import com.entdiy.schedule.entity.JobRunHist;
@@ -57,7 +58,7 @@ public class JobRunHistController extends BaseController<JobRunHist, Long> {
 
     @RequiresPermissions("配置管理:计划任务管理:任务运行记录")
     @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public String htmlPreview() {
+    public String htmlPreview(@ModelEntity JobRunHist entity) {
         return "admin/schedule/jobRunHist-view";
     }
 }
