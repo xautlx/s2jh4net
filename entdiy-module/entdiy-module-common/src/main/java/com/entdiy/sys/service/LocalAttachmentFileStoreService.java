@@ -71,7 +71,7 @@ public class LocalAttachmentFileStoreService implements AttachmentFileStoreServi
             attachmentFile.setFileContentType(contentType);
             return attachmentFile;
         } catch (IOException e) {
-            throw new ServiceException("zoom image error", e);
+            throw new ServiceException("file store error", e);
         } finally {
             //关闭输入流
             IOUtils.closeQuietly(fis);

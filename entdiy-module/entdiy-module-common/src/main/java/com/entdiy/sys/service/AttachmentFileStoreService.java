@@ -87,7 +87,7 @@ public interface AttachmentFileStoreService {
     default AttachmentFile storePublicImage(Resource imageResource) {
         try {
             return storePublicImage(imageResource.lastModified(),
-                    imageResource.getInputStream(), URLDecoder.decode(imageResource.getURL().toString(), "UTF-8"));
+                    imageResource.getInputStream(), URLDecoder.decode(imageResource.getFilename().toString(), "UTF-8"));
         } catch (IOException e) {
             throw new ServiceException("store Resource image error", e);
         }
