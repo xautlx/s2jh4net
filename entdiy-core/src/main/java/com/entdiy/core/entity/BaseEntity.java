@@ -135,7 +135,8 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractPersis
     @MetaData(value = "设置已关联对象主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
     @Transient
     @JsonIgnore
-    protected void setR2TargetIds(String r2Name, String r2TargetName, String r2ThisName, List<Long> r2TargetIds) {
+    protected void setR2TargetIds(String r2Name, String r2TargetName, String r2ThisName, ID... ids) {
+        final List<ID> r2TargetIds = (ids != null && ids.length > 0) ? Lists.newArrayList(ids) : Lists.newArrayList();
         //没有关联对象集合，清空关联集合
         Method r2Method = ReflectionUtils.getGetterMethod(this.getClass(), r2Name);
         List r2s;
@@ -148,8 +149,9 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractPersis
             r2s.clear();
         } else {
             //有关联对象集合，如果原来没有则初始化创建，否则移除不存在关联
-            if (CollectionUtils.isEmpty(r2s)) {
+            if (r2s == null) {
                 r2s = Lists.newArrayList();
+                ReflectionUtils.invokeSetterMethod(this, r2Name, r2s);
             } else {
                 r2s.removeIf(r2 -> !r2TargetIds.stream().anyMatch(r2TargetId -> {
                     Persistable target = (Persistable) ReflectionUtils.invokeGetterMethod(r2, r2TargetName);
@@ -166,13 +168,14 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractPersis
                 try {
                     Type genericReturnType = r2Method.getGenericReturnType();
                     Type[] actualTypeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();
-                    Class r2Class = actualTypeArguments[0].getClass();
+                    Class r2Class = Class.forName(actualTypeArguments[0].getTypeName());
                     Object r2 = r2Class.newInstance();
                     ReflectionUtils.invokeSetterMethod(r2, r2ThisName, this);
                     Method r2TargetMethod = ReflectionUtils.getGetterMethod(r2Class, r2TargetName);
                     Type r2TargetType = r2TargetMethod.getReturnType();
-                    Object r2Target = r2TargetType.getClass().newInstance();
+                    Object r2Target = Class.forName(r2TargetType.getTypeName()).newInstance();
                     ReflectionUtils.invokeSetterMethod(r2Target, "id", r2TargetId);
+                    ReflectionUtils.invokeSetterMethod(r2, r2TargetName, r2Target);
                     finalR2s.add(r2);
                 } catch (Exception e) {
                     throw new ServiceException("R2 class newInstance error", e);

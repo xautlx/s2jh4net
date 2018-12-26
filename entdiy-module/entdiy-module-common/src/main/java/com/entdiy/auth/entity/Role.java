@@ -80,7 +80,7 @@ public class Role extends BaseNativeEntity {
     @MetaData(value = "设置已关联权限主键集合", comments = "辅助属性：用于页面表单标签进行数据绑定")
     @Transient
     @JsonIgnore
-    public void setPrivilegeIds(List<Long> privilegeIds) {
+    public void setPrivilegeIds(Long[] privilegeIds) {
         super.setR2TargetIds("roleR2Privileges", "privilege", "role", privilegeIds);
     }
 

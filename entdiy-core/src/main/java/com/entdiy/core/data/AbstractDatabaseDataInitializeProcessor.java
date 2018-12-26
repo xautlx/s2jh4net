@@ -62,6 +62,7 @@ public abstract class AbstractDatabaseDataInitializeProcessor {
         try {
             initializeInternal();
         } catch (Exception e) {
+            logger.error("data initialize error", e);
             throw new ServiceException("data initialize error", e);
         }
         if (AppContextHolder.isDevMode()) {
