@@ -138,6 +138,9 @@
     <!-- 对@Controller类注解元数据定制处理 -->
     <bean class="com.entdiy.support.data.ControllerMetaDataPostProcessor"/>
 
+    <!-- 业务数据依赖controller层基础数据，所以放在mvc层执行业务数据初始化 -->
+    <bean class="com.entdiy.dev.support.BizDatabaseDataInitializeProcessor"/>
+
     <!-- for Swagger2 -->
     <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
     <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
