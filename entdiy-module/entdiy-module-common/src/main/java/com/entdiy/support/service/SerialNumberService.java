@@ -47,7 +47,7 @@ public class SerialNumberService {
             .appendValue(SECOND_OF_MINUTE, 2)
             .toFormatter();
 
-    @Autowired
+    @Autowired(required = false)
     private RedisTemplate redisTemplate;
 
     /**

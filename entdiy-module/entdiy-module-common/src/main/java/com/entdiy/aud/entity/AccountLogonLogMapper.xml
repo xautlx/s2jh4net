@@ -15,10 +15,11 @@
 		<if test="_databaseId == 'mysql'">
 			DATE_FORMAT(log.logonTime,'%Y-%m-%d') as logonYearMonthDay,
 		</if>
-		log.authGuid
+		account.authType,
+		account.authUid
 		from
-		auth_UserLogonLog log
-		where 1=1
+		auth_AccountLogonLog log,auth_Account account
+		where log.account_id=account.id
 		<if test="logonTimeFrom != null">
 			and log.logonYearMonthDay &gt;= #{logonTimeFrom}
 		</if>

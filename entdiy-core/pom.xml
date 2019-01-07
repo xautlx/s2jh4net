@@ -139,11 +139,10 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
         </dependency>
-        <!-- https://github.com/xautlx/mybatis-paging -->
         <dependency>
             <groupId>com.entdiy</groupId>
             <artifactId>mybatis-paging</artifactId>
-            <version>1.0.0</version>
+            <version>${entdiy.version}</version>
         </dependency>
 
         <!-- AOP begin -->

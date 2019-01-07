@@ -44,10 +44,10 @@ public class SmsVerifyCodeService {
     @Autowired
     private DynamicConfigService dynamicConfigService;
 
-    @Autowired
+    @Autowired(required = false)
     private RedisTemplate redisTemplate;
 
-    @Autowired
+    @Autowired(required = false)
     private SmsService smsService;
 
     /**
