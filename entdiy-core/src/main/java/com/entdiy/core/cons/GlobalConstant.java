@@ -21,6 +21,7 @@ import com.entdiy.core.annotation.MetaData;
 import com.entdiy.core.entity.EnumKeyLabelPair;
 import com.google.common.collect.Maps;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -115,4 +116,9 @@ public class GlobalConstant {
      * 兼容MySQL的最大时间值。直接用LocalDateTime.MAX会导致MySQL存储异常。
      */
     public final static LocalDateTime MAX_LOCAL_DATE_TIME = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
+
+    /**
+     * 兼容MySQL的最大日期值。直接用LocalDate.MAX会导致MySQL存储异常。
+     */
+    public final static LocalDate MAX_LOCAL_DATE = LocalDate.of(9999, 12, 31);
 }
