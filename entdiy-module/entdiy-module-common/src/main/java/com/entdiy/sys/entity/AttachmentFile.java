@@ -140,8 +140,9 @@ public class AttachmentFile extends BaseAttachmentFile {
 
     @Transient
     public String getAccessUrl() {
-        if (AccessModeEnum.PRIVATE.equals(this.accessMode)) {
-            return "/pub/file/view/" + getId();
+        String id = getId();
+        if (AccessModeEnum.PRIVATE.equals(this.accessMode) && StringUtils.isNotBlank(id)) {
+            return "/pub/file/view/" + id;
         } else {
             return getAccessUrl(relativePath);
         }

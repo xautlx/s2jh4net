@@ -311,37 +311,24 @@ public class UtilController {
         }
 
         try {
-            if ("image".equals(dir)) {
-                //创建附件记录
-                AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                        uploadFile, dir);
-
-                //以下两个属性用于kindeditor显示之用
-                retMap.put("error", 0);
-                retMap.put("url", AttachmentFile.getAccessUrl(attachmentFile.getRelativePath()));
-
-                //业务使用属性
-                retMap.put("relativePath", attachmentFile.getRelativePath());
-                return retMap;
-            } else {
-                //创建附件记录
-                AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
-                        uploadFile, dir);
+            //创建附件记录
+            AttachmentFile attachmentFile = attachmentFileStoreService.storeFileData(
+                    uploadFile, dir);
+            if (!"image".equals(dir)) {
                 attachmentFileService.save(attachmentFile);
-
-                String accessUrl = attachmentFile.getAccessUrl();
-
-                //以下两个属性用于kindeditor显示之用
-                retMap.put("error", 0);
-                retMap.put("url", accessUrl);
-
-                //业务使用属性
-                retMap.put("id", attachmentFile.getId());
-                retMap.put("accessUrl", accessUrl);
-                retMap.put("fileRealName", attachmentFile.getFileRealName());
-                retMap.put("fileLength", attachmentFile.getFileLength());
-                return retMap;
             }
+            String accessUrl = attachmentFile.getAccessUrl();
+            
+            //以下两个属性用于kindeditor显示之用
+            retMap.put("error", 0);
+            retMap.put("url", accessUrl);
+
+            //业务使用属性
+            retMap.put("id", attachmentFile.getId());
+            retMap.put("accessUrl", accessUrl);
+            retMap.put("fileRealName", attachmentFile.getFileRealName());
+            retMap.put("fileLength", attachmentFile.getFileLength());
+            return retMap;
         } catch (Exception e) {
             logger.error("File upload error", e);
             retMap.put("error", 1);
