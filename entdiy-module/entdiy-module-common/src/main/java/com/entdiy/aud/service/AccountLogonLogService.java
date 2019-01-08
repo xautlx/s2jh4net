@@ -19,7 +19,6 @@ package com.entdiy.aud.service;
 
 import com.entdiy.aud.dao.AccountLogonLogDao;
 import com.entdiy.aud.entity.AccountLogonLog;
-import com.entdiy.core.dao.jpa.BaseDao;
 import com.entdiy.core.dao.mybatis.MyBatisDao;
 import com.entdiy.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -119,7 +119,9 @@ public class UserController extends BaseController<User, Long> {
             }
         }
         userService.saveCascadeAccount(entity, rawPassword);
-        return OperationResult.buildSuccessResult("数据保存处理完成", entity);
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("id", entity.getId());
+        return OperationResult.buildSuccessResult("数据保存处理完成", result);
     }
 
     @RequiresPermissions("配置管理:权限管理:后台用户管理")
