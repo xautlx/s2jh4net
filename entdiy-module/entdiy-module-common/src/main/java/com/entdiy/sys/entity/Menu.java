@@ -30,6 +30,8 @@ import org.apache.shiro.util.ClassUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -49,6 +51,8 @@ import java.util.Map;
 public class Menu extends BaseNativeNestedSetEntity<Menu> {
 
     private static final long serialVersionUID = 2860233299443173932L;
+
+    private static final Logger logger = LoggerFactory.getLogger(Menu.class);
 
     @MetaData(value = "名称")
     @Column(nullable = false, length = 32)
@@ -100,16 +104,20 @@ public class Menu extends BaseNativeNestedSetEntity<Menu> {
         }
         //基于记录的Controller类和方法信息构造MethodInvocation,用于后续调用shiro的拦截器进行访问权限比对
         if (StringUtils.isNotBlank(getControllerMethod())) {
-            final Class<?> clazz = ClassUtils.forName(getControllerClass());
-            Method[] methods = clazz.getMethods();
-            for (final Method method : methods) {
-                if (method.getName().equals(getControllerMethod())) {
-                    RequestMapping rm = method.getAnnotation(RequestMapping.class);
-                    if (rm.method() == null || rm.method().length == 0 || ArrayUtils.contains(rm.method(), RequestMethod.GET)) {
-                        mappingMethod = method;
-                        break;
+            try {
+                final Class<?> clazz = ClassUtils.forName(getControllerClass());
+                Method[] methods = clazz.getMethods();
+                for (final Method method : methods) {
+                    if (method.getName().equals(getControllerMethod())) {
+                        RequestMapping rm = method.getAnnotation(RequestMapping.class);
+                        if (rm.method() == null || rm.method().length == 0 || ArrayUtils.contains(rm.method(), RequestMethod.GET)) {
+                            mappingMethod = method;
+                            break;
+                        }
                     }
                 }
+            } catch (Exception e) {
+                logger.warn("Menu data process error", e);
             }
         }
         return mappingMethod;
