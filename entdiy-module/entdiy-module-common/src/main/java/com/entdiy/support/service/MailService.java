@@ -21,7 +21,9 @@ import com.entdiy.aud.entity.SendMessageLog;
 import com.entdiy.aud.entity.SendMessageLog.SendMessageTypeEnum;
 import com.entdiy.aud.service.SendMessageLogService;
 import com.entdiy.core.annotation.MetaData;
+import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.util.DateUtils;
+import com.entdiy.core.web.AppContextHolder;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,6 +47,9 @@ public class MailService {
     private final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     @Autowired
+    private DynamicConfigService dynamicConfigService;
+
+    @Autowired
     private SendMessageLogService sendMessageLogService;
 
     @Autowired(required = false)
@@ -59,7 +64,16 @@ public class MailService {
         return javaMailSender != null;
     }
 
-    public void sendHtmlMail(String subject, String text, boolean singleMode, String... toAddrs) {
+    public void sendSystemNotifyMail(String subject, String htmlText) {
+        String systemEmails = dynamicConfigService.getString(GlobalConstant.CFG_SYSTEM_EMAILS);
+        if (StringUtils.isNotBlank(systemEmails)) {
+            sendHtmlMail(subject, AppContextHolder.getSystemName() + " " + htmlText, false, StringUtils.split(systemEmails, ","));
+        } else {
+            logger.warn("Undefined config data: " + GlobalConstant.CFG_SYSTEM_EMAILS);
+        }
+    }
+
+    public void sendHtmlMail(String subject, String htmlText, boolean singleMode, String... toAddrs) {
         Assert.isTrue(isEnabled(), "Mail service unavailable");
         if (logger.isDebugEnabled()) {
             logger.debug("Submit tobe send  mail: TO: {} ,Subject: {}", StringUtils.join(toAddrs, ","), subject);
@@ -87,12 +101,12 @@ public class MailService {
             }
             MailMessage mail = new MailMessage();
             mail.setSubject(subject);
-            mail.setText(text == null ? "NULL" : text);
+            mail.setText(htmlText == null ? "NULL" : htmlText);
             mail.setSingleMode(singleMode);
             mail.setToAddrs(toAddrs);
             mails.add(mail);
         } else {
-            sendMail(subject, text, singleMode, false, toAddrs);
+            sendMail(subject, htmlText, singleMode, false, toAddrs);
         }
     }
 
