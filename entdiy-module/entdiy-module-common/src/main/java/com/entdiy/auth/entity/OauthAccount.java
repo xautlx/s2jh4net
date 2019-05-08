@@ -50,6 +50,12 @@ public class OauthAccount extends BaseNativeEntity {
     @JsonIgnore
     private Account account;
 
+    @MetaData(value = "修改绑定关联账户对象", comments = "用于修改绑定后解绑退回的处理")
+    @OneToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "preAccount_id", nullable = true)
+    @JsonIgnore
+    private Account preAccount;
+
     @MetaData(value = "OAuth类型")
     @Column(length = 64, nullable = false)
     @Enumerated(EnumType.STRING)
@@ -85,6 +91,11 @@ public class OauthAccount extends BaseNativeEntity {
             return oauthUserinfo.getNickname();
         }
         return GlobalConstant.NONE_VALUE;
+    }
+
+    @JsonView(JsonViews.App.class)
+    public Boolean isHasPreAccount() {
+        return preAccount != null;
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
