@@ -69,7 +69,7 @@ case "$1" in
     fi
     ;;
     init)
-    SQL="CREATE DATABASE entdiy DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
+    SQL="CREATE DATABASE entdiy DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
     echo Execute: ${SQL}
     docker exec -i ${app_name} mysql -h localhost -u root -pmysqlP@sswd123 <<< "${SQL}"
     ;;
