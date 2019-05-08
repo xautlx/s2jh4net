@@ -28,6 +28,8 @@ import lombok.Setter;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.util.http.URIUtil;
+import me.chanjar.weixin.mp.api.WxMpUserService;
+import me.chanjar.weixin.mp.api.impl.WxMpUserServiceImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +52,8 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
 
     @Setter
     private WxMpService wxMpService;
+
+    private WxMpUserService wxMpUserService;
 
     @Setter
     private OauthAccountService oauthAccountService;
@@ -151,7 +155,11 @@ public class WeixinAuthenticationFilter extends FormAuthenticationFilter {
 
 
                 if (WxConsts.OAuth2Scope.SNSAPI_USERINFO.equalsIgnoreCase(oauth2Scope)) {
-                    wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+                    if (wxMpUserService == null) {
+                        wxMpUserService = new WxMpUserServiceImpl(wxMpService);
+                    }
+                    //获取完整的用户信息，包含订阅公众号状态等信息
+                    wxMpUser = wxMpUserService.userInfo(wxMpOAuth2AccessToken.getOpenId());
                     logger.debug("wxMpUser: {}" + wxMpUser);
                 }
             } catch (WxErrorException e) {
