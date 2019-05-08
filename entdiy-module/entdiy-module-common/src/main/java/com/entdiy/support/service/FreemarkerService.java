@@ -18,6 +18,7 @@
 package com.entdiy.support.service;
 
 import com.entdiy.core.exception.ServiceException;
+import com.entdiy.core.web.AppContextHolder;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
@@ -86,7 +87,7 @@ public class FreemarkerService extends Configuration {
 
     public String processTemplateByFileName(String templateFileName, Map<String, Object> dataMap) {
         String templateDir = FileUtils.getTempDirectoryPath() + File.separator + "template" + File.separator + "freemarker";
-        File targetTemplateFile = new File(templateDir + File.separator + templateFileName + ".ftl");
+        File targetTemplateFile = new File(templateDir + File.separator + templateFileName + "_" + AppContextHolder.getBuildVersion() + ".ftl");
         if (!targetTemplateFile.exists()) {
             try {
                 //从classpath加载文件处理写入临时文件
