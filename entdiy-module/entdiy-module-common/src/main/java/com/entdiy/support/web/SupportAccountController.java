@@ -88,9 +88,12 @@ public class SupportAccountController {
 
     @RequestMapping(value = "/account/profile/password", method = RequestMethod.POST)
     @ResponseBody
-    public OperationResult modifyPasswordSave(@AuthAccount Account account, @RequestParam("oldpasswd") String oldpasswd,
-                                              @RequestParam("newpasswd") String newpasswd) {
+    public OperationResult modifyPasswordSave(@AuthAccount Account account,
+                                              @RequestParam("oldpasswd") String oldpasswd,
+                                              @RequestParam("newpasswd") String newpasswd,
+                                              @RequestParam(value = "redirectURI", required = false) String redirectURI) {
         Validation.notDemoMode();
+        Validation.isTrue(!oldpasswd.equals(newpasswd), "新旧密码不可相同");
         String encodedPasswd = accountService.encodeUserPasswd(account, oldpasswd);
         if (!encodedPasswd.equals(account.getPassword())) {
             return OperationResult.buildFailureResult("原密码不正确,请重新输入");
@@ -98,7 +101,11 @@ public class SupportAccountController {
             //更新密码失效日期为6个月后
             account.setCredentialsExpireDate(DateUtils.currentDateTime().plusMonths(6).toLocalDate());
             accountService.save(account, newpasswd);
-            return OperationResult.buildSuccessResult("密码修改成功,请在下次登录使用新密码");
+            OperationResult operationResult = OperationResult.buildSuccessResult("密码修改成功,请在下次登录使用新密码");
+            if (StringUtils.isNotBlank(redirectURI)) {
+                operationResult.setRedirect(redirectURI);
+            }
+            return operationResult;
         }
     }
 }
