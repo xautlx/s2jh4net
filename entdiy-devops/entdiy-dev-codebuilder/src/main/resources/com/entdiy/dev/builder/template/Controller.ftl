@@ -66,7 +66,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name}, ${i
     private DataDictService dataDictService;
 
     @MenuData("业务管理:${model_title}管理")
-    @RequiresPermissions("业务管理:${model_title}列表")
+    @RequiresPermissions("业务管理:${model_title}管理")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(@ModelEntity ${entity_name} entity, Model model) {
 <#list entityFields as entityField>
@@ -82,7 +82,7 @@ public class ${entity_name}Controller extends BaseController<${entity_name}, ${i
         return "admin${convert_model_path}/${entity_name_uncapitalize}-index";
     }   
     
-    @RequiresPermissions("业务管理:${model_title}管理")
+    @RequiresPermissions("业务管理:${model_title}列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(JsonViews.Super.class)

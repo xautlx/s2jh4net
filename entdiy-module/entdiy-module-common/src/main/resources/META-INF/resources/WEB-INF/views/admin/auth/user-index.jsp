@@ -31,6 +31,12 @@
                    grid-options='{
                     url: "/admin/auth/user/list",
                     colModel: [{
+                        label: "数据域",
+                        name: "account.dataDomain",
+                        editable: false,
+                        align: "center",
+                        width: 120
+                    }, {
                         label: "登录账号",
                         name: "account.authUid",
                         editable: false,

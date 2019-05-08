@@ -33,8 +33,8 @@
 		<!-- 显式指定Mapper文件位置 -->
 		<property name="mapperLocations">
 			<list>
-				<value>classpath:com/entdiy/**/entity/*Mapper.xml</value>
-				<value>classpath:xyz/entdiy/**/entity/*Mapper.xml</value>
+				<value>classpath*:com/entdiy/**/entity/*Mapper.xml</value>
+				<value>classpath*:xyz/entdiy/**/entity/*Mapper.xml</value>
 			</list>
 		</property>
 	</bean>

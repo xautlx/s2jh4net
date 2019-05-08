@@ -25,6 +25,7 @@ import com.entdiy.auth.service.UserService;
 import com.entdiy.core.cons.GlobalConstant;
 import com.entdiy.core.context.SpringPropertiesHolder;
 import com.entdiy.core.data.AbstractDatabaseDataInitializeProcessor;
+import com.entdiy.core.data.DatabaseDataInitializeExecutor;
 import com.entdiy.locale.entity.LocalizedData;
 import com.entdiy.security.DefaultAuthUserDetails;
 import com.entdiy.sys.entity.ConfigProperty;
@@ -59,6 +60,10 @@ import java.sql.SQLException;
 public class BasicDatabaseDataInitializeProcessor extends AbstractDatabaseDataInitializeProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractDatabaseDataInitializeProcessor.class);
+
+    //未实际使用但保留声明定义，注入使其依赖先运行
+    @Autowired
+    private DatabaseDataInitializeExecutor databaseDataInitializeExecutor;
 
     @Autowired
     private DataSource dataSource;

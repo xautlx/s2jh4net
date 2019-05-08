@@ -75,6 +75,7 @@
                        width: 100,
                        align: "left"
                    }],
+                   inlineNavAddable: true,
                    editurl: "/admin/schedule/job-bean-cfg/edit"
                 }'>
             </table>

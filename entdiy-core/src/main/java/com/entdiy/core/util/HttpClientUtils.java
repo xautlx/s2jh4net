@@ -1,3 +1,4 @@
+
 /**
  * Copyright © 2015 - 2017 EntDIY JavaEE Development Framework
  *
@@ -17,14 +18,8 @@
  */
 package com.entdiy.core.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.entdiy.core.exception.ServiceException;
-
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -43,7 +38,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Maps;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class HttpClientUtils {
 
@@ -88,10 +85,11 @@ public class HttpClientUtils {
 
     /**
      * HTTP Get 获取内容
-     * @param url  请求的url地址 ?之前的地址
-     * @param params 请求的参数
-     * @param charset    编码格式
-     * @return    页面内容
+     *
+     * @param url     请求的url地址 ?之前的地址
+     * @param params  请求的参数
+     * @param charset 编码格式
+     * @return 页面内容
      */
     public static String doGet(String url, Map<String, Object> params, Map<String, String> headers, String charset) {
         if (StringUtils.isBlank(url)) {
@@ -117,7 +115,7 @@ public class HttpClientUtils {
 
             if (headers != null && !headers.isEmpty()) {
                 Set<String> keys = headers.keySet();
-                for (Iterator<String> i = keys.iterator(); i.hasNext();) {
+                for (Iterator<String> i = keys.iterator(); i.hasNext(); ) {
                     String key = (String) i.next();
                     httpGet.addHeader(key, headers.get(key));
                 }
@@ -144,10 +142,11 @@ public class HttpClientUtils {
 
     /**
      * HTTP Post 获取内容
-     * @param url  请求的url地址 ?之前的地址
-     * @param params 请求的参数
-     * @param charset    编码格式
-     * @return    页面内容
+     *
+     * @param url     请求的url地址 ?之前的地址
+     * @param params  请求的参数
+     * @param charset 编码格式
+     * @return 页面内容
      */
     public static String doPost(String url, Map<String, Object> params, Map<String, String> headers, String charset) {
         if (StringUtils.isBlank(url)) {
@@ -171,7 +170,7 @@ public class HttpClientUtils {
             }
             if (headers != null && !headers.isEmpty()) {
                 Set<String> keys = headers.keySet();
-                for (Iterator<String> i = keys.iterator(); i.hasNext();) {
+                for (Iterator<String> i = keys.iterator(); i.hasNext(); ) {
                     String key = ObjectUtils.toString(i.next());
                     httpPost.addHeader(key, headers.get(key));
 
@@ -210,7 +209,7 @@ public class HttpClientUtils {
             HttpPost httpPost = new HttpPost(url);
             if (headers != null && !headers.isEmpty()) {
                 Set<String> keys = headers.keySet();
-                for (Iterator<String> i = keys.iterator(); i.hasNext();) {
+                for (Iterator<String> i = keys.iterator(); i.hasNext(); ) {
                     String key = ObjectUtils.toString(i.next());
                     httpPost.addHeader(key, headers.get(key));
 
@@ -247,6 +246,14 @@ public class HttpClientUtils {
 
     public static CloseableHttpClient getHttpClientInstance() {
         return httpClient;
+    }
+
+    public static String urlEncode(String url) {
+        try {
+            return URLEncoder.encode(url, CHARSET_UTF8);
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("Unsupported Encoding Exception", e);
+        }
     }
 
     public static void main(String[] args) {

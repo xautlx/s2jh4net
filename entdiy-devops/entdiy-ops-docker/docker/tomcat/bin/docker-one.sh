@@ -28,7 +28,7 @@ case "$1" in
     echo docker run ${docker_name}...
     mkdir -p ${app_dir} ; mkdir -p ${data_dir}/upload; mkdir -p ${config_dir}; mkdir -p ${log_dir}
     deploy_dir="/usr/local/tomcat/webapps"
-    docker run --name ${docker_name} --restart=always --privileged=true \
+    docker run --name ${docker_name} -p 8080:${port} --restart=always --privileged=true \
                --link entdiy-redis:redis-server \
                --link entdiy-mysql:mysql-server \
                 -v $app_dir:$deploy_dir \

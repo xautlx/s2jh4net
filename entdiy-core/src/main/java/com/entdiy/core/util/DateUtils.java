@@ -22,6 +22,7 @@ import com.entdiy.core.web.AppContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -37,6 +38,8 @@ public class DateUtils {
     public final static String DEFAULT_TIMEZONE = "GMT+8";
 
     public final static String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    public final static DateFormat DEFAULT_TIME_FORMATOR = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
@@ -74,7 +77,7 @@ public class DateUtils {
         if (date == null) {
             return null;
         }
-        return new SimpleDateFormat(DEFAULT_TIME_FORMAT).format(date);
+        return DEFAULT_TIME_FORMATOR.format(date);
     }
 
     public static String formatShortTime(Date date) {
@@ -248,5 +251,9 @@ public class DateUtils {
         Instant instant = date.toInstant();
         ZoneId zone = ZoneId.systemDefault();
         return LocalDateTime.ofInstant(instant, zone);
+    }
+
+    public static String formatNow() {
+        return DEFAULT_TIME_FORMATOR.format(new Date());
     }
 }
