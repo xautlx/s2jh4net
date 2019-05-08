@@ -81,6 +81,16 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
         String errorMessage = null;
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
+        boolean json = false;
+        if (aHandler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) aHandler;
+            Method method = handlerMethod.getMethod();
+            ResponseBody responseBody = method.getAnnotation(ResponseBody.class);
+            if (responseBody != null) {
+                json = true;
+            }
+        }
+
         if (e instanceof HttpRequestMethodNotSupportedException) {
             //HTTP请求方式不对
             errorMessage = e.getMessage();
@@ -156,7 +166,9 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
                 if (ex != null) {
                     continueProcess = false;
                     //返回400，500等状态码会导致API接口不响应输出JSON信息，因此改为直接200响应，在客户端注意判断json中type属性
-                    httpStatus = HttpStatus.OK;
+                    if (json) {
+                        httpStatus = HttpStatus.OK;
+                    }
                     errorMessage = ex.getMessage();
                     skipLog = true;
                 }
@@ -219,16 +231,6 @@ public class AnnotationHandlerMethodExceptionResolver implements HandlerExceptio
         response.setStatus(httpStatus.value());
         //其余按照标准的error-page处理
         request.setAttribute("javax.servlet.error.message", errorMessage);
-
-        boolean json = false;
-        if (aHandler instanceof HandlerMethod) {
-            HandlerMethod handlerMethod = (HandlerMethod) aHandler;
-            Method method = handlerMethod.getMethod();
-            ResponseBody responseBody = method.getAnnotation(ResponseBody.class);
-            if (responseBody != null) {
-                json = true;
-            }
-        }
 
         if (json) {
             ModelAndView mv = new ModelAndView();
