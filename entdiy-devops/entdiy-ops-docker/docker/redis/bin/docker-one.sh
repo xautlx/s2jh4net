@@ -27,7 +27,8 @@ case "$1" in
     start)
     echo docker run ${DOCKER_NAME}...
     mkdir -p ${DATA_DIR}; mkdir -p ${CONFIG_DIR}; mkdir -p ${LOG_DIR}
-    docker run --name ${DOCKER_NAME} -p $PORT:6379 --restart=always --privileged=true \
+    # -p $PORT:6379
+    docker run --name ${DOCKER_NAME} --restart=always --privileged=true \
                 -v ${DATA_DIR}:/data \
                 -e TZ="Asia/Shanghai" \
                 -d redis:3.2.11 redis-server --requirepass "$REDIS_PASSWD"
