@@ -17,17 +17,18 @@
  */
 package com.entdiy.aud.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
-/** 
+/**
  * 基于logback的DBAppender表结构规范对应的实体定义
+ *
  * @see http://logback.qos.ch/manual/configuration.html #DBAppender
  */
 @Getter
@@ -42,7 +43,7 @@ public class LoggingEventPropertyId implements java.io.Serializable {
     @Column(name = "event_id", nullable = false)
     private Long eventId;
 
-    @Column(name = "mapped_key", nullable = false, length = 2000)
+    @Column(name = "mapped_key", nullable = false, length = 128)
     private String mappedKey;
 
     public LoggingEventPropertyId() {
