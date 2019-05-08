@@ -110,14 +110,15 @@ public class UserController extends BaseController<User, Long> {
                                     @RequestParam(value = "rawPassword", required = false) String rawPassword) {
         if (entity.isNew()) {
             Validation.isTrue(StringUtils.isNotBlank(rawPassword), "创建用户必须设置初始密码");
-        } else {
-            //如果关联对象nullable，则需要特殊处理：关联对象id为空，则把整个关联对象置为null，解决Hibernate异常：
-            //org.hibernate.TransientPropertyValueException:
-            //  object references an unsaved transient instance - save the transient instance before flushing
-            if (entity.getDepartment() != null && entity.getDepartment().getId() == null) {
-                entity.setDepartment(null);
-            }
         }
+        
+        //如果关联对象nullable，则需要特殊处理：关联对象id为空，则把整个关联对象置为null，解决Hibernate异常：
+        //org.hibernate.TransientPropertyValueException:
+        //  object references an unsaved transient instance - save the transient instance before flushing
+        if (entity.getDepartment() != null && entity.getDepartment().getId() == null) {
+            entity.setDepartment(null);
+        }
+
         userService.saveCascadeAccount(entity, rawPassword);
         Map<String, Object> result = Maps.newHashMap();
         result.put("id", entity.getId());
