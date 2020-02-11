@@ -84,22 +84,22 @@
     <repositories>
         <repository>
             <id>aliyun</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
         </repository>
         <repository>
             <id>central</id>
             <name>Central Repository</name>
-            <url>http://repo.maven.apache.org/maven2</url>
+            <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
             <id>org.springframework.maven.milestone</id>
             <name>Spring Framework Maven Milestone Repository</name>
-            <url>http://maven.springframework.org/milestone</url>
+            <url>https://maven.springframework.org/milestone</url>
         </repository>
         <repository>
             <id>spy</id>
             <name>Spy Repository</name>
-            <url>http://files.couchbase.com/maven2/</url>
+            <url>https://files.couchbase.com/maven2/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -107,7 +107,7 @@
         <repository>
             <id>jahia</id>
             <name>jahia repository</name>
-            <url>http://maven.jahia.org/maven2/</url>
+            <url>https://maven.jahia.org/maven2/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -119,11 +119,11 @@
         <repository>
             <id>maven-restlet</id>
             <name>Restlet repository</name>
-            <url>http://maven.restlet.com</url>
+            <url>https://maven.restlet.com</url>
         </repository>
         <repository>
             <id>debop-releases-bintray</id>
-            <url>http://dl.bintray.com/debop/maven</url>
+            <url>https://dl.bintray.com/debop/maven</url>
         </repository>
         <repository>
             <id>my-local-libs</id>
