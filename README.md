@@ -13,6 +13,12 @@
 
 [![Build Status](https://www.travis-ci.org/xautlx/s2jh4net.svg?branch=master)](https://www.travis-ci.org/xautlx/s2jh4net)
 
+欢迎关注作者最新微服务版本开发框架：基于 Vue/Element-UI 和 Spring Boot/Spring Cloud & Alibaba 前后端技术栈的微服务应用开发框架。
+
+**[https://github.com/xautlx/entdiy-cloud](https://github.com/xautlx/entdiy-cloud)**
+
+**[https://gitee.com/xautlx/entdiy-cloud](https://gitee.com/xautlx/entdiy-cloud)**
+
 ## 框架特色
 
 * 面向主流企业级WEB应用系统的界面和常用基础功能设计实现
