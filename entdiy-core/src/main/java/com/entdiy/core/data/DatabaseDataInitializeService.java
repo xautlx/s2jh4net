@@ -30,7 +30,7 @@ import javax.persistence.Table;
 import javax.transaction.Transactional;
 import java.sql.DatabaseMetaData;
 
-@Component
+@Service
 public class DatabaseDataInitializeService {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseDataInitializeExecutor.class);
